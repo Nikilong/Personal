@@ -35,7 +35,8 @@
             model.title = title;
         }else
         {
-            model.title = @"文章已经被删除！！";
+            continue;
+//            model.title = @"文章已经被删除！！";
         }
         model.publishTime = [model getCurrentTime];
         NSArray *arr = dict[@"data"][@"articles"][model.ID][@"thumbnails"];

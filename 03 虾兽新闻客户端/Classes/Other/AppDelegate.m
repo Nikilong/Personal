@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import "XMMainViewController.h"
+#import "XMNavWebViewController.h"
 
 @interface AppDelegate ()
 
@@ -23,6 +24,7 @@
     
     self.mainVC = [[XMMainViewController alloc] init];
     
+//    XMNavWebViewController *nav = [[XMNavWebViewController alloc] initWithRootViewController:_mainVC];
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:_mainVC];
     
     self.window.rootViewController = nav;
@@ -32,42 +34,33 @@
     //创建应用图标上的3D touch快捷选项
     [self creatShortcutItem];
     
-    UIApplicationShortcutItem *shortcutItem = [launchOptions valueForKey:UIApplicationLaunchOptionsShortcutItemKey];
-    //如果是从快捷选项标签启动app，则根据不同标识执行不同操作，然后返回NO，防止调用- (void)application:(UIApplication *)application performActionForShortcutItem:(UIApplicationShortcutItem *)shortcutItem completionHandler:(void (^)(BOOL))completionHandler
-//    if (shortcutItem) {
-//        //判断先前我们设置的快捷选项标签唯一标识，根据不同标识执行不同操作
-//        if([shortcutItem.type isEqualToString:@"one"]){
-//            NSArray *arr = @[@"hello 3D Touch--分享"];
-//            UIActivityViewController *vc = [[UIActivityViewController alloc]initWithActivityItems:arr applicationActivities:nil];
-//            [self.window.rootViewController presentViewController:vc animated:YES completion:^{
-//            }];
-//        } else if ([shortcutItem.type isEqualToString:@"save"]) {//进入珍藏界面
-//            
-//            [mainVC callSaveViewController];
-//        }
-//        return NO;
-//    }
-    
     return YES;
 }
 
-//创建应用图标上的3D touch快捷选项
+/** 用代码创建应用图标上的3D touch快捷选项  */
 - (void)creatShortcutItem {
     //创建系统风格的icon
-    UIApplicationShortcutIcon *icon = [UIApplicationShortcutIcon iconWithType:UIApplicationShortcutIconTypeShare];
+//    UIApplicationShortcutIcon *iconShare = [UIApplicationShortcutIcon iconWithType:UIApplicationShortcutIconTypeShare];
+    UIApplicationShortcutIcon *iconSearch = [UIApplicationShortcutIcon iconWithType:UIApplicationShortcutIconTypeSearch];
+    UIApplicationShortcutIcon *iconSave = [UIApplicationShortcutIcon iconWithType:UIApplicationShortcutIconTypeLove];
+    UIApplicationShortcutIcon *iconScan = [UIApplicationShortcutIcon iconWithType:UIApplicationShortcutIconTypeCapturePhoto];
     
     //    //创建自定义图标的icon
     //    UIApplicationShortcutIcon *icon2 = [UIApplicationShortcutIcon iconWithTemplateImageName:@"分享.png"];
-    
     //创建快捷选项
-    UIApplicationShortcutItem * item = [[UIApplicationShortcutItem alloc]initWithType:@"save" localizedTitle:@"珍藏" localizedSubtitle:@"珍藏副标题" icon:icon userInfo:nil];
+    UIApplicationShortcutItem * itemSave = [[UIApplicationShortcutItem alloc]initWithType:@"save" localizedTitle:@"珍藏" localizedSubtitle:nil icon:iconSave userInfo:nil];
+    UIApplicationShortcutItem * itemSearch = [[UIApplicationShortcutItem alloc]initWithType:@"search" localizedTitle:@"搜索" localizedSubtitle:nil icon:iconSearch userInfo:nil];
+    UIApplicationShortcutItem * itemScan = [[UIApplicationShortcutItem alloc]initWithType:@"scan" localizedTitle:@"扫描二维码" localizedSubtitle:nil icon:iconScan userInfo:nil];
     
     //添加到快捷选项数组
-    [UIApplication sharedApplication].shortcutItems = @[item];
+    [UIApplication sharedApplication].shortcutItems = @[itemSave,itemSearch,itemScan];
 }
+
+/** 3D touch快捷选项触发事件 */
 - (void)application:(UIApplication *)application performActionForShortcutItem:(UIApplicationShortcutItem *)shortcutItem completionHandler:(void (^)(BOOL))completionHandler
 {
     if([shortcutItem.type isEqualToString:@"one"]){
+        // 这个分享的3D touch快捷选项是从plist里面创建的
         NSArray *arr = @[@"hello 3D Touch--分享"];
         UIActivityViewController *vc = [[UIActivityViewController alloc]initWithActivityItems:arr applicationActivities:nil];
         [self.window.rootViewController presentViewController:vc animated:YES completion:^{
@@ -75,6 +68,13 @@
     } else if ([shortcutItem.type isEqualToString:@"save"]) {//进入珍藏界面
         
         [_mainVC callSaveViewController];
+    }else if ([shortcutItem.type isEqualToString:@"search"]) {//进入搜索界面
+        
+        [_mainVC search:nil];
+    }
+    else if ([shortcutItem.type isEqualToString:@"scan"]) {//进入扫描二维码界面
+        
+        [_mainVC scanQRCode];
     }
 }
 

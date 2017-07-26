@@ -63,13 +63,14 @@
     // 取出对应的模型
     XMWebModel *model = self.saveWebsArr[indexPath.row];
     
+//    // 因为webmodule是push出来的,必须先pop掉当前控制器
+//    [self.navigationController popViewControllerAnimated:YES];
+
     // 通知代理发送网络请求
     if ([self.delegate respondsToSelector:@selector(openWebmoduleRequest:)])
     {
         [_delegate openWebmoduleRequest:model];
     }
-    // 跳转页面之后dismiss
-    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath

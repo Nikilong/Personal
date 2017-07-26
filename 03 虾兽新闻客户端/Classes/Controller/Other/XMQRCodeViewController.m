@@ -119,33 +119,45 @@
         
         UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action){
             
-            [self dismissViewControllerAnimated:YES completion:nil];
+            [self.navigationController popViewControllerAnimated:YES];
         }];
 
         
-        UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"复制内容" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action){
+        UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"复制内容" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
             // 将textview的text添加到系统的剪切板
             UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
             [pasteboard setString:obj.stringValue];
             
-            [self dismissViewControllerAnimated:YES completion:nil];
+            [self.navigationController popViewControllerAnimated:YES];
         }];
-        UIAlertAction *openURLAction = [UIAlertAction actionWithTitle:@"前往" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action){
+        UIAlertAction *openURLAction = [UIAlertAction actionWithTitle:@"前往" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
             // 当点击确定执行的块代码
 //            [[NSNotificationCenter defaultCenter] postNotificationName:@"QRCodeShouldOpenWebNotitificaiton" object:nil];
             XMWebModel *model = [[XMWebModel alloc] init];
             model.webURL = [NSURL URLWithString:obj.stringValue];
             
+            // 因为webmodule是push出来的,必须先pop掉当前控制器
+            [self.navigationController popViewControllerAnimated:YES];
+            
             if ([self.delegate respondsToSelector:@selector(openWebmoduleRequest:)])
             {
                 [self.delegate openWebmoduleRequest:model];
             }
+
+        }];
+        
+        UIAlertAction *safariAction = [UIAlertAction actionWithTitle:@"用Safari打开" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
             
-            [self dismissViewControllerAnimated:YES completion:nil];
+            // 用Safari打开
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:obj.stringValue]];
+            
+            [self.navigationController popViewControllerAnimated:YES];
+            
         }];
         
         [tips addAction:cancelAction];
         [tips addAction:okAction];
+        [tips addAction:safariAction];
         [tips addAction:openURLAction];
         
         [self presentViewController:tips animated:YES completion:nil];

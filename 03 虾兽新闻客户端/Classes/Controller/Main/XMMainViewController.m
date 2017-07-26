@@ -12,11 +12,12 @@
 #import "XMWebViewController.h"
 #import "XMChannelModel.h"
 #import "XMLeftViewUserCell.h"
-#import "XMFloatWindow.h"
 #import "XMConerAccessoryView.h"
 #import "XMSaveWebsTableViewController.h"
 #import "XMQRCodeViewController.h"
 #import "XMSearchTableViewController.h"
+
+#import "XMNavWebViewController.h"
 
 #import "UIImageView+WebCache.h"
 #import "MBProgressHUD+NK.h"
@@ -26,7 +27,6 @@
 
 @interface XMMainViewController ()<
 XMLeftTableViewControllerDelegate,
-XMFloatWindowDelegate,
 XMConerAccessoryViewDelegate,
 UIGestureRecognizerDelegate>
 
@@ -37,25 +37,9 @@ UIGestureRecognizerDelegate>
 @property (nonatomic, strong) XMHomeTableViewController *homeVC;
 /** 强引用保存新闻窗口 */
 @property (nonatomic, strong) XMSaveWebsTableViewController *saveVC;
-/** 强引用打开的webmodule */
-@property (weak, nonatomic)  UIView *topWebContentView;
-@property (nonatomic, strong) NSMutableArray *webContentArr;
-@property (nonatomic, strong) NSMutableArray *webVCArr;
-@property (nonatomic, assign, getter=iscanCreateNewWebmodule)  BOOL canCreateNewWebmodule;
-
-
-/** 记录当前webmodule的contentView位置 */
-@property (nonatomic, assign)  CGFloat starX;
-@property (nonatomic, assign)  CGFloat rightContentViewX;
-@property (nonatomic, strong) NSString *currentURL;
 
 /** 蒙板 */
 @property (weak, nonatomic)  UIView *cover;
-
-@property (nonatomic, strong) XMFloatWindow *floatWindow;
-@property (nonatomic, assign) BOOL isNeedFloatWindow;
-
-
 
 @end
 
@@ -81,24 +65,6 @@ UIGestureRecognizerDelegate>
         _saveVC.delegate = self;
     }
     return _saveVC;
-}
-
-- (NSMutableArray *)webContentArr
-{
-    if (!_webContentArr)
-    {
-        _webContentArr = [[NSMutableArray alloc] init];
-    }
-    return _webContentArr;
-}
-
--(NSMutableArray *)webVCArr
-{
-    if (!_webVCArr)
-    {
-        _webVCArr = [[NSMutableArray alloc] init];
-    }
-    return _webVCArr;
 }
 
 - (UIView *)cover
@@ -133,30 +99,14 @@ UIGestureRecognizerDelegate>
     // 设置导航栏标题
     [self setNavTitle:@"推荐"];
     
-    // 创建悬浮按钮
-//    [self addFloatView];
-    
     // 创建左下角辅助按钮
     [self addCornerAccessoryView];
     
     // 创建导航栏按钮
     [self addNavButton];
     
-    // 初始化时还没有webmodule,因此可以创建
-    self.canCreateNewWebmodule = YES;
-    
     // 添加手势
-    // 左侧抽屉手势
-    UISwipeGestureRecognizer *swip = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(showLeftView)];
-    [self.view addGestureRecognizer:swip];
-    // 搜索快捷手势
-    UISwipeGestureRecognizer *searchSwip = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(search:)];
-    searchSwip.numberOfTouchesRequired = 3;  // 设置需要3个手指向下滑
-    // 必须要实现一个代理方法支持多手势,这时候3指下滑同时也会触发单指滚动tableview
-    searchSwip.delegate = self;
-    searchSwip.direction = UISwipeGestureRecognizerDirectionDown;
-    [self.view addGestureRecognizer:searchSwip];
-    
+    [self addGesture];
 }
 
 - (void)dealloc
@@ -168,6 +118,7 @@ UIGestureRecognizerDelegate>
 {
     [super didReceiveMemoryWarning];
     
+    // 收到内存警告清除缓存
     [self clearCache];
 }
 
@@ -185,21 +136,32 @@ UIGestureRecognizerDelegate>
     [self.view addSubview:conerAccessoryView];
 }
 
-/** 添加悬浮辅助按钮*/
-- (void)addFloatView
+/** 添加手势*/
+- (void)addGesture
 {
-    self.floatWindow = [XMFloatWindow floatWindow];
-    _floatWindow.delegate = self;
-    _floatWindow.backgroundColor = [UIColor clearColor];
-    _floatWindow.frame = CGRectMake(10, 300, 30, 90);
-    
-    _isNeedFloatWindow = YES;
+    // 左侧抽屉手势
+    UISwipeGestureRecognizer *swip = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(showLeftView)];
+    [self.view addGestureRecognizer:swip];
+    // 搜索2指下滑快捷搜索手势
+    UISwipeGestureRecognizer *searchSwip = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(search:)];
+    searchSwip.numberOfTouchesRequired = 2;  // 设置需要2个手指向下滑
+    // 必须要实现一个代理方法支持多手势,这时候3指下滑同时也会触发单指滚动tableview
+    searchSwip.delegate = self;
+    searchSwip.direction = UISwipeGestureRecognizerDirectionDown;
+    [self.view addGestureRecognizer:searchSwip];
+    // 搜索2指上划打开收藏快捷手势
+    UISwipeGestureRecognizer *saveSwip = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(callSaveViewController)];
+    saveSwip.numberOfTouchesRequired = 2;  // 设置需要2个手指向下滑
+    // 必须要实现一个代理方法支持多手势,这时候2指下滑同时也会触发单指滚动tableview
+    saveSwip.delegate = self;
+    saveSwip.direction = UISwipeGestureRecognizerDirectionUp;
+    [self.view addGestureRecognizer:saveSwip];
 }
 
 /** 设置导航栏扫描二维码和搜索按钮 */
 - (void)addNavButton
 {
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:self action:@selector(scan)];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:self action:@selector(scanQRCode)];
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:@selector(search:)];
 }
@@ -225,12 +187,6 @@ UIGestureRecognizerDelegate>
     label.attributedText = str;
     self.navigationItem.titleView = label;
     
-    // 标题添加双击回到主界面样式手势
-    UITapGestureRecognizer *homeTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(backTap)];
-    homeTap.numberOfTapsRequired = 2;  // 双击打开
-    [self.navigationItem.titleView addGestureRecognizer:homeTap];
-    // 导航条默认不支持交互事件,必须开启
-    self.navigationItem.titleView.userInteractionEnabled = YES;
 }
 
 /** 添加主新闻窗口 */
@@ -271,7 +227,7 @@ UIGestureRecognizerDelegate>
 #pragma mark - 点击事件与手势
 #pragma mark 导航栏
 /** QRcode */
-- (void)scan
+- (void)scanQRCode
 {
     XMQRCodeViewController *qrVC = [[XMQRCodeViewController alloc] init];
     qrVC.delegate = self;
@@ -287,24 +243,15 @@ UIGestureRecognizerDelegate>
     XMSearchTableViewController *searchVC = [[XMSearchTableViewController alloc] init];
     searchVC.delegate = self;
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:searchVC];
+    // 导航控制器只能present另外一个导航控制器,不能push
     [self presentViewController:nav animated:YES completion:nil];
 }
-
-/** 双击titleview返回 */
-- (void)backTap
-{
-    [self showRightContentView:NO];
-}
-
 
 #pragma mark 左侧栏
 #warning note 1，这里用到navigationController，若这时候leftVC是self的childviewcontroller，则会冲突，系统建议navigationController是leftVC的父控制器。2，在这里插入蒙板最准确，在init里面可能不准确
 /** 显示左侧边栏 */
 - (void)showLeftView
 {
-    // 隐藏悬浮按钮
-    _floatWindow.hidden = YES;
-    
     // 显示蒙板
     self.cover.hidden = NO;
     
@@ -328,127 +275,15 @@ UIGestureRecognizerDelegate>
         // 恢复到最左边的位置
         self.leftContentView.transform = CGAffineTransformIdentity;
         
-    }completion:^(BOOL finished) {
-        // 左侧边栏移除之后再显示悬浮按钮
-        if (!_isNeedFloatWindow) return;
-        self.floatWindow.hidden = NO;
     }];
 }
 
-#pragma mark 右侧webmodule栏
-/** 显示或者隐藏右侧webmodule容器 */
-- (void)showRightContentView:(BOOL)isShow
-{
-    CGFloat duration = 0.5f;
-    if (isShow) // 显示
-    {
-        [UIView animateWithDuration:duration animations:^{
-            self.topWebContentView.transform = CGAffineTransformMakeTranslation(-XMScreenW, 0);
-        }completion:^(BOOL finished) {
-            // 当只有一个webmodule且该webmodule显示时,点击webmodule上面的链接,应该可以再重新创建一个webmodule,所以应该设置canCreateNewWebmodule
-            if (self.webVCArr.count == 1)
-            {
-                self.canCreateNewWebmodule = YES;
-            }
-        }];
-    }else
-    {
-        [UIView animateWithDuration:duration animations:^{
-            self.topWebContentView.transform = CGAffineTransformIdentity;
-        } completion:^(BOOL finished) {
-            // 当只有一个webmodule时,只需要隐藏不需要销毁,因此可以避免加载同一个网站时重新加载
-            if (self.webContentArr.count == 1)
-            {
-                // 只有一个webmodule并且隐藏时,在主界面,不需要重新创建webmodule
-                self.canCreateNewWebmodule = NO;
-                return;
-            }
-            // 当打开多个webmodule时移除最上面的webmodule
-            UIView *topContentView = [self.webContentArr lastObject];
-            [topContentView removeFromSuperview];
-            [self.webContentArr removeLastObject];
-            [self.webVCArr removeLastObject];
-            // 重新标记最上面的webmodule
-            self.topWebContentView = [self.webContentArr lastObject];
-        }];
-    }
-}
-
-
-/** 右划返回webmodule*/
-- (void)panToCloseWebmodule:(UIPanGestureRecognizer *)pan
-{
-    // 手势加载rightContentView上面,需要转换坐标系
-    CGFloat currentX = [self.topWebContentView convertPoint:[pan locationInView:self.topWebContentView] toView:self.view].x;
-    switch (pan.state) {
-        case UIGestureRecognizerStateBegan: // 拖拽开始
-            // 记录一开始的触点,
-            self.starX = [self.topWebContentView convertPoint:[pan locationInView:self.topWebContentView] toView:self.view].x;
-            break;
-            
-        case UIGestureRecognizerStateChanged: // 拖拽改变
-        {
-            if (currentX < self.starX) return;
-            // 由于一开始rightContentView的x坐标为XMScreenW(藏在最右边),因此transform都是以XMScreenW作为原点,因此需要减去XMScreenW
-            self.topWebContentView.transform = CGAffineTransformMakeTranslation(currentX - self.starX - XMScreenW, 0);
-            break;
-        }
-        case UIGestureRecognizerStateEnded: // 拖拽结束
-        {
-            // 拖拽距离超过rightContentView的相对位置0.3时决定弹回还是隐藏
-            [self showRightContentView:self.topWebContentView.frame.origin.x < XMScreenW * 0.3];
-            break;
-        }
-        default:
-            break;
-    }
-}
 #pragma 请求网络申请- delegate
 /**   请求网络申请*/
 - (void)openWebmoduleRequest:(XMWebModel *)webModel
 {
-    // 隐藏刷新按钮
-    self.floatWindow.isShowRefreshButton = NO;
-    
-    // 当第一次请求时或者两次请求不一样是应该创建webmodule
-    if (self.currentURL == nil || ![self.currentURL isEqualToString:webModel.webURL.absoluteString] )
-    {
-        self.currentURL = webModel.webURL.absoluteString;
-    
-        // 区分开点击主界面的浏览行为和点击网站链接的行为
-        if (self.iscanCreateNewWebmodule)
-        {
-            // 创建右侧边栏容器
-            UIView *rightContentView = [[UIView alloc] initWithFrame:CGRectMake(XMScreenW, 64, XMScreenW, XMScreenH - 64)];
-            [self.view addSubview:rightContentView];
-            
-            // 标记最顶部的rightContentView
-            self.topWebContentView = rightContentView;
-            
-            // 创建webmodule的控制器
-            XMWebViewController *webVC = [[XMWebViewController alloc] init];
-            webVC.delegate = self;
-            [rightContentView addSubview:webVC.view];
-            // 必须把webVC加到数组强引用,不然会销毁
-            [self.webVCArr addObject:webVC];
-            
-            // 添加右划关闭当前webmodule手势
-            UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panToCloseWebmodule:)];
-            [rightContentView addGestureRecognizer:pan];
-            [self.webContentArr addObject:rightContentView];
-            
-            // 传递模型
-            webVC.model = webModel;
-        }else  // 在主界面浏览新闻时只需要一个webmodule,并且设置url即可
-        {
-            XMWebViewController *webVC = [self.webVCArr lastObject];
-            webVC.model = webModel;
-        }
-    }
-
-    // 每次网络请求都应该显示webmodule
-    [self showRightContentView:YES];
-    
+    // 调用webmodule的类方法
+    [XMWebViewController openWebmoduleWithModel:webModel viewController:self];
 }
 
 
@@ -467,38 +302,6 @@ UIGestureRecognizerDelegate>
     [self setNavTitle:model.channel];
 }
 
-#pragma mark floatView - delegate
-/** web滚到最顶部和最底部功能 */
-//- (void)floatWindowDidClickDownToBottomButton:(XMFloatWindow *)floatWindow
-//{
-//    UIViewController *topVC = self.navigationController.visibleViewController;
-//
-//    if ([topVC isKindOfClass:[XMWebViewController class]])
-//    {
-//        [self.webVC webViewDidScrollToBottom];
-//    }else
-//    {
-//        [self.homeVC downToBottom];
-//    }
-//}
-//
-//- (void)floatWindowDidClickUpToTopButton:(XMFloatWindow *)floatWindow
-//{
-//    UIViewController *topVC = self.navigationController.visibleViewController;
-//    if ([topVC isKindOfClass:[XMWebViewController class]])
-//    {
-//        [self.webVC webViewDidScrollToTop];
-//    }else
-//    {
-//        [self.homeVC upToTop];
-//    }
-//}
-
-//- (void)floatWindowDidClickRefreshButton:(XMFloatWindow *)floatWindow
-//{
-//    [self.homeVC refresh];
-//}
-
 
 #pragma mark conerAccessoryView - delegate
 - (void)conerAccessoryViewDidClickPlantedButton:(UIButton *)button
@@ -516,19 +319,7 @@ UIGestureRecognizerDelegate>
             
         case 3: // 取消隐藏/显示悬浮按钮
             
-            if (button.selected) // 默认是显示，当点击按钮被选择即表示要隐藏悬浮按钮
-            {
-                _isNeedFloatWindow = YES;
-                _floatWindow.hidden = NO;
-                button.selected = NO;
-            }else
-            {
-                _isNeedFloatWindow = NO;
-                _floatWindow.hidden = YES;
-                button.selected = YES;
-            }
             break;
-#warning undo case 4 打开搜索
             
         default:
             break;
@@ -559,9 +350,6 @@ UIGestureRecognizerDelegate>
 {
     // 隐藏左侧边栏
     [self hideLeftView];
-    
-    // 隐藏中间刷新按钮
-    _floatWindow.isShowRefreshButton = NO;
     
     // 用导航控制器push，可以使得控制器保持在栈顶
     [self.navigationController pushViewController:self.saveVC animated:YES];

@@ -11,7 +11,7 @@
 #define kName @"name"
 #define kEngine @"engine"
 
-@interface XMSearchTableViewController ()<UITextFieldDelegate>
+@interface XMSearchTableViewController ()<UITextFieldDelegate,UIGestureRecognizerDelegate>
 
 @property (nonatomic, strong) NSString *selectEngine;
 @property (nonatomic, strong) NSMutableArray *engineArr;
@@ -34,10 +34,10 @@
          https://www.sogou.com/web?query=a11a
          */
         NSDictionary *bingDict = @{kName : @"必应",
-                                   kEngine : @"https://www.baidu.com/s?ie=UTF-8&wd="
+                                   kEngine : @"http://cn.bing.com/search?q="
                                    };
         NSDictionary *baiduDict = @{kName : @"百毒",
-                                   kEngine : @"http://cn.bing.com/search?q="
+                                   kEngine : @"https://www.baidu.com/s?ie=UTF-8&wd="
                                    };
         NSDictionary *sogouDict = @{kName : @"搜狗",
                                      kEngine : @"https://www.sogou.com/web?query="
@@ -60,12 +60,17 @@
     [self setNavItem];
     // 默认初始搜索引擎为必应
     self.selectEngine = @"http://cn.bing.com/search?q=";
+    // 添加右划dismiss手势
+    UISwipeGestureRecognizer *swip = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(cancel)];
+    swip.delegate = self;
+    [self.tableView addGestureRecognizer:swip];
     
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    // 自动弹出键盘
     [self.navigationItem.titleView becomeFirstResponder];
 }
 
@@ -99,10 +104,12 @@
 
 - (void)go
 {
-    NSLog(@"%s",__func__);
     XMWebModel *model = [[XMWebModel alloc] init];
+    // 对于搜索内容为中文时,需要转码
     NSString *webStr = [[NSString stringWithFormat:@"%@%@",self.selectEngine,self.searchF.text] stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
     model.webURL = [NSURL URLWithString:webStr];
+    // 标记为搜索模式
+    model.searchMode = YES;
     
     if ([self.delegate respondsToSelector:@selector(openWebmoduleRequest:)])
     {
@@ -138,13 +145,16 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    // 改变频道
     self.selectEngine = self.engineArr[indexPath.row][kEngine];
+    // 然后去搜索
     [self go];
 }
 
 #pragma mark textfield delegate
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
+    // 按下键盘的return去搜索
     [self go];
     return YES;
 }

@@ -19,6 +19,9 @@
 @property (nonatomic, strong) NSURL *webURL;
 @property (nonatomic, assign) NSInteger index;
 @property (nonatomic, copy) NSString *publishTime;
+/** 是否搜索模式,搜索模式下只会打开一个webModule */
+@property (nonatomic, assign, getter=isSearchMode)  BOOL searchMode;
+
 
 /** 评论数*/
 @property (nonatomic, assign)  NSUInteger cmt_cnt;

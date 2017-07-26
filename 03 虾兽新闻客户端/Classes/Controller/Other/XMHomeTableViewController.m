@@ -63,6 +63,8 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
+    // 已改为加载在contentView,所以打开webmodule时不会disappear
+    [UIApplication sharedApplication].applicationSupportsShakeToEdit = NO;
     [self resignFirstResponder];
 }
 
@@ -164,8 +166,6 @@
     if (_isRefreshing) return;
     
     CGFloat tableViewOffet = -self.tableView.contentOffset.y;
-
-//    NSLog(@"%f",tableViewOffet);  /* 测试用,需要删除 */
     
     if (tableViewOffet > 64)
     {
@@ -252,7 +252,6 @@
     // 0,创建动画，刷新按钮旋转
 //    [self addRotationAnimation];
     //----------------------------------------
-    
     
     _isRefreshing = YES;
     // 0,设置下拉标题提示用户正在刷新
