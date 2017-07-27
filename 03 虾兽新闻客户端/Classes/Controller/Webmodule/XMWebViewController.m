@@ -10,7 +10,7 @@
 #import "XMWebModelTool.h"
 #import "MBProgressHUD+NK.h"
 
-#define XMBackImageVStarX 30
+#define XMBackImageVStarX ([UIScreen mainScreen].bounds.size.width / (3))
 
 @interface XMWebViewController ()<UIWebViewDelegate,NSURLSessionDelegate,UIGestureRecognizerDelegate>
 
@@ -46,7 +46,7 @@
     if (_web == nil)
     {
         _web = [[UIWebView alloc] init];
-        _web.frame = self.view.bounds;
+        _web.frame = CGRectMake(0, -20, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height + 20);
         _web.delegate = self;
         [self.view addSubview:_web];
         
@@ -150,7 +150,7 @@
     [super viewWillAppear:animated];
     
     // 截图
-    UIGraphicsBeginImageContextWithOptions([UIScreen mainScreen].bounds.size, YES, 1.0);
+    UIGraphicsBeginImageContextWithOptions([UIScreen mainScreen].bounds.size, YES, [UIScreen mainScreen].scale);
     [[UIApplication sharedApplication].keyWindow.layer renderInContext:UIGraphicsGetCurrentContext()];
     UIImage *img = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
@@ -236,13 +236,19 @@
     {
         // 恢复成一开始最左边的位置
         [UIView animateWithDuration:duration animations:^{
+            // web backImageV toolBar 三个要联动
             self.web.transform = CGAffineTransformIdentity;
+            self.backImageV.transform = CGAffineTransformIdentity;
+            self.toolBar.transform = CGAffineTransformIdentity;
         }];
     }else
     {
         // 将webmodule关闭掉
         [UIView animateWithDuration:duration animations:^{
+            // web backImageV toolBar 三个要联动
             self.web.transform = CGAffineTransformMakeTranslation([UIScreen mainScreen].bounds.size.width, 0);
+            self.toolBar.transform = CGAffineTransformMakeTranslation([UIScreen mainScreen].bounds.size.width, 0);
+            self.backImageV.transform = CGAffineTransformMakeTranslation(XMBackImageVStarX, 0);
         }completion:^(BOOL finished) {
             // 移除背景相框
             [self.backImageV removeFromSuperview];

@@ -10,6 +10,7 @@
 #import "XMWebTableViewCell.h"
 #import "XMChannelModel.h"
 
+#import "XMMainViewController.h"
 
 #define XMRowHeight 100
 #define XMRrfreshHeight 100
@@ -82,6 +83,8 @@
 #pragma mark - 消息横幅
 - (void)setRefreshCount:(NSString *)content
 {
+    // 只有在XMMainViewController控制器里面才需要刷新横幅
+    if (![self.navigationController.childViewControllers.lastObject isKindOfClass:[XMMainViewController class]]) return;
     UILabel *countLabel = [[UILabel alloc] init];
     [self.navigationController.view insertSubview:countLabel belowSubview:self.navigationController.navigationBar];
     CGFloat countLabelW = [UIScreen mainScreen].bounds.size.width;
@@ -314,9 +317,11 @@
     NSUInteger refreshCount = 6;
     arrM = (NSMutableArray *)[XMWebModel websWithDict:dict refreshCount:refreshCount];
     // 拼接新刷新的数据到最前面
-    if (self.webs.count)  [arrM addObjectsFromArray:self.webs];
+    if (self.webs.count)
+    {
+        [arrM addObjectsFromArray:self.webs];
+    }
     self.webs = arrM;
-    arrM = nil;
     
     if (self.webs.count > 30)
     {
@@ -325,8 +330,10 @@
         }
     }
     // 6，回到主线程设置cell的信息
-    [self backToMainQueueWithMessage:[NSString stringWithFormat:@"成功加载%ld条新闻",refreshCount]];
+    [self backToMainQueueWithMessage:[NSString stringWithFormat:@"成功加载%ld条新闻",arrM.count]];
     
+    // 清空中转数组
+    arrM = nil;
 }
 
 // 回到主线程
