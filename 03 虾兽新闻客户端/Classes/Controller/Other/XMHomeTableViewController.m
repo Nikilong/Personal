@@ -85,6 +85,8 @@
 {
     // 只有在XMMainViewController控制器里面才需要刷新横幅
     if (![self.navigationController.childViewControllers.lastObject isKindOfClass:[XMMainViewController class]]) return;
+    
+    // 创建刷新消息横幅
     UILabel *countLabel = [[UILabel alloc] init];
     [self.navigationController.view insertSubview:countLabel belowSubview:self.navigationController.navigationBar];
     CGFloat countLabelW = [UIScreen mainScreen].bounds.size.width;
