@@ -211,7 +211,7 @@ UIGestureRecognizerDelegate>
     // 创建左侧边栏
     self.leftVC = [[XMLeftTableViewController alloc] initWithStyle:UITableViewStyleGrouped];
     self.leftVC.delegate = self;
-    self.leftVC.view.frame = CGRectMake(XMLeftViewPadding, XMLeftViewPadding, XMLeftViewTotalW - 2 *XMLeftViewPadding, XMScreenH - 2 *XMLeftViewPadding);
+    self.leftVC.view.frame = CGRectMake(XMLeftViewPadding, 20, XMLeftViewTotalW - 2 *XMLeftViewPadding, XMScreenH - XMLeftViewPadding - 20);
     [self.leftContentView addSubview:self.leftVC.view];
     
     // 添加到导航条之上
@@ -257,6 +257,8 @@ UIGestureRecognizerDelegate>
     
     // 添加到导航栏的上面
     [self.navigationController.view insertSubview:self.cover aboveSubview:self.navigationController.navigationBar];
+    // 添加到导航条之上
+    [self.navigationController.view insertSubview:self.leftContentView aboveSubview:self.navigationController.navigationBar];
     
     // 设置动画弹出左侧边栏
     [UIView animateWithDuration:0.5 animations:^{

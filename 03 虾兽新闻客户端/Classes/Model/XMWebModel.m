@@ -20,6 +20,7 @@
 {
     NSMutableArray *arrM = [NSMutableArray array];
 
+    NSLog(@"%@",dict);
     for (int i = 0; i < count; i++)
     {
         XMWebModel *model = [[XMWebModel alloc] init];

@@ -29,10 +29,14 @@
 /** searchMode模块 */
 // 标记是否是searchMode
 @property (nonatomic, assign, getter=isSearchMode)  BOOL searchMode;
-// 记录加载过的request
-@property (nonatomic, strong) NSMutableArray *searchUrlArr;
+@property (nonatomic, assign)  NSUInteger *loadCount;
+@property (weak, nonatomic)  UIPanGestureRecognizer *pan;
+@property (nonatomic, assign)  CGFloat searchModePanStarX;
 
-// 标记右划开始的卫士
+
+@property (nonatomic, assign)  BOOL canLoad;
+
+// 标记右划开始的位置
 @property (nonatomic, assign)  CGFloat starX;
 
 // 截图相框
@@ -50,6 +54,9 @@
         _web.delegate = self;
         [self.view addSubview:_web];
         
+        // 初始化标记,能够加载
+        self.canLoad = YES;
+        
         // 添加长按手势
         UILongPressGestureRecognizer *longP = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
 #warning note 这里需要设置长按反应时间<0.5将系统的长按覆盖掉
@@ -61,33 +68,13 @@
         panTocCloseWebmodule.delegate = self;
         [_web addGestureRecognizer:panTocCloseWebmodule];
         
-        //获取a标签的地址,但是有的使用div和span去做容器
-//        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(aaa:)];
-//        tap.delegate = self;
-//        [self.web addGestureRecognizer:tap];
-        
+//        // 添加双指滚到最上面或者最下面手势
+//        UISwipeGestureRecognizer *swip = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(scroll:)];
+//        [_web addGestureRecognizer:swip];
+//        swip.delegate = self;
+//        swip.numberOfTouchesRequired = 2;
     }
     return _web; 
-}
-//获取a标签的地址,但是有的使用div和span去做容器
-//- (void)aaa:(UITapGestureRecognizer *)tap{
-//    if (tap.state == UIGestureRecognizerStateEnded)
-//    {
-//        CGPoint touchP = [tap locationInView:self.web];
-////        NSString *string = [NSString stringWithFormat:@"var a =document.elementFromPoint(%f,%f).tagName;alert(a)",touchP.x,touchP.y];
-//        NSString *string = @"var a=new Array();a= document.getElementsByTagName('DIV').childNodes;alert(a)";
-//        NSString *str = [self.web stringByEvaluatingJavaScriptFromString:string];
-//        NSLog(@"-----%@",str);
-//    }
-//}
-
-- (NSMutableArray *)searchUrlArr
-{
-    if (!_searchUrlArr)
-    {
-        _searchUrlArr = [[NSMutableArray alloc] init];
-    }
-    return _searchUrlArr;
 }
 
 -(UIView *)toolBar
@@ -130,10 +117,20 @@
     // 为searchmode添加左划返回手势
     if (self.searchMode)
     {
-        UISwipeGestureRecognizer *swip = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(backToPreviosURL)];
-        swip.direction = UISwipeGestureRecognizerDirectionLeft;
-        swip.delegate = self;
-        [self.web addGestureRecognizer:swip];
+        // 初始化加载统计
+        self.loadCount = 0;
+        
+        // 为searchmode添加左划返回手势
+        UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(backToPreviosURL:)];
+        pan.delegate = self;
+        [self.web addGestureRecognizer:pan];
+        self.pan = pan;
+        
+        // 添加双击页面返回手势
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(backToPreviosURL:)];
+        tap.numberOfTapsRequired = 2;
+        tap.delegate = self;
+        [self.web addGestureRecognizer:tap];
     }
     // 传递模型
     [self.web loadRequest:[NSURLRequest requestWithURL:model.webURL]];
@@ -142,7 +139,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -155,11 +151,15 @@
     UIImage *img = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     // 将截图放到底部的图片框上,否则会出现黑底
-    UIImageView *backImageV = [[UIImageView alloc] initWithImage:img];
-    backImageV.frame = CGRectMake(-XMBackImageVStarX, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
-    self.backImageV = backImageV;
+    if (!self.backImageV)
+    {
+        UIImageView *backImageV = [[UIImageView alloc] initWithImage:img];
+        backImageV.frame = CGRectMake(-XMBackImageVStarX, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
+        _backImageV = backImageV;
+    
 #warning 核心代码,需要把图片加到这上面,如果加到self.view上面会在pop之后闪一下黑色
-    [self.navigationController.view.superview insertSubview:backImageV belowSubview:self.navigationController.view];
+        [self.navigationController.view.superview insertSubview:self.backImageV belowSubview:self.navigationController.view];
+    }
     
     // 必须先截图再截屏.否则会没有导航条
     self.navigationController.navigationBarHidden = YES;
@@ -192,11 +192,10 @@
     [vc.navigationController pushViewController:webVC animated:YES];
 }
 
-#pragma mark - 右划关闭webmodule
+#pragma mark - 手势
+#pragma mark 右划关闭webmodule
 - (void)panToCloseWebmodule:(UIPanGestureRecognizer *)pan
 {
-    
-    if (self.navigationController.childViewControllers.count == 1) return;
     // 手势加载web上面,web随着手的滑动而滑动,需要参考一个不懂的坐标,需要转换坐标系
     CGFloat currentX = [self.web convertPoint:[pan locationInView:self.web] toView:self.view].x;
     switch (pan.state) {
@@ -259,8 +258,7 @@
     }
 }
 
-
-#pragma mark - ViewControllerDelegate的代理方法
+#pragma mark - 滚动web
 
 - (void)webViewDidScrollToBottom
 {
@@ -311,7 +309,6 @@
  */
 - (void)showShareVC
 {
-    return;
     // 取出分享参数
     NSURL *url = self.model.webURL;
     NSString *title = self.model.title;
@@ -391,50 +388,95 @@
 #pragma mark - UIWebViewDelegate
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
-    NSString *urlString = request.URL.absoluteString;
-    // 点击一个网络连接时,会多次触发该代理方法,要对网络请求进行过滤
-    if (!self.searchMode && ![urlString isEqualToString:self.currentURL.absoluteString] && ![urlString isEqualToString:@"about:blank"] && ![urlString containsString:@"ucbrowser://"] && ![urlString containsString:@"webview/static/"] && ![urlString containsString:@"m.sp.uczzd.cn"] && ![urlString containsString:@"/app"] && ![urlString containsString:@".js"])
+    // 当处于searchMode模式或者还没有加载完成网页的时候允许加载网页
+    if (self.searchMode) // 必须先判断是否是searchMode
+    {
+        if (navigationType == UIWebViewNavigationTypeBackForward)
+        {
+            self.loadCount--;
+#warning undo
+//            if (self.loadCount == 0)
+//            {
+//                [self.web removeGestureRecognizer:self.pan];
+//            }
+        }
+        return YES;
+    }else if(self.canLoad)
+    {
+        return YES;
+    }else
     {
         NSLog(@"=======%@",self.currentURL.absoluteString);
-        NSLog(@"=======%@",urlString);
-        XMWebModel *model = [[XMWebModel alloc] init];
-        model.webURL = request.URL;
-        
-        // 调用方法打开新的webmodule
-        [XMWebViewController openWebmoduleWithModel:model viewController:self];
-
-        // 打开一个新的webmodule,原网站保持原来的url申请
+        NSLog(@"=======%@",request.URL.absoluteString);
+        // 加载完成之后如果下一个网络请求不一样就是点击了新的网页,同时需要保证链接能打开
+        if (![self.currentURL.absoluteString isEqualToString:request.URL.absoluteString] && [[UIApplication sharedApplication] canOpenURL:request.URL])
+        {
+            XMWebModel *model = [[XMWebModel alloc] init];
+            model.webURL = request.URL;
+            
+            // 调用方法打开新的webmodule
+            [XMWebViewController openWebmoduleWithModel:model viewController:self];
+        }
+        // 当网页完成加载之后,禁止再重新加载
         return NO;
     }
-    
-    return YES;
 }
 
-- (void)webViewDidFinishLoad:(UIWebView *)webView {
-
+- (void)webViewDidFinishLoad:(UIWebView *)webView
+{
+    // 禁止完成加载之后再去加载网页
+    if (!self.searchMode)
+    {
+        self.canLoad = NO;
+    }else
+    {
+        if (![self.web isLoading])
+        {
+#warning undo 回退的时候也会触发这个方法
+            self.loadCount++;
+        }
+    }
+    // 记录当前网页的信息
     self.model.title = [self.web stringByEvaluatingJavaScriptFromString:@"document.title"];
     self.webHeight = [[webView stringByEvaluatingJavaScriptFromString:@"document.body.offsetHeight"] intValue];
-    // 当请求不一样的时候添加进数组保存起来
-    if (![self.searchUrlArr.lastObject isEqual:webView.request])
-    {
-        [self.searchUrlArr addObject:webView.request];
-    }
-    //    NSString *currentURL = [webView stringByEvaluatingJavaScriptFromString:@"document.location.href"];
-    //    NSString *urlString = webView.request.URL.absoluteString;
-//    NSLog(@"=======%@",urlString);
-//    NSLog(@"=======%@",currentURL);
-    
 }
 
 #pragma mark - searchMode的返回处理
-/** 左划swipe手势触发的方法 */
-- (void)backToPreviosURL
+/** searchMode下手势触发的方法 */
+- (void)backToPreviosURL:(UIGestureRecognizer *)gesture
 {
-    // 返回到根页面应该屏蔽手势
-    if (self.searchUrlArr.count == 1) return;
-    // 取出上一个url请求在发送申请
-    [self.searchUrlArr removeLastObject];
-    [self.web loadRequest:self.searchUrlArr.lastObject];
+    if ([gesture isKindOfClass:[UIPanGestureRecognizer class]])
+    {
+        // 如果是pan手势,需要根据左划还是右划决定返回还是向前
+        switch (gesture.state) {
+            case UIGestureRecognizerStateBegan:
+            {
+                self.searchModePanStarX = [gesture locationInView:self.web].x;
+                break;
+            }
+            case UIGestureRecognizerStateEnded:
+            {
+                CGFloat panShift = [gesture locationInView:self.web].x - self.searchModePanStarX;
+                // 右划且滑动距离大于50,表示应该返回,反之左划并且距离大于50表示向前
+                if (panShift > 50)
+                {
+                    [self.web goBack];
+                }else if(panShift < -50)
+                {
+                    [self.web goForward];
+                }
+                break;
+            }
+            default:
+                break;
+        }
+    }else  // 双击返回手势
+    {
+        if(gesture.state == UIGestureRecognizerStateEnded)
+        {
+            [self.web goBack];
+        }
+    }
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer

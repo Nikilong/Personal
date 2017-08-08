@@ -318,6 +318,12 @@
     NSMutableArray *arrM = [NSMutableArray array];
     NSUInteger refreshCount = 6;
     arrM = (NSMutableArray *)[XMWebModel websWithDict:dict refreshCount:refreshCount];
+    
+    /* 转码打印json数据,用于分析数据
+//    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:NSJSONWritingPrettyPrinted error:nil];
+//    NSString *jsonStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+//    NSLog(@"这是全部数据%@",jsonStr);
+     */
     // 拼接新刷新的数据到最前面
     if (self.webs.count)
     {

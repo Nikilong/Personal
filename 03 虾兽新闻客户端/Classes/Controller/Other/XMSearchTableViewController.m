@@ -111,12 +111,13 @@
     // 标记为搜索模式
     model.searchMode = YES;
     
-    if ([self.delegate respondsToSelector:@selector(openWebmoduleRequest:)])
-    {
-        [self.delegate openWebmoduleRequest:model];
-    }
-    
-    [self cancel];
+    // 先dismiss掉self,然后再通知代理去加载网页
+    [self dismissViewControllerAnimated:YES completion:^{
+        if ([self.delegate respondsToSelector:@selector(openWebmoduleRequest:)])
+        {
+            [self.delegate openWebmoduleRequest:model];
+        }
+    }];
 }
 
 - (void)cancel

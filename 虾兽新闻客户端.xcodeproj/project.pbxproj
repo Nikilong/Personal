@@ -19,6 +19,7 @@
 		202C84F31F2624AD0055FD7D /* XMWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 202C84EC1F2624AD0055FD7D /* XMWebViewController.m */; };
 		202C84F61F2624FC0055FD7D /* XMNavWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 202C84F51F2624FC0055FD7D /* XMNavWebViewController.m */; };
 		2056D8731E8D67B200EB4BB5 /* XMConerAccessoryView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2056D8721E8D67B200EB4BB5 /* XMConerAccessoryView.m */; };
+		20A3BCFF1F2E2D7400ED1699 /* XMAdvance.m in Sources */ = {isa = PBXBuildFile; fileRef = 20A3BCFE1F2E2D7400ED1699 /* XMAdvance.m */; };
 		20BA35661E89597D00477BCB /* XMFloatWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 20BA35651E89597D00477BCB /* XMFloatWindow.m */; };
 		20F112141E864FC000E64A70 /* web.plist in Resources */ = {isa = PBXBuildFile; fileRef = 20F112131E864FC000E64A70 /* web.plist */; };
 		20F112171E86697400E64A70 /* XMChannelModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 20F112161E86697400E64A70 /* XMChannelModel.m */; };
@@ -97,6 +98,8 @@
 		2056D8711E8D67B200EB4BB5 /* XMConerAccessoryView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMConerAccessoryView.h; sourceTree = "<group>"; };
 		2056D8721E8D67B200EB4BB5 /* XMConerAccessoryView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMConerAccessoryView.m; sourceTree = "<group>"; };
 		2099EB7C1F19DCD500F8BD42 /* XMOpenWebmoduleProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMOpenWebmoduleProtocol.h; sourceTree = "<group>"; };
+		20A3BCFD1F2E2D7400ED1699 /* XMAdvance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMAdvance.h; sourceTree = "<group>"; };
+		20A3BCFE1F2E2D7400ED1699 /* XMAdvance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMAdvance.m; sourceTree = "<group>"; };
 		20BA35641E89597D00477BCB /* XMFloatWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMFloatWindow.h; sourceTree = "<group>"; };
 		20BA35651E89597D00477BCB /* XMFloatWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMFloatWindow.m; sourceTree = "<group>"; };
 		20F112131E864FC000E64A70 /* web.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = web.plist; sourceTree = "<group>"; };
@@ -337,6 +340,8 @@
 				842970FC1E654644002BDBC0 /* AppDelegate.h */,
 				842970FD1E654644002BDBC0 /* AppDelegate.m */,
 				2099EB7C1F19DCD500F8BD42 /* XMOpenWebmoduleProtocol.h */,
+				20A3BCFD1F2E2D7400ED1699 /* XMAdvance.h */,
+				20A3BCFE1F2E2D7400ED1699 /* XMAdvance.m */,
 			);
 			path = Other;
 			sourceTree = "<group>";
@@ -486,7 +491,7 @@
 				TargetAttributes = {
 					849D26ED1E640E3200F0CA5D = {
 						CreatedOnToolsVersion = 8.1;
-						DevelopmentTeam = TG279FFVZS;
+						DevelopmentTeam = S3RSD3BB8U;
 						ProvisioningStyle = Automatic;
 					};
 					849D27061E640E3300F0CA5D = {
@@ -575,6 +580,7 @@
 				8419743A1E67103C004BCC3C /* SDWebImageCompat.m in Sources */,
 				841974421E67103C004BCC3C /* UIImage+MultiFormat.m in Sources */,
 				841974451E67103C004BCC3C /* UIImageView+WebCache.m in Sources */,
+				20A3BCFF1F2E2D7400ED1699 /* XMAdvance.m in Sources */,
 				20F112171E86697400E64A70 /* XMChannelModel.m in Sources */,
 				84BA25591E65C7A800C8B204 /* XMWebTableViewCell.m in Sources */,
 				8419743C1E67103C004BCC3C /* SDWebImageDownloader.m in Sources */,
@@ -734,7 +740,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = TG279FFVZS;
+				DEVELOPMENT_TEAM = S3RSD3BB8U;
 				INFOPLIST_FILE = "03 虾兽新闻客户端/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -749,7 +755,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = TG279FFVZS;
+				DEVELOPMENT_TEAM = S3RSD3BB8U;
 				INFOPLIST_FILE = "03 虾兽新闻客户端/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
