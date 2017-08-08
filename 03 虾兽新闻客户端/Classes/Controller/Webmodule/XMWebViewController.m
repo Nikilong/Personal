@@ -131,6 +131,12 @@
         tap.numberOfTapsRequired = 2;
         tap.delegate = self;
         [self.web addGestureRecognizer:tap];
+        
+        // 添加五次点击closeWebmodule
+        UITapGestureRecognizer *tapRemove = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(closeWebModule)];
+        tapRemove.numberOfTapsRequired = 5;
+        tapRemove.delegate = self;
+        [self.web addGestureRecognizer:tapRemove];
     }
     // 传递模型
     [self.web loadRequest:[NSURLRequest requestWithURL:model.webURL]];
@@ -441,6 +447,33 @@
     self.webHeight = [[webView stringByEvaluatingJavaScriptFromString:@"document.body.offsetHeight"] intValue];
 }
 
+#pragma mark - uigestureDelegate
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    // 当触发swipe手势时,可能会触发pan手势等手势
+    if ([gestureRecognizer isKindOfClass:[UISwipeGestureRecognizer class]])
+    {
+        // swip根据state会触发两次,或者会同时触发pan手势,这都是可以的
+        if ([otherGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]] || [otherGestureRecognizer isKindOfClass:[UISwipeGestureRecognizer class]])
+        {
+            return YES;
+        }
+        // 当web页面有滚动图片时,还会触发一个页面的类似于pan的手势,此时应该屏蔽swipe手势
+        return NO;
+    }
+ 
+    // 当滑动手势伴随着其他手势,例如图片滑动等手势时,禁止右划关闭webmodule
+    if ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]])
+    {
+        if (otherGestureRecognizer)
+        {
+            return NO;
+        }
+    }
+    return YES;
+    
+}
+
 #pragma mark - searchMode的返回处理
 /** searchMode下手势触发的方法 */
 - (void)backToPreviosURL:(UIGestureRecognizer *)gesture
@@ -478,31 +511,11 @@
         }
     }
 }
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+/** 临时方法,将webmodule关闭掉 */
+- (void)closeWebModule
 {
-    // 当触发swipe手势时,可能会触发pan手势等手势
-    if ([gestureRecognizer isKindOfClass:[UISwipeGestureRecognizer class]])
-    {
-        // swip根据state会触发两次,或者会同时触发pan手势,这都是可以的
-        if ([otherGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]] || [otherGestureRecognizer isKindOfClass:[UISwipeGestureRecognizer class]])
-        {
-            return YES;
-        }
-        // 当web页面有滚动图片时,还会触发一个页面的类似于pan的手势,此时应该屏蔽swipe手势
-        return NO;
-    }
- 
-    // 当滑动手势伴随着其他手势,例如图片滑动等手势时,禁止右划关闭webmodule
-    if ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]])
-    {
-        if (otherGestureRecognizer)
-        {
-            return NO;
-        }
-    }
-    return YES;
-    
+    [self.navigationController popViewControllerAnimated:YES];
 }
+
 
 @end
