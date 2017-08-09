@@ -31,9 +31,10 @@
 @property (nonatomic, assign, getter=isSearchMode)  BOOL searchMode;
 @property (nonatomic, assign)  NSUInteger *loadCount;
 @property (weak, nonatomic)  UIPanGestureRecognizer *pan;
-@property (nonatomic, assign)  CGFloat searchModePanStarX;
+@property (nonatomic, assign)  BOOL lastPage;
 
 
+// 防止多次加载
 @property (nonatomic, assign)  BOOL canLoad;
 
 // 标记右划开始的位置
@@ -399,12 +400,7 @@
     {
         if (navigationType == UIWebViewNavigationTypeBackForward)
         {
-            self.loadCount--;
-#warning undo
-//            if (self.loadCount == 0)
-//            {
-//                [self.web removeGestureRecognizer:self.pan];
-//            }
+            self.lastPage = NO;
         }
         return YES;
     }else if(self.canLoad)
@@ -431,17 +427,8 @@
 - (void)webViewDidFinishLoad:(UIWebView *)webView
 {
     // 禁止完成加载之后再去加载网页
-    if (!self.searchMode)
-    {
-        self.canLoad = NO;
-    }else
-    {
-        if (![self.web isLoading])
-        {
-#warning undo 回退的时候也会触发这个方法
-            self.loadCount++;
-        }
-    }
+    self.canLoad = NO;
+    
     // 记录当前网页的信息
     self.model.title = [self.web stringByEvaluatingJavaScriptFromString:@"document.title"];
     self.webHeight = [[webView stringByEvaluatingJavaScriptFromString:@"document.body.offsetHeight"] intValue];
@@ -484,12 +471,14 @@
         switch (gesture.state) {
             case UIGestureRecognizerStateBegan:
             {
-                self.searchModePanStarX = [gesture locationInView:self.web].x;
+                self.starX = [gesture locationInView:self.web].x;
                 break;
             }
             case UIGestureRecognizerStateEnded:
             {
-                CGFloat panShift = [gesture locationInView:self.web].x - self.searchModePanStarX;
+                // 标记是否最后一页
+                self.lastPage = YES;
+                CGFloat panShift = [gesture locationInView:self.web].x - self.starX;
                 // 右划且滑动距离大于50,表示应该返回,反之左划并且距离大于50表示向前
                 if (panShift > 50)
                 {
@@ -497,6 +486,15 @@
                 }else if(panShift < -50)
                 {
                     [self.web goForward];
+                }else  // 距离不够,相当于取消该次手势
+                {
+                    self.lastPage = NO;
+                }
+                
+                // 当经过上面的操作后仍是yes,表示没有触发前进或者回退以及取消,表示当前已经是最后一页
+                if (self.lastPage)
+                {
+                    [self.web removeGestureRecognizer:self.pan];
                 }
                 break;
             }
