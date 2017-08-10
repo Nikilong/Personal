@@ -222,12 +222,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "03 &#x867e;&#x517d;&#x65b0;&#x95fb;&#x5ba2;&#x6237;&#x7aef;/Classes/Controller/Webmodule/XMWebViewController.m"
-            timestampString = "523901517.382642"
+            timestampString = "524075422.70243"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "284"
-            endingLineNumber = "284"
-            landmarkName = "-saveWeb"
+            startingLineNumber = "403"
+            endingLineNumber = "403"
+            landmarkName = "-gestureRecognizer:shouldRecognizeSimultaneouslyWithGestureRecognizer:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -238,27 +238,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "03 &#x867e;&#x517d;&#x65b0;&#x95fb;&#x5ba2;&#x6237;&#x7aef;/Classes/Controller/Webmodule/XMWebViewController.m"
-            timestampString = "523901517.382642"
+            timestampString = "524075422.70243"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "399"
-            endingLineNumber = "399"
-            landmarkName = "-webView:shouldStartLoadWithRequest:navigationType:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "03 &#x867e;&#x517d;&#x65b0;&#x95fb;&#x5ba2;&#x6237;&#x7aef;/Classes/Controller/Webmodule/XMWebViewController.m"
-            timestampString = "523901517.382642"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "442"
-            endingLineNumber = "442"
+            startingLineNumber = "391"
+            endingLineNumber = "391"
             landmarkName = "-webViewDidFinishLoad:"
             landmarkType = "7">
          </BreakpointContent>
@@ -270,11 +254,43 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "03 &#x867e;&#x517d;&#x65b0;&#x95fb;&#x5ba2;&#x6237;&#x7aef;/Classes/Controller/Webmodule/XMWebViewController.m"
-            timestampString = "523901517.382642"
+            timestampString = "524075422.70243"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "404"
-            endingLineNumber = "404"
+            startingLineNumber = "348"
+            endingLineNumber = "348"
+            landmarkName = "-webView:shouldStartLoadWithRequest:navigationType:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "03 &#x867e;&#x517d;&#x65b0;&#x95fb;&#x5ba2;&#x6237;&#x7aef;/Classes/Controller/Webmodule/XMWebViewController.m"
+            timestampString = "524075422.70243"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "547"
+            endingLineNumber = "547"
+            landmarkName = "-panToBackForward:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "03 &#x867e;&#x517d;&#x65b0;&#x95fb;&#x5ba2;&#x6237;&#x7aef;/Classes/Controller/Webmodule/XMWebViewController.m"
+            timestampString = "524075422.70243"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "369"
+            endingLineNumber = "369"
             landmarkName = "-webView:shouldStartLoadWithRequest:navigationType:"
             landmarkType = "7">
          </BreakpointContent>

@@ -175,7 +175,7 @@
     if (tableViewOffet > 64)
     {
         // 取消下拉横幅隐藏
-        _headerRefreshV.hidden = NO;
+        self.headerRefreshV.hidden = NO;
     }else if (tableViewOffet == 64)
     {
         // 隐藏刷新
@@ -185,7 +185,7 @@
     // 如果下拉到固定值修改标题提示用户
     if (tableViewOffet > XMRrfreshHeight && _isDragging)
     {
-        _headerRefreshV.enabled = NO;
+        self.headerRefreshV.enabled = NO;
     }
 
 }
@@ -244,26 +244,23 @@
     // 通知代理发送网络请求
     if ([self.delegate respondsToSelector:@selector(openWebmoduleRequest:)])
     {
-        [_delegate openWebmoduleRequest:model];
+        [self.delegate openWebmoduleRequest:model];
     }
 }
 
 #pragma mark - 刷新表格数据
 - (void)refresh
 {
-    //---------------旧的刷新动画---------------
-    // 不允许连续多次点击刷新按钮
-//    self.btnRefresh.userInteractionEnabled = NO;
-    // 0,创建动画，刷新按钮旋转
-//    [self addRotationAnimation];
-    //----------------------------------------
-    
-    _isRefreshing = YES;
+    // 当前正在刷新则返回避免连续刷新
+    if(self.isRefreshing) return;
+    // 开启网络加载
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+    self.isRefreshing = YES;
     // 0,设置下拉标题提示用户正在刷新
-    _headerRefreshV.enabled = YES;
-    _headerRefreshV.selected = YES;
+    self.headerRefreshV.enabled = YES;
+    self.headerRefreshV.selected = YES;
     // 添加动画
-    [_headerRefreshV.imageView.layer addAnimation:[self addRotationAnimation] forKey:nil];
+    [self.headerRefreshV.imageView.layer addAnimation:[self addRotationAnimation] forKey:nil];
     
     // 1,创建session
     NSURLSessionConfiguration *cfg = [NSURLSessionConfiguration defaultSessionConfiguration];
@@ -271,13 +268,15 @@
     
     // 2,创建url
     // 取出当前频道
-    XMChannelModel *model = [XMChannelModel channels][_currentChannel];
+    XMChannelModel *model = [XMChannelModel channels][self.currentChannel];
     NSURL *idUrl = [NSURL URLWithString:model.url];
     
     // 3,创建一个下载任务，类型为NSURLSessionDataTask
     NSURLSessionDataTask *task = [session dataTaskWithURL:idUrl  completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error)
       {
-          _isRefreshing = NO;
+          // 关闭网络加载
+          [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+          self.isRefreshing = NO;
 
           if (!error)
           {
@@ -330,6 +329,8 @@
         [arrM addObjectsFromArray:self.webs];
     }
     self.webs = arrM;
+    // 清空中转数组
+    arrM = nil;
     
     if (self.webs.count > 30)
     {
@@ -338,10 +339,7 @@
         }
     }
     // 6，回到主线程设置cell的信息
-    [self backToMainQueueWithMessage:[NSString stringWithFormat:@"成功加载%ld条新闻",arrM.count]];
-    
-    // 清空中转数组
-    arrM = nil;
+    [self backToMainQueueWithMessage:[NSString stringWithFormat:@"成功加载%ld条新闻",refreshCount]];
 }
 
 // 回到主线程
@@ -356,11 +354,11 @@
             self.tableView.contentInset = UIEdgeInsetsMake(64, 0, 0, 0);
         }completion:^(BOOL finished) {
             // 移除动画
-            [_headerRefreshV.imageView.layer removeAllAnimations];
+            [self.headerRefreshV.imageView.layer removeAllAnimations];
             // 隐藏刷新
             self.headerRefreshV.hidden = YES;
             // 恢复标题
-            _headerRefreshV.selected = NO;
+            self.headerRefreshV.selected = NO;
             
             // 滚到最顶部
             [self upToTop];

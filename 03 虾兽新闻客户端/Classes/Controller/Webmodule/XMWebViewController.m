@@ -11,6 +11,7 @@
 #import "MBProgressHUD+NK.h"
 
 #define XMBackImageVStarX ([UIScreen mainScreen].bounds.size.width / (3))
+#define XMSearchModePanDistance 70
 
 @interface XMWebViewController ()<UIWebViewDelegate,NSURLSessionDelegate,UIGestureRecognizerDelegate>
 
@@ -19,6 +20,7 @@
 
 /** 工具条 */
 @property (nonatomic, strong) UIView *toolBar;
+//@property (weak, nonatomic)  UIButton *saveBtn;
 
 /** 网页view */
 @property (nonatomic, strong) UIWebView *web;
@@ -29,9 +31,9 @@
 /** searchMode模块 */
 // 标记是否是searchMode
 @property (nonatomic, assign, getter=isSearchMode)  BOOL searchMode;
-@property (nonatomic, assign)  NSUInteger *loadCount;
-@property (weak, nonatomic)  UIPanGestureRecognizer *pan;
-@property (nonatomic, assign)  BOOL lastPage;
+@property (nonatomic, strong)  UIPanGestureRecognizer *panSearchMode;
+@property (weak, nonatomic)  UIImageView *backImgV;
+@property (weak, nonatomic)  UIImageView *forwardImgV;
 
 
 // 防止多次加载
@@ -39,6 +41,7 @@
 
 // 标记右划开始的位置
 @property (nonatomic, assign)  CGFloat starX;
+@property (weak, nonatomic)  UIPanGestureRecognizer *panToCloseWebmodule;
 
 // 截图相框
 @property (weak, nonatomic)  UIImageView *backImageV;
@@ -65,9 +68,10 @@
         [_web addGestureRecognizer:longP];
         
         // 添加右划关闭当前webmodule手势
-        UIPanGestureRecognizer *panTocCloseWebmodule = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panToCloseWebmodule:)];
-        panTocCloseWebmodule.delegate = self;
-        [_web addGestureRecognizer:panTocCloseWebmodule];
+        UIPanGestureRecognizer *panToCloseWebmodule = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panToCloseWebmodule:)];
+        panToCloseWebmodule.delegate = self;
+        self.panToCloseWebmodule = panToCloseWebmodule;
+        [_web addGestureRecognizer:panToCloseWebmodule];
         
 //        // 添加双指滚到最上面或者最下面手势
 //        UISwipeGestureRecognizer *swip = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(scroll:)];
@@ -83,28 +87,49 @@
     if (!_toolBar)
     {
         CGFloat toolbarH = 35;
-        UIView *toolBar = [[UIView alloc] initWithFrame:CGRectMake(0, [UIScreen mainScreen].bounds.size.height - toolbarH, [UIScreen mainScreen].bounds.size.width, toolbarH)];
+        UIView *toolBar = [[UIView alloc] init];
 //        toolBar.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"tool_background"]];
         toolBar.backgroundColor = [UIColor clearColor];
         _toolBar = toolBar;
-        
-        // 添加收藏按钮
-        UIButton *addBtn = [UIButton buttonWithType:UIButtonTypeContactAdd];
-        [addBtn addTarget:self action:@selector(saveWeb) forControlEvents:UIControlEventTouchUpInside];
-        [toolBar addSubview:addBtn];
-        
-        CGRect addBtnF = CGRectMake(0, 0, 35, 35);
-        addBtn.frame = addBtnF;
         
         // 添加滚到最底部
         UIButton *downBtn = [[UIButton alloc] init];
         [downBtn setImage:[UIImage imageNamed:@"down"] forState:UIControlStateNormal];
         [downBtn addTarget:self action:@selector(webViewDidScrollToBottom) forControlEvents:UIControlEventTouchUpInside];
         [toolBar addSubview:downBtn];
-        
-        CGRect downBtnF = CGRectMake([UIScreen mainScreen].bounds.size.width - 35, 0, 35, 35);
+        CGRect downBtnF = CGRectMake(0, 0, toolbarH, toolbarH);
         downBtn.frame = downBtnF;
         
+        // 添加滚到最顶部
+        UIButton *upBtn = [[UIButton alloc] init];
+        [upBtn setImage:[UIImage imageNamed:@"up"] forState:UIControlStateNormal];
+        [upBtn addTarget:self action:@selector(webViewDidScrollToTop) forControlEvents:UIControlEventTouchUpInside];
+        [toolBar addSubview:upBtn];
+        CGRect upBtnF = CGRectMake(CGRectGetMaxX(downBtnF), 0, toolbarH, toolbarH);
+        upBtn.frame = upBtnF;
+        
+        // 添加收藏按钮
+        UIButton *addBtn = [[UIButton alloc] init];
+//        self.saveBtn = addBtn;
+        [addBtn addTarget:self action:@selector(saveWeb:) forControlEvents:UIControlEventTouchUpInside];
+        [addBtn setImage:[UIImage imageNamed:@"save_normal"] forState:UIControlStateNormal];
+        [addBtn setImage:[UIImage imageNamed:@"save_selected"] forState:UIControlStateSelected];
+        [toolBar addSubview:addBtn];
+        CGRect addBtnF = CGRectMake(CGRectGetMaxX(upBtnF) + toolbarH, 0, toolbarH, toolbarH);
+        addBtn.frame = addBtnF;
+        
+        // 添加强制关闭webmodule按钮
+        UIButton *backBtn = [[UIButton alloc] init];
+        [backBtn setImage:[UIImage imageNamed:@"clear"] forState:UIControlStateNormal];
+        [backBtn addTarget:self action:@selector(closeWebModule) forControlEvents:UIControlEventTouchUpInside];
+        [toolBar addSubview:backBtn];
+        CGRect backBtnF = CGRectMake(CGRectGetMaxX(addBtnF) + toolbarH, 0, toolbarH, toolbarH);
+        backBtn.frame = backBtnF;
+        
+        // 计算toolbar居中
+        CGFloat toolBarW = CGRectGetMaxX(backBtnF);
+        CGFloat toolBarX = ([UIScreen mainScreen].bounds.size.width - toolBarW) * 0.5;
+        _toolBar.frame = CGRectMake(toolBarX, [UIScreen mainScreen].bounds.size.height - toolbarH, toolBarW, toolbarH);
     }
     return _toolBar;
 }
@@ -115,32 +140,13 @@
     // 初始化参数
     self.currentURL = model.webURL;
     self.searchMode = model.searchMode;
+    // 传递模型
+    [self.web loadRequest:[NSURLRequest requestWithURL:model.webURL]];
     // 为searchmode添加左划返回手势
     if (self.searchMode)
     {
-        // 初始化加载统计
-        self.loadCount = 0;
-        
-        // 为searchmode添加左划返回手势
-        UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(backToPreviosURL:)];
-        pan.delegate = self;
-        [self.web addGestureRecognizer:pan];
-        self.pan = pan;
-        
-        // 添加双击页面返回手势
-        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(backToPreviosURL:)];
-        tap.numberOfTapsRequired = 2;
-        tap.delegate = self;
-        [self.web addGestureRecognizer:tap];
-        
-        // 添加五次点击closeWebmodule
-        UITapGestureRecognizer *tapRemove = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(closeWebModule)];
-        tapRemove.numberOfTapsRequired = 5;
-        tapRemove.delegate = self;
-        [self.web addGestureRecognizer:tapRemove];
+        [self initSearchMode];
     }
-    // 传递模型
-    [self.web loadRequest:[NSURLRequest requestWithURL:model.webURL]];
     [self.view addSubview:self.toolBar];
 }
 
@@ -199,72 +205,6 @@
     [vc.navigationController pushViewController:webVC animated:YES];
 }
 
-#pragma mark - 手势
-#pragma mark 右划关闭webmodule
-- (void)panToCloseWebmodule:(UIPanGestureRecognizer *)pan
-{
-    // 手势加载web上面,web随着手的滑动而滑动,需要参考一个不懂的坐标,需要转换坐标系
-    CGFloat currentX = [self.web convertPoint:[pan locationInView:self.web] toView:self.view].x;
-    switch (pan.state) {
-        case UIGestureRecognizerStateBegan: // 拖拽开始
-            // 记录一开始的触点,
-            self.starX = [self.web convertPoint:[pan locationInView:self.web] toView:self.view].x;
-            break;
-            
-        case UIGestureRecognizerStateChanged: // 拖拽改变
-        {
-            if (currentX < self.starX) return;
-            // 一开始web在最左边,因此直接加上滑动距离即可
-            self.web.transform = CGAffineTransformMakeTranslation(currentX - self.starX, 0);
-            // 同时让toolbar跟着移动
-            self.toolBar.transform = CGAffineTransformMakeTranslation(currentX - self.starX, 0);;
-            // 同时让backImageV跟着移动
-            self.backImageV.transform = CGAffineTransformMakeTranslation((currentX - self.starX) * XMBackImageVStarX / [UIScreen mainScreen].bounds.size.width, 0);
-            // 同时将透明度随着距离改变(效果不好,多开webmodule会由于上层变透明会看到上上层)
-          //self.backImageV.alpha = (currentX / [UIScreen mainScreen].bounds.size.width)* 2/3 + 0.33;
-            break;
-        }
-        case UIGestureRecognizerStateEnded: // 拖拽结束
-        {
-            // 拖拽距离超过rightContentView的相对位置0.3时决定弹回还是隐藏
-            [self showRightContentView:self.web.frame.origin.x < [UIScreen mainScreen].bounds.size.width * 0.3];
-            break;
-        }
-        default:
-            break;
-    }
-}
-
-- (void)showRightContentView:(BOOL)canShow
-{
-    CGFloat duration = 0.30f;
-    if (canShow) // 显示
-    {
-        // 恢复成一开始最左边的位置
-        [UIView animateWithDuration:duration animations:^{
-            // web backImageV toolBar 三个要联动
-            self.web.transform = CGAffineTransformIdentity;
-            self.backImageV.transform = CGAffineTransformIdentity;
-            self.toolBar.transform = CGAffineTransformIdentity;
-        }];
-    }else
-    {
-        // 将webmodule关闭掉
-        [UIView animateWithDuration:duration animations:^{
-            // web backImageV toolBar 三个要联动
-            self.web.transform = CGAffineTransformMakeTranslation([UIScreen mainScreen].bounds.size.width, 0);
-            self.toolBar.transform = CGAffineTransformMakeTranslation([UIScreen mainScreen].bounds.size.width, 0);
-            self.backImageV.transform = CGAffineTransformMakeTranslation(XMBackImageVStarX, 0);
-        }completion:^(BOOL finished) {
-            // 移除背景相框
-            [self.backImageV removeFromSuperview];
-            // 移到最右边结束时pop掉当前vc
-#warning note 这里必须关闭动画效果,不然会有重复的pop效果
-            [self.navigationController popViewControllerAnimated:NO];
-        }];
-    }
-}
-
 #pragma mark - 滚动web
 
 - (void)webViewDidScrollToBottom
@@ -280,12 +220,20 @@
 
 
 #pragma mark - 保存网页按钮
-- (void)saveWeb
+- (void)saveWeb:(UIButton *)button
 {
-    // 保存网站到本地
-    [XMWebModelTool saveWebModel:self.model];
-    // 提示用户保存网页成功
-    [MBProgressHUD showSuccess:@"已成功添加到收藏夹" toView:self.web];
+    // 取反选择状态
+    button.selected = !button.isSelected;
+#warning undo 重复收藏该网页,以及searchMode下的切换
+    if (button.isSelected)
+    {
+        // 保存的网站需要取消searchMode标记
+        self.model.searchMode = NO;
+        // 保存网站到本地
+        [XMWebModelTool saveWebModel:self.model];
+        // 提示用户保存网页成功
+        [MBProgressHUD showSuccess:@"已成功添加到收藏夹" toView:self.web];
+    }
 }
 
 #pragma mark - 长按保存网页图片/弹出分享
@@ -395,20 +343,25 @@
 #pragma mark - UIWebViewDelegate
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
+    // 开启网络加载
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+    // 过滤名单
+    if([request.URL.absoluteString containsString:@".js"])
+    {
+        // 关闭网络加载
+        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+        return NO;
+    }
     // 当处于searchMode模式或者还没有加载完成网页的时候允许加载网页
     if (self.searchMode) // 必须先判断是否是searchMode
     {
-        if (navigationType == UIWebViewNavigationTypeBackForward)
-        {
-            self.lastPage = NO;
-        }
         return YES;
     }else if(self.canLoad)
     {
         return YES;
     }else
-    {
-        NSLog(@"=======%@",self.currentURL.absoluteString);
+    {//feed.baidu.com
+//        NSLog(@"=======%@",self.currentURL.absoluteString);
         NSLog(@"=======%@",request.URL.absoluteString);
         // 加载完成之后如果下一个网络请求不一样就是点击了新的网页,同时需要保证链接能打开
         if (![self.currentURL.absoluteString isEqualToString:request.URL.absoluteString] && [[UIApplication sharedApplication] canOpenURL:request.URL])
@@ -418,7 +371,9 @@
             
             // 调用方法打开新的webmodule
             [XMWebViewController openWebmoduleWithModel:model viewController:self];
+            // 关闭网络加载
         }
+        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
         // 当网页完成加载之后,禁止再重新加载
         return NO;
     }
@@ -426,9 +381,15 @@
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView
 {
+    // 关闭网络加载
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     // 禁止完成加载之后再去加载网页
     self.canLoad = NO;
-    
+    // 加载完成之后判断是否需要添加searchMode的pan手势
+    if(self.web.canGoBack || self.web.canGoForward)
+    {
+        [self.web addGestureRecognizer:self.panSearchMode];
+    }
     // 记录当前网页的信息
     self.model.title = [self.web stringByEvaluatingJavaScriptFromString:@"document.title"];
     self.webHeight = [[webView stringByEvaluatingJavaScriptFromString:@"document.body.offsetHeight"] intValue];
@@ -461,9 +422,95 @@
     
 }
 
+#pragma mark - 手势
+#pragma mark 右划关闭webmodule
+- (void)panToCloseWebmodule:(UIPanGestureRecognizer *)pan
+{
+    // 手势加载web上面,web随着手的滑动而滑动,需要参考一个不懂的坐标,需要转换坐标系
+    CGFloat currentX = [self.web convertPoint:[pan locationInView:self.web] toView:self.view].x;
+    switch (pan.state) {
+        case UIGestureRecognizerStateBegan: // 拖拽开始
+            // 记录一开始的触点,
+            self.starX = [self.web convertPoint:[pan locationInView:self.web] toView:self.view].x;
+            break;
+            
+        case UIGestureRecognizerStateChanged: // 拖拽改变
+        {
+            if (currentX < self.starX)
+            {
+                if (self.searchMode && self.web.canGoForward)
+                {
+                    self.forwardImgV.hidden = NO;
+                    // 防止过多移动右箭头
+                    if (self.starX - currentX > self.forwardImgV.frame.size.width) return;
+                    self.forwardImgV.transform = CGAffineTransformMakeTranslation(currentX - self.starX, 0);
+                }
+                break;
+                
+            }
+            // 一开始web在最左边,因此直接加上滑动距离即可
+            self.web.transform = CGAffineTransformMakeTranslation(currentX - self.starX, 0);
+            // 同时让toolbar跟着移动
+            self.toolBar.transform = CGAffineTransformMakeTranslation(currentX - self.starX, 0);;
+            // 同时让backImageV跟着移动
+            self.backImageV.transform = CGAffineTransformMakeTranslation((currentX - self.starX) * XMBackImageVStarX / [UIScreen mainScreen].bounds.size.width, 0);
+            // 同时将透明度随着距离改变(效果不好,多开webmodule会由于上层变透明会看到上上层)
+            //self.backImageV.alpha = (currentX / [UIScreen mainScreen].bounds.size.width)* 2/3 + 0.33;
+            break;
+        }
+        case UIGestureRecognizerStateEnded: // 拖拽结束
+        {
+            if(self.searchMode)
+            {
+                if(![self.web canGoBack] && self.starX - currentX > XMSearchModePanDistance)
+                {
+                    self.forwardImgV.transform = CGAffineTransformIdentity;
+                    self.forwardImgV.hidden = YES;
+                    [self.web goForward];
+                }
+            }
+            // 拖拽距离超过rightContentView的相对位置0.3时决定弹回还是隐藏
+            [self showRightContentView:self.web.frame.origin.x < [UIScreen mainScreen].bounds.size.width * 0.3];
+            break;
+        }
+        default:
+            break;
+    }
+}
+
+- (void)showRightContentView:(BOOL)canShow
+{
+    CGFloat duration = 0.30f;
+    if (canShow) // 显示
+    {
+        // 恢复成一开始最左边的位置
+        [UIView animateWithDuration:duration animations:^{
+            // web backImageV toolBar 三个要联动
+            self.web.transform = CGAffineTransformIdentity;
+            self.backImageV.transform = CGAffineTransformIdentity;
+            self.toolBar.transform = CGAffineTransformIdentity;
+        }];
+    }else
+    {
+        // 将webmodule关闭掉
+        [UIView animateWithDuration:duration animations:^{
+            // web backImageV toolBar 三个要联动
+            self.web.transform = CGAffineTransformMakeTranslation([UIScreen mainScreen].bounds.size.width, 0);
+            self.toolBar.transform = CGAffineTransformMakeTranslation([UIScreen mainScreen].bounds.size.width, 0);
+            self.backImageV.transform = CGAffineTransformMakeTranslation(XMBackImageVStarX, 0);
+        }completion:^(BOOL finished) {
+            // 移除背景相框
+            [self.backImageV removeFromSuperview];
+            // 移到最右边结束时pop掉当前vc
+#warning note 这里必须关闭动画效果,不然会有重复的pop效果
+            [self.navigationController popViewControllerAnimated:NO];
+        }];
+    }
+}
+
 #pragma mark - searchMode的返回处理
 /** searchMode下手势触发的方法 */
-- (void)backToPreviosURL:(UIGestureRecognizer *)gesture
+- (void)panToBackForward:(UIGestureRecognizer *)gesture
 {
     if ([gesture isKindOfClass:[UIPanGestureRecognizer class]])
     {
@@ -474,28 +521,46 @@
                 self.starX = [gesture locationInView:self.web].x;
                 break;
             }
+            case UIGestureRecognizerStateChanged:
+            {
+                CGFloat panShift = [gesture locationInView:self.web].x - self.starX;
+                // 超过左右箭头的大小则不再移动箭头
+                if (panShift > self.backImgV.frame.size.width || -panShift > self.forwardImgV.frame.size.width) return;
+                // 根据左划或者右划移动箭头
+                if (panShift > 0 && self.web.canGoBack)
+                {
+                    self.backImgV.hidden = NO;
+                    self.backImgV.transform = CGAffineTransformMakeTranslation(panShift, 0);
+                }else if(panShift < 0 && self.web.canGoForward)
+                {
+                    self.forwardImgV.hidden = NO;
+                    self.forwardImgV.transform = CGAffineTransformMakeTranslation(panShift, 0);
+                }
+                break;
+            }
             case UIGestureRecognizerStateEnded:
             {
-                // 标记是否最后一页
-                self.lastPage = YES;
                 CGFloat panShift = [gesture locationInView:self.web].x - self.starX;
-                // 右划且滑动距离大于50,表示应该返回,反之左划并且距离大于50表示向前
-                if (panShift > 50)
+                // 右划且滑动距离大于50,表示应该返回,反之左划并且距离大于50表示向前,并复位左右两个箭头
+                if (panShift > XMSearchModePanDistance)
                 {
+                    self.backImgV.transform = CGAffineTransformIdentity;
                     [self.web goBack];
-                }else if(panShift < -50)
+                    // 检测是否最后一页,移除searchMode下的pan手势
+                    if (!self.web.canGoBack)
+                    {
+                        [self.web removeGestureRecognizer:self.panSearchMode];
+                    }
+                    
+                }else if(panShift < -XMSearchModePanDistance)
                 {
+                    self.forwardImgV.transform = CGAffineTransformIdentity;
                     [self.web goForward];
-                }else  // 距离不够,相当于取消该次手势
-                {
-                    self.lastPage = NO;
                 }
                 
-                // 当经过上面的操作后仍是yes,表示没有触发前进或者回退以及取消,表示当前已经是最后一页
-                if (self.lastPage)
-                {
-                    [self.web removeGestureRecognizer:self.pan];
-                }
+                // 手势结束之后隐藏两边箭头
+                self.backImgV.hidden = YES;
+                self.forwardImgV.hidden = YES;
                 break;
             }
             default:
@@ -509,6 +574,40 @@
         }
     }
 }
+
+/**  searchMode下初始化 */
+- (void)initSearchMode
+{
+    // 添加左右两个箭头
+    UIImageView *backImgV = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"searchMode_back"]];
+    backImgV.frame = CGRectMake(-60, CGRectGetMidY([UIScreen mainScreen].bounds), 60, 60);
+    backImgV.hidden = YES;
+    self.backImgV = backImgV;
+    [self.web addSubview:backImgV];
+    UIImageView *forwardImgV = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"searchMode_forward"]];
+    forwardImgV.frame = CGRectMake(CGRectGetMaxX([UIScreen mainScreen].bounds), CGRectGetMidY([UIScreen mainScreen].bounds), 60, 60);
+    forwardImgV.hidden = YES;
+    self.forwardImgV = forwardImgV;
+    [self.web addSubview:forwardImgV];
+    
+    // 为searchmode添加前进后退手势
+    UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panToBackForward:)];
+    pan.delegate = self;
+    self.panSearchMode = pan;
+    
+    // 添加双击页面返回手势
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(panToBackForward:)];
+    tap.numberOfTapsRequired = 2;
+    tap.delegate = self;
+    [self.web addGestureRecognizer:tap];
+    
+    // 添加五次点击closeWebmodule
+    UITapGestureRecognizer *tapRemove = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(closeWebModule)];
+    tapRemove.numberOfTapsRequired = 5;
+    tapRemove.delegate = self;
+    [self.web addGestureRecognizer:tapRemove];
+}
+
 /** 临时方法,将webmodule关闭掉 */
 - (void)closeWebModule
 {

@@ -104,6 +104,10 @@
 
 - (void)go
 {
+    // 收起键盘
+    [self.searchF resignFirstResponder];
+    
+    // 传递web数据给webmodule
     XMWebModel *model = [[XMWebModel alloc] init];
     // 对于搜索内容为中文时,需要转码
     NSString *webStr = [[NSString stringWithFormat:@"%@%@",self.selectEngine,self.searchF.text] stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
