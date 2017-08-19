@@ -19,15 +19,16 @@
 @property (nonatomic, strong) NSURL *webURL;
 @property (nonatomic, assign) NSInteger index;
 @property (nonatomic, copy) NSString *publishTime;
-/** 是否搜索模式,搜索模式下只会打开一个webModule */
-@property (nonatomic, assign, getter=isSearchMode)  BOOL searchMode;
-
 
 /** 评论数*/
 @property (nonatomic, assign)  NSUInteger cmt_cnt;
 
 @property (nonatomic, copy) NSString *source;
 
+/** 是否搜索模式,搜索模式下只会打开一个webModule */
+@property (nonatomic, assign, getter=isSearchMode)  BOOL searchMode;
+/** 是否从main发送的网络请求,即是否第一个webmodule的标记 */
+@property (nonatomic, assign, getter=isFirstRequest)  BOOL firstRequest;
 + (NSArray *)websWithDict:(NSDictionary *)dict refreshCount:(NSUInteger)count;
 
 @end

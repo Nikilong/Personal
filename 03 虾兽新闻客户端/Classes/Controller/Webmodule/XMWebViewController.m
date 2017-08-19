@@ -28,6 +28,9 @@
 /** 记录当前的网络请求 */
 @property (nonatomic, strong) NSURL *currentURL;
 
+/** 标价是否第一个打开的webmodule */
+@property (nonatomic, assign, getter=isFirstWebmodule)  BOOL firstWebmodule;
+
 /** searchMode模块 */
 // 标记是否是searchMode
 @property (nonatomic, assign, getter=isSearchMode)  BOOL searchMode;
@@ -45,6 +48,9 @@
 
 // 截图相框
 @property (weak, nonatomic)  UIImageView *backImageV;
+
+@property (nonatomic, strong) UIView *statusBar;
+@property (weak, nonatomic)  UIView *statusCover;
 @end
 
 @implementation XMWebViewController
@@ -54,7 +60,7 @@
     if (_web == nil)
     {
         _web = [[UIWebView alloc] init];
-        _web.frame = CGRectMake(0, -20, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height + 20);
+        _web.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
         _web.delegate = self;
         [self.view addSubview:_web];
         
@@ -72,6 +78,12 @@
         panToCloseWebmodule.delegate = self;
         self.panToCloseWebmodule = panToCloseWebmodule;
         [_web addGestureRecognizer:panToCloseWebmodule];
+        
+        // 添加五次点击closeWebmodule
+        UITapGestureRecognizer *tapRemove = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(closeWebModule)];
+        tapRemove.numberOfTapsRequired = 5;
+        tapRemove.delegate = self;
+        [self.web addGestureRecognizer:tapRemove];
         
 //        // 添加双指滚到最上面或者最下面手势
 //        UISwipeGestureRecognizer *swip = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(scroll:)];
@@ -105,8 +117,15 @@
         [upBtn setImage:[UIImage imageNamed:@"up"] forState:UIControlStateNormal];
         [upBtn addTarget:self action:@selector(webViewDidScrollToTop) forControlEvents:UIControlEventTouchUpInside];
         [toolBar addSubview:upBtn];
-        CGRect upBtnF = CGRectMake(CGRectGetMaxX(downBtnF), 0, toolbarH, toolbarH);
+        CGRect upBtnF = CGRectMake(CGRectGetMaxX(downBtnF) + 10, 0, toolbarH, toolbarH);
         upBtn.frame = upBtnF;
+        // 添加滚到最顶部
+        UIButton *freshBtn = [[UIButton alloc] init];
+        [freshBtn setImage:[UIImage imageNamed:@"shuaxin"] forState:UIControlStateNormal];
+        [freshBtn addTarget:self action:@selector(webViewDidFresh) forControlEvents:UIControlEventTouchUpInside];
+        [toolBar addSubview:freshBtn];
+        CGRect freshBtnF = CGRectMake(CGRectGetMaxX(upBtnF) + 10, 0, toolbarH, toolbarH);
+        freshBtn.frame = freshBtnF;
         
         // 添加收藏按钮
         UIButton *addBtn = [[UIButton alloc] init];
@@ -115,7 +134,7 @@
         [addBtn setImage:[UIImage imageNamed:@"save_normal"] forState:UIControlStateNormal];
         [addBtn setImage:[UIImage imageNamed:@"save_selected"] forState:UIControlStateSelected];
         [toolBar addSubview:addBtn];
-        CGRect addBtnF = CGRectMake(CGRectGetMaxX(upBtnF) + toolbarH, 0, toolbarH, toolbarH);
+        CGRect addBtnF = CGRectMake(CGRectGetMaxX(freshBtnF) + toolbarH, 0, toolbarH, toolbarH);
         addBtn.frame = addBtnF;
         
         // 添加强制关闭webmodule按钮
@@ -134,12 +153,34 @@
     return _toolBar;
 }
 
+- (UIView *)statusBar
+{
+    if (!_statusBar)
+    {
+        _statusBar = [[[UIApplication sharedApplication] valueForKey:@"statusBarWindow"] valueForKey:@"statusBar"];
+    }
+    return _statusBar;
+}
+- (UIView *)statusCover
+{
+    if (!_statusCover)
+    {
+        UIView *statusCover = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 20)];
+        statusCover.backgroundColor = [UIColor whiteColor];
+        statusCover.hidden = YES;
+        [self.statusBar addSubview:statusCover];
+        _statusCover = statusCover;
+    }
+    return _statusCover;
+}
+
 - (void)setModel:(XMWebModel *)model
 {
     _model = model;
     // 初始化参数
     self.currentURL = model.webURL;
     self.searchMode = model.searchMode;
+    self.firstWebmodule = model.isFirstRequest;
     // 传递模型
     [self.web loadRequest:[NSURLRequest requestWithURL:model.webURL]];
     // 为searchmode添加左划返回手势
@@ -176,6 +217,14 @@
     
     // 必须先截图再截屏.否则会没有导航条
     self.navigationController.navigationBarHidden = YES;
+    
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    // 修改状态栏颜色
+    self.statusBar.backgroundColor = [UIColor whiteColor];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -185,6 +234,9 @@
     if(![self.navigationController.childViewControllers.lastObject isKindOfClass:[XMWebViewController class]])
     {
         self.navigationController.navigationBarHidden = NO;
+        // 修改状态栏颜色
+        self.statusBar.backgroundColor = [UIColor colorWithRed:249/255.0 green:249/255.0 blue:249/255.0 alpha:1.0];
+        
     }
 }
 
@@ -205,21 +257,34 @@
     [vc.navigationController pushViewController:webVC animated:YES];
 }
 
-#pragma mark - 滚动web
+#pragma mark - toolbar 点击事件
 
+/** web滚到最底部*/
 - (void)webViewDidScrollToBottom
 {
     // 利用scrollview滚动的方法滚到最底部,原生的带有动画效果
     [self.web.scrollView setContentOffset:CGPointMake(0, self.webHeight) animated:YES];
 }
 
+/** web滚到顶部 */
 - (void)webViewDidScrollToTop
 {
     [self.web stringByEvaluatingJavaScriptFromString:@"window.scrollTo(0,0);"];
 }
 
+/** web重新加载 */
+- (void)webViewDidFresh
+{
+    [self.web reload];
+}
 
-#pragma mark - 保存网页按钮
+/** 临时方法,将webmodule关闭掉 */
+- (void)closeWebModule
+{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+/** 保存网页 */
 - (void)saveWeb:(UIButton *)button
 {
     // 取反选择状态
@@ -343,10 +408,11 @@
 #pragma mark - UIWebViewDelegate
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
+    NSLog(@"=======%@",request.URL.absoluteString);
     // 开启网络加载
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     // 过滤名单
-    if([request.URL.absoluteString containsString:@".js"])
+    if([request.URL.absoluteString containsString:@".js"] || [request.URL.absoluteString containsString:@"eclick.baidu.com"] || [request.URL.absoluteString containsString:@"pos.baidu.com"])
     {
         // 关闭网络加载
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
@@ -356,13 +422,13 @@
     if (self.searchMode) // 必须先判断是否是searchMode
     {
         return YES;
-    }else if(self.canLoad)
+    }else if(self.canLoad || [request.URL.absoluteString containsString:@"//feed.baidu.com"] || [request.URL.absoluteString containsString:@"//m.baidu.com/feed/data/videoland"] )
     {
+        // 百度新闻或者视频的逻辑是先m.baidu.com/...一个网站,此时需要新开一个webmodule,然后在新开的webmodule任由其加载即可,百度的图集(http//feed.baidu.com/..),视频(http://m.baidu.com/feed/data/videoland/..)
         return YES;
     }else
-    {//feed.baidu.com
+    {
 //        NSLog(@"=======%@",self.currentURL.absoluteString);
-        NSLog(@"=======%@",request.URL.absoluteString);
         // 加载完成之后如果下一个网络请求不一样就是点击了新的网页,同时需要保证链接能打开
         if (![self.currentURL.absoluteString isEqualToString:request.URL.absoluteString] && [[UIApplication sharedApplication] canOpenURL:request.URL])
         {
@@ -371,8 +437,8 @@
             
             // 调用方法打开新的webmodule
             [XMWebViewController openWebmoduleWithModel:model viewController:self];
-            // 关闭网络加载
         }
+        // 关闭网络加载
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
         // 当网页完成加载之后,禁止再重新加载
         return NO;
@@ -432,6 +498,12 @@
         case UIGestureRecognizerStateBegan: // 拖拽开始
             // 记录一开始的触点,
             self.starX = [self.web convertPoint:[pan locationInView:self.web] toView:self.view].x;
+            if (self.isFirstWebmodule)
+            {
+                // 修改状态栏颜色
+                self.statusBar.backgroundColor = [UIColor colorWithRed:249/255.0 green:249/255.0 blue:249/255.0 alpha:1.0];
+                self.statusCover.hidden = NO;
+            }
             break;
             
         case UIGestureRecognizerStateChanged: // 拖拽改变
@@ -442,7 +514,7 @@
                 {
                     self.forwardImgV.hidden = NO;
                     // 防止过多移动右箭头
-                    if (self.starX - currentX > self.forwardImgV.frame.size.width) return;
+                    if (self.starX - currentX > self.forwardImgV.frame.size.width + 10) return;
                     self.forwardImgV.transform = CGAffineTransformMakeTranslation(currentX - self.starX, 0);
                 }
                 break;
@@ -450,10 +522,13 @@
             }
             // 一开始web在最左边,因此直接加上滑动距离即可
             self.web.transform = CGAffineTransformMakeTranslation(currentX - self.starX, 0);
-            // 同时让toolbar跟着移动
+            // 同时让toolbar  backImageV  statusCover跟着移动
             self.toolBar.transform = CGAffineTransformMakeTranslation(currentX - self.starX, 0);;
-            // 同时让backImageV跟着移动
             self.backImageV.transform = CGAffineTransformMakeTranslation((currentX - self.starX) * XMBackImageVStarX / [UIScreen mainScreen].bounds.size.width, 0);
+            if (self.isFirstWebmodule)
+            {
+                self.statusCover.transform = CGAffineTransformMakeTranslation(currentX - self.starX, 0);;
+            }
             // 同时将透明度随着距离改变(效果不好,多开webmodule会由于上层变透明会看到上上层)
             //self.backImageV.alpha = (currentX / [UIScreen mainScreen].bounds.size.width)* 2/3 + 0.33;
             break;
@@ -489,6 +564,13 @@
             self.web.transform = CGAffineTransformIdentity;
             self.backImageV.transform = CGAffineTransformIdentity;
             self.toolBar.transform = CGAffineTransformIdentity;
+            if (self.isFirstWebmodule)
+            {
+                // 修改状态栏颜色
+                self.statusBar.backgroundColor = [UIColor whiteColor];
+                self.statusCover.transform = CGAffineTransformIdentity;
+                self.statusCover.hidden = YES;
+            }
         }];
     }else
     {
@@ -498,7 +580,15 @@
             self.web.transform = CGAffineTransformMakeTranslation([UIScreen mainScreen].bounds.size.width, 0);
             self.toolBar.transform = CGAffineTransformMakeTranslation([UIScreen mainScreen].bounds.size.width, 0);
             self.backImageV.transform = CGAffineTransformMakeTranslation(XMBackImageVStarX, 0);
+            if (self.isFirstWebmodule)
+            {
+                self.statusCover.transform = CGAffineTransformMakeTranslation([UIScreen mainScreen].bounds.size.width, 0);
+            }
         }completion:^(BOOL finished) {
+            if (self.isFirstWebmodule)
+            {
+                self.statusCover.hidden = YES;
+            }
             // 移除背景相框
             [self.backImageV removeFromSuperview];
             // 移到最右边结束时pop掉当前vc
@@ -525,7 +615,7 @@
             {
                 CGFloat panShift = [gesture locationInView:self.web].x - self.starX;
                 // 超过左右箭头的大小则不再移动箭头
-                if (panShift > self.backImgV.frame.size.width || -panShift > self.forwardImgV.frame.size.width) return;
+                if (panShift > self.backImgV.frame.size.width + 10 || -panShift > self.forwardImgV.frame.size.width + 10) return;
                 // 根据左划或者右划移动箭头
                 if (panShift > 0 && self.web.canGoBack)
                 {
@@ -579,13 +669,14 @@
 - (void)initSearchMode
 {
     // 添加左右两个箭头
+    CGFloat imgVWH = 50;
     UIImageView *backImgV = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"searchMode_back"]];
-    backImgV.frame = CGRectMake(-60, CGRectGetMidY([UIScreen mainScreen].bounds), 60, 60);
+    backImgV.frame = CGRectMake(-imgVWH, CGRectGetMidY([UIScreen mainScreen].bounds), imgVWH, imgVWH);
     backImgV.hidden = YES;
     self.backImgV = backImgV;
     [self.web addSubview:backImgV];
     UIImageView *forwardImgV = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"searchMode_forward"]];
-    forwardImgV.frame = CGRectMake(CGRectGetMaxX([UIScreen mainScreen].bounds), CGRectGetMidY([UIScreen mainScreen].bounds), 60, 60);
+    forwardImgV.frame = CGRectMake(CGRectGetMaxX([UIScreen mainScreen].bounds), CGRectGetMidY([UIScreen mainScreen].bounds), imgVWH, imgVWH);
     forwardImgV.hidden = YES;
     self.forwardImgV = forwardImgV;
     [self.web addSubview:forwardImgV];
@@ -600,19 +691,7 @@
     tap.numberOfTapsRequired = 2;
     tap.delegate = self;
     [self.web addGestureRecognizer:tap];
-    
-    // 添加五次点击closeWebmodule
-    UITapGestureRecognizer *tapRemove = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(closeWebModule)];
-    tapRemove.numberOfTapsRequired = 5;
-    tapRemove.delegate = self;
-    [self.web addGestureRecognizer:tapRemove];
-}
 
-/** 临时方法,将webmodule关闭掉 */
-- (void)closeWebModule
-{
-    [self.navigationController popViewControllerAnimated:YES];
 }
-
 
 @end

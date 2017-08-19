@@ -60,7 +60,7 @@
     XMWebTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ID];
     
     if (cell == nil) {
-        NSLog(@"---XMWebTableViewCell-----build cell====");
+//        NSLog(@"---XMWebTableViewCell-----build cell====");
         cell = [[[NSBundle mainBundle] loadNibNamed:@"XMWebTableViewCell" owner:nil options:nil] lastObject];
     }
     

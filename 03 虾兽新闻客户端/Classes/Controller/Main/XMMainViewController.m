@@ -284,6 +284,8 @@ UIGestureRecognizerDelegate>
 /**   请求网络申请*/
 - (void)openWebmoduleRequest:(XMWebModel *)webModel
 {
+    // 标记第一个webmodule
+    webModel.firstRequest = YES;
     // 调用webmodule的类方法
     [XMWebViewController openWebmoduleWithModel:webModel viewController:self];
 }
