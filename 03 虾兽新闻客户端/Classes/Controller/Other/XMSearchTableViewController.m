@@ -112,8 +112,6 @@
     // 对于搜索内容为中文时,需要转码
     NSString *webStr = [[NSString stringWithFormat:@"%@%@",self.selectEngine,self.searchF.text] stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
     model.webURL = [NSURL URLWithString:webStr];
-    // 标记为搜索模式
-    model.searchMode = YES;
     
     // 先dismiss掉self,然后再通知代理去加载网页
     [self dismissViewControllerAnimated:YES completion:^{

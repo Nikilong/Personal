@@ -12,19 +12,20 @@
 
 @interface XMLeftTableViewController ()
 
-@property (nonatomic, strong) NSArray *channelArr;
+// 特别频道
+@property (nonatomic, strong) NSArray *specialChannelArr;
 
 @end
 
 @implementation XMLeftTableViewController
 
--(NSArray *)channelArr
+-(NSArray *)specialChannelArr
 {
-    if (!_channelArr)
+    if (!_specialChannelArr)
     {
-        _channelArr = [XMChannelModel channels];
+        _specialChannelArr = [XMChannelModel specialChannels];
     }
-    return _channelArr;
+    return _specialChannelArr;
 }
 
 - (void)viewDidLoad {
@@ -43,9 +44,9 @@
     return 2;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    
-    return (section == 1) ? self.channelArr.count : 1;
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return section == 1 ? self.specialChannelArr.count : 1;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -57,19 +58,15 @@
             return cell;
             break;
         }
-            
         case 1:
         {
-            static NSString *ID = @"leftCell";
-            UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ID];
-            if (!cell)
-            {
-                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:ID];
-                // 修改选中状态的背景颜色
-                cell.selectedBackgroundView = [[UIView alloc]  initWithFrame:cell.frame];
-                cell.selectedBackgroundView.backgroundColor = [UIColor yellowColor];
-            }
-            XMChannelModel *model = self.channelArr[indexPath.row];
+            UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:nil];
+            
+            // 修改选中状态的背景颜色
+            cell.selectedBackgroundView = [[UIView alloc]  initWithFrame:cell.frame];
+            cell.selectedBackgroundView.backgroundColor = [UIColor yellowColor];
+            
+            XMChannelModel *model = self.specialChannelArr[indexPath.row];
             cell.textLabel.text = model.channel;
             
             return cell;
@@ -84,18 +81,18 @@
 /** 自定义行高 */
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return indexPath.section == 0 ? 120 : 44;
+    return indexPath.section == 0 ? 100 : 44;
 }
 
 #pragma mark - 代理方法
 /** 通知代理选中了某一个频道 */
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.section == 1)
+    if (indexPath.section != 0)
     {
         if ([self.delegate respondsToSelector:@selector(leftTableViewControllerDidSelectChannel:)])
         {
-            [_delegate leftTableViewControllerDidSelectChannel:indexPath];
+            [self.delegate leftTableViewControllerDidSelectChannel:indexPath];
         }
     }
 }

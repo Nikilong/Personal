@@ -19,6 +19,8 @@
 
 // 保存每一条cell的新闻的url
 @property (nonatomic, strong) NSMutableArray *webs;
+// 最新加载的新闻
+@property (nonatomic, strong) NSMutableArray *freshWebsArr;
 
 // 下拉刷新条幅
 @property (nonatomic, weak) UIButton *headerRefreshV;
@@ -41,6 +43,15 @@
         _webs = [NSMutableArray array];
     }
     return _webs;
+}
+
+- (NSMutableArray *)freshWebsArr
+{
+    if (_freshWebsArr == nil)
+    {
+        _freshWebsArr = [NSMutableArray array];
+    }
+    return _freshWebsArr;
 }
 
 
@@ -145,7 +156,7 @@
 #pragma mark -  设置下拉刷新
 - (void)setRreflashControl
 {
-    UIButton *headerRefreshV = [[UIButton alloc] initWithFrame:CGRectMake(0, -44, 375, 44)];
+    UIButton *headerRefreshV = [[UIButton alloc] initWithFrame:CGRectMake(0, -44, [UIScreen mainScreen].bounds.size.width, 44)];
     self.headerRefreshV = headerRefreshV;
     headerRefreshV.hidden = YES;
     
@@ -314,10 +325,26 @@
 // 根据dict更新数据
 - (void)dealJsonDataWithDict:(NSDictionary *)dict
 {
-    NSMutableArray *arrM = [NSMutableArray array];
     NSUInteger refreshCount = 6;
-    arrM = (NSMutableArray *)[XMWebModel websWithDict:dict refreshCount:refreshCount];
-    
+    // 取出当前频道
+    XMChannelModel *model = [XMChannelModel channels][self.currentChannel];
+    if ([model.channel isEqualToString:@"时尚"])
+    {
+        [self.freshWebsArr addObjectsFromArray:[XMWebModel websWithDict:dict refreshCount:refreshCount keyWordArray:model.tags]];
+    }else if ([model.channel isEqualToString:@"段子"])
+    {
+        [self.freshWebsArr addObjectsFromArray:[XMWebModel websWithDict:dict refreshCount:refreshCount keyWordArray:nil]];
+    }else
+    {
+        [self.freshWebsArr addObjectsFromArray:[XMWebModel websWithDict:dict refreshCount:refreshCount keyWordArray:nil]];
+    }
+    // 未加载够足够新闻再次请求加载数据
+    if (self.freshWebsArr.count < refreshCount)
+    {
+        [self refresh];
+        return;
+    }
+    NSUInteger acturallyCount = self.freshWebsArr.count;
     /* 转码打印json数据,用于分析数据
 //    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:NSJSONWritingPrettyPrinted error:nil];
 //    NSString *jsonStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
@@ -326,11 +353,11 @@
     // 拼接新刷新的数据到最前面
     if (self.webs.count)
     {
-        [arrM addObjectsFromArray:self.webs];
+        [self.freshWebsArr addObjectsFromArray:self.webs];
     }
-    self.webs = arrM;
+    self.webs = self.freshWebsArr;
     // 清空中转数组
-    arrM = nil;
+    self.freshWebsArr = nil;
     
     if (self.webs.count > 30)
     {
@@ -339,7 +366,7 @@
         }
     }
     // 6，回到主线程设置cell的信息
-    [self backToMainQueueWithMessage:[NSString stringWithFormat:@"成功加载%ld条新闻",refreshCount]];
+    [self backToMainQueueWithMessage:[NSString stringWithFormat:@"成功加载%zd条新闻",acturallyCount]];
 }
 
 // 回到主线程

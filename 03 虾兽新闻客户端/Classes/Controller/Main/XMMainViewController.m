@@ -9,6 +9,7 @@
 #import "XMMainViewController.h"
 #import "XMHomeTableViewController.h"
 #import "XMLeftTableViewController.h"
+#import "XMNavTitleTableViewController.h"
 #import "XMWebViewController.h"
 #import "XMChannelModel.h"
 #import "XMLeftViewUserCell.h"
@@ -16,6 +17,7 @@
 #import "XMSaveWebsTableViewController.h"
 #import "XMQRCodeViewController.h"
 #import "XMSearchTableViewController.h"
+#import "XMDropView.h"
 
 #import "XMNavWebViewController.h"
 
@@ -27,7 +29,9 @@
 
 @interface XMMainViewController ()<
 XMLeftTableViewControllerDelegate,
+XMNavTitleTableViewControllerDelegate,
 XMConerAccessoryViewDelegate,
+XMDropViewDelegate,
 UIGestureRecognizerDelegate>
 
 /** 强引用左侧边栏窗口 */
@@ -38,8 +42,15 @@ UIGestureRecognizerDelegate>
 /** 强引用保存新闻窗口 */
 @property (nonatomic, strong) XMSaveWebsTableViewController *saveVC;
 
+@property (nonatomic, strong) XMDropView *dropView;
+@property (nonatomic, strong) XMNavTitleTableViewController *navTitleVC;
+
 /** 蒙板 */
 @property (weak, nonatomic)  UIView *cover;
+
+/** 是否以searchMode打开webmodule */
+@property (nonatomic, assign)  BOOL searchMode;
+
 
 @end
 
@@ -114,14 +125,6 @@ UIGestureRecognizerDelegate>
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    
-    // 收到内存警告清除缓存
-    [self clearCache];
-}
-
 - (void)addCornerAccessoryView
 {
     // 设置conerAccessoryView的子按钮
@@ -186,7 +189,12 @@ UIGestureRecognizerDelegate>
     [str setAttributes:dictChannel range:NSMakeRange(8, channel.length)];
     label.attributedText = str;
     self.navigationItem.titleView = label;
-    
+
+    // 添加点击事件
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(callDropView:)];
+    tap.delegate = self;
+    [label addGestureRecognizer:tap];
+    self.navigationItem.titleView.userInteractionEnabled = YES;
 }
 
 /** 添加主新闻窗口 */
@@ -237,7 +245,7 @@ UIGestureRecognizerDelegate>
     [self.navigationController pushViewController:qrVC animated:YES];
 }
 
-/** 搜索框*/
+/** 搜索框 */
 - (void)search:(UISwipeGestureRecognizer *)swip
 {
     XMSearchTableViewController *searchVC = [[XMSearchTableViewController alloc] init];
@@ -245,6 +253,23 @@ UIGestureRecognizerDelegate>
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:searchVC];
     // 导航控制器只能present另外一个导航控制器,不能push
     [self presentViewController:nav animated:YES completion:nil];
+}
+
+/** 导航栏titleview的dropview*/
+- (void)callDropView:(UITapGestureRecognizer *)gest
+{
+    // 创建频道tableview
+    self.navTitleVC = [[XMNavTitleTableViewController alloc] initWithStyle:UITableViewStylePlain];
+    CGFloat height = [XMChannelModel channels].count * 44;
+    self.navTitleVC.tableView.frame = CGRectMake(0, 0, 150, height);
+    self.navTitleVC.delegate = self;
+
+    // 创建dropview
+    self.dropView = [XMDropView dropView];
+    self.dropView.contentController = self.navTitleVC;
+    self.dropView.delegate = self;
+    // 新创建的dropview指向titleview
+    [self.dropView showFrom:self.navigationItem.titleView];
 }
 
 #pragma mark 左侧栏
@@ -280,31 +305,46 @@ UIGestureRecognizerDelegate>
     }];
 }
 
-#pragma 请求网络申请- delegate
+#pragma mark - 代理方法
+#pragma 请求网络申请 delegate
 /**   请求网络申请*/
 - (void)openWebmoduleRequest:(XMWebModel *)webModel
 {
+    webModel.searchMode = self.searchMode;
     // 标记第一个webmodule
     webModel.firstRequest = YES;
     // 调用webmodule的类方法
     [XMWebViewController openWebmoduleWithModel:webModel viewController:self];
 }
 
-
-#pragma mark - 代理方法
-/** 选中频道的代理方法 */
+#pragma mark leftTableViewController delegate
+/** 左侧选择频道的代理方法 */
 - (void)leftTableViewControllerDidSelectChannel:(NSIndexPath *)indexPath
 {
-    // 切换频道
-    self.homeVC.currentChannel = indexPath.row;
-    
     // 隐藏左侧边栏
     [self hideLeftView];
     
+    // 将specialChannel以webmodule打开
+    XMChannelModel *specialModel = [XMChannelModel specialChannels][indexPath.row];
+    XMWebModel *model = [[XMWebModel alloc] init];
+    model.webURL = [NSURL URLWithString:specialModel.url];
+    [self openWebmoduleRequest:model];
+    
+}
+
+#pragma mark navTitleTableViewController delegate
+/** 导航栏titleview中选择uc频道的代理方法 */
+- (void)navTitleTableViewControllerDidSelectChannel:(NSIndexPath *)indexPath
+{
+    // 将dropview dismiss掉
+    [self.dropView dismiss];
+    // 切换频道
+    self.homeVC.currentChannel = indexPath.row;
     // 设置导航栏显示当前频道
     XMChannelModel *model = [XMChannelModel channels][indexPath.row];
     [self setNavTitle:model.channel];
 }
+
 
 
 #pragma mark conerAccessoryView - delegate
@@ -321,8 +361,15 @@ UIGestureRecognizerDelegate>
             [self clearCache];
             break;
             
-        case 3: // 取消隐藏/显示悬浮按钮
-            
+        case 3: // searchmode
+            self.searchMode = !self.searchMode;
+            if(self.searchMode)
+            {
+                [MBProgressHUD showMessage:@"已打开searchMode" toView:self.view];
+            }else
+            {
+                [MBProgressHUD showMessage:@"已关闭searchMode" toView:self.view];
+            }
             break;
             
         default:

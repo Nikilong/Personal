@@ -9,6 +9,7 @@
 #import "XMWebViewController.h"
 #import "XMWebModelTool.h"
 #import "MBProgressHUD+NK.h"
+#import "UIView+getPointColor.h"
 
 #define XMBackImageVStarX ([UIScreen mainScreen].bounds.size.width / (3))
 #define XMSearchModePanDistance 70
@@ -25,8 +26,8 @@
 /** 网页view */
 @property (nonatomic, strong) UIWebView *web;
 
-/** 记录当前的网络请求 */
-@property (nonatomic, strong) NSURL *currentURL;
+/** 记录最初的网络请求 */
+@property (nonatomic, strong) NSURL *originURL;
 
 /** 标价是否第一个打开的webmodule */
 @property (nonatomic, assign, getter=isFirstWebmodule)  BOOL firstWebmodule;
@@ -49,7 +50,12 @@
 // 截图相框
 @property (weak, nonatomic)  UIImageView *backImageV;
 
+/** statusBar相关*/
+// 网页导航栏颜色
+@property (nonatomic, strong) UIColor *webNavColor;
+// 状态栏
 @property (nonatomic, strong) UIView *statusBar;
+// 状态栏遮罩
 @property (weak, nonatomic)  UIView *statusCover;
 @end
 
@@ -134,7 +140,7 @@
         [addBtn setImage:[UIImage imageNamed:@"save_normal"] forState:UIControlStateNormal];
         [addBtn setImage:[UIImage imageNamed:@"save_selected"] forState:UIControlStateSelected];
         [toolBar addSubview:addBtn];
-        CGRect addBtnF = CGRectMake(CGRectGetMaxX(freshBtnF) + toolbarH, 0, toolbarH, toolbarH);
+        CGRect addBtnF = CGRectMake(CGRectGetMaxX(freshBtnF) + 10, 0, toolbarH, toolbarH);
         addBtn.frame = addBtnF;
         
         // 添加强制关闭webmodule按钮
@@ -142,7 +148,7 @@
         [backBtn setImage:[UIImage imageNamed:@"clear"] forState:UIControlStateNormal];
         [backBtn addTarget:self action:@selector(closeWebModule) forControlEvents:UIControlEventTouchUpInside];
         [toolBar addSubview:backBtn];
-        CGRect backBtnF = CGRectMake(CGRectGetMaxX(addBtnF) + toolbarH, 0, toolbarH, toolbarH);
+        CGRect backBtnF = CGRectMake(CGRectGetMaxX(addBtnF) + 10, 0, toolbarH, toolbarH);
         backBtn.frame = backBtnF;
         
         // 计算toolbar居中
@@ -166,7 +172,7 @@
     if (!_statusCover)
     {
         UIView *statusCover = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 20)];
-        statusCover.backgroundColor = [UIColor whiteColor];
+        statusCover.backgroundColor = self.webNavColor;
         statusCover.hidden = YES;
         [self.statusBar addSubview:statusCover];
         _statusCover = statusCover;
@@ -178,7 +184,7 @@
 {
     _model = model;
     // 初始化参数
-    self.currentURL = model.webURL;
+    self.originURL = model.webURL;
     self.searchMode = model.searchMode;
     self.firstWebmodule = model.isFirstRequest;
     // 传递模型
@@ -218,13 +224,8 @@
     // 必须先截图再截屏.否则会没有导航条
     self.navigationController.navigationBarHidden = YES;
     
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-    // 修改状态栏颜色
-    self.statusBar.backgroundColor = [UIColor whiteColor];
+    self.statusBar.backgroundColor = self.webNavColor;
+    
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -428,9 +429,9 @@
         return YES;
     }else
     {
-//        NSLog(@"=======%@",self.currentURL.absoluteString);
+//        NSLog(@"=======%@",self.originURL.absoluteString);
         // 加载完成之后如果下一个网络请求不一样就是点击了新的网页,同时需要保证链接能打开
-        if (![self.currentURL.absoluteString isEqualToString:request.URL.absoluteString] && [[UIApplication sharedApplication] canOpenURL:request.URL])
+        if (![self.originURL.absoluteString isEqualToString:request.URL.absoluteString] && [[UIApplication sharedApplication] canOpenURL:request.URL])
         {
             XMWebModel *model = [[XMWebModel alloc] init];
             model.webURL = request.URL;
@@ -449,6 +450,9 @@
 {
     // 关闭网络加载
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+    // 设置statusBar随页面的颜色改变
+    self.webNavColor = [webView colorOfPoint:CGPointMake(10, 21)];
+    self.statusBar.backgroundColor = self.webNavColor;
     // 禁止完成加载之后再去加载网页
     self.canLoad = NO;
     // 加载完成之后判断是否需要添加searchMode的pan手势
@@ -567,7 +571,7 @@
             if (self.isFirstWebmodule)
             {
                 // 修改状态栏颜色
-                self.statusBar.backgroundColor = [UIColor whiteColor];
+                self.statusBar.backgroundColor = self.webNavColor;
                 self.statusCover.transform = CGAffineTransformIdentity;
                 self.statusCover.hidden = YES;
             }

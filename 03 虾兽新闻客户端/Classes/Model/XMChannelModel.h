@@ -12,7 +12,11 @@
 
 @property (nonatomic, copy) NSString *url;
 @property (nonatomic, copy) NSString *channel;
+@property (nonatomic, strong) NSArray *tags;
 
+// uc新闻频道
 + (NSArray *)channels;
+// 特别频道
++ (NSArray *)specialChannels;
 
 @end
