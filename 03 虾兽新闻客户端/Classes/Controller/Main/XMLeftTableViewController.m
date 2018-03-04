@@ -41,7 +41,7 @@
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 2;
+    return 3;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -68,6 +68,20 @@
             
             XMChannelModel *model = self.specialChannelArr[indexPath.row];
             cell.textLabel.text = model.channel;
+            
+            return cell;
+            break;
+        }
+        case 2:
+        {
+            UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:nil];
+            
+            // 修改选中状态的背景颜色
+            cell.selectedBackgroundView = [[UIView alloc]  initWithFrame:cell.frame];
+            cell.selectedBackgroundView.backgroundColor = [UIColor yellowColor];
+            
+            cell.textLabel.text = @"工具箱";
+            cell.textLabel.textAlignment = NSTextAlignmentCenter;
             
             return cell;
             break;

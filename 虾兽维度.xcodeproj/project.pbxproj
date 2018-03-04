@@ -47,6 +47,7 @@
 		205CED131F49623200821E38 /* NSArray+Log.m in Sources */ = {isa = PBXBuildFile; fileRef = 205CED121F49623200821E38 /* NSArray+Log.m */; };
 		20A3BCFF1F2E2D7400ED1699 /* XMAdvance.m in Sources */ = {isa = PBXBuildFile; fileRef = 20A3BCFE1F2E2D7400ED1699 /* XMAdvance.m */; };
 		20BA35661E89597D00477BCB /* XMFloatWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 20BA35651E89597D00477BCB /* XMFloatWindow.m */; };
+		20E9E373204C4BEC007D442E /* XMClipImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20E9E372204C4BEC007D442E /* XMClipImageViewController.m */; };
 		20F112141E864FC000E64A70 /* web.plist in Resources */ = {isa = PBXBuildFile; fileRef = 20F112131E864FC000E64A70 /* web.plist */; };
 		20F112171E86697400E64A70 /* XMChannelModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 20F112161E86697400E64A70 /* XMChannelModel.m */; };
 		20F1121B1E866F9C00E64A70 /* XMLeftViewUserCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 20F112191E866F9C00E64A70 /* XMLeftViewUserCell.m */; };
@@ -161,6 +162,9 @@
 		20A3BCFE1F2E2D7400ED1699 /* XMAdvance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMAdvance.m; sourceTree = "<group>"; };
 		20BA35641E89597D00477BCB /* XMFloatWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMFloatWindow.h; sourceTree = "<group>"; };
 		20BA35651E89597D00477BCB /* XMFloatWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMFloatWindow.m; sourceTree = "<group>"; };
+		20E9E371204C4BEC007D442E /* XMClipImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMClipImageViewController.h; sourceTree = "<group>"; };
+		20E9E372204C4BEC007D442E /* XMClipImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMClipImageViewController.m; sourceTree = "<group>"; };
+		20E9E374204C5136007D442E /* CommonHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CommonHeader.h; sourceTree = "<group>"; };
 		20F112131E864FC000E64A70 /* web.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = web.plist; sourceTree = "<group>"; };
 		20F112151E86697400E64A70 /* XMChannelModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMChannelModel.h; sourceTree = "<group>"; };
 		20F112161E86697400E64A70 /* XMChannelModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMChannelModel.m; sourceTree = "<group>"; };
@@ -171,15 +175,15 @@
 		20F112241E86BF4600E64A70 /* XMWebModelTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMWebModelTool.m; sourceTree = "<group>"; };
 		842970FC1E654644002BDBC0 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		842970FD1E654644002BDBC0 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		849D26EE1E640E3200F0CA5D /* 虾兽新闻客户端.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "虾兽新闻客户端.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		849D26EE1E640E3200F0CA5D /* 虾兽维度.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "虾兽维度.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		849D26F21E640E3200F0CA5D /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		849D26FD1E640E3200F0CA5D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		849D27001E640E3200F0CA5D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		849D27021E640E3200F0CA5D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		849D27071E640E3300F0CA5D /* 虾兽新闻客户端Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "虾兽新闻客户端Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		849D27071E640E3300F0CA5D /* 虾兽维度Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "虾兽维度Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		849D270B1E640E3300F0CA5D /* _3________Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "_3________Tests.m"; sourceTree = "<group>"; };
 		849D270D1E640E3300F0CA5D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		849D27121E640E3300F0CA5D /* 虾兽新闻客户端UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "虾兽新闻客户端UITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		849D27121E640E3300F0CA5D /* 虾兽维度UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "虾兽维度UITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		849D27161E640E3300F0CA5D /* _3________UITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "_3________UITests.m"; sourceTree = "<group>"; };
 		849D27181E640E3300F0CA5D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		84BA25561E65C7A800C8B204 /* XMWebTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMWebTableViewCell.h; sourceTree = "<group>"; };
@@ -225,6 +229,8 @@
 				202C84E71F2624AD0055FD7D /* XMSaveWebsTableViewController.m */,
 				202C84E81F2624AD0055FD7D /* XMSearchTableViewController.h */,
 				202C84E91F2624AD0055FD7D /* XMSearchTableViewController.m */,
+				20E9E371204C4BEC007D442E /* XMClipImageViewController.h */,
+				20E9E372204C4BEC007D442E /* XMClipImageViewController.m */,
 			);
 			path = Other;
 			sourceTree = "<group>";
@@ -422,7 +428,7 @@
 		849D26E51E640E3200F0CA5D = {
 			isa = PBXGroup;
 			children = (
-				849D26F01E640E3200F0CA5D /* 虾兽新闻客户端 */,
+				849D26F01E640E3200F0CA5D /* 虾兽维度 */,
 				849D270A1E640E3300F0CA5D /* 03 虾兽新闻客户端Tests */,
 				849D27151E640E3300F0CA5D /* 03 虾兽新闻客户端UITests */,
 				849D26EF1E640E3200F0CA5D /* Products */,
@@ -432,14 +438,14 @@
 		849D26EF1E640E3200F0CA5D /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				849D26EE1E640E3200F0CA5D /* 虾兽新闻客户端.app */,
-				849D27071E640E3300F0CA5D /* 虾兽新闻客户端Tests.xctest */,
-				849D27121E640E3300F0CA5D /* 虾兽新闻客户端UITests.xctest */,
+				849D26EE1E640E3200F0CA5D /* 虾兽维度.app */,
+				849D27071E640E3300F0CA5D /* 虾兽维度Tests.xctest */,
+				849D27121E640E3300F0CA5D /* 虾兽维度UITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		849D26F01E640E3200F0CA5D /* 虾兽新闻客户端 */ = {
+		849D26F01E640E3200F0CA5D /* 虾兽维度 */ = {
 			isa = PBXGroup;
 			children = (
 				842970ED1E654644002BDBC0 /* Classes */,
@@ -449,8 +455,9 @@
 				205CECF51F488EF700821E38 /* webSpecial.plist */,
 				849D27021E640E3200F0CA5D /* Info.plist */,
 				849D26F11E640E3200F0CA5D /* Supporting Files */,
+				20E9E374204C5136007D442E /* CommonHeader.h */,
 			);
-			name = "虾兽新闻客户端";
+			name = "虾兽维度";
 			path = "03 虾兽新闻客户端";
 			sourceTree = "<group>";
 		};
@@ -483,9 +490,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		849D26ED1E640E3200F0CA5D /* 虾兽新闻客户端 */ = {
+		849D26ED1E640E3200F0CA5D /* 虾兽维度 */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 849D271B1E640E3300F0CA5D /* Build configuration list for PBXNativeTarget "虾兽新闻客户端" */;
+			buildConfigurationList = 849D271B1E640E3300F0CA5D /* Build configuration list for PBXNativeTarget "虾兽维度" */;
 			buildPhases = (
 				849D26EA1E640E3200F0CA5D /* Sources */,
 				849D26EB1E640E3200F0CA5D /* Frameworks */,
@@ -495,14 +502,14 @@
 			);
 			dependencies = (
 			);
-			name = "虾兽新闻客户端";
+			name = "虾兽维度";
 			productName = "03 虾兽新闻客户端";
-			productReference = 849D26EE1E640E3200F0CA5D /* 虾兽新闻客户端.app */;
+			productReference = 849D26EE1E640E3200F0CA5D /* 虾兽维度.app */;
 			productType = "com.apple.product-type.application";
 		};
-		849D27061E640E3300F0CA5D /* 虾兽新闻客户端Tests */ = {
+		849D27061E640E3300F0CA5D /* 虾兽维度Tests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 849D271E1E640E3300F0CA5D /* Build configuration list for PBXNativeTarget "虾兽新闻客户端Tests" */;
+			buildConfigurationList = 849D271E1E640E3300F0CA5D /* Build configuration list for PBXNativeTarget "虾兽维度Tests" */;
 			buildPhases = (
 				849D27031E640E3300F0CA5D /* Sources */,
 				849D27041E640E3300F0CA5D /* Frameworks */,
@@ -513,14 +520,14 @@
 			dependencies = (
 				849D27091E640E3300F0CA5D /* PBXTargetDependency */,
 			);
-			name = "虾兽新闻客户端Tests";
+			name = "虾兽维度Tests";
 			productName = "03 虾兽新闻客户端Tests";
-			productReference = 849D27071E640E3300F0CA5D /* 虾兽新闻客户端Tests.xctest */;
+			productReference = 849D27071E640E3300F0CA5D /* 虾兽维度Tests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		849D27111E640E3300F0CA5D /* 虾兽新闻客户端UITests */ = {
+		849D27111E640E3300F0CA5D /* 虾兽维度UITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 849D27211E640E3300F0CA5D /* Build configuration list for PBXNativeTarget "虾兽新闻客户端UITests" */;
+			buildConfigurationList = 849D27211E640E3300F0CA5D /* Build configuration list for PBXNativeTarget "虾兽维度UITests" */;
 			buildPhases = (
 				849D270E1E640E3300F0CA5D /* Sources */,
 				849D270F1E640E3300F0CA5D /* Frameworks */,
@@ -531,9 +538,9 @@
 			dependencies = (
 				849D27141E640E3300F0CA5D /* PBXTargetDependency */,
 			);
-			name = "虾兽新闻客户端UITests";
+			name = "虾兽维度UITests";
 			productName = "03 虾兽新闻客户端UITests";
-			productReference = 849D27121E640E3300F0CA5D /* 虾兽新闻客户端UITests.xctest */;
+			productReference = 849D27121E640E3300F0CA5D /* 虾兽维度UITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -563,7 +570,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 849D26E91E640E3200F0CA5D /* Build configuration list for PBXProject "虾兽新闻客户端" */;
+			buildConfigurationList = 849D26E91E640E3200F0CA5D /* Build configuration list for PBXProject "虾兽维度" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -576,9 +583,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				849D26ED1E640E3200F0CA5D /* 虾兽新闻客户端 */,
-				849D27061E640E3300F0CA5D /* 虾兽新闻客户端Tests */,
-				849D27111E640E3300F0CA5D /* 虾兽新闻客户端UITests */,
+				849D26ED1E640E3200F0CA5D /* 虾兽维度 */,
+				849D27061E640E3300F0CA5D /* 虾兽维度Tests */,
+				849D27111E640E3300F0CA5D /* 虾兽维度UITests */,
 			);
 		};
 /* End PBXProject section */
@@ -624,6 +631,7 @@
 				205CECF01F48150E00821E38 /* UIView+WebCacheOperation.m in Sources */,
 				20BA35661E89597D00477BCB /* XMFloatWindow.m in Sources */,
 				2056D8731E8D67B200EB4BB5 /* XMConerAccessoryView.m in Sources */,
+				20E9E373204C4BEC007D442E /* XMClipImageViewController.m in Sources */,
 				84D9ED061E656BC30046840E /* XMWebModel.m in Sources */,
 				202C84F11F2624AD0055FD7D /* XMSaveWebsTableViewController.m in Sources */,
 				205CECE91F48150E00821E38 /* UIButton+WebCache.m in Sources */,
@@ -688,12 +696,12 @@
 /* Begin PBXTargetDependency section */
 		849D27091E640E3300F0CA5D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 849D26ED1E640E3200F0CA5D /* 虾兽新闻客户端 */;
+			target = 849D26ED1E640E3200F0CA5D /* 虾兽维度 */;
 			targetProxy = 849D27081E640E3300F0CA5D /* PBXContainerItemProxy */;
 		};
 		849D27141E640E3300F0CA5D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 849D26ED1E640E3200F0CA5D /* 虾兽新闻客户端 */;
+			target = 849D26ED1E640E3200F0CA5D /* 虾兽维度 */;
 			targetProxy = 849D27131E640E3300F0CA5D /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -836,7 +844,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "Apple.-3--------Tests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/虾兽新闻客户端.app/虾兽新闻客户端";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/虾兽维度.app/虾兽维度";
 			};
 			name = Debug;
 		};
@@ -848,7 +856,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "Apple.-3--------Tests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/虾兽新闻客户端.app/虾兽新闻客户端";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/虾兽维度.app/虾兽维度";
 			};
 			name = Release;
 		};
@@ -877,7 +885,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		849D26E91E640E3200F0CA5D /* Build configuration list for PBXProject "虾兽新闻客户端" */ = {
+		849D26E91E640E3200F0CA5D /* Build configuration list for PBXProject "虾兽维度" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				849D27191E640E3300F0CA5D /* Debug */,
@@ -886,7 +894,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		849D271B1E640E3300F0CA5D /* Build configuration list for PBXNativeTarget "虾兽新闻客户端" */ = {
+		849D271B1E640E3300F0CA5D /* Build configuration list for PBXNativeTarget "虾兽维度" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				849D271C1E640E3300F0CA5D /* Debug */,
@@ -895,7 +903,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		849D271E1E640E3300F0CA5D /* Build configuration list for PBXNativeTarget "虾兽新闻客户端Tests" */ = {
+		849D271E1E640E3300F0CA5D /* Build configuration list for PBXNativeTarget "虾兽维度Tests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				849D271F1E640E3300F0CA5D /* Debug */,
@@ -904,7 +912,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		849D27211E640E3300F0CA5D /* Build configuration list for PBXNativeTarget "虾兽新闻客户端UITests" */ = {
+		849D27211E640E3300F0CA5D /* Build configuration list for PBXNativeTarget "虾兽维度UITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				849D27221E640E3300F0CA5D /* Debug */,

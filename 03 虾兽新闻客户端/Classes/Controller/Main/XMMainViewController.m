@@ -24,8 +24,9 @@
 #import "UIImageView+WebCache.h"
 #import "MBProgressHUD+NK.h"
 
-#define XMScreenW [UIScreen mainScreen].bounds.size.width
-#define XMScreenH [UIScreen mainScreen].bounds.size.height
+#import "CommonHeader.h"
+
+#import "XMClipImageViewController.h"
 
 @interface XMMainViewController ()<
 XMLeftTableViewControllerDelegate,
@@ -100,6 +101,9 @@ UIGestureRecognizerDelegate>
 #pragma mark - 初始化
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    //默认采用searchmode
+    self.searchMode = YES;
     
     // 添加主新闻窗口
     [self addHomeVC];
@@ -176,17 +180,19 @@ UIGestureRecognizerDelegate>
     label.numberOfLines = 0;
     label.textAlignment = NSTextAlignmentCenter;
     
-    NSMutableAttributedString *str = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"虾兽新闻客户端\n%@",channel]];
+    // 注意:标题决定了下面的两个range需要同步调整,这里说的标题统计指"虾兽新闻端",共5个字,当有改动时需要同步调整titleCount
+    int titleCount = 5;
+    NSMutableAttributedString *str = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"虾兽新闻端\n%@",channel]];
     // 设置第一行样式
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     dict[NSFontAttributeName] = [UIFont boldSystemFontOfSize:17];
-    [str setAttributes:dict range:NSMakeRange(0, 7)];
+    [str setAttributes:dict range:NSMakeRange(0, titleCount)];
     
     // 设置频道的样式
     NSMutableDictionary *dictChannel = [NSMutableDictionary dictionary];
     dictChannel[NSFontAttributeName] = [UIFont systemFontOfSize:13];
     dictChannel[NSForegroundColorAttributeName] = [UIColor orangeColor];
-    [str setAttributes:dictChannel range:NSMakeRange(8, channel.length)];
+    [str setAttributes:dictChannel range:NSMakeRange(titleCount + 1, channel.length)];
     label.attributedText = str;
     self.navigationItem.titleView = label;
 
@@ -219,7 +225,7 @@ UIGestureRecognizerDelegate>
     // 创建左侧边栏
     self.leftVC = [[XMLeftTableViewController alloc] initWithStyle:UITableViewStyleGrouped];
     self.leftVC.delegate = self;
-    self.leftVC.view.frame = CGRectMake(XMLeftViewPadding, 20, XMLeftViewTotalW - 2 *XMLeftViewPadding, XMScreenH - XMLeftViewPadding - 20);
+    self.leftVC.view.frame = CGRectMake(XMLeftViewPadding, 40, XMLeftViewTotalW - 2 *XMLeftViewPadding, XMScreenH - XMLeftViewPadding - 20);
     [self.leftContentView addSubview:self.leftVC.view];
     
     // 添加到导航条之上
@@ -324,11 +330,20 @@ UIGestureRecognizerDelegate>
     // 隐藏左侧边栏
     [self hideLeftView];
     
-    // 将specialChannel以webmodule打开
-    XMChannelModel *specialModel = [XMChannelModel specialChannels][indexPath.row];
-    XMWebModel *model = [[XMWebModel alloc] init];
-    model.webURL = [NSURL URLWithString:specialModel.url];
-    [self openWebmoduleRequest:model];
+    if (indexPath.section == 1){
+        // 将specialChannel以webmodule打开
+        XMChannelModel *specialModel = [XMChannelModel specialChannels][indexPath.row];
+        XMWebModel *model = [[XMWebModel alloc] init];
+        model.webURL = [NSURL URLWithString:specialModel.url];
+        [self openWebmoduleRequest:model];
+    
+    }else if ( indexPath.section == 2){
+    
+        XMClipImageViewController *clipVC = [[XMClipImageViewController alloc] init];
+        clipVC.view.backgroundColor = [UIColor whiteColor];
+        clipVC.view.frame = self.view.bounds;
+        [self.navigationController pushViewController:clipVC animated:YES];
+    }
     
 }
 
