@@ -8,12 +8,15 @@
 
 #import "XMQRCodeViewController.h"
 #import <AVFoundation/AVFoundation.h>
+#import "EXQRCodeImageDetectorUtil.h"
+//#import <Photos/Photos.h>
+#import "MBProgressHUD+NK.h"
 
 #define EX_SCREEN_WIDTH (NSFoundationVersionNumber <= NSFoundationVersionNumber_iOS_7_1 ? (UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation) ? [[UIScreen mainScreen] bounds].size.width : [[UIScreen mainScreen] bounds].size.height) : [[UIScreen mainScreen] bounds].size.width)
 
 #define EX_SCREEN_HEIGHT (NSFoundationVersionNumber <= NSFoundationVersionNumber_iOS_7_1 ? (UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation) ? [[UIScreen mainScreen] bounds].size.height : [[UIScreen mainScreen] bounds].size.width) : [[UIScreen mainScreen] bounds].size.height)
 
-@interface XMQRCodeViewController ()<AVCaptureMetadataOutputObjectsDelegate>
+@interface XMQRCodeViewController ()<AVCaptureMetadataOutputObjectsDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate>
 
 /** 摄像头部件 */
 @property (nonatomic, strong) AVCaptureSession *session;
@@ -26,7 +29,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    // 添加从相册中识别二维码
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"相册" style:UIBarButtonItemStylePlain target:self action:@selector(dealAlbumPicture)];
+    
 }
+
 
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -114,54 +121,104 @@
     if (metadataObjects.count > 0) {
         AVMetadataMachineReadableCodeObject *obj = metadataObjects[0];
         // 提示：如果需要对url或者名片等信息进行扫描，可以在此进行扩展！
-
-        UIAlertController *tips = [UIAlertController alertControllerWithTitle:@"扫描结果" message:obj.stringValue preferredStyle:UIAlertControllerStyleAlert];
+        [self dealResult:obj.stringValue];
         
-        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action){
-            
-            [self.navigationController popViewControllerAnimated:YES];
-        }];
-
-        
-        UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"复制内容" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
-            // 将textview的text添加到系统的剪切板
-            UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
-            [pasteboard setString:obj.stringValue];
-            
-            [self.navigationController popViewControllerAnimated:YES];
-        }];
-        UIAlertAction *openURLAction = [UIAlertAction actionWithTitle:@"前往" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
-            // 当点击确定执行的块代码
-//            [[NSNotificationCenter defaultCenter] postNotificationName:@"QRCodeShouldOpenWebNotitificaiton" object:nil];
-            XMWebModel *model = [[XMWebModel alloc] init];
-            model.webURL = [NSURL URLWithString:obj.stringValue];
-            
-            // 因为webmodule是push出来的,必须先pop掉当前控制器
-            [self.navigationController popViewControllerAnimated:YES];
-            
-            if ([self.delegate respondsToSelector:@selector(openWebmoduleRequest:)])
-            {
-                [self.delegate openWebmoduleRequest:model];
-            }
-
-        }];
-        
-        UIAlertAction *safariAction = [UIAlertAction actionWithTitle:@"用Safari打开" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
-            
-            // 用Safari打开
-            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:obj.stringValue]];
-            
-            [self.navigationController popViewControllerAnimated:YES];
-            
-        }];
-        
-        [tips addAction:cancelAction];
-        [tips addAction:okAction];
-        [tips addAction:safariAction];
-        [tips addAction:openURLAction];
-        
-        [self presentViewController:tips animated:YES completion:nil];
+    }else{
+        [MBProgressHUD showMessage:@"未能识别二维码" toView:self.view];
     }
+}
+
+
+// 根据解析二维码得到的结果进行下一步处理
+- (void)dealResult:(NSString *)result{
+    UIAlertController *tips = [UIAlertController alertControllerWithTitle:@"扫描结果" message:result preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action){
+        
+        [self.navigationController popViewControllerAnimated:YES];
+    }];
+    
+    
+    UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"复制内容" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
+        // 将textview的text添加到系统的剪切板
+        UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+        [pasteboard setString:result];
+        
+        [self.navigationController popViewControllerAnimated:YES];
+    }];
+    UIAlertAction *openURLAction = [UIAlertAction actionWithTitle:@"前往" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
+        // 当点击确定执行的块代码
+        //            [[NSNotificationCenter defaultCenter] postNotificationName:@"QRCodeShouldOpenWebNotitificaiton" object:nil];
+        XMWebModel *model = [[XMWebModel alloc] init];
+        model.webURL = [NSURL URLWithString:result];
+        
+        // 因为webmodule是push出来的,必须先pop掉当前控制器
+        [self.navigationController popViewControllerAnimated:YES];
+        
+        if ([self.delegate respondsToSelector:@selector(openWebmoduleRequest:)])
+        {
+            [self.delegate openWebmoduleRequest:model];
+        }
+        
+    }];
+    
+    UIAlertAction *safariAction = [UIAlertAction actionWithTitle:@"用Safari打开" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
+        
+        // 用Safari打开
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:result]];
+        
+        [self.navigationController popViewControllerAnimated:YES];
+        
+    }];
+    
+    [tips addAction:cancelAction];
+    [tips addAction:okAction];
+    [tips addAction:safariAction];
+    [tips addAction:openURLAction];
+    
+    [self presentViewController:tips animated:YES completion:nil];
+
+}
+
+// '相册'按钮点击事件
+- (void)dealAlbumPicture{
+    // 1.判断相册是否可以打开
+    if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary]) return;
+    // 2. 创建图片选择控制器
+    UIImagePickerController *ipc = [[UIImagePickerController alloc] init];
+    // 3. 设置打开照片相册类型(显示所有相簿)
+    ipc.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+    // 4.设置代理
+    ipc.delegate = self;
+    // 5.modal出这个控制器
+    [self presentViewController:ipc animated:YES completion:nil];
+
+    
+}
+
+#pragma mark -- <UIImagePickerControllerDelegate>
+// 获取相册中的图片并识别图片中的二维码
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+    // 销毁控制器
+    [picker dismissViewControllerAnimated:YES completion:nil];
+    
+    // 停止扫描,释放控制器
+    [self.session stopRunning];
+    
+    // 解析选中的图片的二维码信息
+    NSString *scanResult = [EXQRCodeImageDetectorUtil detectorQRCodeImage:info[UIImagePickerControllerOriginalImage]];
+    if(scanResult.length > 0){
+        [self dealResult:scanResult];
+    }else{
+        [MBProgressHUD showMessage:@"未能识别二维码" toView:self.view];
+    }
+}
+
+//当用户取消选取时调用
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker{
+    // 先dismiss相册
+    [picker dismissViewControllerAnimated:YES completion:nil];
 }
 
 
