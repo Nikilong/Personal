@@ -48,6 +48,7 @@
 		20A3BCFF1F2E2D7400ED1699 /* XMAdvance.m in Sources */ = {isa = PBXBuildFile; fileRef = 20A3BCFE1F2E2D7400ED1699 /* XMAdvance.m */; };
 		20BA35661E89597D00477BCB /* XMFloatWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 20BA35651E89597D00477BCB /* XMFloatWindow.m */; };
 		20C85E2F204EE8850057F483 /* EXQRCodeImageDetectorUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 20C85E2E204EE8850057F483 /* EXQRCodeImageDetectorUtil.m */; };
+		20C85E322050477F0057F483 /* XMtest.m in Sources */ = {isa = PBXBuildFile; fileRef = 20C85E312050477F0057F483 /* XMtest.m */; };
 		20E9E373204C4BEC007D442E /* XMClipImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20E9E372204C4BEC007D442E /* XMClipImageViewController.m */; };
 		20F112141E864FC000E64A70 /* web.plist in Resources */ = {isa = PBXBuildFile; fileRef = 20F112131E864FC000E64A70 /* web.plist */; };
 		20F112171E86697400E64A70 /* XMChannelModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 20F112161E86697400E64A70 /* XMChannelModel.m */; };
@@ -165,6 +166,8 @@
 		20BA35651E89597D00477BCB /* XMFloatWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMFloatWindow.m; sourceTree = "<group>"; };
 		20C85E2D204EE8850057F483 /* EXQRCodeImageDetectorUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EXQRCodeImageDetectorUtil.h; sourceTree = "<group>"; };
 		20C85E2E204EE8850057F483 /* EXQRCodeImageDetectorUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EXQRCodeImageDetectorUtil.m; sourceTree = "<group>"; };
+		20C85E302050477F0057F483 /* XMtest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMtest.h; sourceTree = "<group>"; };
+		20C85E312050477F0057F483 /* XMtest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMtest.m; sourceTree = "<group>"; };
 		20E9E371204C4BEC007D442E /* XMClipImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMClipImageViewController.h; sourceTree = "<group>"; };
 		20E9E372204C4BEC007D442E /* XMClipImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMClipImageViewController.m; sourceTree = "<group>"; };
 		20E9E374204C5136007D442E /* CommonHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CommonHeader.h; sourceTree = "<group>"; };
@@ -357,6 +360,8 @@
 				20F112241E86BF4600E64A70 /* XMWebModelTool.m */,
 				20C85E2D204EE8850057F483 /* EXQRCodeImageDetectorUtil.h */,
 				20C85E2E204EE8850057F483 /* EXQRCodeImageDetectorUtil.m */,
+				20C85E302050477F0057F483 /* XMtest.h */,
+				20C85E312050477F0057F483 /* XMtest.m */,
 			);
 			name = Tool;
 			path = Other/Tool;
@@ -671,6 +676,7 @@
 				202C84F31F2624AD0055FD7D /* XMWebViewController.m in Sources */,
 				205CECE81F48150E00821E38 /* SDWebImagePrefetcher.m in Sources */,
 				20F112251E86BF4600E64A70 /* XMWebModelTool.m in Sources */,
+				20C85E322050477F0057F483 /* XMtest.m in Sources */,
 				205CED0F1F48AA5600821E38 /* XMTextTableViewCell.m in Sources */,
 				205CECE61F48150E00821E38 /* SDWebImageDownloaderOperation.m in Sources */,
 				205CECDB1F48150E00821E38 /* MBProgressHUD+NK.m in Sources */,
