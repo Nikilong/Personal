@@ -8,7 +8,6 @@
 
 #import "XMClipImageViewController.h"
 #import "MBProgressHUD+NK.h"
-
 #import "CommonHeader.h"
 
 typedef enum : NSUInteger {
@@ -38,6 +37,11 @@ typedef enum : NSUInteger {
 @property (strong, nonatomic) UIColor *ringColor;
 @property (strong, nonatomic) UIColor *imgBGColor;
 /*  clipParV 相关参数 */
+
+// 手动添加照片
+@property (nonatomic, assign)  BOOL manualMode;
+
+
 @end
 
 @implementation XMClipImageViewController
@@ -97,13 +101,17 @@ typedef enum : NSUInteger {
     [self photoView];
     [self btnContentV];
 
+    // 初始化自动打开相册
+    self.manualMode = NO;
+    
+    
     // 初始化裁剪参数
     [self setDefaultClipParameters];
 }
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-    if (!self.seleImage){
+    if (!self.seleImage && !self.manualMode){
         // 当没有图片的自动打开相册
         [self addImageFromUlbum];
     }
@@ -467,6 +475,9 @@ typedef enum : NSUInteger {
 #pragma mark - UIImagePickerControllerDelegate
 //当用户取消选取时调用
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker{
+    // 用户自动取消表示是需要手动添加照片
+    self.manualMode = YES;
+    
     // 先dismiss相册
     [picker dismissViewControllerAnimated:YES completion:nil];
 }

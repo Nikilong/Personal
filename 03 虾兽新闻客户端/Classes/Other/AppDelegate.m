@@ -24,7 +24,6 @@
     
     self.mainVC = [[XMMainViewController alloc] init];
     
-//    XMNavWebViewController *nav = [[XMNavWebViewController alloc] initWithRootViewController:_mainVC];
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:_mainVC];
     
     self.window.rootViewController = nav;

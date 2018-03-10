@@ -26,6 +26,7 @@
 
 #import "CommonHeader.h"
 
+#import "XMToolboxViewController.h"
 #import "XMClipImageViewController.h"
 
 @interface XMMainViewController ()<
@@ -33,6 +34,7 @@ XMLeftTableViewControllerDelegate,
 XMNavTitleTableViewControllerDelegate,
 XMConerAccessoryViewDelegate,
 XMDropViewDelegate,
+XMToolBoxViewControllerDelegate,
 UIGestureRecognizerDelegate>
 
 /** 强引用左侧边栏窗口 */
@@ -338,11 +340,34 @@ UIGestureRecognizerDelegate>
         [self openWebmoduleRequest:model];
     
     }else if ( indexPath.section == 2){
-    
-        XMClipImageViewController *clipVC = [[XMClipImageViewController alloc] init];
-        clipVC.view.backgroundColor = [UIColor whiteColor];
-        clipVC.view.frame = self.view.bounds;
-        [self.navigationController pushViewController:clipVC animated:YES];
+        // 创建采用第三方SDK分享控制器
+        XMToolboxViewController *toolboxVC = [[XMToolboxViewController alloc] init];
+        toolboxVC.delegate = self;
+        toolboxVC.modalPresentationStyle = UIModalPresentationCustom;
+
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            // webModule添加蒙板
+            UIView *cover = [[UIView alloc] initWithFrame:CGRectMake(0, -20, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)];
+            // 采用原生导航栏时cover添加到导航条上面,否则直接添加到callerVC.view
+            [self.navigationController.navigationBar addSubview:cover];
+            
+            cover.alpha = 0.0;
+            cover.backgroundColor = [UIColor blackColor];
+            [UIView animateWithDuration:XMToolBoxViewAnimationTime animations:^{
+                // 蒙板透明度渐变
+                cover.alpha = 0.3;
+            }];
+            
+            toolboxVC.toolBoxViewCover = cover;
+            // 用导航控制器推出分享控制器
+            [self.navigationController presentViewController:toolboxVC animated:YES completion:^{
+                // 设置父视图透明,否则看不到webmodule
+                toolboxVC.view.superview.backgroundColor = [UIColor clearColor];
+            }];
+            
+        });
+        
     }
     
 }
@@ -426,5 +451,23 @@ UIGestureRecognizerDelegate>
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
     return YES;
+}
+#pragma mark XMToolBoxViewControllerDelegate delegate
+- (void)toolboxButtonDidClick:(UIButton *)btn{
+    switch (btn.tag) {
+        case XMToolBoxTypeClipImg:{
+
+            XMClipImageViewController *clipVC = [[XMClipImageViewController alloc] init];
+            clipVC.view.backgroundColor = [UIColor whiteColor];
+            [self.navigationController pushViewController:clipVC animated:YES];
+
+            break;
+        }
+            
+        default:
+            break;
+    }
+
+
 }
 @end
