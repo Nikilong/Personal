@@ -60,7 +60,7 @@
         }
         case 1:
         {
-            UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:nil];
+            UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
             
             // 修改选中状态的背景颜色
             cell.selectedBackgroundView = [[UIView alloc]  initWithFrame:cell.frame];
@@ -68,13 +68,14 @@
             
             XMChannelModel *model = self.specialChannelArr[indexPath.row];
             cell.textLabel.text = model.channel;
+            cell.textLabel.textAlignment = NSTextAlignmentCenter;
             
             return cell;
             break;
         }
         case 2:
         {
-            UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:nil];
+            UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
             
             // 修改选中状态的背景颜色
             cell.selectedBackgroundView = [[UIView alloc]  initWithFrame:cell.frame];

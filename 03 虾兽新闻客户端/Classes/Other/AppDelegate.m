@@ -10,6 +10,8 @@
 #import "XMMainViewController.h"
 #import "XMNavWebViewController.h"
 
+#import "XMTouchIDKeyboardViewController.h"
+
 @interface AppDelegate ()
 
 @property (nonatomic, strong) XMMainViewController *mainVC;

@@ -10,8 +10,18 @@
 
 #import <LocalAuthentication/LocalAuthentication.h>
 #import "XMMainViewController.h"
-#import "MBProgressHUD+NK.h"
 #import "XMButton.h"
+
+#import "XMTouchIDKeyboardViewController.h"
+
+#define kAuthenCallBackNotificaiton @"kAuthenCallBackNotificaiton"
+
+typedef enum : NSUInteger {
+    AuthenResultTypeSuccess,    //验证成功
+    AuthenResultTypeFail,       //验证失败
+    AuthenResultTypeUnsupport   //touchID不可用或者被锁或者未设置
+} AuthenResultType;
+
 
 @interface XMToolboxViewController ()
 
@@ -21,17 +31,20 @@
 // 标记工具箱面板是否弹出
 @property (nonatomic, assign)  BOOL flat;
 
+// 记录当前点击的toolBox按钮
+@property (weak, nonatomic)  XMButton *clickBtn;
+
 @end
 
 @implementation XMToolboxViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
-    
-//    [self loadAuthentication];
     // 添加toolView,并且传递按钮的点击方法
     [self initToolView];
+    
+    // 观察指纹登录通知
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(authenticationCallBack:) name:kAuthenCallBackNotificaiton object:self];
 
 }
 
@@ -40,7 +53,7 @@
     [super viewWillAppear:animated];
     
     // 显示工具箱菜单整体
-    [self showToolView:YES caller:nil];
+    [self showToolView:YES caller:nil dismiss:NO];
     
 }
 
@@ -52,6 +65,12 @@
     UITapGestureRecognizer *tapToCancel = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(cancelTool)];
     [self.view addGestureRecognizer:tapToCancel];
     
+}
+
+- (void)dealloc{
+
+    // 移除指纹登录通知
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kAuthenCallBackNotificaiton object:self];
 }
 
 #pragma mark - 工具箱面板整体
@@ -107,7 +126,7 @@
         [toolMenuV addSubview:btn];
     
         btn.tag = [dict[ToolBox_kType] integerValue];
-        btn.authentication = [dict[ToolBox_kAuth] integerValue];
+        btn.authentication = ([dict[ToolBox_kAuth] integerValue] == XMToolBoxAuthenTypeNeed) ? YES : NO;
         UIImage *iconImage = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"tool_icon_%zd.png",btn.tag] ofType:nil]];
         [btn setImage:iconImage forState:UIControlStateNormal];
         [btn addTarget:self action:@selector(toolButtonDidClick:) forControlEvents:UIControlEventTouchDown];
@@ -129,7 +148,7 @@
 
 #pragma mark 弹出或隐藏
 /** 隐藏或者隐藏工具箱面板整体 */
-- (void)showToolView:(BOOL)result caller:(UIButton *)button
+- (void)showToolView:(BOOL)result caller:(UIButton *)button dismiss:(BOOL)flag
 {
     if(result) // 显示工具箱菜单
     {
@@ -153,7 +172,10 @@
         }completion:^(BOOL finished) {
             // 移除蒙板
             [self.toolBoxViewCover removeFromSuperview];
-            [self dismissViewControllerAnimated:YES completion:nil];
+            if (flag){
+            
+                [self dismissViewControllerAnimated:YES completion:nil];
+            }
         }];
         
     }
@@ -163,143 +185,174 @@
 /**  取消工具箱 */
 - (void)cancelTool
 {
-    [self showToolView:NO caller:nil];
+    [self showToolView:NO caller:nil dismiss:YES];
 }
 
+// toolbox上面的按钮的点击事件
 - (void)toolButtonDidClick:(XMButton *)btn{
-    
+    // 标记当前被点击的按钮
+    self.clickBtn = btn;
+    // 该工具是否需要指纹验证
     if (btn.authentication){
-        __weak typeof(self) weakSelf = self;
-        self.callbackBlock = ^(BOOL result){
-            if(result && [weakSelf.delegate respondsToSelector:@selector(toolboxButtonDidClick:)]){
-                [weakSelf.delegate toolboxButtonDidClick:btn];
-            }
-        };
+
         [self loadAuthentication];
+        
     }else{
     
         if ([self.delegate respondsToSelector:@selector(toolboxButtonDidClick:)]){
             [self.delegate toolboxButtonDidClick:btn];
         }
+        [self showToolView:NO caller:btn dismiss:YES];
     }
 
-    [self showToolView:NO caller:btn];
 }
 
 
 #pragma mark - 指纹验证
+
+- (void)authenticationCallBack:(NSNotification *)noti{
+    NSUInteger result = [noti.userInfo[@"result"] integerValue];
+    NSString *msg = @"";
+    BOOL touchIDKeyboardFlag = NO;
+    // 处理验证的结果
+    switch (result) {
+        case AuthenResultTypeSuccess:{ //验证成功
+            if([self.delegate respondsToSelector:@selector(toolboxButtonDidClick:)]){
+                [self.delegate toolboxButtonDidClick:self.clickBtn];
+            }
+            [self showToolView:NO caller:self.clickBtn dismiss:YES];
+            break;
+        }
+        case AuthenResultTypeFail:{ // 验证失败,3次错误,按下home键,点击"取消",点击'键盘输入'
+            NSError *error = noti.userInfo[@"error"];
+            NSLog(@"~~~fail---code:%zd  text:%@",error.code,error.localizedDescription);
+            switch (error.code) {
+                case LAErrorSystemCancel:{
+                    NSLog(@"Authentication was cancelled by the system");
+                    //切换到其他APP，系统取消验证Touch ID
+                    break;
+                }
+                case LAErrorUserCancel:{
+                    NSLog(@"Authentication was cancelled by the user");
+                    //用户点击"取消"验证Touch ID
+                    break;
+                }
+                case LAErrorUserFallback:{
+                    // 点击"输入密码"
+                    NSLog(@"User selected to enter custom password");
+                    touchIDKeyboardFlag = YES;
+                    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                        //用户选择其他验证方式，切换主线程处理
+                        XMTouchIDKeyboardViewController *keyVC = [[XMTouchIDKeyboardViewController alloc] init];
+                        [self presentViewController:keyVC animated:YES completion:nil];
+//                        [self.navigationController pushViewController:keyVC animated:YES];
+
+                    }];
+                    break;
+                }
+                default:{
+                    // 指纹不对,连续输错三次,应该转到
+                    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                        //其他情况，切换主线程处理
+                    }];
+                    
+                    msg = @"错误次数已达3次,达到了5次将被系统锁定Touch ID,建议用键盘输入";
+                    break;
+                }
+            }
+
+            
+            break;
+        }
+        case AuthenResultTypeUnsupport:{ // 不支持指纹验证或者未设置指纹或者5次错误touchID被锁
+            NSError *error = noti.userInfo[@"error"];
+            NSLog(@"~~~unsupp---code:%zd  text:%@",error.code,error.localizedDescription);
+            //不支持指纹识别，LOG出错误详情
+            switch (error.code) {
+                case LAErrorTouchIDNotEnrolled: {
+    
+                    NSLog(@"TouchID is not enrolled");
+    
+                    break;
+                }
+                case LAErrorPasscodeNotSet:{
+    
+                    NSLog(@"A passcode has not been set");
+    
+                    break;
+    
+                }
+                default:{
+                    // 达到5次将会被锁touch ID,需要锁屏输入开机密码才能解锁
+                    NSLog(@"TouchID not available");
+                    msg = @"达到了5次的错误限制,已经被系统锁定,请锁屏再输入密码激活Touch ID";
+                    break;
+                }
+                    
+            }
+            
+            break;
+        }
+        default:
+            break;
+    }
+    //        if([msg isEqualToString:@"Biometry is locked out."]){
+//            msg = @"达到了5次的错误限制,已经被系统锁定,请锁屏再输入密码激活Touch ID";
+//        }
+//        if([msg isEqualToString:@"Application retry limit exceeded."]){
+//            msg = @"错误次数已达3次,达到了5次将被系统锁定Touch ID,建议用键盘输入";
+//        }
+//        if([msg isEqualToString:@"Fallback authentication mechanism selected."]){
+//            
+//            // 用户点击进入"键盘"输入密码
+//            return;
+//        }
+    
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (![msg isEqualToString:@""]){
+                UIAlertView *ale = [[UIAlertView alloc] initWithTitle:@"提醒" message:msg delegate:self cancelButtonTitle:@"取消" otherButtonTitles:nil, nil];
+                [ale show];
+            }
+            
+            [self showToolView:NO caller:self.clickBtn dismiss:!touchIDKeyboardFlag];
+        });
+
+}
 /**
  * 指纹登录验证
  */
+
+#warning undo 手动输入密码,失败提醒,成功提醒
 - (void)loadAuthentication
 {
     LAContext *context = [[LAContext alloc] init]; //这个属性是设置指纹输入失败之后的弹出框的选项
-    
-    context.localizedFallbackTitle = @"再试";
-    
+    context.localizedFallbackTitle = @"输入密码";
     NSError *error = nil;
     NSString* result = @"需要验证您的touch ID";
     //首先使用canEvaluatePolicy 判断设备支持状态
-    
+
     if ([context canEvaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics error:&error]) {
         
         //支持指纹验证
-        __weak typeof(self) weakSelf = self;
         [context evaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics localizedReason:result reply:^(BOOL success, NSError *error) {
             
             if (success) {
                 //验证成功，主线程处理UI
                 NSLog(@"验证成功");
-                dispatch_async(dispatch_get_main_queue(), ^{
-//                    [MBProgressHUD showMessage:@"验证成功" toView:weakSelf.view];
-                    self.callbackBlock(YES);
-                });
+                [[NSNotificationCenter defaultCenter] postNotificationName:kAuthenCallBackNotificaiton object:self userInfo:@{@"result":[NSNumber numberWithInteger:AuthenResultTypeSuccess]}];
             }else{
+
                 NSLog(@"%@",error.localizedDescription);
-                switch (error.code) {
-                        
-                    case LAErrorSystemCancel:{
-                        NSLog(@"Authentication was cancelled by the system");
-                        //切换到其他APP，系统取消验证Touch ID
-                        
-                        break;
-                    }
-                    case LAErrorUserCancel:{
-                        NSLog(@"Authentication was cancelled by the user");
-                        //用户取消验证Touch ID
-                        
-                        break;
-                    }
-                    case LAErrorUserFallback:{
-                        // 点击"再试"
-                        NSLog(@"User selected to enter custom password");
-                        
-                        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                            
-                            //用户选择其他验证方式，切换主线程处理
-                            
-                        }];
-                        
-                        break;
-                    }
-                    default:{
-                        // 指纹不对
-                        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                            
-                            //其他情况，切换主线程处理
-                            
-                            
-                        }];
-                        
-                        break;
-                        
-                    }
-                }
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [MBProgressHUD showMessage:@"验证出错34" toView:self.view];
-                    weakSelf.callbackBlock(NO);
-//                    [self.navigationController popViewControllerAnimated:YES];
-                });
+                [[NSNotificationCenter defaultCenter] postNotificationName:kAuthenCallBackNotificaiton object:self userInfo:@{@"result":[NSNumber numberWithInteger:AuthenResultTypeFail],@"error":error}];
                 
             }
             
         }];
         
     }else{
-        
-        //不支持指纹识别，LOG出错误详情
-        switch (error.code) {
-            case LAErrorTouchIDNotEnrolled: {
-                
-                NSLog(@"TouchID is not enrolled");
-                
-                break;
-            }
-            case LAErrorPasscodeNotSet:{
-                
-                NSLog(@"A passcode has not been set");
-                
-                break;
-                
-            }
-            default:{
-                // 超过六次将会被锁
-                NSLog(@"TouchID not available");
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [MBProgressHUD showMessage:@"错误超过六次" toView:self.view];
-                });
-                
-                break;
-            }
-                
-        }
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-        
-            NSLog(@"%@",error.localizedDescription);
-            [MBProgressHUD showMessage:@"验证出错12" toView:self.view];
-            self.callbackBlock(NO);
-        });
+        // 不支持指纹验证或者未设置指纹或者5次错误touchID被锁
+        NSLog(@"post----failed---unsuport");
+        [[NSNotificationCenter defaultCenter] postNotificationName:kAuthenCallBackNotificaiton object:self userInfo:@{@"result":[NSNumber numberWithInteger:AuthenResultTypeUnsupport],@"error":error                                                                                          }];
         
     }
     
