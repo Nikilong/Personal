@@ -23,7 +23,7 @@ typedef enum : NSUInteger {
 } AuthenResultType;
 
 
-@interface XMToolboxViewController ()
+@interface XMToolboxViewController ()<XMTouchIDKeyboardViewControllerDelegate>
 
 // 工具箱面板整体
 @property (strong, nonatomic)  UIView *toolView;
@@ -40,9 +40,10 @@ typedef enum : NSUInteger {
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
     // 添加toolView,并且传递按钮的点击方法
     [self initToolView];
-    
+
     // 观察指纹登录通知
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(authenticationCallBack:) name:kAuthenCallBackNotificaiton object:self];
 
@@ -51,7 +52,7 @@ typedef enum : NSUInteger {
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
+      
     // 显示工具箱菜单整体
     [self showToolView:YES caller:nil dismiss:NO];
     
@@ -61,6 +62,7 @@ typedef enum : NSUInteger {
 {
     [super viewDidAppear:animated];
     
+    
     // 添加点击取消手势
     UITapGestureRecognizer *tapToCancel = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(cancelTool)];
     [self.view addGestureRecognizer:tapToCancel];
@@ -68,7 +70,6 @@ typedef enum : NSUInteger {
 }
 
 - (void)dealloc{
-
     // 移除指纹登录通知
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kAuthenCallBackNotificaiton object:self];
 }
@@ -154,6 +155,7 @@ typedef enum : NSUInteger {
     {
         // 菜单栏整体上升
         [UIView animateWithDuration:XMToolBoxViewAnimationTime animations:^{
+    
             if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
             {
                 // iphone在最底下显示工具箱菜单
@@ -244,8 +246,8 @@ typedef enum : NSUInteger {
                     [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                         //用户选择其他验证方式，切换主线程处理
                         XMTouchIDKeyboardViewController *keyVC = [[XMTouchIDKeyboardViewController alloc] init];
+                        keyVC.delegate = self;
                         [self presentViewController:keyVC animated:YES completion:nil];
-//                        [self.navigationController pushViewController:keyVC animated:YES];
 
                     }];
                     break;
@@ -261,7 +263,6 @@ typedef enum : NSUInteger {
                 }
             }
 
-            
             break;
         }
         case AuthenResultTypeUnsupport:{ // 不支持指纹验证或者未设置指纹或者5次错误touchID被锁
@@ -296,26 +297,15 @@ typedef enum : NSUInteger {
         default:
             break;
     }
-    //        if([msg isEqualToString:@"Biometry is locked out."]){
-//            msg = @"达到了5次的错误限制,已经被系统锁定,请锁屏再输入密码激活Touch ID";
-//        }
-//        if([msg isEqualToString:@"Application retry limit exceeded."]){
-//            msg = @"错误次数已达3次,达到了5次将被系统锁定Touch ID,建议用键盘输入";
-//        }
-//        if([msg isEqualToString:@"Fallback authentication mechanism selected."]){
-//            
-//            // 用户点击进入"键盘"输入密码
-//            return;
-//        }
     
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (![msg isEqualToString:@""]){
-                UIAlertView *ale = [[UIAlertView alloc] initWithTitle:@"提醒" message:msg delegate:self cancelButtonTitle:@"取消" otherButtonTitles:nil, nil];
-                [ale show];
-            }
-            
-            [self showToolView:NO caller:self.clickBtn dismiss:!touchIDKeyboardFlag];
-        });
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (![msg isEqualToString:@""]){
+            UIAlertView *ale = [[UIAlertView alloc] initWithTitle:@"提醒" message:msg delegate:self cancelButtonTitle:@"取消" otherButtonTitles:nil, nil];
+            [ale show];
+        }
+        
+        [self showToolView:NO caller:self.clickBtn dismiss:!touchIDKeyboardFlag];
+    });
 
 }
 /**
@@ -356,6 +346,13 @@ typedef enum : NSUInteger {
         
     }
     
+}
+
+#pragma mark - XMTouchIDKeyboardViewControllerDelegate
+- (void)touchIDKeyboardViewControllerDidDismiss{
+
+    [self dismissViewControllerAnimated:YES completion:nil];
+
 }
 
 @end

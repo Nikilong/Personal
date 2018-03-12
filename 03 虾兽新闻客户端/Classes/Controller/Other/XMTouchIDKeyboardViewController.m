@@ -11,17 +11,38 @@
 
 @interface XMTouchIDKeyboardViewController ()
 
+// 显示密码错误或者提示输入的标题
 @property (weak, nonatomic)  UILabel *resultLab;
+
+// 4位密码的数组
+@property (nonatomic, strong) NSMutableArray *inputBtnArr;
+
+// 记录输入了多少位数字
+@property (nonatomic, assign)  NSUInteger inputIndex;
+
+// 删除按钮
+@property (weak, nonatomic)  UIButton *deleBtn;
 
 @end
 
 @implementation XMTouchIDKeyboardViewController
 
+- (NSMutableArray *)inputBtnArr
+{
+    if (!_inputBtnArr)
+    {
+        _inputBtnArr = [[NSMutableArray alloc] init];
+    }
+    return _inputBtnArr;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.view.backgroundColor = [UIColor whiteColor];
+    self.view.backgroundColor = [UIColor colorWithRed:246/255.0 green:246/255.0 blue:246/255.0 alpha:1];
+    self.inputIndex = 0;
     [self initToolView];
+    [self setResultLabel:NO];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -37,7 +58,7 @@
     // 1.顶部提示和'取消按钮'
     UIView *topContentV = [[UIView alloc] initWithFrame:CGRectMake(0, 20, XMScreenW, 44)];
     [self.view addSubview:topContentV];
-    topContentV.backgroundColor = [UIColor whiteColor];
+    topContentV.backgroundColor = [UIColor clearColor];
     UIButton *cancelBtn = [[UIButton alloc] init];
     cancelBtn.frame = CGRectMake(XMScreenW - 100, 0, 100, 44);
     [topContentV addSubview:cancelBtn];
@@ -49,35 +70,34 @@
     // 2.输入框整体
     UIView *inputContentV = [[UIView alloc] init];
     [self.view addSubview:inputContentV];
-    inputContentV.backgroundColor = [UIColor redColor];
+    inputContentV.backgroundColor = [UIColor clearColor];
     
     // 按钮下标签
     UILabel *labT = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, XMScreenW, 60)];
-    labT.backgroundColor = [UIColor whiteColor];
+    labT.backgroundColor = [UIColor clearColor];
     labT.numberOfLines = 0;
     labT.lineBreakMode = NSLineBreakByWordWrapping;
-    labT.text = @"请输入密码";
     labT.tintColor = [UIColor blackColor];
     labT.textAlignment = NSTextAlignmentCenter;
     labT.font = [UIFont systemFontOfSize:17];
     [inputContentV addSubview:labT];
     self.resultLab = labT;
-//    //结果显示按钮
-//    UIButton *resultBtn = [[UIButton alloc] init];
-//    resultBtn.frame = CGRectMake(0, CGRectGetMaxY(labT.frame), XMScreenW, 30);
-//    [inputContentV addSubview:resultBtn];
-////    resultBtn.hidden = YES;
-//    resultBtn.backgroundColor = [UIColor orangeColor];
-//    [resultBtn setTitleColor:[UIColor blueColor] forState:UIControlStateNormal
-//     ];
-//    resultBtn.titleLabel.font = [UIFont systemFontOfSize:11];
-//    [resultBtn setTitle:@"密码错误" forState:UIControlStateNormal];
-//    [resultBtn setTitle:@"密码错误" forState:UIControlStateSelected];
+    //结果显示按钮
+    CGFloat inputBtnWH = 30;
+    CGFloat inputBtnPadding = 5;
+    CGFloat inputBtnMargin = (XMScreenW - 4 * inputBtnWH - 3 * inputBtnPadding) * 0.5;
+    for (NSUInteger i = 0; i < 4; i++) {
+        UIButton *resultBtn = [[UIButton alloc] init];
+        [self.inputBtnArr addObject:resultBtn];
+        resultBtn.frame = CGRectMake(inputBtnMargin + (inputBtnWH + inputBtnPadding) * i, CGRectGetMaxY(labT.frame), inputBtnWH, inputBtnWH);
+        [inputContentV addSubview:resultBtn];
+        resultBtn.backgroundColor = [UIColor clearColor];
+    }
 
-    inputContentV.frame = CGRectMake(0, CGRectGetMaxY(topContentV.frame), XMScreenW, CGRectGetMaxY(labT.frame));
+    inputContentV.frame = CGRectMake(0, CGRectGetMaxY(topContentV.frame), XMScreenW, CGRectGetMaxY(labT.frame) + inputBtnWH * 1.5);
     
     // 3.键盘整体
-    CGFloat btnWH = 70;         // 工具箱按钮宽高,根据bundle下toolBixIcons文件夹的图标确定
+    CGFloat btnWH = 75;         // 工具箱按钮宽高,根据bundle下toolBixIcons文件夹的图标确定
     CGFloat btnLabelH = 20;     // 工具箱按钮标签高度
     CGFloat padding = 10;       // 间隙
     NSUInteger colMaxNum = 3;      // 每行允许排列的图标个数
@@ -108,34 +128,46 @@
     
     UIView *toolMenuV = [[UIView alloc] initWithFrame:CGRectMake(toolMenuX, 0, toolMenuVW, toolMenuVH)];
     [toolView addSubview:toolMenuV];
-    toolMenuV.backgroundColor = [UIColor whiteColor];
+    toolMenuV.backgroundColor = [UIColor clearColor];
     
     // 添加按钮
     CGFloat btnX;
     CGFloat btnY;
     for (int i = 0; i < btnNum; i++)
     {
-        NSDictionary *dict = btnParams[i];
         btnX = toolBtnMarginX + (btnWH + toolBtnMarginX) * (i % colMaxNum);
         btnY = toolBtnMarginY + (btnWH + btnLabelH + padding) * (i / colMaxNum);
         // 工具箱按钮
         UIButton *btn = [[UIButton alloc] initWithFrame:CGRectMake(btnX, btnY, btnWH, btnWH)];
         [toolMenuV addSubview:btn];
 
-        btn.tag = 1;
-        if (i == 9){
+        if (i == 9){  // 忘记密码按钮
             [btn setTitle:@"忘记密码" forState:UIControlStateNormal];
             [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        }else if (i == 11){
-            [btn setTitle:@"删除" forState:UIControlStateNormal];
+        }else if (i == 11){  // 删除/指纹按钮
+            self.deleBtn = btn;
+            [btn setImage:[UIImage imageNamed:@"Passcode_icon_delete"] forState:UIControlStateNormal];
+            [btn setImage:[UIImage imageNamed:@"Passcode_icon_TouchID"] forState:UIControlStateSelected];
             [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+            [btn addTarget:self action:@selector(deleteInput:) forControlEvents:UIControlEventTouchDown];
+            btn.selected = YES;
         
         }else{
-        
-            UIImage *iconImage = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"tool_icon_%zd.png",btn.tag] ofType:nil]];
-            [btn setImage:iconImage forState:UIControlStateNormal];
+            if (i != 10){
+                btn.tag = i + 1;
+                [btn setTitle:[NSString stringWithFormat:@"%zd",btn.tag] forState:UIControlStateNormal];
+            }else{
+                [btn setTitle:@"0" forState:UIControlStateNormal];
+                btn.tag = 10;
+            }
+            btn.layer.cornerRadius = 0.5 * btnWH;
+            btn.clipsToBounds = YES;
+            btn.backgroundColor = [UIColor whiteColor];
+            [btn setTitleColor:[UIColor greenColor] forState:UIControlStateNormal];
+            btn.titleLabel.font = [UIFont systemFontOfSize:40];
+            [btn addTarget:self action:@selector(toolButtonDidClick:) forControlEvents:UIControlEventTouchDown];
         }
-        [btn addTarget:self action:@selector(toolButtonDidClick:) forControlEvents:UIControlEventTouchDown];
+        
         
     }
     
@@ -145,29 +177,69 @@
 
 
 #pragma mark - 按钮点击事件
+// 点击了键盘数字按钮
 - (void)toolButtonDidClick:(UIButton *)btn{
-    [self setResultLabel:YES];
-    NSLog(@"0000000");
+    self.deleBtn.selected = NO;
+    if (self.inputIndex < 4){
+        UIButton *btn = self.inputBtnArr[self.inputIndex];
+        self.inputIndex += 1;
+        btn.backgroundColor = [UIColor orangeColor];
+        if (self.inputIndex == 4){
+            //此时需要验证密码
+            [self setResultLabel:YES];
+        }
+    }
 }
 
+// '删除'按钮点击操作
+- (void)deleteInput:(UIButton *)deleBtn{
+    if (deleBtn.selected){
+        // 当是选择状态下,跳转到指纹认证
+        
+    }else{
+    
+        if (self.inputIndex > 0){
+            //        self.resultLab.text = @"请输入密码";
+            [self setResultLabel:NO];
+            self.inputIndex -= 1;
+            UIButton *btn = self.inputBtnArr[self.inputIndex];
+            btn.backgroundColor = [UIColor clearColor];
+            
+            // 当全部输入清除时,显示删除按钮为指纹登录团
+            if (self.inputIndex == 0) self.deleBtn.selected = YES;
+        }
+    
+    }
+}
+
+// 右上角"取消按钮"
 - (void)cancel{
-//    [self dismissViewControllerAnimated:YES completion:nil];
-    NSLog(@"cancel");
+    [self dismissViewControllerAnimated:YES completion:^{
+        if([self.delegate respondsToSelector:@selector(touchIDKeyboardViewControllerDidDismiss)]){
+            [self.delegate touchIDKeyboardViewControllerDidDismiss];
+        }
+    }];
 }
 
+
+// 根据密码结果设定标题
 - (void)setResultLabel:(BOOL)result{
     // 注意:标题决定了下面的两个range需要同步调整,这里说的标题统计指"请输入密码",共5个字,当有改动时需要同步调整titleCount
     int titleCount = 5;
     NSMutableAttributedString *str = [[NSMutableAttributedString alloc] initWithString:@"请输入密码\n密码错误"];
     // 设置第一行样式
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    dict[NSFontAttributeName] = [UIFont systemFontOfSize:17];
+    dict[NSFontAttributeName] = [UIFont systemFontOfSize:22];
     [str setAttributes:dict range:NSMakeRange(0, titleCount)];
     
     // 设置频道的样式
     NSMutableDictionary *dictChannel = [NSMutableDictionary dictionary];
-    dictChannel[NSFontAttributeName] = [UIFont systemFontOfSize:13];
-    dictChannel[NSForegroundColorAttributeName] = [UIColor orangeColor];
+    dictChannel[NSFontAttributeName] = [UIFont systemFontOfSize:15];
+    if (result){
+        dictChannel[NSForegroundColorAttributeName] = [UIColor orangeColor];
+    }else{
+        dictChannel[NSForegroundColorAttributeName] = [UIColor clearColor];
+    }
     [str setAttributes:dictChannel range:NSMakeRange(titleCount + 1, 4)];
     self.resultLab.attributedText = str;
 }

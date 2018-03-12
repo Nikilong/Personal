@@ -8,6 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol XMTouchIDKeyboardViewControllerDelegate <NSObject>
+
+- (void)touchIDKeyboardViewControllerDidDismiss;
+
+@end
+
 @interface XMTouchIDKeyboardViewController : UIViewController
+
+@property (weak, nonatomic)  id<XMTouchIDKeyboardViewControllerDelegate> delegate;
 
 @end

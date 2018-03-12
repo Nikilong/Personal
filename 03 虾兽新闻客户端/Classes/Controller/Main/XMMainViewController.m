@@ -340,7 +340,7 @@ UIGestureRecognizerDelegate>
         [self openWebmoduleRequest:model];
     
     }else if ( indexPath.section == 2){
-        // 创建采用第三方SDK分享控制器
+        // 工具箱的九宫格界面控制器
         XMToolboxViewController *toolboxVC = [[XMToolboxViewController alloc] init];
         toolboxVC.delegate = self;
         toolboxVC.modalPresentationStyle = UIModalPresentationCustom;
