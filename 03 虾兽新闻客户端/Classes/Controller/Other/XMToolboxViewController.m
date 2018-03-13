@@ -219,10 +219,15 @@ typedef enum : NSUInteger {
     // 处理验证的结果
     switch (result) {
         case AuthenResultTypeSuccess:{ //验证成功
-            if([self.delegate respondsToSelector:@selector(toolboxButtonDidClick:)]){
-                [self.delegate toolboxButtonDidClick:self.clickBtn];
-            }
-            [self showToolView:NO caller:self.clickBtn dismiss:YES];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                [self dismissViewControllerAnimated:YES completion:^{
+                    
+                    if([self.delegate respondsToSelector:@selector(toolboxButtonDidClick:)]){
+                        [self.delegate toolboxButtonDidClick:self.clickBtn];
+                    }
+                }];
+            });
             break;
         }
         case AuthenResultTypeFail:{ // 验证失败,3次错误,按下home键,点击"取消",点击'键盘输入'
@@ -308,11 +313,11 @@ typedef enum : NSUInteger {
     });
 
 }
+
+
 /**
  * 指纹登录验证
  */
-
-#warning undo 手动输入密码,失败提醒,成功提醒
 - (void)loadAuthentication
 {
     LAContext *context = [[LAContext alloc] init]; //这个属性是设置指纹输入失败之后的弹出框的选项
@@ -353,6 +358,17 @@ typedef enum : NSUInteger {
 
     [self dismissViewControllerAnimated:YES completion:nil];
 
+}
+
+// 验证成功
+- (void)touchIDKeyboardViewAuthenSuccess{
+    [[NSNotificationCenter defaultCenter] postNotificationName:kAuthenCallBackNotificaiton object:self userInfo:@{@"result":[NSNumber numberWithInteger:AuthenResultTypeSuccess]}];
+
+}
+
+// 密码验证切换回指纹验证
+- (void)touchIDKeyboardViewControllerAskForTouchID{
+    [self loadAuthentication];
 }
 
 @end

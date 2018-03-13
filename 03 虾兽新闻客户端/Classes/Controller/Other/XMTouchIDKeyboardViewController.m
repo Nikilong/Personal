@@ -17,6 +17,9 @@
 // 4位密码的数组
 @property (nonatomic, strong) NSMutableArray *inputBtnArr;
 
+// 输入的实质数组
+@property (nonatomic, strong) NSMutableArray *clickBtnArr;
+
 // 记录输入了多少位数字
 @property (nonatomic, assign)  NSUInteger inputIndex;
 
@@ -34,6 +37,15 @@
         _inputBtnArr = [[NSMutableArray alloc] init];
     }
     return _inputBtnArr;
+}
+
+- (NSMutableArray *)clickBtnArr
+{
+    if (!_clickBtnArr)
+    {
+        _clickBtnArr = [[NSMutableArray alloc] init];
+    }
+    return _clickBtnArr;
 }
 
 - (void)viewDidLoad {
@@ -158,7 +170,7 @@
                 [btn setTitle:[NSString stringWithFormat:@"%zd",btn.tag] forState:UIControlStateNormal];
             }else{
                 [btn setTitle:@"0" forState:UIControlStateNormal];
-                btn.tag = 10;
+                btn.tag = 0;
             }
             btn.layer.cornerRadius = 0.5 * btnWH;
             btn.clipsToBounds = YES;
@@ -181,12 +193,35 @@
 - (void)toolButtonDidClick:(UIButton *)btn{
     self.deleBtn.selected = NO;
     if (self.inputIndex < 4){
+        // 记录当前点击的按钮
+        [self.clickBtnArr addObject:btn];
+        // 显示一个按钮
         UIButton *btn = self.inputBtnArr[self.inputIndex];
         self.inputIndex += 1;
         btn.backgroundColor = [UIColor orangeColor];
         if (self.inputIndex == 4){
-            //此时需要验证密码
-            [self setResultLabel:YES];
+            NSString *password = @"";
+            for (UIButton *clickBtn in self.clickBtnArr) {
+                password = [password stringByAppendingString:[NSString stringWithFormat:@"%zd",clickBtn.tag]];
+            }
+            NSLog(@"-----%@",password);
+            //此时需要验证密码,延迟执行
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                if ([password isEqualToString:@"2236"]){
+                    if ([self.delegate respondsToSelector:@selector(touchIDKeyboardViewAuthenSuccess)]){
+                        
+                        [self.delegate touchIDKeyboardViewAuthenSuccess];
+                    }
+                }else{
+                    // 密码错误时清空选择数组,显示错误
+                    [self setResultLabel:YES];
+                    [self.clickBtnArr removeAllObjects];
+                    self.inputIndex = 0;
+                    for (UIButton *inputBtn in self.inputBtnArr) {
+                        inputBtn.backgroundColor = [UIColor clearColor];
+                    }
+                }
+            });
         }
     }
 }
@@ -195,10 +230,20 @@
 - (void)deleteInput:(UIButton *)deleBtn{
     if (deleBtn.selected){
         // 当是选择状态下,跳转到指纹认证
+        if ([self.delegate respondsToSelector:@selector(touchIDKeyboardViewControllerAskForTouchID)]){
+            [self dismissViewControllerAnimated:YES completion:^{
+                
+                [self.delegate touchIDKeyboardViewControllerAskForTouchID];
+            }];
+        }
         
     }else{
     
         if (self.inputIndex > 0){
+            // 移除最后一个点击的按钮
+            [self.clickBtnArr removeLastObject];
+            
+            // 隐藏一个显示按钮
             //        self.resultLab.text = @"请输入密码";
             [self setResultLabel:NO];
             self.inputIndex -= 1;

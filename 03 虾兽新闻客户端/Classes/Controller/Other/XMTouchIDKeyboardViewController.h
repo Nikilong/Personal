@@ -12,6 +12,10 @@
 
 - (void)touchIDKeyboardViewControllerDidDismiss;
 
+- (void)touchIDKeyboardViewAuthenSuccess;
+
+- (void)touchIDKeyboardViewControllerAskForTouchID;
+
 @end
 
 @interface XMTouchIDKeyboardViewController : UIViewController

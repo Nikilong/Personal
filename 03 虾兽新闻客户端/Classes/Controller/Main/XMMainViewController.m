@@ -340,36 +340,42 @@ UIGestureRecognizerDelegate>
         [self openWebmoduleRequest:model];
     
     }else if ( indexPath.section == 2){
-        // 工具箱的九宫格界面控制器
-        XMToolboxViewController *toolboxVC = [[XMToolboxViewController alloc] init];
-        toolboxVC.delegate = self;
-        toolboxVC.modalPresentationStyle = UIModalPresentationCustom;
-
-        dispatch_async(dispatch_get_main_queue(), ^{
-            
-            // webModule添加蒙板
-            UIView *cover = [[UIView alloc] initWithFrame:CGRectMake(0, -20, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)];
-            // 采用原生导航栏时cover添加到导航条上面,否则直接添加到callerVC.view
-            [self.navigationController.navigationBar addSubview:cover];
-            
-            cover.alpha = 0.0;
-            cover.backgroundColor = [UIColor blackColor];
-            [UIView animateWithDuration:XMToolBoxViewAnimationTime animations:^{
-                // 蒙板透明度渐变
-                cover.alpha = 0.3;
-            }];
-            
-            toolboxVC.toolBoxViewCover = cover;
-            // 用导航控制器推出分享控制器
-            [self.navigationController presentViewController:toolboxVC animated:YES completion:^{
-                // 设置父视图透明,否则看不到webmodule
-                toolboxVC.view.superview.backgroundColor = [UIColor clearColor];
-            }];
-            
-        });
-        
+        // 打开工具箱
+        [self callToolBox];
     }
     
+}
+
+/** 打开工具箱 */
+- (void)callToolBox{
+    // 工具箱的九宫格界面控制器
+    XMToolboxViewController *toolboxVC = [[XMToolboxViewController alloc] init];
+    toolboxVC.delegate = self;
+    toolboxVC.modalPresentationStyle = UIModalPresentationCustom;
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        // webModule添加蒙板
+        UIView *cover = [[UIView alloc] initWithFrame:CGRectMake(0, -20, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)];
+        // 采用原生导航栏时cover添加到导航条上面,否则直接添加到callerVC.view
+        [self.navigationController.navigationBar addSubview:cover];
+        
+        cover.alpha = 0.0;
+        cover.backgroundColor = [UIColor blackColor];
+        [UIView animateWithDuration:XMToolBoxViewAnimationTime animations:^{
+            // 蒙板透明度渐变
+            cover.alpha = 0.3;
+        }];
+        
+        toolboxVC.toolBoxViewCover = cover;
+        // 用导航控制器推出分享控制器
+        [self.navigationController presentViewController:toolboxVC animated:YES completion:^{
+            // 设置父视图透明,否则看不到webmodule
+            toolboxVC.view.superview.backgroundColor = [UIColor clearColor];
+        }];
+        
+    });
+
 }
 
 #pragma mark navTitleTableViewController delegate

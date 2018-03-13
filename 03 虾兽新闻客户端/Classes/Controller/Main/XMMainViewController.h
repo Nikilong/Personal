@@ -15,5 +15,6 @@
 - (void)callSaveViewController;
 - (void)search:(UISwipeGestureRecognizer *)swip;
 - (void)scanQRCode;
+- (void)callToolBox;
 
 @end

@@ -49,12 +49,13 @@
     //    //创建自定义图标的icon
     //    UIApplicationShortcutIcon *icon2 = [UIApplicationShortcutIcon iconWithTemplateImageName:@"分享.png"];
     //创建快捷选项
-    UIApplicationShortcutItem * itemSave = [[UIApplicationShortcutItem alloc]initWithType:@"save" localizedTitle:@"珍藏" localizedSubtitle:nil icon:iconSave userInfo:nil];
+//    UIApplicationShortcutItem * itemSave = [[UIApplicationShortcutItem alloc]initWithType:@"save" localizedTitle:@"珍藏" localizedSubtitle:nil icon:iconSave userInfo:nil];
+    UIApplicationShortcutItem * itemToolbox = [[UIApplicationShortcutItem alloc]initWithType:@"toolbox" localizedTitle:@"工具箱" localizedSubtitle:nil icon:iconSave userInfo:nil];
     UIApplicationShortcutItem * itemSearch = [[UIApplicationShortcutItem alloc]initWithType:@"search" localizedTitle:@"搜索" localizedSubtitle:nil icon:iconSearch userInfo:nil];
     UIApplicationShortcutItem * itemScan = [[UIApplicationShortcutItem alloc]initWithType:@"scan" localizedTitle:@"扫描二维码" localizedSubtitle:nil icon:iconScan userInfo:nil];
     
     //添加到快捷选项数组
-    [UIApplication sharedApplication].shortcutItems = @[itemSave,itemSearch,itemScan];
+    [UIApplication sharedApplication].shortcutItems = @[itemToolbox,itemSearch,itemScan];
 }
 
 /** 3D touch快捷选项触发事件 */
@@ -76,6 +77,10 @@
     else if ([shortcutItem.type isEqualToString:@"scan"]) {//进入扫描二维码界面
         
         [_mainVC scanQRCode];
+    }
+    else if ([shortcutItem.type isEqualToString:@"toolbox"]) {//进入工具箱
+        
+        [_mainVC callToolBox];
     }
 }
 
