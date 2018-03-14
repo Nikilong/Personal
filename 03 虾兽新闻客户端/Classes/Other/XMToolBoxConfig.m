@@ -21,15 +21,15 @@
                ToolBox_kType:@(XMToolBoxTypeClipImg),
                ToolBox_kAuth:@(XMToolBoxAuthenTypeNone)
                },
-             @{ToolBox_kName:@"微信好友",
-               ToolBox_kType:@(XMToolBoxTypeAAA),
+             @{ToolBox_kName:@"Hiweb",
+               ToolBox_kType:@(XMToolBoxTypeHiweb),
                ToolBox_kAuth:@(XMToolBoxAuthenTypeNeed)
                },
-             @{ToolBox_kName:@"微信朋友圈",
-               ToolBox_kType:@(XMToolBoxTypeBBB),
+             @{ToolBox_kName:@"易",
+               ToolBox_kType:@(XMToolBoxTypeTaiji),
                ToolBox_kAuth:@(XMToolBoxAuthenTypeNeed)
                },
-             @{ToolBox_kName:@"微信收藏",
+             @{ToolBox_kName:@"招租",
                ToolBox_kType:@(XMToolBoxTypeCCC),
                ToolBox_kAuth:@(XMToolBoxAuthenTypeNeed)
               },

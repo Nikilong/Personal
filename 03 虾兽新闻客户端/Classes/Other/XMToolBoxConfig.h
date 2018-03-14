@@ -20,8 +20,8 @@
 
 typedef enum : NSUInteger {
     XMToolBoxTypeClipImg,  // 裁剪图片
-    XMToolBoxTypeAAA,
-    XMToolBoxTypeBBB,
+    XMToolBoxTypeHiweb,    // hiweb
+    XMToolBoxTypeTaiji,    // 易数
     XMToolBoxTypeCCC,
     XMToolBoxTypeDDD,
     XMToolBoxTypeEEE,

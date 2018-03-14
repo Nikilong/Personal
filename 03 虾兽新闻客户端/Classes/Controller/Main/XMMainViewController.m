@@ -26,8 +26,10 @@
 
 #import "CommonHeader.h"
 
+// 工具箱模块
 #import "XMToolboxViewController.h"
 #import "XMClipImageViewController.h"
+#import "XMHiwebViewController.h"
 
 @interface XMMainViewController ()<
 XMLeftTableViewControllerDelegate,
@@ -469,7 +471,16 @@ UIGestureRecognizerDelegate>
 
             break;
         }
+        case XMToolBoxTypeHiweb:{
             
+            XMHiwebViewController *clipVC = [[XMHiwebViewController alloc] init];
+            clipVC.view.backgroundColor = [UIColor whiteColor];
+            [self.navigationController pushViewController:clipVC animated:YES];
+            
+            break;
+        }
+
+        
         default:
             break;
     }

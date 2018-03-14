@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		200770302059775100551C00 /* XMHiwebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 200770262059775100551C00 /* XMHiwebViewController.m */; };
+		200770312059775100551C00 /* XMPersonDataUnit.m in Sources */ = {isa = PBXBuildFile; fileRef = 200770282059775100551C00 /* XMPersonDataUnit.m */; };
+		200770322059775100551C00 /* XMPersonFilmCollectionVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2007702A2059775100551C00 /* XMPersonFilmCollectionVC.m */; };
+		200770332059775100551C00 /* XMShowCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2007702C2059775100551C00 /* XMShowCollectionViewCell.m */; };
+		200770342059775100551C00 /* XMShowCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2007702D2059775100551C00 /* XMShowCollectionViewCell.xib */; };
+		200770352059775100551C00 /* XMSingleFilmModle.m in Sources */ = {isa = PBXBuildFile; fileRef = 2007702F2059775100551C00 /* XMSingleFilmModle.m */; };
 		202C84EF1F2624AD0055FD7D /* XMHomeTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 202C84E31F2624AD0055FD7D /* XMHomeTableViewController.m */; };
 		202C84F01F2624AD0055FD7D /* XMQRCodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 202C84E51F2624AD0055FD7D /* XMQRCodeViewController.m */; };
 		202C84F11F2624AD0055FD7D /* XMSaveWebsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 202C84E71F2624AD0055FD7D /* XMSaveWebsTableViewController.m */; };
@@ -52,13 +58,9 @@
 		20C85E53205419C80057F483 /* XMToolBoxConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 20C85E52205419C80057F483 /* XMToolBoxConfig.m */; };
 		20C85E6020541F3B0057F483 /* tool_icon_0.png in Resources */ = {isa = PBXBuildFile; fileRef = 20C85E5620541F3B0057F483 /* tool_icon_0.png */; };
 		20C85E6120541F3B0057F483 /* tool_icon_1.png in Resources */ = {isa = PBXBuildFile; fileRef = 20C85E5720541F3B0057F483 /* tool_icon_1.png */; };
-		20C85E6220541F3B0057F483 /* tool_icon_1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 20C85E5820541F3B0057F483 /* tool_icon_1@2x.png */; };
 		20C85E6320541F3B0057F483 /* tool_icon_2.png in Resources */ = {isa = PBXBuildFile; fileRef = 20C85E5920541F3B0057F483 /* tool_icon_2.png */; };
-		20C85E6420541F3B0057F483 /* tool_icon_2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 20C85E5A20541F3B0057F483 /* tool_icon_2@2x.png */; };
 		20C85E6520541F3B0057F483 /* tool_icon_3.png in Resources */ = {isa = PBXBuildFile; fileRef = 20C85E5B20541F3B0057F483 /* tool_icon_3.png */; };
-		20C85E6620541F3B0057F483 /* tool_icon_3@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 20C85E5C20541F3B0057F483 /* tool_icon_3@2x.png */; };
 		20C85E6720541F3B0057F483 /* tool_icon_4.png in Resources */ = {isa = PBXBuildFile; fileRef = 20C85E5D20541F3B0057F483 /* tool_icon_4.png */; };
-		20C85E6820541F3B0057F483 /* tool_icon_4@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 20C85E5E20541F3B0057F483 /* tool_icon_4@2x.png */; };
 		20C85E6920541F3B0057F483 /* tool_icon_default.png in Resources */ = {isa = PBXBuildFile; fileRef = 20C85E5F20541F3B0057F483 /* tool_icon_default.png */; };
 		20C85E6D2054313F0057F483 /* XMButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 20C85E6C2054313F0057F483 /* XMButton.m */; };
 		20C85E7020551B800057F483 /* XMTouchIDKeyboardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20C85E6F20551B800057F483 /* XMTouchIDKeyboardViewController.m */; };
@@ -97,6 +99,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		200770252059775100551C00 /* XMHiwebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMHiwebViewController.h; sourceTree = "<group>"; };
+		200770262059775100551C00 /* XMHiwebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMHiwebViewController.m; sourceTree = "<group>"; };
+		200770272059775100551C00 /* XMPersonDataUnit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPersonDataUnit.h; sourceTree = "<group>"; };
+		200770282059775100551C00 /* XMPersonDataUnit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPersonDataUnit.m; sourceTree = "<group>"; };
+		200770292059775100551C00 /* XMPersonFilmCollectionVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPersonFilmCollectionVC.h; sourceTree = "<group>"; };
+		2007702A2059775100551C00 /* XMPersonFilmCollectionVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPersonFilmCollectionVC.m; sourceTree = "<group>"; };
+		2007702B2059775100551C00 /* XMShowCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMShowCollectionViewCell.h; sourceTree = "<group>"; };
+		2007702C2059775100551C00 /* XMShowCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMShowCollectionViewCell.m; sourceTree = "<group>"; };
+		2007702D2059775100551C00 /* XMShowCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = XMShowCollectionViewCell.xib; sourceTree = "<group>"; };
+		2007702E2059775100551C00 /* XMSingleFilmModle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMSingleFilmModle.h; sourceTree = "<group>"; };
+		2007702F2059775100551C00 /* XMSingleFilmModle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMSingleFilmModle.m; sourceTree = "<group>"; };
 		202C84E21F2624AD0055FD7D /* XMHomeTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMHomeTableViewController.h; sourceTree = "<group>"; };
 		202C84E31F2624AD0055FD7D /* XMHomeTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMHomeTableViewController.m; sourceTree = "<group>"; };
 		202C84E41F2624AD0055FD7D /* XMQRCodeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMQRCodeViewController.h; sourceTree = "<group>"; };
@@ -185,13 +198,9 @@
 		20C85E52205419C80057F483 /* XMToolBoxConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMToolBoxConfig.m; sourceTree = "<group>"; };
 		20C85E5620541F3B0057F483 /* tool_icon_0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tool_icon_0.png; sourceTree = "<group>"; };
 		20C85E5720541F3B0057F483 /* tool_icon_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tool_icon_1.png; sourceTree = "<group>"; };
-		20C85E5820541F3B0057F483 /* tool_icon_1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tool_icon_1@2x.png"; sourceTree = "<group>"; };
 		20C85E5920541F3B0057F483 /* tool_icon_2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tool_icon_2.png; sourceTree = "<group>"; };
-		20C85E5A20541F3B0057F483 /* tool_icon_2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tool_icon_2@2x.png"; sourceTree = "<group>"; };
 		20C85E5B20541F3B0057F483 /* tool_icon_3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tool_icon_3.png; sourceTree = "<group>"; };
-		20C85E5C20541F3B0057F483 /* tool_icon_3@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tool_icon_3@2x.png"; sourceTree = "<group>"; };
 		20C85E5D20541F3B0057F483 /* tool_icon_4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tool_icon_4.png; sourceTree = "<group>"; };
-		20C85E5E20541F3B0057F483 /* tool_icon_4@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tool_icon_4@2x.png"; sourceTree = "<group>"; };
 		20C85E5F20541F3B0057F483 /* tool_icon_default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tool_icon_default.png; sourceTree = "<group>"; };
 		20C85E6B2054313F0057F483 /* XMButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMButton.h; sourceTree = "<group>"; };
 		20C85E6C2054313F0057F483 /* XMButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMButton.m; sourceTree = "<group>"; };
@@ -253,6 +262,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		200770242059775100551C00 /* hiweb */ = {
+			isa = PBXGroup;
+			children = (
+				200770252059775100551C00 /* XMHiwebViewController.h */,
+				200770262059775100551C00 /* XMHiwebViewController.m */,
+				200770272059775100551C00 /* XMPersonDataUnit.h */,
+				200770282059775100551C00 /* XMPersonDataUnit.m */,
+				200770292059775100551C00 /* XMPersonFilmCollectionVC.h */,
+				2007702A2059775100551C00 /* XMPersonFilmCollectionVC.m */,
+				2007702B2059775100551C00 /* XMShowCollectionViewCell.h */,
+				2007702C2059775100551C00 /* XMShowCollectionViewCell.m */,
+				2007702D2059775100551C00 /* XMShowCollectionViewCell.xib */,
+				2007702E2059775100551C00 /* XMSingleFilmModle.h */,
+				2007702F2059775100551C00 /* XMSingleFilmModle.m */,
+			);
+			path = hiweb;
+			sourceTree = "<group>";
+		};
 		202C84E11F2624AD0055FD7D /* Other */ = {
 			isa = PBXGroup;
 			children = (
@@ -384,6 +411,7 @@
 		20C85E5420541BD50057F483 /* ToolBox */ = {
 			isa = PBXGroup;
 			children = (
+				200770242059775100551C00 /* hiweb */,
 				20C85E362053E1F40057F483 /* XMToolboxViewController.h */,
 				20C85E372053E1F40057F483 /* XMToolboxViewController.m */,
 				20C85E6E20551B800057F483 /* XMTouchIDKeyboardViewController.h */,
@@ -399,13 +427,9 @@
 			children = (
 				20C85E5620541F3B0057F483 /* tool_icon_0.png */,
 				20C85E5720541F3B0057F483 /* tool_icon_1.png */,
-				20C85E5820541F3B0057F483 /* tool_icon_1@2x.png */,
 				20C85E5920541F3B0057F483 /* tool_icon_2.png */,
-				20C85E5A20541F3B0057F483 /* tool_icon_2@2x.png */,
 				20C85E5B20541F3B0057F483 /* tool_icon_3.png */,
-				20C85E5C20541F3B0057F483 /* tool_icon_3@2x.png */,
 				20C85E5D20541F3B0057F483 /* tool_icon_4.png */,
-				20C85E5E20541F3B0057F483 /* tool_icon_4@2x.png */,
 				20C85E5F20541F3B0057F483 /* tool_icon_default.png */,
 			);
 			path = toolBoxIcons;
@@ -677,18 +701,15 @@
 				849D27011E640E3200F0CA5D /* LaunchScreen.storyboard in Resources */,
 				20C85E6920541F3B0057F483 /* tool_icon_default.png in Resources */,
 				20C85E6720541F3B0057F483 /* tool_icon_4.png in Resources */,
-				20C85E6620541F3B0057F483 /* tool_icon_3@2x.png in Resources */,
 				20F1121C1E866F9C00E64A70 /* XMLeftViewUserCell.xib in Resources */,
 				20F112141E864FC000E64A70 /* web.plist in Resources */,
-				20C85E6220541F3B0057F483 /* tool_icon_1@2x.png in Resources */,
 				84BA255A1E65C7A800C8B204 /* XMWebTableViewCell.xib in Resources */,
 				849D26FE1E640E3200F0CA5D /* Assets.xcassets in Resources */,
-				20C85E6820541F3B0057F483 /* tool_icon_4@2x.png in Resources */,
+				200770342059775100551C00 /* XMShowCollectionViewCell.xib in Resources */,
 				205CECF61F488EF700821E38 /* webSpecial.plist in Resources */,
 				20C85E6320541F3B0057F483 /* tool_icon_2.png in Resources */,
 				205CECDC1F48150E00821E38 /* MBProgressHUD.bundle in Resources */,
 				20C85E6120541F3B0057F483 /* tool_icon_1.png in Resources */,
-				20C85E6420541F3B0057F483 /* tool_icon_2@2x.png in Resources */,
 				20C85E6020541F3B0057F483 /* tool_icon_0.png in Resources */,
 				20C85E6520541F3B0057F483 /* tool_icon_3.png in Resources */,
 			);
@@ -729,6 +750,7 @@
 				205CECE21F48150E00821E38 /* SDImageCacheConfig.m in Sources */,
 				205CECEB1F48150E00821E38 /* UIImage+MultiFormat.m in Sources */,
 				202C84EF1F2624AD0055FD7D /* XMHomeTableViewController.m in Sources */,
+				200770322059775100551C00 /* XMPersonFilmCollectionVC.m in Sources */,
 				205CECF91F4898A600821E38 /* XMDropView.m in Sources */,
 				20C85E7020551B800057F483 /* XMTouchIDKeyboardViewController.m in Sources */,
 				205CECEF1F48150E00821E38 /* UIView+WebCache.m in Sources */,
@@ -736,6 +758,7 @@
 				842971041E654644002BDBC0 /* AppDelegate.m in Sources */,
 				205CECEE1F48150E00821E38 /* UIImageView+WebCache.m in Sources */,
 				205CECE11F48150E00821E38 /* SDImageCache.m in Sources */,
+				200770302059775100551C00 /* XMHiwebViewController.m in Sources */,
 				205CECDD1F48150E00821E38 /* MBProgressHUD.m in Sources */,
 				20A3BCFF1F2E2D7400ED1699 /* XMAdvance.m in Sources */,
 				205CECE51F48150E00821E38 /* SDWebImageDownloader.m in Sources */,
@@ -748,15 +771,18 @@
 				205CECDE1F48150E00821E38 /* MKAnnotationView+WebCache.m in Sources */,
 				20C85E2F204EE8850057F483 /* EXQRCodeImageDetectorUtil.m in Sources */,
 				202C84F61F2624FC0055FD7D /* XMNavWebViewController.m in Sources */,
+				200770332059775100551C00 /* XMShowCollectionViewCell.m in Sources */,
 				205CECE31F48150E00821E38 /* SDWebImageCompat.m in Sources */,
 				205CED0C1F489F2B00821E38 /* XMNavTitleTableViewController.m in Sources */,
 				20F1121B1E866F9C00E64A70 /* XMLeftViewUserCell.m in Sources */,
+				200770312059775100551C00 /* XMPersonDataUnit.m in Sources */,
 				202C84F21F2624AD0055FD7D /* XMSearchTableViewController.m in Sources */,
 				205CECF41F48151700821E38 /* UIView+getPointColor.m in Sources */,
 				205CED0B1F489F2B00821E38 /* XMMainViewController.m in Sources */,
 				202C84F31F2624AD0055FD7D /* XMWebViewController.m in Sources */,
 				205CECE81F48150E00821E38 /* SDWebImagePrefetcher.m in Sources */,
 				20F112251E86BF4600E64A70 /* XMWebModelTool.m in Sources */,
+				200770352059775100551C00 /* XMSingleFilmModle.m in Sources */,
 				20C85E382053E1F40057F483 /* XMToolboxViewController.m in Sources */,
 				205CED0F1F48AA5600821E38 /* XMTextTableViewCell.m in Sources */,
 				205CECE61F48150E00821E38 /* SDWebImageDownloaderOperation.m in Sources */,
