@@ -131,6 +131,7 @@
 
 // 根据解析二维码得到的结果进行下一步处理
 - (void)dealResult:(NSString *)result{
+    
     UIAlertController *tips = [UIAlertController alertControllerWithTitle:@"扫描结果" message:result preferredStyle:UIAlertControllerStyleAlert];
     
     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action){

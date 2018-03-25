@@ -11,6 +11,7 @@
 #import "XMNavWebViewController.h"
 
 #import "XMTouchIDKeyboardViewController.h"
+#import "XMHiwebViewController.h"
 
 @interface AppDelegate ()
 

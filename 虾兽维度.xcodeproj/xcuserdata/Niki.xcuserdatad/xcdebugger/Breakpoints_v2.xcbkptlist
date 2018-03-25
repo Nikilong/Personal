@@ -222,11 +222,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "03 &#x867e;&#x517d;&#x65b0;&#x95fb;&#x5ba2;&#x6237;&#x7aef;/Classes/Controller/Webmodule/XMWebViewController.m"
-            timestampString = "524927183.067011"
+            timestampString = "543681197.208447"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "473"
-            endingLineNumber = "473"
+            startingLineNumber = "495"
+            endingLineNumber = "495"
             landmarkName = "-gestureRecognizer:shouldRecognizeSimultaneouslyWithGestureRecognizer:"
             landmarkType = "7">
          </BreakpointContent>
@@ -238,11 +238,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "03 &#x867e;&#x517d;&#x65b0;&#x95fb;&#x5ba2;&#x6237;&#x7aef;/Classes/Controller/Webmodule/XMWebViewController.m"
-            timestampString = "524927183.067011"
+            timestampString = "543681197.208447"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "641"
-            endingLineNumber = "641"
+            startingLineNumber = "663"
+            endingLineNumber = "663"
             landmarkName = "-panToBackForward:"
             landmarkType = "7">
          </BreakpointContent>
@@ -254,11 +254,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "03 &#x867e;&#x517d;&#x65b0;&#x95fb;&#x5ba2;&#x6237;&#x7aef;/Classes/Controller/Webmodule/XMWebViewController.m"
-            timestampString = "524927183.067011"
+            timestampString = "543681197.208447"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "434"
-            endingLineNumber = "434"
+            startingLineNumber = "456"
+            endingLineNumber = "456"
             landmarkName = "-webView:shouldStartLoadWithRequest:navigationType:"
             landmarkType = "7">
          </BreakpointContent>
@@ -270,11 +270,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "03 &#x867e;&#x517d;&#x65b0;&#x95fb;&#x5ba2;&#x6237;&#x7aef;/Classes/Controller/Webmodule/XMWebViewController.m"
-            timestampString = "524927183.067011"
+            timestampString = "543681197.208447"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "646"
-            endingLineNumber = "646"
+            startingLineNumber = "668"
+            endingLineNumber = "668"
             landmarkName = "-panToBackForward:"
             landmarkType = "7">
          </BreakpointContent>
@@ -319,6 +319,22 @@
             continueAfterRunningActions = "No"
             scope = "0"
             stopOnStyle = "0">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "03 &#x867e;&#x517d;&#x65b0;&#x95fb;&#x5ba2;&#x6237;&#x7aef;/Classes/Controller/Other/hiweb/XMPersonFilmCollectionVC.m"
+            timestampString = "543678916.175227"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "360"
+            endingLineNumber = "360"
+            landmarkName = "-starRequestWithModle:"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

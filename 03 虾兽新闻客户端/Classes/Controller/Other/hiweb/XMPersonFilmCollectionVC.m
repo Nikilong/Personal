@@ -314,13 +314,22 @@ static NSString * const reuseIdentifier = @"Cell";
 
 - (void)starRequestWithModle:(XMSingleFilmModle *)model
 {
+    if (!model.url){
+        [MBProgressHUD showMessage:@"请求的url为空" toView:self.view];
+        return;
+    }
     // 开启网络加载提示
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     
     NSString *html;
     while (!html.length)
     {
-        html = [NSString stringWithContentsOfURL:[NSURL URLWithString:model.url] encoding:NSUTF8StringEncoding error:nil];
+        NSError *error;
+        html = [NSString stringWithContentsOfURL:[NSURL URLWithString:model.url] encoding:NSUTF8StringEncoding error:&error];
+        if (error.code == -999){
+            [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+            return;
+        }
         
     }
     

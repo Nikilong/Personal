@@ -8,9 +8,20 @@
 
 #import "XMPersonDataUnit.h"
 #import "XMSingleFilmModle.h"
+#import "CommonHeader.h"
 
+static NSString *homUrl;
 @implementation XMPersonDataUnit
-
+    
+// 返回homeurl
++ (NSString *)checkHomeUrl{
+    if (homUrl){
+        return homUrl;
+    }else{
+        homUrl = [NSString stringWithContentsOfFile:XMHiwebHomeUrlPath encoding:NSUTF8StringEncoding error:nil];
+        return homUrl;
+    }
+}
 
 #pragma mark - 处理数据
 // 处理个人所有作品
@@ -42,8 +53,7 @@
         XMSingleFilmModle *model = [[XMSingleFilmModle alloc] init];
         for (NSString *item in itemArr)
         {
-        
-            if ([item containsString:@"href=\"https://www.javbus2.com/"])
+            if ([item containsString:[NSString stringWithFormat:@"href=\"%@/",[self checkHomeUrl]]])
             {
                 url = [self regularUrl:item paternString:@"https" index:3];
                 model.url = url;
@@ -102,8 +112,7 @@
         XMSingleFilmModle *model = [[XMSingleFilmModle alloc] init];
         for (NSString *item in itemArr)
         {
-            
-            if ([item containsString:@"href=\"https://www.javbus2.com/"])
+            if ([item containsString:[NSString stringWithFormat:@"href=\"%@/",[self checkHomeUrl]]])
             {
                 url = [self regularUrl:item paternString:@"https" index:3];
                 model.url = url;
@@ -281,5 +290,34 @@
     return [str substringWithRange:NSMakeRange(range.location, str.length - range.location - index)];
 }
 
+
+// 正则提取url
++ (NSArray *)new_dealDateUrl:(NSString *)date logFlag:(BOOL)flag{
+    NSString *reguStrUrl = @"((http[s]{0,1}|ftp)://[a-zA-Z0-9\\.\\-]+\\.([a-zA-Z]{2,4})(:\\d+)?(/[a-zA-Z0-9\\.\\-~!@#$%^&*+?:_/=<>]*)?)|(www.[a-zA-Z0-9\\.\\-]+\\.([a-zA-Z]{2,4})(:\\d+)?(/[a-zA-Z0-9\\.\\-~!@#$%^&*+?:_/=<>]*)?)";
+    return [self regularWithString:date regular:reguStrUrl logFlag:flag];
+}
+    
+// 正则表达式过滤
++ (NSArray *)regularWithString:(NSString *)str regular:(NSString *)reguStr logFlag:(BOOL) flag{
+    
+    NSError *error = NULL;
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:reguStr options: NSRegularExpressionCaseInsensitive error:&error];
+    
+    NSArray *arrayOfAllMatches = [regex matchesInString:str options:0 range:NSMakeRange(0, [str length])];
+    
+    NSMutableArray *resultArr = [NSMutableArray array];
+    for (NSTextCheckingResult *match in arrayOfAllMatches){
+        
+        NSString* substringForMatch = [str substringWithRange:match.range];
+        [resultArr addObject:substringForMatch];
+        if (flag){
+            NSLog(@"%@",substringForMatch);
+            
+        }
+    }
+    NSLog(@"一共有:%zd个结果",arrayOfAllMatches.count);
+    return resultArr;
+    
+}
 
 @end

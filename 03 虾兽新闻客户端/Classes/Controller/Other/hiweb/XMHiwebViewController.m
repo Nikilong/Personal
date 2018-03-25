@@ -14,9 +14,14 @@
 #import "MBProgressHUD+NK.h"
 #import "UIImageView+WebCache.h"
 
+#import "CommonHeader.h"
+
 @interface XMHiwebViewController ()<UITextFieldDelegate>
 
 @property (nonatomic, strong) XMPersonFilmCollectionVC *personCollectListVC;
+
+// 记录首页
+@property (copy, nonatomic) NSString *homeUrl;
 
 @end
 
@@ -72,24 +77,30 @@
 
     self.index = 1;
 //    self.url = @"https://www.javbus2.com/star/n4r";
-//    self.url = @"https://www.javbus2.com/star/92l";
 //    self.url = @"https://www.javbus2.com/page";
-//    self.url = @"https://www.javbus2.com/search/ipz";
-    self.url = @"https://www.javbus2.com/search/abp";
-
-    [self starRequest];
+//    self.url = @"https://www.javbus2.pw/search/abp";
+    self.homeUrl = [NSString stringWithContentsOfFile:XMHiwebHomeUrlPath encoding:NSUTF8StringEncoding error:nil];
+    if (self.homeUrl){
+        self.url = [NSString stringWithFormat:@"%@/search/abp",self.homeUrl];
+        // 开始加载数据
+        [self starRequest];
+    }else{
+        [self getNewHomeUrl];
+    }
     
-    //
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(popCurrentViewcontroller)];
-    tap.numberOfTapsRequired = 2;
-    tap.delegate = self;
-    [self.navigationItem.titleView addGestureRecognizer:tap];
-    self.navigationItem.titleView.userInteractionEnabled = YES;
+
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    // 设置导航栏
+    [self setNavBar];
+    
+}
+    
+- (void)setNavBar{
     // 设置左右导航栏的功能键
     UIView *leftContenV = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 44 * 3, 44)];
     // 上一页
@@ -98,19 +109,24 @@
     [backBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [backBtn addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
     // 清缓存
-    UIButton *clearBtn = [[UIButton alloc] initWithFrame:CGRectMake(44, 0, 44, 44)];
-    [clearBtn setImage:[UIImage imageNamed:@"iconDelete"] forState:UIControlStateNormal];
-    [clearBtn addTarget:self action:@selector(clear) forControlEvents:UIControlEventTouchUpInside];
+    //    UIButton *clearBtn = [[UIButton alloc] initWithFrame:CGRectMake(44, 0, 44, 44)];
+    //    [clearBtn setImage:[UIImage imageNamed:@"iconDelete"] forState:UIControlStateNormal];
+    //    [clearBtn addTarget:self action:@selector(clear) forControlEvents:UIControlEventTouchUpInside];
+    // 获取最新的地址
+    UIButton *homeUrlBtn = [[UIButton alloc] initWithFrame:CGRectMake(44, 0, 44, 44)];
+    [homeUrlBtn setImage:[UIImage imageNamed:@"iconSetting"] forState:UIControlStateNormal];
+    [homeUrlBtn addTarget:self action:@selector(getNewHomeUrl) forControlEvents:UIControlEventTouchUpInside];
     
-    // 清缓存
+    // 退出模块
     UIButton *closeBtn = [[UIButton alloc] initWithFrame:CGRectMake(88, 0, 44, 44)];
     [closeBtn setImage:[UIImage imageNamed:@"iconOffline"] forState:UIControlStateNormal];
     [closeBtn addTarget:self action:@selector(closeCurrentViewController) forControlEvents:UIControlEventTouchUpInside];
     
     [leftContenV addSubview:backBtn];
-    [leftContenV addSubview:clearBtn];
+    //    [leftContenV addSubview:clearBtn];
+    [leftContenV addSubview:homeUrlBtn];
     [leftContenV addSubview:closeBtn];
-
+    
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:leftContenV];;
     
     
@@ -134,7 +150,6 @@
     [rightContenV addSubview:reloadBtn];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightContenV];
 
-    
 }
 
 
@@ -171,6 +186,43 @@
     [MBProgressHUD showProgressInView:self.navigationController.view mode:MBProgressHUDModeDeterminateHorizontalBar duration:2 title:@"正在清理缓存中。。。。"];
 
 }
+    
+// 获得最新的地址
+- (void)getNewHomeUrl{
+    //https://announce.javbus2.pw/website.php
+    NSError *error;
+    NSString *html = [NSString stringWithContentsOfURL:[NSURL URLWithString:@"https://announce.javbus2.pw/website.php"] encoding:NSUTF8StringEncoding error:&error];
+    if (!error){
+        // 对html的网页进行提取,并利用NSSet去重
+        NSSet *urlSet = [NSSet setWithArray:[XMPersonDataUnit new_dealDateUrl:html logFlag:NO]];
+        NSArray *urlArr = urlSet.allObjects;
+        
+        // 弹出底部按钮来做选项
+        UIAlertController *tips = [UIAlertController alertControllerWithTitle:@"提示" message:@"重新设定主页url" preferredStyle:UIAlertControllerStyleActionSheet];
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
+         [tips addAction:cancelAction];
+        
+        __weak typeof(self) weakSelf = self;
+        for (int i = 0; i < urlArr.count; i++) {
+            UIAlertAction *okAction = [UIAlertAction actionWithTitle:urlArr[i] style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action){
+                weakSelf.homeUrl = urlArr[i];
+                weakSelf.url = [NSString stringWithFormat:@"%@/search/abp",urlArr[i]];
+                [urlArr[i] writeToFile:XMHiwebHomeUrlPath atomically:YES encoding:NSUTF8StringEncoding error:nil];
+                
+                [weakSelf starRequest];
+                
+            }];
+            
+            [tips addAction:okAction];
+            
+        }
+        
+        [self presentViewController:tips animated:YES completion:nil];
+        NSLog(@"---");
+        
+    }
+
+}
 
 // 搜索
 - (void)search
@@ -186,7 +238,7 @@
     }
 }
     
-//
+// 退出当前模块
 - (void)closeCurrentViewController{
     [self.navigationController popViewControllerAnimated:YES];
 }
@@ -197,16 +249,6 @@
 {
     // 显示当前页数
     self.navigationItem.title = [NSString stringWithFormat:@"第%zd页",self.index];
-    
-    // 假数据
-//    XMSingleFilmModle *model = [[XMSingleFilmModle alloc] init];
-//    model.url = @"";
-//    model.imgUrl = @"";
-//    model.title = @"111";
-//    NSArray *dataArr = @[model];
-//    self.personCollectListVC.data = dataArr;
-//    return;
-    
     
     // 通过url获取网页的内容
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%zd",self.url,self.index]];
@@ -222,10 +264,15 @@
     // 异步去加载网络请求
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
-        NSString *html = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:nil];
+        NSError *error;
+        NSString *html = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:&error];
+        if (error.code == -999){
+            [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+            return;
+        }
         // 回到主线程更新ui
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+            [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
             // 判断请求得到的内容是否为空
             if (!html.length)
             {
@@ -244,14 +291,6 @@
 }
 
 
-//#pragma mark - xmpersoncollection  delegate
-//- (void)loadOtherActor:(XMSingleFilmModle *)model
-//{
-//    self.index = 1;
-//    self.url = model.url;
-//    [self starRequest];
-//}
-
 
 #pragma mark - uitextfield delegate
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
@@ -264,7 +303,7 @@
     if (textField.text.length == 0) return NO;
     
     // 拼接搜索内容并且对中文进行转码
-    self.url = [[NSString stringWithFormat:@"https://www.javbus2.com/search/%@",textField.text] stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
+    self.url = [[NSString stringWithFormat:@"%@/search/%@",self.homeUrl,textField.text] stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
     // 重置索引为第一页
     self.index = 1;
     // 发起网络请求

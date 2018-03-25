@@ -170,7 +170,7 @@
 		205CECDA1F48150E00821E38 /* UIView+WebCacheOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+WebCacheOperation.m"; sourceTree = "<group>"; };
 		205CECF21F48151700821E38 /* UIView+getPointColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+getPointColor.h"; sourceTree = "<group>"; };
 		205CECF31F48151700821E38 /* UIView+getPointColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+getPointColor.m"; sourceTree = "<group>"; };
-		205CECF51F488EF700821E38 /* webSpecial.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = webSpecial.plist; sourceTree = "<group>"; };
+		205CECF51F488EF700821E38 /* webSpecial.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = webSpecial.plist; path = ../webSpecial.plist; sourceTree = "<group>"; };
 		205CECF71F4898A600821E38 /* XMDropView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMDropView.h; sourceTree = "<group>"; };
 		205CECF81F4898A600821E38 /* XMDropView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMDropView.m; sourceTree = "<group>"; };
 		205CECFA1F489A0000821E38 /* UIView+Extension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Extension.h"; sourceTree = "<group>"; };
@@ -194,8 +194,8 @@
 		20C85E2E204EE8850057F483 /* EXQRCodeImageDetectorUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EXQRCodeImageDetectorUtil.m; sourceTree = "<group>"; };
 		20C85E362053E1F40057F483 /* XMToolboxViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMToolboxViewController.h; sourceTree = "<group>"; };
 		20C85E372053E1F40057F483 /* XMToolboxViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMToolboxViewController.m; sourceTree = "<group>"; };
-		20C85E51205419C80057F483 /* XMToolBoxConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMToolBoxConfig.h; sourceTree = "<group>"; };
-		20C85E52205419C80057F483 /* XMToolBoxConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMToolBoxConfig.m; sourceTree = "<group>"; };
+		20C85E51205419C80057F483 /* XMToolBoxConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMToolBoxConfig.h; path = ../Classes/Other/XMToolBoxConfig.h; sourceTree = "<group>"; };
+		20C85E52205419C80057F483 /* XMToolBoxConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XMToolBoxConfig.m; path = ../Classes/Other/XMToolBoxConfig.m; sourceTree = "<group>"; };
 		20C85E5620541F3B0057F483 /* tool_icon_0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tool_icon_0.png; sourceTree = "<group>"; };
 		20C85E5720541F3B0057F483 /* tool_icon_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tool_icon_1.png; sourceTree = "<group>"; };
 		20C85E5920541F3B0057F483 /* tool_icon_2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tool_icon_2.png; sourceTree = "<group>"; };
@@ -208,8 +208,8 @@
 		20C85E6F20551B800057F483 /* XMTouchIDKeyboardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMTouchIDKeyboardViewController.m; sourceTree = "<group>"; };
 		20E9E371204C4BEC007D442E /* XMClipImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMClipImageViewController.h; sourceTree = "<group>"; };
 		20E9E372204C4BEC007D442E /* XMClipImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMClipImageViewController.m; sourceTree = "<group>"; };
-		20E9E374204C5136007D442E /* CommonHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CommonHeader.h; sourceTree = "<group>"; };
-		20F112131E864FC000E64A70 /* web.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = web.plist; sourceTree = "<group>"; };
+		20E9E374204C5136007D442E /* CommonHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CommonHeader.h; path = ../CommonHeader.h; sourceTree = "<group>"; };
+		20F112131E864FC000E64A70 /* web.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = web.plist; path = ../web.plist; sourceTree = "<group>"; };
 		20F112151E86697400E64A70 /* XMChannelModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMChannelModel.h; sourceTree = "<group>"; };
 		20F112161E86697400E64A70 /* XMChannelModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMChannelModel.m; sourceTree = "<group>"; };
 		20F112181E866F9C00E64A70 /* XMLeftViewUserCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMLeftViewUserCell.h; sourceTree = "<group>"; };
@@ -280,6 +280,39 @@
 			path = hiweb;
 			sourceTree = "<group>";
 		};
+		20077036205AA78F00551C00 /* config */ = {
+			isa = PBXGroup;
+			children = (
+				20F112131E864FC000E64A70 /* web.plist */,
+				205CECF51F488EF700821E38 /* webSpecial.plist */,
+				20C85E51205419C80057F483 /* XMToolBoxConfig.h */,
+				20C85E52205419C80057F483 /* XMToolBoxConfig.m */,
+				20E9E374204C5136007D442E /* CommonHeader.h */,
+			);
+			name = config;
+			path = toolBoxIcons;
+			sourceTree = "<group>";
+		};
+		20077037205AA7D200551C00 /* clipImage */ = {
+			isa = PBXGroup;
+			children = (
+				20E9E371204C4BEC007D442E /* XMClipImageViewController.h */,
+				20E9E372204C4BEC007D442E /* XMClipImageViewController.m */,
+			);
+			name = clipImage;
+			sourceTree = "<group>";
+		};
+		20077038205AA7E400551C00 /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				20C85E362053E1F40057F483 /* XMToolboxViewController.h */,
+				20C85E372053E1F40057F483 /* XMToolboxViewController.m */,
+				20C85E6E20551B800057F483 /* XMTouchIDKeyboardViewController.h */,
+				20C85E6F20551B800057F483 /* XMTouchIDKeyboardViewController.m */,
+			);
+			name = Main;
+			sourceTree = "<group>";
+		};
 		202C84E11F2624AD0055FD7D /* Other */ = {
 			isa = PBXGroup;
 			children = (
@@ -291,7 +324,6 @@
 				202C84E71F2624AD0055FD7D /* XMSaveWebsTableViewController.m */,
 				202C84E81F2624AD0055FD7D /* XMSearchTableViewController.h */,
 				202C84E91F2624AD0055FD7D /* XMSearchTableViewController.m */,
-				20C85E5420541BD50057F483 /* ToolBox */,
 			);
 			path = Other;
 			sourceTree = "<group>";
@@ -411,15 +443,12 @@
 		20C85E5420541BD50057F483 /* ToolBox */ = {
 			isa = PBXGroup;
 			children = (
+				20077038205AA7E400551C00 /* Main */,
+				20077037205AA7D200551C00 /* clipImage */,
 				200770242059775100551C00 /* hiweb */,
-				20C85E362053E1F40057F483 /* XMToolboxViewController.h */,
-				20C85E372053E1F40057F483 /* XMToolboxViewController.m */,
-				20C85E6E20551B800057F483 /* XMTouchIDKeyboardViewController.h */,
-				20C85E6F20551B800057F483 /* XMTouchIDKeyboardViewController.m */,
-				20E9E371204C4BEC007D442E /* XMClipImageViewController.h */,
-				20E9E372204C4BEC007D442E /* XMClipImageViewController.m */,
 			);
 			name = ToolBox;
+			path = Controller/Other;
 			sourceTree = "<group>";
 		};
 		20C85E5520541F3B0057F483 /* toolBoxIcons */ = {
@@ -464,6 +493,7 @@
 				842970FA1E654644002BDBC0 /* Model */,
 				842970FE1E654644002BDBC0 /* View */,
 				842970FB1E654644002BDBC0 /* Other */,
+				20C85E5420541BD50057F483 /* ToolBox */,
 				205CECF11F48151700821E38 /* Category */,
 				20F112221E86BF1800E64A70 /* Tool */,
 			);
@@ -499,8 +529,6 @@
 				2099EB7C1F19DCD500F8BD42 /* XMOpenWebmoduleProtocol.h */,
 				20A3BCFD1F2E2D7400ED1699 /* XMAdvance.h */,
 				20A3BCFE1F2E2D7400ED1699 /* XMAdvance.m */,
-				20C85E51205419C80057F483 /* XMToolBoxConfig.h */,
-				20C85E52205419C80057F483 /* XMToolBoxConfig.m */,
 			);
 			path = Other;
 			sourceTree = "<group>";
@@ -552,13 +580,11 @@
 			children = (
 				842970ED1E654644002BDBC0 /* Classes */,
 				849D26FD1E640E3200F0CA5D /* Assets.xcassets */,
+				20077036205AA78F00551C00 /* config */,
 				20C85E5520541F3B0057F483 /* toolBoxIcons */,
 				849D26FF1E640E3200F0CA5D /* LaunchScreen.storyboard */,
-				20F112131E864FC000E64A70 /* web.plist */,
-				205CECF51F488EF700821E38 /* webSpecial.plist */,
 				849D27021E640E3200F0CA5D /* Info.plist */,
 				849D26F11E640E3200F0CA5D /* Supporting Files */,
-				20E9E374204C5136007D442E /* CommonHeader.h */,
 			);
 			name = "虾兽维度";
 			path = "03 虾兽新闻客户端";

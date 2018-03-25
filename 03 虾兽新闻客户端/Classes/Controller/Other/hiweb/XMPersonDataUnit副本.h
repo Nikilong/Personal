@@ -12,12 +12,16 @@
 
 @interface XMPersonDataUnit : NSObject
 
++ (NSArray *)new_dealHomeDate:(NSString *)date;
++ (NSArray *)new_dealDatePicture:(NSString *)date;
++ (NSArray *)new_dealDateAcotr:(NSString *)date;
++ (NSArray *)new_dealDateUrl:(NSString *)date;
+    
+// 旧方法
 + (NSArray *)dealDate:(NSString *)date;
 + (NSArray *)dealDatePicture:(NSString *)date;
 + (NSArray *)dealDateAcotr:(NSString *)date;
 + (NSArray *)dealRelateFilmArr:(NSString *)date;
-// 正则获得url
-+ (NSArray *)new_dealDateUrl:(NSString *)date logFlag:(BOOL)flag;
 + (XMSingleFilmModle *)dealDetail:(NSString *)date;
 
 @end

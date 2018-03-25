@@ -10,6 +10,7 @@
 #import "XMWebModelTool.h"
 #import "MBProgressHUD+NK.h"
 #import "UIView+getPointColor.h"
+#import "EXQRCodeImageDetectorUtil.h"
 
 #define XMBackImageVStarX ([UIScreen mainScreen].bounds.size.width / (3))
 #define XMSearchModePanDistance 70
@@ -360,7 +361,28 @@
     [tips addAction:cancelAction];
     [tips addAction:okAction];
     
-    [self presentViewController:tips animated:YES completion:nil];
+    // 判断是否含有二维码
+    NSString *qrMsg = [EXQRCodeImageDetectorUtil detectorQRCodeImage:[UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:imageUrl]]]];
+    if(qrMsg){
+        UIAlertAction *qrAction = [UIAlertAction actionWithTitle:@"识别图中二维码" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
+            // 当点击确定执行的块代码
+            XMWebModel *model = [[XMWebModel alloc] init];
+            model.webURL = [NSURL URLWithString:qrMsg];
+            
+            // 因为webmodule是push出来的,必须先pop掉当前控制器
+//            [self.navigationController popViewControllerAnimated:YES];
+            
+
+            [XMWebViewController openWebmoduleWithModel:model viewController:self];
+
+        }];
+        
+        [tips addAction:qrAction];
+    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        [self presentViewController:tips animated:YES completion:nil];
+    });
 }
 
 /**

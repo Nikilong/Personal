@@ -13,4 +13,11 @@
 #define XMScreenW [UIScreen mainScreen].bounds.size.width
 #define XMScreenH [UIScreen mainScreen].bounds.size.height
 
+// app的documents路径
+#define XMHomeDirectory NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0]
+
+// hiweb主页路径
+#define XMHiwebHomeUrlPath [XMHomeDirectory stringByAppendingPathComponent:@"hiweb.homeurl"]
+
+
 #endif /* CommonHeader_h */

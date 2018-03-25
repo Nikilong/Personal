@@ -17,6 +17,8 @@
 @property (nonatomic, strong) NSMutableArray *engineArr;
 
 @property (weak, nonatomic)  UITextField *searchF;
+    
+@property (weak, nonatomic)  UITableViewCell *urlCell;
 
 @end
 
@@ -72,9 +74,15 @@
     [super viewWillAppear:animated];
     // 自动弹出键盘
     [self.navigationItem.titleView becomeFirstResponder];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textFieldDidChangeNotification:) name:UITextFieldTextDidChangeNotification object:self.searchF];
+}
+    
+- (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-#pragma mark - 
+#pragma mark -
 - (void)setNavItem
 {
     // 导航栏titleview
@@ -99,10 +107,10 @@
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStyleDone target:self action:@selector(cancel)];
     
     // 右侧go按钮
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"go" style:UIBarButtonItemStyleDone target:self action:@selector(go)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"go" style:UIBarButtonItemStyleDone target:self action:@selector(goWithUrlFlag:)];
 }
 
-- (void)go
+- (void)goWithUrlFlag:(BOOL)urlFlag
 {
     // 收起键盘
     [self.searchF resignFirstResponder];
@@ -110,7 +118,12 @@
     // 传递web数据给webmodule
     XMWebModel *model = [[XMWebModel alloc] init];
     // 对于搜索内容为中文时,需要转码
-    NSString *webStr = [[NSString stringWithFormat:@"%@%@",self.selectEngine,self.searchF.text] stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
+    NSString *webStr;
+    if (urlFlag){
+        webStr = [self.searchF.text stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
+    }else{
+        webStr = [[NSString stringWithFormat:@"%@%@",self.selectEngine,self.searchF.text] stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
+    }
     model.webURL = [NSURL URLWithString:webStr];
     
     // 先dismiss掉self,然后再通知代理去加载网页
@@ -129,9 +142,14 @@
 
 #pragma mark - delegate
 #pragma mark tableview delegate
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+
+    return 2;
+}
+    
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return self.engineArr.count;
+    return section == 0 ? 1 : self.engineArr.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -141,25 +159,44 @@
     {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:ID];
     }
-    cell.textLabel.text = self.engineArr[indexPath.row][kName];
+    if(indexPath.section == 0){
+        cell.textLabel.text = @"前往URL:";
+        self.urlCell = cell;
+    }else{
+    
+        cell.textLabel.text = self.engineArr[indexPath.row][kName];
+    }
     
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // 改变频道
-    self.selectEngine = self.engineArr[indexPath.row][kEngine];
-    // 然后去搜索
-    [self go];
+    if(indexPath.section == 0){
+        [self goWithUrlFlag:YES];
+    }else{
+    
+        // 改变频道
+        self.selectEngine = self.engineArr[indexPath.row][kEngine];
+        // 然后去搜索
+        [self goWithUrlFlag:NO];
+    }
 }
 
 #pragma mark textfield delegate
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     // 按下键盘的return去搜索
-    [self go];
+    [self goWithUrlFlag:NO];
     return YES;
 }
+    
+#pragma mark - 监听textfield的输入
+- (void)textFieldDidChangeNotification:(NSNotification *)noti{
+
+    self.urlCell.textLabel.text = [NSString stringWithFormat:@"前往URL: %@",self.searchF.text];
+}
+    
+
 
 @end
