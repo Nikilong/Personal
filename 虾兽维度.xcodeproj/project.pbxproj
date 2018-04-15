@@ -13,6 +13,7 @@
 		200770332059775100551C00 /* XMShowCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2007702C2059775100551C00 /* XMShowCollectionViewCell.m */; };
 		200770342059775100551C00 /* XMShowCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2007702D2059775100551C00 /* XMShowCollectionViewCell.xib */; };
 		200770352059775100551C00 /* XMSingleFilmModle.m in Sources */ = {isa = PBXBuildFile; fileRef = 2007702F2059775100551C00 /* XMSingleFilmModle.m */; };
+		200A823420837B1300825E6E /* XMMetorMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200A823320837B1300825E6E /* XMMetorMapViewController.swift */; };
 		202C84EF1F2624AD0055FD7D /* XMHomeTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 202C84E31F2624AD0055FD7D /* XMHomeTableViewController.m */; };
 		202C84F01F2624AD0055FD7D /* XMQRCodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 202C84E51F2624AD0055FD7D /* XMQRCodeViewController.m */; };
 		202C84F11F2624AD0055FD7D /* XMSaveWebsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 202C84E71F2624AD0055FD7D /* XMSaveWebsTableViewController.m */; };
@@ -110,6 +111,8 @@
 		2007702D2059775100551C00 /* XMShowCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = XMShowCollectionViewCell.xib; sourceTree = "<group>"; };
 		2007702E2059775100551C00 /* XMSingleFilmModle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMSingleFilmModle.h; sourceTree = "<group>"; };
 		2007702F2059775100551C00 /* XMSingleFilmModle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMSingleFilmModle.m; sourceTree = "<group>"; };
+		200A823320837B1300825E6E /* XMMetorMapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XMMetorMapViewController.swift; sourceTree = "<group>"; };
+		200A823520837BBC00825E6E /* 虾兽维度-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "虾兽维度-Bridging-Header.h"; sourceTree = "<group>"; };
 		202C84E21F2624AD0055FD7D /* XMHomeTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMHomeTableViewController.h; sourceTree = "<group>"; };
 		202C84E31F2624AD0055FD7D /* XMHomeTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMHomeTableViewController.m; sourceTree = "<group>"; };
 		202C84E41F2624AD0055FD7D /* XMQRCodeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMQRCodeViewController.h; sourceTree = "<group>"; };
@@ -324,6 +327,7 @@
 				202C84E71F2624AD0055FD7D /* XMSaveWebsTableViewController.m */,
 				202C84E81F2624AD0055FD7D /* XMSearchTableViewController.h */,
 				202C84E91F2624AD0055FD7D /* XMSearchTableViewController.m */,
+				200A823320837B1300825E6E /* XMMetorMapViewController.swift */,
 			);
 			path = Other;
 			sourceTree = "<group>";
@@ -580,6 +584,7 @@
 			children = (
 				842970ED1E654644002BDBC0 /* Classes */,
 				849D26FD1E640E3200F0CA5D /* Assets.xcassets */,
+				200A823520837BBC00825E6E /* 虾兽维度-Bridging-Header.h */,
 				20077036205AA78F00551C00 /* config */,
 				20C85E5520541F3B0057F483 /* toolBoxIcons */,
 				849D26FF1E640E3200F0CA5D /* LaunchScreen.storyboard */,
@@ -685,6 +690,7 @@
 					849D26ED1E640E3200F0CA5D = {
 						CreatedOnToolsVersion = 8.1;
 						DevelopmentTeam = S3RSD3BB8U;
+						LastSwiftMigration = 0810;
 						ProvisioningStyle = Automatic;
 					};
 					849D27061E640E3300F0CA5D = {
@@ -794,6 +800,7 @@
 				205CECDF1F48150E00821E38 /* NSData+ImageContentType.m in Sources */,
 				205CECFC1F489A0000821E38 /* UIView+Extension.m in Sources */,
 				84BA25591E65C7A800C8B204 /* XMWebTableViewCell.m in Sources */,
+				200A823420837B1300825E6E /* XMMetorMapViewController.swift in Sources */,
 				205CECDE1F48150E00821E38 /* MKAnnotationView+WebCache.m in Sources */,
 				20C85E2F204EE8850057F483 /* EXQRCodeImageDetectorUtil.m in Sources */,
 				202C84F61F2624FC0055FD7D /* XMNavWebViewController.m in Sources */,
@@ -956,14 +963,19 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = S3RSD3BB8U;
 				INFOPLIST_FILE = "03 虾兽新闻客户端/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.excellence.abc;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "03 虾兽新闻客户端/虾兽维度-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -971,20 +983,25 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = S3RSD3BB8U;
 				INFOPLIST_FILE = "03 虾兽新闻客户端/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.excellence.abc;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "03 虾兽新闻客户端/虾兽维度-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
 		849D271F1E640E3300F0CA5D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				INFOPLIST_FILE = "03 虾兽新闻客户端Tests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -997,6 +1014,7 @@
 		849D27201E640E3300F0CA5D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				INFOPLIST_FILE = "03 虾兽新闻客户端Tests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -1009,6 +1027,7 @@
 		849D27221E640E3300F0CA5D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				INFOPLIST_FILE = "03 虾兽新闻客户端UITests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "Apple.-3--------UITests";
@@ -1020,6 +1039,7 @@
 		849D27231E640E3300F0CA5D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				INFOPLIST_FILE = "03 虾兽新闻客户端UITests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "Apple.-3--------UITests";

@@ -13,7 +13,7 @@
 #import "EXQRCodeImageDetectorUtil.h"
 
 #define XMBackImageVStarX ([UIScreen mainScreen].bounds.size.width / (3))
-#define XMSearchModePanDistance 70
+#define XMSearchModePanDistance 150
 
 @interface XMWebViewController ()<UIWebViewDelegate,NSURLSessionDelegate,UIGestureRecognizerDelegate>
 

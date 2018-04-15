@@ -31,6 +31,11 @@
 #import "XMClipImageViewController.h"
 #import "XMHiwebViewController.h"
 
+// swift
+//#import "虾兽维度-XMMetorMapViewController.swift"
+#import "虾兽维度-Bridging-Header.h"
+#import "虾兽维度-Swift.h"
+
 @interface XMMainViewController ()<
 XMLeftTableViewControllerDelegate,
 XMNavTitleTableViewControllerDelegate,
@@ -126,7 +131,15 @@ UIGestureRecognizerDelegate>
     
     // 添加手势
     [self addGesture];
+    
 }
+
+//- (void)viewDidAppear:(BOOL)animated{
+//    [super viewDidAppear:animated];
+//    XMMetorMapViewController *maVC  = [[XMMetorMapViewController alloc] init];
+//    [self.navigationController pushViewController:maVC animated:YES];
+//
+//}
 
 - (void)dealloc
 {
@@ -153,14 +166,22 @@ UIGestureRecognizerDelegate>
     // 左侧抽屉手势
     UISwipeGestureRecognizer *swip = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(showLeftView)];
     [self.view addGestureRecognizer:swip];
-    // 搜索2指下滑快捷搜索手势
+    // 2指下滑快捷搜索手势
     UISwipeGestureRecognizer *searchSwip = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(search:)];
     searchSwip.numberOfTouchesRequired = 2;  // 设置需要2个手指向下滑
     // 必须要实现一个代理方法支持多手势,这时候3指下滑同时也会触发单指滚动tableview
     searchSwip.delegate = self;
     searchSwip.direction = UISwipeGestureRecognizerDirectionDown;
     [self.view addGestureRecognizer:searchSwip];
-    // 搜索2指上划打开收藏快捷手势
+    // 3指下滑快捷打开地铁图手势
+    UISwipeGestureRecognizer *mapSwip = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(openMetorMap)];
+    mapSwip.numberOfTouchesRequired = 3;  // 设置需要2个手指向下滑
+    // 必须要实现一个代理方法支持多手势,这时候3指下滑同时也会触发单指滚动tableview
+    mapSwip.delegate = self;
+    mapSwip.direction = UISwipeGestureRecognizerDirectionDown;
+    [self.view addGestureRecognizer:mapSwip];
+    
+    // 2指上划打开收藏快捷手势
     UISwipeGestureRecognizer *saveSwip = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(callSaveViewController)];
     saveSwip.numberOfTouchesRequired = 2;  // 设置需要2个手指向下滑
     // 必须要实现一个代理方法支持多手势,这时候2指下滑同时也会触发单指滚动tableview
@@ -263,6 +284,14 @@ UIGestureRecognizerDelegate>
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:searchVC];
     // 导航控制器只能present另外一个导航控制器,不能push
     [self presentViewController:nav animated:YES completion:nil];
+}
+
+
+/** 打开地铁图*/
+- (void)openMetorMap{
+    //
+    XMMetorMapViewController *maVC  = [[XMMetorMapViewController alloc] init];
+    [self.navigationController pushViewController:maVC animated:YES];
 }
 
 /** 导航栏titleview的dropview*/
