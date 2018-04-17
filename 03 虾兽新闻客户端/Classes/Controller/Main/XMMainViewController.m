@@ -134,12 +134,12 @@ UIGestureRecognizerDelegate>
     
 }
 
-//- (void)viewDidAppear:(BOOL)animated{
-//    [super viewDidAppear:animated];
-//    XMMetorMapViewController *maVC  = [[XMMetorMapViewController alloc] init];
-//    [self.navigationController pushViewController:maVC animated:YES];
-//
-//}
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    XMMetorMapViewController *maVC  = [[XMMetorMapViewController alloc] init];
+    [self.navigationController pushViewController:maVC animated:YES];
+
+}
 
 - (void)dealloc
 {

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class XMMetorMapViewController: UIViewController {
+class XMMetorMapViewController: UIViewController,UIImagePickerControllerDelegate,UINavigationControllerDelegate {
 
     var imgV = UIImageView()
     var pinchScale : CGFloat!
@@ -56,6 +56,16 @@ class XMMetorMapViewController: UIViewController {
         panG = UIPanGestureRecognizer.init(target: self, action: #selector(pan(_ :)))
         // 缩放手势
         pinG = UIPinchGestureRecognizer.init(target: self, action: #selector(pinch(_ :)))
+        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        let addBtn = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(openAlbum))
+        let updateBtn = UIBarButtonItem(title: "更新", style: .plain, target: self , action: #selector(downloadImage))
+        let saveBtn = UIBarButtonItem(title: "保存", style: .plain, target: self , action: #selector(saveToAlbum))
+        self.navigationItem.rightBarButtonItems = [addBtn, updateBtn,saveBtn]
         
     }
 
@@ -169,6 +179,44 @@ class XMMetorMapViewController: UIViewController {
             
             dataTask.resume()
         }
+    }
+    
+    // MARK:导航栏按钮事件
+    /// 打开相册
+    func openAlbum(){
+        if ((UIImagePickerController.availableMediaTypes(for:.photoLibrary)) != nil){
+            let pickVC = UIImagePickerController()
+            pickVC.delegate = self
+            self.navigationController?.present(pickVC, animated: true, completion: nil)
+        
+        }
+        
+    }
+    
+    /// 保存到本地相册
+    func saveToAlbum(){
+//        let data = UIImageJPEGRepresentation(self.imgV.image!, 0.5)
+        UIImageWriteToSavedPhotosAlbum(self.imgV.image!, nil, nil, nil)
+    }
+    
+    //MARK: - UIImagePickerControllerDelegate
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        
+        // 选择完图片需要dismiss图片选择器
+        picker.dismiss(animated: true, completion: (() -> Void)?{
+            // 设置图片显示并且保存到本地
+            let seleImg: UIImage = info[UIImagePickerControllerOriginalImage] as! UIImage
+            
+            self.imgV.image = seleImg
+            
+            // 保存到沙盒,并且不处理异常
+            let data = UIImageJPEGRepresentation(seleImg, 0.5)
+            try! data?.write(to: URL(fileURLWithPath:self.mapPath))
+        
+        
+        })
+        
+        
     }
     
     override func didReceiveMemoryWarning() {
