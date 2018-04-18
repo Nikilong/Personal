@@ -19,4 +19,7 @@
 // 特别频道
 + (NSArray *)specialChannels;
 
+// 使用说明书
++ (NSString *)userGuild;
+
 @end

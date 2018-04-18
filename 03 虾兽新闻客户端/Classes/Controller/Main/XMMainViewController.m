@@ -47,6 +47,7 @@ UIGestureRecognizerDelegate>
 /** 强引用左侧边栏窗口 */
 @property (nonatomic, strong) XMLeftTableViewController *leftVC;
 @property (weak, nonatomic)  UIView *leftContentView;
+@property (weak, nonatomic)  UITextView *guildView;
 /** 强引用主新闻窗口 */
 @property (nonatomic, strong) XMHomeTableViewController *homeVC;
 /** 强引用保存新闻窗口 */
@@ -134,12 +135,12 @@ UIGestureRecognizerDelegate>
     
 }
 
-- (void)viewDidAppear:(BOOL)animated{
-    [super viewDidAppear:animated];
-    XMMetorMapViewController *maVC  = [[XMMetorMapViewController alloc] init];
-    [self.navigationController pushViewController:maVC animated:YES];
-
-}
+//- (void)viewDidAppear:(BOOL)animated{
+//    [super viewDidAppear:animated];
+//    XMMetorMapViewController *maVC  = [[XMMetorMapViewController alloc] init];
+//    [self.navigationController pushViewController:maVC animated:YES];
+//
+//}
 
 - (void)dealloc
 {
@@ -363,7 +364,11 @@ UIGestureRecognizerDelegate>
     // 隐藏左侧边栏
     [self hideLeftView];
     
-    if (indexPath.section == 1){
+    if (indexPath.section == 0){
+        // 创建说明文档
+        [self createGuildView];
+        
+    }else if(indexPath.section == 1){
         // 将specialChannel以webmodule打开
         XMChannelModel *specialModel = [XMChannelModel specialChannels][indexPath.row];
         XMWebModel *model = [[XMWebModel alloc] init];
@@ -407,6 +412,33 @@ UIGestureRecognizerDelegate>
         
     });
 
+}
+
+
+/**
+ 创建说明书
+ */
+- (void)createGuildView{
+    UITextView *guildView = [[UITextView alloc] initWithFrame:CGRectMake(0, 64, XMScreenW, XMScreenH - 64)];
+    self.guildView = guildView;
+    [self.view insertSubview:guildView aboveSubview:self.homeVC.view];
+    guildView.text = [XMChannelModel userGuild];
+    guildView.textColor = [UIColor orangeColor];
+    guildView.font = [UIFont systemFontOfSize:20];
+    guildView.editable = NO;
+
+    // 双击退出手势
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTap)];
+    tap.numberOfTapsRequired = 2;
+    tap.delegate = self;
+    [guildView addGestureRecognizer:tap];
+}
+
+/**
+ 双击关闭说明书
+ */
+- (void)doubleTap{
+    [self.guildView removeFromSuperview];
 }
 
 #pragma mark navTitleTableViewController delegate

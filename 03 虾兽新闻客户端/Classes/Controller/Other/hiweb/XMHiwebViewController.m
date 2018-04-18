@@ -96,8 +96,7 @@
     [super viewWillAppear:animated];
     
     // 设置导航栏
-    [self setNavBar];
-    
+    [self setNavBar];    
 }
     
 - (void)setNavBar{
@@ -190,37 +189,43 @@
 // 获得最新的地址
 - (void)getNewHomeUrl{
     //https://announce.javbus2.pw/website.php
-    NSError *error;
-    NSString *html = [NSString stringWithContentsOfURL:[NSURL URLWithString:@"https://announce.javbus2.pw/website.php"] encoding:NSUTF8StringEncoding error:&error];
-    if (!error){
-        // 对html的网页进行提取,并利用NSSet去重
-        NSSet *urlSet = [NSSet setWithArray:[XMPersonDataUnit new_dealDateUrl:html logFlag:NO]];
-        NSArray *urlArr = urlSet.allObjects;
-        
-        // 弹出底部按钮来做选项
-        UIAlertController *tips = [UIAlertController alertControllerWithTitle:@"提示" message:@"重新设定主页url" preferredStyle:UIAlertControllerStyleActionSheet];
-        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
-         [tips addAction:cancelAction];
-        
-        __weak typeof(self) weakSelf = self;
-        for (int i = 0; i < urlArr.count; i++) {
-            UIAlertAction *okAction = [UIAlertAction actionWithTitle:urlArr[i] style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action){
-                weakSelf.homeUrl = urlArr[i];
-                weakSelf.url = [NSString stringWithFormat:@"%@/search/abp",urlArr[i]];
-                [urlArr[i] writeToFile:XMHiwebHomeUrlPath atomically:YES encoding:NSUTF8StringEncoding error:nil];
-                
-                [weakSelf starRequest];
-                
-            }];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSError *error;
+        NSString *html = [NSString stringWithContentsOfURL:[NSURL URLWithString:@"https://announce.javbus2.pw/website.php"] encoding:NSUTF8StringEncoding error:&error];
+        if (!error){
+            // 对html的网页进行提取,并利用NSSet去重
+            NSSet *urlSet = [NSSet setWithArray:[XMPersonDataUnit new_dealDateUrl:html logFlag:NO]];
+            NSArray *urlArr = urlSet.allObjects;
             
-            [tips addAction:okAction];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                // 弹出底部按钮来做选项
+                UIAlertController *tips = [UIAlertController alertControllerWithTitle:@"提示" message:@"重新设定主页url" preferredStyle:UIAlertControllerStyleActionSheet];
+                UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
+                [tips addAction:cancelAction];
+                
+                __weak typeof(self) weakSelf = self;
+                for (int i = 0; i < urlArr.count; i++) {
+                    UIAlertAction *okAction = [UIAlertAction actionWithTitle:urlArr[i] style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action){
+                        weakSelf.homeUrl = urlArr[i];
+                        weakSelf.url = [NSString stringWithFormat:@"%@/search/abp",urlArr[i]];
+                        [urlArr[i] writeToFile:XMHiwebHomeUrlPath atomically:YES encoding:NSUTF8StringEncoding error:nil];
+                        
+                        [weakSelf starRequest];
+                        
+                    }];
+                    
+                    [tips addAction:okAction];
+                    
+                }
+                
+                [self presentViewController:tips animated:YES completion:nil];
+                NSLog(@"---");
+            });
             
         }
         
-        [self presentViewController:tips animated:YES completion:nil];
-        NSLog(@"---");
-        
-    }
+    });
 
 }
 

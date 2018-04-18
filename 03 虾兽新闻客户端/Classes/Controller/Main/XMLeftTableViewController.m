@@ -103,12 +103,9 @@
 /** 通知代理选中了某一个频道 */
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.section != 0)
+    if ([self.delegate respondsToSelector:@selector(leftTableViewControllerDidSelectChannel:)])
     {
-        if ([self.delegate respondsToSelector:@selector(leftTableViewControllerDidSelectChannel:)])
-        {
-            [self.delegate leftTableViewControllerDidSelectChannel:indexPath];
-        }
+        [self.delegate leftTableViewControllerDidSelectChannel:indexPath];
     }
 }
 @end

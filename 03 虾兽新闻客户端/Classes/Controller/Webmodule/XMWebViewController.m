@@ -18,7 +18,7 @@
 @interface XMWebViewController ()<UIWebViewDelegate,NSURLSessionDelegate,UIGestureRecognizerDelegate>
 
 /** 网页高度 */
-@property (nonatomic, assign) NSInteger webHeight;
+//@property (nonatomic, assign) NSInteger webHeight;
 
 /** 工具条 */
 @property (nonatomic, strong) UIView *toolBar;
@@ -74,6 +74,10 @@
         // 初始化标记,能够加载
         self.canLoad = YES;
         
+//        _web.scalesPageToFit = YES;
+////        _web.userInteractionEnabled = YES;
+//        _web.multipleTouchEnabled = YES;
+        
         // 添加长按手势
         UILongPressGestureRecognizer *longP = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
 #warning note 这里需要设置长按反应时间<0.5将系统的长按覆盖掉
@@ -91,6 +95,12 @@
         tapRemove.numberOfTapsRequired = 5;
         tapRemove.delegate = self;
         [self.web addGestureRecognizer:tapRemove];
+        
+        // 添加双击恢复缩放大小
+        UITapGestureRecognizer *tapDouble = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTapToScaleIdentity)];
+        tapDouble.numberOfTapsRequired = 2;
+        tapDouble.delegate = self;
+        [self.web addGestureRecognizer:tapDouble];
         
 //        // 添加双指滚到最上面或者最下面手势
 //        UISwipeGestureRecognizer *swip = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(scroll:)];
@@ -264,8 +274,11 @@
 /** web滚到最底部*/
 - (void)webViewDidScrollToBottom
 {
+    // 获取网页高度
+    CGFloat webHeight = [[self.web stringByEvaluatingJavaScriptFromString:@"document.body.offsetHeight"] doubleValue];
+    
     // 利用scrollview滚动的方法滚到最底部,原生的带有动画效果
-    [self.web.scrollView setContentOffset:CGPointMake(0, self.webHeight) animated:YES];
+    [self.web.scrollView setContentOffset:CGPointMake(0, webHeight - [UIScreen mainScreen].bounds.size.height) animated:YES];
 }
 
 /** web滚到顶部 */
@@ -484,7 +497,17 @@
     }
     // 记录当前网页的信息
     self.model.title = [self.web stringByEvaluatingJavaScriptFromString:@"document.title"];
-    self.webHeight = [[webView stringByEvaluatingJavaScriptFromString:@"document.body.offsetHeight"] intValue];
+    
+    // 设置网页自动缩放,user-scalable为NO即可禁止缩放
+    NSString *injectionJSString =@"var script = document.createElement('meta');"
+    "script.name = 'viewport';"
+    "script.content=\"width=device-width, initial-scale=1.0,maximum-scale=3.0, minimum-scale=1.0, user-scalable=yes\";"
+    "document.getElementsByTagName('head')[0].appendChild(script);";
+    
+    [self.web stringByEvaluatingJavaScriptFromString:injectionJSString];
+    
+
+    
 }
 
 #pragma mark - uigestureDelegate
@@ -624,6 +647,13 @@
     }
 }
 
+/**
+ 双击恢复正常缩放
+ */
+- (void)doubleTapToScaleIdentity{
+    self.web.transform = CGAffineTransformIdentity;
+}
+
 #pragma mark - searchMode的返回处理
 /** searchMode下手势触发的方法 */
 - (void)panToBackForward:(UIGestureRecognizer *)gesture
@@ -712,9 +742,9 @@
     pan.delegate = self;
     self.panSearchMode = pan;
     
-    // 添加双击页面返回手势
+    // 添加3击页面返回手势
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(panToBackForward:)];
-    tap.numberOfTapsRequired = 2;
+    tap.numberOfTapsRequired = 3;
     tap.delegate = self;
     [self.web addGestureRecognizer:tap];
 

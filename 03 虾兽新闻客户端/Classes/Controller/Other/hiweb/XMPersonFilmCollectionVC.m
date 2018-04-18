@@ -140,7 +140,6 @@ static NSString * const reuseIdentifier = @"Cell";
 {
     [super viewWillAppear:animated];
     
-    
     UIView *contentV = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
     // 展示更多演员信息
     UIButton *actBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 44)];
@@ -172,6 +171,14 @@ static NSString * const reuseIdentifier = @"Cell";
     self.navigationItem.titleView = contentV;
     // 开启标题栏交互
     self.navigationItem.titleView.userInteractionEnabled = YES;
+    
+    // 强制纠正y方向64的偏移,view的y会由0变64,同时collectionView的高度会减少64
+    CGRect tarF = self.view.frame;
+    tarF.origin.y = 0;
+    self.view.frame = tarF;
+    CGRect tarCF = self.collectionView.frame;
+    tarCF.size.height = [UIScreen mainScreen].bounds.size.height;
+    self.collectionView.frame = tarCF;
     
 }
 - (void)dealloc
