@@ -22,6 +22,7 @@ typedef enum : NSUInteger {
 @property (weak, nonatomic)  UIButton *clipParBtn;      // 裁剪参数按钮
 @property (weak, nonatomic)  UIButton *saveBtn;         // 保存到相册按钮
 @property (weak, nonatomic)  UIButton *addBtn;          // 从像相册选择图片按钮
+@property (weak, nonatomic)  UIButton *mirrorBtn;       // 镜像按钮
 @property (weak, nonatomic)  UIView *btnContentV;       // 所有按钮的容器
 @property (nonatomic, strong) UIImage *seleImage;       // 已选择的图片
 @property (nonatomic, strong) UIImage *saveImage;       // 将要保存的图片
@@ -65,7 +66,7 @@ typedef enum : NSUInteger {
 {
     if (!_btnContentV)
     {
-        UIView *btnContentV = [[UIView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.photoView.frame) + 10, XMScreenW, 200)];
+        UIView *btnContentV = [[UIView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.photoView.frame) + 10, XMScreenW, 250)];
         _btnContentV = btnContentV;
         [self.view addSubview:btnContentV];
         
@@ -73,12 +74,15 @@ typedef enum : NSUInteger {
         CGFloat btnH = 44;
         CGFloat margin = 5;
         
-        // 初始化4个按钮
+        // 初始化5个按钮
         self.addBtn = [self addButtonWithTitle:@"添加图片" selector:@selector(addImageFromUlbum) parentView:_btnContentV];
         self.addBtn.frame = CGRectMake(0.5 * (XMScreenW - btnW), 0, btnW, btnH);
-
+        
+        self.mirrorBtn = [self addButtonWithTitle:@"镜像图片" selector:@selector(mirrorImage) parentView:_btnContentV];
+        self.mirrorBtn.frame = CGRectMake(0.5 * (XMScreenW - btnW), CGRectGetMaxY(self.addBtn.frame) + margin, btnW, btnH);
+        
         self.clipParBtn = [self addButtonWithTitle:@"裁剪参数" selector:@selector(setClipParamers) parentView:_btnContentV];
-        self.clipParBtn.frame = CGRectMake(0.5 * (XMScreenW - btnW), CGRectGetMaxY(self.addBtn.frame) + margin, btnW, btnH);
+        self.clipParBtn.frame = CGRectMake(0.5 * (XMScreenW - btnW), CGRectGetMaxY(self.mirrorBtn.frame) + margin, btnW, btnH);
         
         self.clipBtn = [self addButtonWithTitle:@"裁剪图片" selector:@selector(photoDidClip) parentView:_btnContentV];
         self.clipBtn.frame = CGRectMake(0.5 * (XMScreenW - btnW), CGRectGetMaxY(self.clipParBtn.frame) + margin, btnW, btnH);
@@ -164,6 +168,7 @@ typedef enum : NSUInteger {
  */
 - (void)photoDidClip
 {
+    
     if (!self.seleImage){
         [MBProgressHUD showMessage:@"请先添加一张图片" toView:self.view];
         return;
@@ -244,6 +249,17 @@ typedef enum : NSUInteger {
     
     [self.navigationController presentViewController:picker animated:YES completion:nil];
     
+}
+
+
+/**
+ 将图片镜像化
+ */
+- (void)mirrorImage{
+    self.seleImage = [[UIImage alloc] initWithCGImage:self.seleImage.CGImage scale:1.0 orientation:UIImageOrientationUpMirrored];
+    self.saveImage = self.seleImage;
+    self.photoView.image = self.seleImage;
+    return;
 }
 
 #pragma mark - 设置参数界面

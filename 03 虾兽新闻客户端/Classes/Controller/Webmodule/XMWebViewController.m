@@ -234,7 +234,6 @@
     
     // 必须先截图再截屏.否则会没有导航条
     self.navigationController.navigationBarHidden = YES;
-    
     self.statusBar.backgroundColor = self.webNavColor;
     
 }
@@ -246,9 +245,9 @@
     if(![self.navigationController.childViewControllers.lastObject isKindOfClass:[XMWebViewController class]])
     {
         self.navigationController.navigationBarHidden = NO;
-        // 修改状态栏颜色
-        self.statusBar.backgroundColor = [UIColor colorWithRed:249/255.0 green:249/255.0 blue:249/255.0 alpha:1.0];
-        
+        // 恢复状态栏颜色,原来的为空
+        self.statusBar.backgroundColor = nil;
+        [self.statusCover removeFromSuperview];
     }
 }
 
