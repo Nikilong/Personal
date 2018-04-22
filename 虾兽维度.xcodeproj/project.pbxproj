@@ -591,8 +591,7 @@
 				849D27021E640E3200F0CA5D /* Info.plist */,
 				849D26F11E640E3200F0CA5D /* Supporting Files */,
 			);
-			name = "虾兽维度";
-			path = "03 虾兽新闻客户端";
+			path = "虾兽维度";
 			sourceTree = "<group>";
 		};
 		849D26F11E640E3200F0CA5D /* Supporting Files */ = {
@@ -609,8 +608,7 @@
 				849D270B1E640E3300F0CA5D /* _3________Tests.m */,
 				849D270D1E640E3300F0CA5D /* Info.plist */,
 			);
-			name = "虾兽维度Tests";
-			path = "03 虾兽新闻客户端Tests";
+			path = "虾兽维度Tests";
 			sourceTree = "<group>";
 		};
 		849D27151E640E3300F0CA5D /* 虾兽维度UITests */ = {
@@ -619,8 +617,7 @@
 				849D27161E640E3300F0CA5D /* _3________UITests.m */,
 				849D27181E640E3300F0CA5D /* Info.plist */,
 			);
-			name = "虾兽维度UITests";
-			path = "03 虾兽新闻客户端UITests";
+			path = "虾兽维度UITests";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -970,12 +967,12 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = S3RSD3BB8U;
-				INFOPLIST_FILE = "03 虾兽新闻客户端/Info.plist";
+				INFOPLIST_FILE = "虾兽维度/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.excellence.abc;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "03 虾兽新闻客户端/虾兽维度-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "虾兽维度/虾兽维度-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 			};
@@ -990,12 +987,12 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = S3RSD3BB8U;
-				INFOPLIST_FILE = "03 虾兽新闻客户端/Info.plist";
+				INFOPLIST_FILE = "虾兽维度/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.excellence.abc;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "03 虾兽新闻客户端/虾兽维度-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "虾兽维度/虾兽维度-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
