@@ -12,6 +12,7 @@
 
 #import "XMTouchIDKeyboardViewController.h"
 #import "XMHiwebViewController.h"
+#import "XMClipImageViewController.h"
 
 @interface AppDelegate ()
 

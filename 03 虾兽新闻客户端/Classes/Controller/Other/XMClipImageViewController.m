@@ -27,6 +27,11 @@ typedef enum : NSUInteger {
 @property (nonatomic, strong) UIImage *seleImage;       // 已选择的图片
 @property (nonatomic, strong) UIImage *saveImage;       // 将要保存的图片
 
+@property (nonatomic, strong) NSArray *mirrorArr;
+@property (nonatomic, assign)  NSUInteger index;
+
+
+
 /*  clipParV 相关参数 */
 @property (weak, nonatomic)  UIView *clipParV;
 @property (weak, nonatomic)  UITextField *ringParTF;
@@ -108,6 +113,10 @@ typedef enum : NSUInteger {
     // 初始化自动打开相册
     self.manualMode = NO;
     
+    // 初始化镜像参数
+    self.index = 0;
+    [NSNumber numberWithInteger:UIImageOrientationUpMirrored];
+    self.mirrorArr = @[[NSNumber numberWithInteger:UIImageOrientationUpMirrored],[NSNumber numberWithInteger:UIImageOrientationDownMirrored],[NSNumber numberWithInteger:UIImageOrientationLeftMirrored],[NSNumber numberWithInteger:UIImageOrientationRightMirrored]];
     
     // 初始化裁剪参数
     [self setDefaultClipParameters];
@@ -256,10 +265,17 @@ typedef enum : NSUInteger {
  将图片镜像化
  */
 - (void)mirrorImage{
-    self.seleImage = [[UIImage alloc] initWithCGImage:self.seleImage.CGImage scale:1.0 orientation:UIImageOrientationUpMirrored];
-    self.saveImage = self.seleImage;
-    self.photoView.image = self.seleImage;
-    return;
+    if (self.index > 3){
+        self.index = 0;
+    }
+//    self.seleImage = [[UIImage alloc] initWithCGImage:self.seleImage.CGImage scale:1.0 orientation:[self.mirrorArr[self.index] integerValue]];
+//    self.saveImage = self.seleImage;
+//    self.photoView.image = self.seleImage;
+    UIImage *image = [[UIImage alloc] initWithCGImage:self.seleImage.CGImage scale:1.0 orientation:[self.mirrorArr[self.index] integerValue]];
+//    self.saveImage = self.seleImage;
+    self.photoView.image = image;
+    
+    self.index++;
 }
 
 #pragma mark - 设置参数界面

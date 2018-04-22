@@ -563,8 +563,8 @@
 			isa = PBXGroup;
 			children = (
 				849D26F01E640E3200F0CA5D /* 虾兽维度 */,
-				849D270A1E640E3300F0CA5D /* 03 虾兽新闻客户端Tests */,
-				849D27151E640E3300F0CA5D /* 03 虾兽新闻客户端UITests */,
+				849D270A1E640E3300F0CA5D /* 虾兽维度Tests */,
+				849D27151E640E3300F0CA5D /* 虾兽维度UITests */,
 				849D26EF1E640E3200F0CA5D /* Products */,
 			);
 			sourceTree = "<group>";
@@ -603,21 +603,23 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		849D270A1E640E3300F0CA5D /* 03 虾兽新闻客户端Tests */ = {
+		849D270A1E640E3300F0CA5D /* 虾兽维度Tests */ = {
 			isa = PBXGroup;
 			children = (
 				849D270B1E640E3300F0CA5D /* _3________Tests.m */,
 				849D270D1E640E3300F0CA5D /* Info.plist */,
 			);
+			name = "虾兽维度Tests";
 			path = "03 虾兽新闻客户端Tests";
 			sourceTree = "<group>";
 		};
-		849D27151E640E3300F0CA5D /* 03 虾兽新闻客户端UITests */ = {
+		849D27151E640E3300F0CA5D /* 虾兽维度UITests */ = {
 			isa = PBXGroup;
 			children = (
 				849D27161E640E3300F0CA5D /* _3________UITests.m */,
 				849D27181E640E3300F0CA5D /* Info.plist */,
 			);
+			name = "虾兽维度UITests";
 			path = "03 虾兽新闻客户端UITests";
 			sourceTree = "<group>";
 		};
