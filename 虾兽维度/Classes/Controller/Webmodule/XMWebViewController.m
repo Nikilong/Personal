@@ -115,33 +115,34 @@
 {
     if (!_toolBar)
     {
-        CGFloat toolbarH = 35;
+        CGFloat toolbarW = 35;
         UIView *toolBar = [[UIView alloc] init];
 //        toolBar.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"tool_background"]];
         toolBar.backgroundColor = [UIColor clearColor];
+        toolBar.alpha = 0.4;
         _toolBar = toolBar;
         
-        // 添加滚到最底部
-        UIButton *downBtn = [[UIButton alloc] init];
-        [downBtn setImage:[UIImage imageNamed:@"down"] forState:UIControlStateNormal];
-        [downBtn addTarget:self action:@selector(webViewDidScrollToBottom) forControlEvents:UIControlEventTouchUpInside];
-        [toolBar addSubview:downBtn];
-        CGRect downBtnF = CGRectMake(0, 0, toolbarH, toolbarH);
-        downBtn.frame = downBtnF;
         
         // 添加滚到最顶部
         UIButton *upBtn = [[UIButton alloc] init];
         [upBtn setImage:[UIImage imageNamed:@"up"] forState:UIControlStateNormal];
         [upBtn addTarget:self action:@selector(webViewDidScrollToTop) forControlEvents:UIControlEventTouchUpInside];
         [toolBar addSubview:upBtn];
-        CGRect upBtnF = CGRectMake(CGRectGetMaxX(downBtnF) + 10, 0, toolbarH, toolbarH);
+        CGRect upBtnF = CGRectMake(0, 0, toolbarW, toolbarW);
         upBtn.frame = upBtnF;
+        // 添加滚到最底部
+        UIButton *downBtn = [[UIButton alloc] init];
+        [downBtn setImage:[UIImage imageNamed:@"down"] forState:UIControlStateNormal];
+        [downBtn addTarget:self action:@selector(webViewDidScrollToBottom) forControlEvents:UIControlEventTouchUpInside];
+        [toolBar addSubview:downBtn];
+        CGRect downBtnF = CGRectMake(0, CGRectGetMaxY(upBtnF) + 10, toolbarW, toolbarW);
+        downBtn.frame = downBtnF;
         // 添加滚到最顶部
         UIButton *freshBtn = [[UIButton alloc] init];
         [freshBtn setImage:[UIImage imageNamed:@"shuaxin"] forState:UIControlStateNormal];
         [freshBtn addTarget:self action:@selector(webViewDidFresh) forControlEvents:UIControlEventTouchUpInside];
         [toolBar addSubview:freshBtn];
-        CGRect freshBtnF = CGRectMake(CGRectGetMaxX(upBtnF) + 10, 0, toolbarH, toolbarH);
+        CGRect freshBtnF = CGRectMake(0, CGRectGetMaxY(downBtnF) + 10, toolbarW, toolbarW);
         freshBtn.frame = freshBtnF;
         
         // 添加收藏按钮
@@ -151,7 +152,7 @@
         [addBtn setImage:[UIImage imageNamed:@"save_normal"] forState:UIControlStateNormal];
         [addBtn setImage:[UIImage imageNamed:@"save_selected"] forState:UIControlStateSelected];
         [toolBar addSubview:addBtn];
-        CGRect addBtnF = CGRectMake(CGRectGetMaxX(freshBtnF) + 10, 0, toolbarH, toolbarH);
+        CGRect addBtnF = CGRectMake(0, CGRectGetMaxY(freshBtnF) + 10, toolbarW, toolbarW);
         addBtn.frame = addBtnF;
         
         // 添加强制关闭webmodule按钮
@@ -159,13 +160,14 @@
         [backBtn setImage:[UIImage imageNamed:@"clear"] forState:UIControlStateNormal];
         [backBtn addTarget:self action:@selector(closeWebModule) forControlEvents:UIControlEventTouchUpInside];
         [toolBar addSubview:backBtn];
-        CGRect backBtnF = CGRectMake(CGRectGetMaxX(addBtnF) + 10, 0, toolbarH, toolbarH);
+        CGRect backBtnF = CGRectMake(0, CGRectGetMaxY(addBtnF) + 10, toolbarW, toolbarW);
         backBtn.frame = backBtnF;
         
         // 计算toolbar居中
-        CGFloat toolBarW = CGRectGetMaxX(backBtnF);
-        CGFloat toolBarX = ([UIScreen mainScreen].bounds.size.width - toolBarW) * 0.5;
-        _toolBar.frame = CGRectMake(toolBarX, [UIScreen mainScreen].bounds.size.height - toolbarH, toolBarW, toolbarH);
+        CGFloat toolbarH = CGRectGetMaxY(backBtnF);
+//        CGFloat toolBarX = [UIScreen mainScreen].bounds.size.width - toolbarW;
+        CGFloat toolBarY = [UIScreen mainScreen].bounds.size.height - toolbarH - 100;
+        _toolBar.frame = CGRectMake(20, toolBarY, toolbarW, toolbarH);
     }
     return _toolBar;
 }
@@ -708,7 +710,13 @@
                 self.forwardImgV.hidden = YES;
                 break;
             }
-            default:
+            default:{
+                self.forwardImgV.transform = CGAffineTransformIdentity;
+                self.backImageV.transform = CGAffineTransformIdentity;
+                self.forwardImgV.hidden = YES;
+                self.backImageV.hidden = YES;
+                
+            }
                 break;
         }
     }else  // 双击返回手势
