@@ -50,6 +50,10 @@
 //model.source = model.ID;
 //        NSLog(@"%@",dict[@"data"][@"articles"][model.ID][@"dislike_infos"]);
         model.title =  dict[@"data"][@"articles"][model.ID][@"title"];
+        // 过滤掉标题为空的新闻
+        if (model.title.length == 0 || model.title == nil){
+            continue;
+        }
         model.publishTime = [model getCurrentTime];
         NSArray *arr = dict[@"data"][@"articles"][model.ID][@"thumbnails"];
         // 没有图片的新闻要做一个判断
