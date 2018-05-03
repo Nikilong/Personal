@@ -202,6 +202,8 @@ static NSString *homUrl;
     
     // 在提取终极哪有用的信息,第一项为演员信息
     NSMutableArray *arr = [dataStr componentsSeparatedByString:@"<div class=\"photo-info\""];
+    // 当数组只有一个值,表示没有相关的影片
+    if (arr.count == 1) return nil;
     // 去掉最后的空白数据
     [arr removeLastObject];
     

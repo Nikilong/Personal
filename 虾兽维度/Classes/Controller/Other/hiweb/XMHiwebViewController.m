@@ -23,6 +23,9 @@
 // 记录首页
 @property (copy, nonatomic) NSString *homeUrl;
 
+// 导航栏标题栏
+@property (weak, nonatomic)  UILabel *navTitleLab;
+
 @end
 
 @implementation XMHiwebViewController
@@ -75,6 +78,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    // 初始化导航栏
+    [self setNavBar];
+    
+    // 开始加载
     self.index = 1;
 //    self.url = @"https://www.javbus2.com/star/n4r";
 //    self.url = @"https://www.javbus2.com/page";
@@ -95,8 +102,6 @@
 {
     [super viewWillAppear:animated];
     
-    // 设置导航栏
-    [self setNavBar];    
 }
     
 - (void)setNavBar{
@@ -151,11 +156,12 @@
     
     // 导航栏标题栏添加标标题
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(jumpToPage)];
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 44)];
-    label.numberOfLines = 0;
-    label.textAlignment = NSTextAlignmentCenter;
-    [label addGestureRecognizer: tap];
-    self.navigationItem.titleView = label;
+    UILabel *navTitleLab = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 44)];
+    self.navTitleLab = navTitleLab;
+    navTitleLab.numberOfLines = 0;
+    navTitleLab.textAlignment = NSTextAlignmentCenter;
+    [navTitleLab addGestureRecognizer: tap];
+    self.navigationItem.titleView = navTitleLab;
     self.navigationItem.titleView.userInteractionEnabled = YES;
 
 }
@@ -172,6 +178,8 @@
             if([[alertView textFieldAtIndex:0].text integerValue]){
                 self.index = [[alertView textFieldAtIndex:0].text integerValue];
                 [self starRequest];
+            }else{
+                [MBProgressHUD showMessage:@"无效的输入,请输入数字" toView:self.view];
             }
             break;
         default:
@@ -289,9 +297,6 @@
 // 开始网络请求
 - (void)starRequest
 {
-    // 显示当前页数
-    self.navigationItem.title = [NSString stringWithFormat:@"第%zd页",self.index];
-    
     // 通过url获取网页的内容
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/%zd",self.url,self.index]];
     
@@ -301,7 +306,7 @@
         [MBProgressHUD showMessage:@"无效的url" toView:self.view];
         return;
     }
-    
+
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     // 异步去加载网络请求
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
@@ -321,6 +326,9 @@
                 [MBProgressHUD showMessage:@"无相关内容" toView:self.view];
                 return;
             }
+            
+            // 显示当前页数
+            self.navTitleLab.text = [NSString stringWithFormat:@"第%zd页",self.index];
             
             // 如果有数据则解析数据
             NSArray *dataArr = [XMPersonDataUnit dealDate:html];
