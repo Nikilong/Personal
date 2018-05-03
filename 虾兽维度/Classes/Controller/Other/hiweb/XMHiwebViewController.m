@@ -16,7 +16,7 @@
 
 #import "CommonHeader.h"
 
-@interface XMHiwebViewController ()<UITextFieldDelegate>
+@interface XMHiwebViewController ()<UITextFieldDelegate,UIAlertViewDelegate>
 
 @property (nonatomic, strong) XMPersonFilmCollectionVC *personCollectListVC;
 
@@ -148,11 +148,48 @@
     [rightContenV addSubview:searchBtn];
     [rightContenV addSubview:reloadBtn];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightContenV];
+    
+    // 导航栏标题栏添加标标题
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(jumpToPage)];
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 44)];
+    label.numberOfLines = 0;
+    label.textAlignment = NSTextAlignmentCenter;
+    [label addGestureRecognizer: tap];
+    self.navigationItem.titleView = label;
+    self.navigationItem.titleView.userInteractionEnabled = YES;
 
 }
 
 
+
+#pragma mark - UIAlertViewDelegate
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    switch (buttonIndex) {
+        case 0:
+            break;
+        case 1:
+            // 点击了确定按钮,读取当前的输入(序号为0),并且判断输入是否有效
+            if([[alertView textFieldAtIndex:0].text integerValue]){
+                self.index = [[alertView textFieldAtIndex:0].text integerValue];
+                [self starRequest];
+            }
+            break;
+        default:
+            break;
+    }
+}
+
+
 #pragma mark - 处理数据
+/**
+ 跳转到某一页
+ */
+- (void)jumpToPage{
+    UIAlertView *ale = [[UIAlertView alloc] initWithTitle:@"跳页" message:@"输入要跳转到的页数" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+    ale.alertViewStyle = UIAlertViewStylePlainTextInput;
+    [ale show];
+}
+
 // 前进
 - (void)back
 {

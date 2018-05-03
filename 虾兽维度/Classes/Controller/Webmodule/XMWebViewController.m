@@ -23,6 +23,7 @@
 /** 工具条 */
 @property (nonatomic, strong) UIView *toolBar;
 //@property (weak, nonatomic)  UIButton *saveBtn;
+@property (nonatomic, strong) NSMutableArray *toolBarArr;  // 应该隐藏的工具栏按钮
 
 /** 网页view */
 @property (nonatomic, strong) UIWebView *web;
@@ -115,62 +116,79 @@
 {
     if (!_toolBar)
     {
+        // 初始化数组
+        self.toolBarArr = [NSMutableArray array];
+        
         CGFloat toolbarW = 35;
         UIView *toolBar = [[UIView alloc] init];
-//        toolBar.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"tool_background"]];
         toolBar.backgroundColor = [UIColor clearColor];
-        toolBar.alpha = 0.4;
+        toolBar.alpha = 0.7;
         _toolBar = toolBar;
-        
         
         // 添加滚到最顶部
         UIButton *upBtn = [[UIButton alloc] init];
+        upBtn.hidden = YES;
         [upBtn setImage:[UIImage imageNamed:@"up"] forState:UIControlStateNormal];
         [upBtn addTarget:self action:@selector(webViewDidScrollToTop) forControlEvents:UIControlEventTouchUpInside];
         [toolBar addSubview:upBtn];
         CGRect upBtnF = CGRectMake(0, 0, toolbarW, toolbarW);
         upBtn.frame = upBtnF;
+        [self.toolBarArr addObject:upBtn];
         // 添加滚到最底部
         UIButton *downBtn = [[UIButton alloc] init];
+        downBtn.hidden = YES;
         [downBtn setImage:[UIImage imageNamed:@"down"] forState:UIControlStateNormal];
         [downBtn addTarget:self action:@selector(webViewDidScrollToBottom) forControlEvents:UIControlEventTouchUpInside];
         [toolBar addSubview:downBtn];
         CGRect downBtnF = CGRectMake(0, CGRectGetMaxY(upBtnF) + 10, toolbarW, toolbarW);
         downBtn.frame = downBtnF;
+        [self.toolBarArr addObject:downBtn];
         // 添加滚到最顶部
         UIButton *freshBtn = [[UIButton alloc] init];
+        freshBtn.hidden = YES;
         [freshBtn setImage:[UIImage imageNamed:@"shuaxin"] forState:UIControlStateNormal];
         [freshBtn addTarget:self action:@selector(webViewDidFresh) forControlEvents:UIControlEventTouchUpInside];
         [toolBar addSubview:freshBtn];
         CGRect freshBtnF = CGRectMake(0, CGRectGetMaxY(downBtnF) + 10, toolbarW, toolbarW);
         freshBtn.frame = freshBtnF;
-        
+        [self.toolBarArr addObject:freshBtn];
         // 添加收藏按钮
         UIButton *addBtn = [[UIButton alloc] init];
-//        self.saveBtn = addBtn;
+        addBtn.hidden = YES;
         [addBtn addTarget:self action:@selector(saveWeb:) forControlEvents:UIControlEventTouchUpInside];
         [addBtn setImage:[UIImage imageNamed:@"save_normal"] forState:UIControlStateNormal];
         [addBtn setImage:[UIImage imageNamed:@"save_selected"] forState:UIControlStateSelected];
         [toolBar addSubview:addBtn];
         CGRect addBtnF = CGRectMake(0, CGRectGetMaxY(freshBtnF) + 10, toolbarW, toolbarW);
         addBtn.frame = addBtnF;
-        
+        [self.toolBarArr addObject:addBtn];
         // 添加强制关闭webmodule按钮
         UIButton *backBtn = [[UIButton alloc] init];
+        backBtn.hidden = YES;
         [backBtn setImage:[UIImage imageNamed:@"clear"] forState:UIControlStateNormal];
         [backBtn addTarget:self action:@selector(closeWebModule) forControlEvents:UIControlEventTouchUpInside];
         [toolBar addSubview:backBtn];
         CGRect backBtnF = CGRectMake(0, CGRectGetMaxY(addBtnF) + 10, toolbarW, toolbarW);
         backBtn.frame = backBtnF;
+        [self.toolBarArr addObject:backBtn];
+        
+        
+        // 隐藏/显示toolbar的其他按钮
+        UIButton *showHideBtn = [UIButton buttonWithType:UIButtonTypeContactAdd];
+        showHideBtn.selected = YES;
+        [showHideBtn addTarget:self action:@selector(showHideToolBarButton:) forControlEvents:UIControlEventTouchUpInside];
+        [toolBar addSubview:showHideBtn];
+        CGRect showHideBtnF = CGRectMake(0, CGRectGetMaxY(backBtnF) + 10, toolbarW, toolbarW);
+        showHideBtn.frame = showHideBtnF;
         
         // 计算toolbar居中
-        CGFloat toolbarH = CGRectGetMaxY(backBtnF);
-//        CGFloat toolBarX = [UIScreen mainScreen].bounds.size.width - toolbarW;
-        CGFloat toolBarY = [UIScreen mainScreen].bounds.size.height - toolbarH - 100;
+        CGFloat toolbarH = CGRectGetMaxY(showHideBtnF);
+        CGFloat toolBarY = [UIScreen mainScreen].bounds.size.height - toolbarH - 50;
         _toolBar.frame = CGRectMake(20, toolBarY, toolbarW, toolbarH);
     }
     return _toolBar;
 }
+
 
 - (UIView *)statusBar
 {
@@ -314,6 +332,18 @@
         [XMWebModelTool saveWebModel:self.model];
         // 提示用户保存网页成功
         [MBProgressHUD showSuccess:@"已成功添加到收藏夹" toView:self.web];
+    }
+}
+
+
+/**
+ 显示/隐藏toolbar的其他按钮
+ */
+- (void)showHideToolBarButton:(UIButton *)btn{
+    // 按钮状态取反,然后设置toolbar其他按钮的隐藏与否
+    btn.selected = !btn.selected;
+    for (UIButton *toolBtn in self.toolBarArr) {
+        toolBtn.hidden = btn.selected;
     }
 }
 
