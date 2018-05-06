@@ -17,4 +17,6 @@
 + (void)showMessage:(NSString *)text toView:(UIView *)view;
 + (void)showSuccess:(NSString *)success toView:(UIView *)view;
 
+/** 显示一张图片*/
++ (void)show:(NSString *)text icon:(NSString *)icon view:(UIView *)view;
 @end

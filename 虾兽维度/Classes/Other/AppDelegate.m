@@ -13,6 +13,7 @@
 #import "XMTouchIDKeyboardViewController.h"
 #import "XMHiwebViewController.h"
 #import "XMClipImageViewController.h"
+#import "XMWifiTransFileViewController.h"
 
 @interface AppDelegate ()
 
@@ -24,9 +25,10 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     
-    self.mainVC = [[XMMainViewController alloc] init];
+    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+     
+    self.mainVC = [[XMWifiTransFileViewController alloc] init];
     
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:_mainVC];
     

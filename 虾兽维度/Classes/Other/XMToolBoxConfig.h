@@ -19,10 +19,10 @@
 #define ToolBox_kAuth @"ToolBox_kAuth"
 
 typedef enum : NSUInteger {
-    XMToolBoxTypeClipImg,  // 裁剪图片
-    XMToolBoxTypeHiweb,    // hiweb
-    XMToolBoxTypeTaiji,    // 易数
-    XMToolBoxTypeCCC,
+    XMToolBoxTypeClipImg,           // 裁剪图片
+    XMToolBoxTypeHiweb,             // hiweb
+    XMToolBoxTypeTaiji,             // 易数
+    XMToolBoxTypeWifiTransFiles,    // wifi传输文件
     XMToolBoxTypeDDD,
     XMToolBoxTypeEEE,
 } XMToolBoxType;

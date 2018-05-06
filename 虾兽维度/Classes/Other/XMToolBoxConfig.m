@@ -25,16 +25,16 @@
                ToolBox_kType:@(XMToolBoxTypeHiweb),
                ToolBox_kAuth:@(XMToolBoxAuthenTypeNeed)
                },
+             @{ToolBox_kName:@"Wifi传送文件",
+               ToolBox_kType:@(XMToolBoxTypeWifiTransFiles),
+               ToolBox_kAuth:@(XMToolBoxAuthenTypeNeed)
+               },
              @{ToolBox_kName:@"易",
                ToolBox_kType:@(XMToolBoxTypeTaiji),
                ToolBox_kAuth:@(XMToolBoxAuthenTypeNeed)
                },
-             @{ToolBox_kName:@"招租",
-               ToolBox_kType:@(XMToolBoxTypeCCC),
-               ToolBox_kAuth:@(XMToolBoxAuthenTypeNeed)
-              },
              @{ToolBox_kName:@"更多",
-               ToolBox_kType:@(XMToolBoxTypeCCC),
+               ToolBox_kType:@(XMToolBoxTypeDDD),
                ToolBox_kAuth:@(XMToolBoxAuthenTypeNone)
               }
              ];

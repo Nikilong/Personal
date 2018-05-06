@@ -30,6 +30,7 @@
 #import "XMToolboxViewController.h"
 #import "XMClipImageViewController.h"
 #import "XMHiwebViewController.h"
+#import "XMWifiTransFileViewController.h"
 
 // swift
 //#import "虾兽维度-XMMetorMapViewController.swift"
@@ -525,7 +526,7 @@ UIGestureRecognizerDelegate>
 - (void)toolboxButtonDidClick:(UIButton *)btn{
     switch (btn.tag) {
         case XMToolBoxTypeClipImg:{
-
+            // 裁剪图片
             XMClipImageViewController *clipVC = [[XMClipImageViewController alloc] init];
             clipVC.view.backgroundColor = [UIColor whiteColor];
             [self.navigationController pushViewController:clipVC animated:YES];
@@ -533,10 +534,17 @@ UIGestureRecognizerDelegate>
             break;
         }
         case XMToolBoxTypeHiweb:{
-            
+            // hiweb模块
             XMHiwebViewController *clipVC = [[XMHiwebViewController alloc] init];
             clipVC.view.backgroundColor = [UIColor whiteColor];
             [self.navigationController pushViewController:clipVC animated:YES];
+            
+            break;
+        }
+        case XMToolBoxTypeWifiTransFiles:{
+            // wifi传输文件模块
+            XMWifiTransFileViewController *wifiTransVC = [[XMWifiTransFileViewController alloc] init];
+            [self.navigationController pushViewController:wifiTransVC animated:YES];
             
             break;
         }

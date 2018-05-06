@@ -19,5 +19,8 @@
 // hiweb主页路径
 #define XMHiwebHomeUrlPath [XMHomeDirectory stringByAppendingPathComponent:@"hiweb.homeurl"]
 
+// wifi传输的保存沙盒路径
+#define XMWifiUploadDirPath  [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject]
+
 
 #endif /* CommonHeader_h */
