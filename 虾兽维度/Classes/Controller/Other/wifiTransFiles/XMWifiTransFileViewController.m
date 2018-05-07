@@ -35,9 +35,37 @@
 
 @property (nonatomic, strong) NSMutableArray *dataArr;
 
+@property (weak, nonatomic)  UIView *toolBar;           // 批量编辑下的工具条
+@property (weak, nonatomic)  UILabel *navTitleLab;      // 自定义导航栏标题
+
 @end
 
 @implementation XMWifiTransFileViewController
+
+- (UIView *)toolBar
+{
+    if (!_toolBar)
+    {
+        CGFloat toolH = 44;
+        UIView *toolBar = [[UIView alloc] initWithFrame:CGRectMake(0, XMScreenH - toolH, XMScreenW, toolH)];
+        toolBar.backgroundColor = [UIColor grayColor];
+        _toolBar = toolBar;
+        UIWindow *window = [UIApplication sharedApplication].keyWindow;
+        [window addSubview:toolBar];
+        UIButton *allSelectBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, toolH, toolH)];
+        [toolBar addSubview:allSelectBtn];
+        [allSelectBtn addTarget:self action:@selector(selectAllCell) forControlEvents:UIControlEventTouchUpInside];
+        [allSelectBtn setTitle:@"全选" forState:UIControlStateNormal];
+        [allSelectBtn setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+        
+        UIButton *deleBtn = [[UIButton alloc] initWithFrame:CGRectMake(XMScreenW - toolH, 0, toolH, toolH)];
+        [toolBar addSubview:deleBtn];
+        [deleBtn addTarget:self action:@selector(deleteSelectCell) forControlEvents:UIControlEventTouchUpInside];
+        [deleBtn setTitle:@"删除" forState:UIControlStateNormal];
+        [deleBtn setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+    }
+    return _toolBar;
+}
 
 - (NSMutableArray *)dataArr
 {
@@ -111,27 +139,39 @@
     UIBarButtonItem *editBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(setEditMode)];
     self.navigationItem.leftBarButtonItems = @[createdBtn,editBtn];
     // 右边为打开wifi的按钮
-    UIBarButtonItem *wifiBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(startHttpServer)];
-    UIBarButtonItem *wifiCloseBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemStop target:self action:@selector(stopHttpServer)];
+    UIBarButtonItem *wifiBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(switchHttpServerConnect)];
     UIBarButtonItem *ipBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemBookmarks target:self action:@selector(showIP)];
-    self.navigationItem.rightBarButtonItems = @[wifiCloseBtn,wifiBtn,ipBtn];
+    self.navigationItem.rightBarButtonItems = @[wifiBtn,ipBtn];
     
     // 设置标题
-    self.navigationItem.title = @"Wifi传输未打开";
+    UILabel *titleLab = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 44)];
+    self.navTitleLab = titleLab;
+    titleLab.font = [UIFont systemFontOfSize:17];
+    titleLab.textColor = [UIColor blackColor];
+    titleLab.text = @"Wifi传输未打开";
+    // 添加刷新手势
+    UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(navTitleViewDidDoubleTap)];
+    doubleTap.numberOfTapsRequired = 2;
+    [titleLab addGestureRecognizer:doubleTap];
+    self.navigationItem.titleView = titleLab;
+    self.navigationItem.titleView.userInteractionEnabled = YES;
     
 }
-#pragma mark - 导航栏及点击事件
-/// 打开一个http服务
-- (void)startHttpServer{
+#pragma mark - 导航栏/toolbar及点击事件
+/// 打开/关闭一个http服务
+- (void)switchHttpServerConnect{
     if (self.connectFlag){
-        [MBProgressHUD showMessage:@"已经打开Wifi传输" toView:self.view];
+        // 关闭http服务
+        [self.httpServer stop];
+        self.navTitleLab.text = @"Wifi传输未打开";
+        self.connectFlag = NO;
+        [MBProgressHUD showMessage:@"Wifi传输已关闭" toView:self.view];
         return;
     }
     // Configure our logging framework.
     // To keep things simple and fast, we're just going to log to the Xcode console.
     [DDLog addLogger:[DDTTYLogger sharedInstance]];
     
-    // Initalize our http server
     self.httpServer = [[HTTPServer alloc] init];
     
     // Tell the server to broadcast its presence via Bonjour.
@@ -139,7 +179,7 @@
     [self.httpServer setType:@"_http._tcp."];
     
     // 指定端口号(用于测试),实际由系统随机分配即可
-//        [self.httpServer setPort:60431];
+    [self.httpServer setPort:50914];
     
     // 设置index.html的路径
     NSString *webPath = [[NSBundle mainBundle] resourcePath];
@@ -155,22 +195,13 @@
         [MBProgressHUD showMessage:@"打开HTTP服务失败" toView:self.view];
     }else{
         NSLog(@"打开HTTP服务成功");
-        self.navigationItem.title = @"Wifi传输已打开";
+        self.navTitleLab.text = @"Wifi传输已打开";
         self.connectFlag = YES;
         // 获得本机IP和端口号
         [self showIP];
     }
 
 
-}
-/// 关闭wifi传输
-- (void)stopHttpServer{
-    if (self.connectFlag){
-        [self.httpServer stop];
-        self.navigationItem.title = @"Wifi传输未打开";
-        self.connectFlag = NO;
-    }
-    [MBProgressHUD showMessage:@"Wifi传输已关闭" toView:self.view];
 }
 
 /// 弹出ip信息
@@ -195,6 +226,12 @@
     
 }
 
+/// 导航栏双击刷新
+- (void)navTitleViewDidDoubleTap{
+    [self refreshDate];
+    [self.tableView reloadData];
+}
+
 /// 创建分组文件夹
 - (void)creatGroupDir{
 #warning undo
@@ -203,17 +240,76 @@
 
 /// 批量编辑模式
 - (void)setEditMode{
-    if ([self.tableView isEditing]){
+    if (![self.tableView isEditing]){
+        self.toolBar.hidden = NO;
         
-        [self.tableView setEditing:YES animated:YES];
     }else{
-        NSArray *arr = [self.tableView indexPathsForSelectedRows];
-//        for
-        #warning todo
-        [self.tableView setEditing:NO animated:YES];
+        self.toolBar.hidden = YES;
+        
+    }
+    [self.tableView setEditing:![self.tableView isEditing] animated:YES];
+}
+
+#pragma mark toolbart
+/// 全选所有cell
+- (void)selectAllCell{
+    if (self.dataArr.count == 0) return;
+    for (NSInteger i = 0; i < self.dataArr.count; i++) {
+        [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0] animated:YES scrollPosition:UITableViewScrollPositionNone];
+    }
+   
+    
+}
+
+/// 数组降序,即arr[0]的数值最大
+- (NSArray *)sortArray:(NSArray *)arr{
+    NSComparator comp = ^(NSIndexPath *obj1,NSIndexPath *obj2){
+        if (obj1.row > obj2.row){
+            return (NSComparisonResult)NSOrderedAscending;
+        }
+        if (obj1.row < obj2.row){
+            return (NSComparisonResult)NSOrderedDescending;
+        }
+        return (NSComparisonResult)NSOrderedSame;
+    };
+    return [arr sortedArrayUsingComparator:comp];
+}
+
+/// 删除所选的cell
+- (void)deleteSelectCell{
+    self.toolBar.userInteractionEnabled = NO;
+    NSArray *seleArr = [self.tableView indexPathsForSelectedRows];
+    // 先对数组进行降序处理,将indexPath.row最大(即最底下的数据先删除),防止序号紊乱
+    NSArray *sortArr = [self sortArray:seleArr];
+    if (seleArr.count > 0){
+        for (NSIndexPath *indexPath in sortArr){
+            [self deleteOneCellAtIndexPath:indexPath];
+        }
+    }
+    [self.tableView setEditing:NO animated:YES];
+    self.toolBar.userInteractionEnabled = YES;
+    self.toolBar.hidden = YES;
+}
+
+/// 根据indexPath删除单个cell
+- (void)deleteOneCellAtIndexPath:(NSIndexPath *)indexPath{
+    if (self.dataArr.count - 1 < indexPath.row){
+        return;
+    }
+    XMWifiTransModel *model = self.dataArr[indexPath.row];
+    NSError *error;
+    BOOL succesFlag = [[NSFileManager defaultManager] removeItemAtPath:model.fullPath error:&error];
+    if(succesFlag){
+        [self.dataArr removeObjectAtIndex:indexPath.row];
+        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+        
+    }else{
+        
+        [MBProgressHUD showMessage:[NSString stringWithFormat:@"删除失败__>%@",error] toView:self.view];
         
     }
 }
+
 
 #pragma mark - 监听上传的结果
 - (void)uploadFinish:(NSNotification *)noti{
@@ -227,6 +323,50 @@
     return self.dataArr.count;
 }
 
+- (void)longPressToEditCell:(UILongPressGestureRecognizer *)gest{
+    if (gest.state == UIGestureRecognizerStateBegan){
+        NSLog(@"%s",__func__);
+        
+        UIAlertController *tips = [UIAlertController alertControllerWithTitle:@"警告" message:@"确定要注销？？" preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
+        __weak typeof(self) weakSelf = self;
+        UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action){
+            
+            // 获得输入内容
+            UITextField *textF = tips.textFields[0];
+            
+            // 根据触摸点推送indexPath
+            CGPoint point = [gest locationInView:weakSelf.tableView];
+            NSIndexPath *indexPath = [weakSelf.tableView indexPathForRowAtPoint:point];
+            XMWifiTransModel *model = weakSelf.dataArr[indexPath.row];
+            NSString *extesionStr = [[model.fileName lowercaseString] pathExtension];
+            NSString *newName = [NSString stringWithFormat:@"%@.%@",textF.text,extesionStr];
+            NSString *newFullPath = [XMWifiUploadDirPath stringByAppendingPathComponent:newName];
+#warning todo 有缓存,效果不好
+            // 重命名
+            NSError *error;
+            if ([[NSFileManager defaultManager] moveItemAtPath:model.fullPath toPath:newFullPath error:&error]){
+                model.fileName = newName;
+                model.fullPath = newFullPath;
+//                [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+                [weakSelf.tableView reloadData];
+//                [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+            }else{
+                [MBProgressHUD showMessage:@"名称已存在" toView:weakSelf.view];
+            }
+
+        }];
+        
+        [tips addAction:cancelAction];
+        [tips addAction:okAction];
+        [tips addTextFieldWithConfigurationHandler:nil];
+        [self presentViewController:tips animated:YES completion:nil];
+        
+    }
+
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *ID = @"cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ID];
@@ -234,6 +374,11 @@
     {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:ID];
     }
+    
+    // 添加长按重命名收税
+    UILongPressGestureRecognizer *longGest = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressToEditCell:)];
+    [cell.contentView addGestureRecognizer:longGest];
+    
     XMWifiTransModel *model = self.dataArr[indexPath.row];
     cell.textLabel.text = model.fileName;
     if(model.size < 0.001){
@@ -251,9 +396,7 @@
         return;
     }
     
-    
     XMWifiTransModel *model = self.dataArr[indexPath.row];
-    
     NSString *extesionStr = [[model.fileName lowercaseString] pathExtension];
     // 不支持的格式
     if ([@"zip|rar" containsString:extesionStr]){
@@ -305,14 +448,7 @@
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
     if (editingStyle == UITableViewCellEditingStyleDelete){
-        XMWifiTransModel *model = self.dataArr[indexPath.row];
-        
-        if([[NSFileManager defaultManager] removeItemAtPath:model.fullPath error:nil]){
-            [self.dataArr removeObjectAtIndex:indexPath.row];
-            [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-        }else{
-            [MBProgressHUD showMessage:@"删除失败" toView:self.view];
-        }
+        [self deleteOneCellAtIndexPath:indexPath];
     }
     
 }
