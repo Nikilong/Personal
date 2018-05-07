@@ -282,7 +282,7 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_VERBOSE; // | HTTP_LOG_FLAG_TRACE
             [self.hud hideAnimated:YES];
             self.hud = nil;
             // 通知外界传输完成
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"XMWifiTransfronFilesComplete" object:nil];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"XMWifiTransfronFilesComplete" object:self.haveUploadFiles];
             
         }else{
             // 来到这里表示上传多个文件

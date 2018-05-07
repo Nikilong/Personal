@@ -454,8 +454,8 @@
 				20707E99209F3E5700572604 /* model */,
 				204D23DA209ED86800F17E2E /* XMWifiTransFileViewController.h */,
 				204D23DB209ED86800F17E2E /* XMWifiTransFileViewController.m */,
-				2066C305209F558600799A1E /* MyHTTPConnection.m */,
 				2066C306209F558600799A1E /* MyHTTPConnection.h */,
+				2066C305209F558600799A1E /* MyHTTPConnection.m */,
 				20707E9D209F446F00572604 /* XMFileDisplayWebViewViewController.h */,
 				20707E9E209F446F00572604 /* XMFileDisplayWebViewViewController.m */,
 			);
