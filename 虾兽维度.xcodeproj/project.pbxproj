@@ -115,6 +115,7 @@
 		84BA25591E65C7A800C8B204 /* XMWebTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BA25571E65C7A800C8B204 /* XMWebTableViewCell.m */; };
 		84BA255A1E65C7A800C8B204 /* XMWebTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84BA25581E65C7A800C8B204 /* XMWebTableViewCell.xib */; };
 		84D9ED061E656BC30046840E /* XMWebModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 84D9ED051E656BC30046840E /* XMWebModel.m */; };
+		FD3332E420A154D80017655F /* transportFile.py in Resources */ = {isa = PBXBuildFile; fileRef = FD3332E320A154D80017655F /* transportFile.py */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -340,6 +341,7 @@
 		84BA25581E65C7A800C8B204 /* XMWebTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = XMWebTableViewCell.xib; sourceTree = "<group>"; };
 		84D9ED041E656BC30046840E /* XMWebModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMWebModel.h; sourceTree = "<group>"; };
 		84D9ED051E656BC30046840E /* XMWebModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMWebModel.m; sourceTree = "<group>"; };
+		FD3332E320A154D80017655F /* transportFile.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = transportFile.py; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -835,6 +837,7 @@
 		849D26E51E640E3200F0CA5D = {
 			isa = PBXGroup;
 			children = (
+				FD3332E320A154D80017655F /* transportFile.py */,
 				849D26F01E640E3200F0CA5D /* 虾兽维度 */,
 				849D270A1E640E3300F0CA5D /* 虾兽维度Tests */,
 				849D27151E640E3300F0CA5D /* 虾兽维度UITests */,
@@ -1002,6 +1005,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FD3332E420A154D80017655F /* transportFile.py in Resources */,
 				849D27011E640E3200F0CA5D /* LaunchScreen.storyboard in Resources */,
 				204D2438209ED91A00F17E2E /* README.txt in Resources */,
 				20C85E6920541F3B0057F483 /* tool_icon_default.png in Resources */,
