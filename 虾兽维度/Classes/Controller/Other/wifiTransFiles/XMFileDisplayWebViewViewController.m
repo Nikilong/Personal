@@ -9,7 +9,7 @@
 #import "XMFileDisplayWebViewViewController.h"
 //#import <WebKit/WebKit.h>
 
-@interface XMFileDisplayWebViewViewController ()
+@interface XMFileDisplayWebViewViewController ()<UIGestureRecognizerDelegate>
 
 @property (nonatomic, strong) UIWebView *displayWebview;
 
@@ -28,30 +28,34 @@
 //    
 //    self.displayWebview = [[WKWebView alloc] initWithFrame:self.view.bounds configuration:config];
     self.displayWebview = [[UIWebView alloc] initWithFrame:self.view.bounds];
-
+    // 实现缩放
+    self.displayWebview.scalesPageToFit = YES;
     [self.view addSubview:self.displayWebview];
+    
+    // 增加点击手势隐藏或显示导航栏
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showNavBar:)];
+    tap.delegate = self;
+    [self.displayWebview addGestureRecognizer:tap];
     
 }
 
+/// 隐藏或显示导航栏
+- (void)showNavBar:(UITapGestureRecognizer *)gest{
+    if (gest.state == UIGestureRecognizerStateEnded){
+        self.navigationController.navigationBarHidden = !self.navigationController.navigationBarHidden;
+    }
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+    return YES;
+
+}
 
 /// 加载本地文件
 - (void)loadLocalFileWithPath:(NSString *)fullPath{
     [self.displayWebview loadRequest:[NSURLRequest requestWithURL:[NSURL fileURLWithPath:fullPath]]];
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

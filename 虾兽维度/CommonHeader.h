@@ -9,9 +9,12 @@
 #ifndef CommonHeader_h
 #define CommonHeader_h
 
-// 左侧边栏
+// 左侧边栏(首页)
 #define XMLeftViewTotalW 200
 #define XMLeftViewPadding 10
+
+// 左侧边栏(wifi传输)
+#define XMWifiLeftViewTotalW 130
 
 // 屏幕尺寸
 #define XMScreenW [UIScreen mainScreen].bounds.size.width

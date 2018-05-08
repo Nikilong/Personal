@@ -80,18 +80,7 @@
 {
     if (!_dataArr)
     {
-        _dataArr = [NSMutableArray array];
-        NSArray *array = [[NSFileManager defaultManager] subpathsAtPath:XMWifiUploadDirPath];
-        NSDictionary *dict = @{};
-        for (NSString *ele in array){
-            XMWifiTransModel *model = [[XMWifiTransModel alloc] init];
-            dict = [[NSFileManager defaultManager] attributesOfItemAtPath:[XMWifiUploadDirPath stringByAppendingPathComponent:ele] error:nil];
-            model.fileName = ele;
-            model.fullPath = [XMWifiUploadDirPath stringByAppendingPathComponent:ele];
-            model.size = dict.fileSize/1024.0/1024.0;
-//            NSLog(@"%@---size:%.3fM",ele,dict.fileSize/1024.0/1024.0);
-            [_dataArr addObject:model];
-        }
+        _dataArr = [XMWifiGroupTool getCurrentGroupFiles];
     }
     return _dataArr;
 }
@@ -100,7 +89,7 @@
 {
     if (!_cover)
     {
-        UIView *cover = [[UIView alloc] initWithFrame:CGRectMake(XMLeftViewTotalW, 0, XMScreenW - XMLeftViewTotalW, XMScreenH)];
+        UIView *cover = [[UIView alloc] initWithFrame:CGRectMake(XMWifiLeftViewTotalW, 0, XMScreenW - XMWifiLeftViewTotalW, XMScreenH)];
         cover.backgroundColor = [UIColor clearColor];
         [self.view addSubview:cover];
         _cover = cover;
@@ -118,6 +107,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    // 初始化参数
     self.view.backgroundColor = [UIColor whiteColor];
     self.connectFlag = NO;
     self.tableView.allowsMultipleSelectionDuringEditing = YES;
@@ -147,18 +137,9 @@
 }
 
  - (void)refreshDate{
-     [_dataArr removeAllObjects];
-     NSArray *array = [[NSFileManager defaultManager] subpathsAtPath:XMWifiUploadDirPath];
-     NSDictionary *dict = @{};
-     for (NSString *ele in array){
-         XMWifiTransModel *model = [[XMWifiTransModel alloc] init];
-         dict = [[NSFileManager defaultManager] attributesOfItemAtPath:[XMWifiUploadDirPath stringByAppendingPathComponent:ele] error:nil];
-         model.fileName = ele;
-         model.fullPath = [XMWifiUploadDirPath stringByAppendingPathComponent:ele];
-         model.size = dict.fileSize/1024.0/1024.0;
-    
-         [_dataArr addObject:model];
-     }
+     [self.dataArr removeAllObjects];
+     self.dataArr = [XMWifiGroupTool getCurrentGroupFiles];
+     [self.tableView reloadData];
 }
 
 
@@ -185,7 +166,7 @@
     titleLab.font = [UIFont systemFontOfSize:17];
     titleLab.textColor = [UIColor blackColor];
     titleLab.textAlignment = NSTextAlignmentCenter;
-    titleLab.text = @"Wifi-ON";
+    titleLab.text = [XMWifiGroupTool getDefaultGroupName];
     // 添加刷新手势
     UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(navTitleViewDidDoubleTap)];
     doubleTap.numberOfTapsRequired = 2;
@@ -202,7 +183,6 @@
     if (self.connectFlag){
         // 关闭http服务
         [self.httpServer stop];
-        self.navTitleLab.text = @"Wifi-OFF";
         self.connectFlag = NO;
         [MBProgressHUD showMessage:@"Wifi传输已关闭" toView:self.view];
         return;
@@ -234,7 +214,6 @@
         [MBProgressHUD showMessage:@"打开HTTP服务失败" toView:self.view];
     }else{
         NSLog(@"打开HTTP服务成功");
-        self.navTitleLab.text = @"Wifi-ON";
         self.connectFlag = YES;
         // 获得本机IP和端口号
         [self showIP];
@@ -268,14 +247,9 @@
 /// 导航栏双击刷新
 - (void)navTitleViewDidDoubleTap{
     [self refreshDate];
-    [self.tableView reloadData];
+//    [self.tableView reloadData];
 }
 
-/// 创建分组文件夹
-- (void)creatGroupDir{
-#warning undo
-    
-}
 
 /// 批量编辑模式
 - (void)setEditMode{
@@ -370,14 +344,14 @@
 -(void)addLeftVC
 {
     // 创建左侧边栏容器
-    UIView *leftContentView = [[UIView alloc] initWithFrame:CGRectMake(-XMLeftViewTotalW, 0, XMLeftViewTotalW, XMScreenH)];
+    UIView *leftContentView = [[UIView alloc] initWithFrame:CGRectMake(-XMWifiLeftViewTotalW, 0, XMWifiLeftViewTotalW, XMScreenH)];
     leftContentView.backgroundColor = [UIColor grayColor];
     self.leftContentView = leftContentView;
     
     // 创建左侧边栏
     self.leftVC = [[XMWifiLeftTableViewController alloc] initWithStyle:UITableViewStyleGrouped];
     self.leftVC.delegate = self;
-    self.leftVC.view.frame = CGRectMake(XMLeftViewPadding, 40, XMLeftViewTotalW - 2 *XMLeftViewPadding, XMScreenH - XMLeftViewPadding - 20);
+    self.leftVC.view.frame = CGRectMake(XMLeftViewPadding, 40, XMWifiLeftViewTotalW - 2 *XMLeftViewPadding, XMScreenH - XMLeftViewPadding - 20);
     [self.leftContentView addSubview:self.leftVC.view];
     
     // 添加到导航条之上
@@ -402,7 +376,7 @@
     
     // 设置动画弹出左侧边栏
     [UIView animateWithDuration:0.5 animations:^{
-        self.leftContentView.transform = CGAffineTransformMakeTranslation(XMLeftViewTotalW, 0);
+        self.leftContentView.transform = CGAffineTransformMakeTranslation(XMWifiLeftViewTotalW, 0);
     }];
     
 }
@@ -420,16 +394,28 @@
     }];
 }
 
-#pragma mark
--(void)leftWifiTableViewControllerDidSelectChannel:(NSIndexPath *)indexPath{
-    
+#pragma mark XMWifiLeftTableViewControllerDelegate
+- (void)leftWifiTableViewControllerDidSelectGroupName:(NSString *)groupName{
+    // 一系列设置标题
+    self.navTitleLab.text = groupName;
+    [XMWifiGroupTool upgradeCurrentGroupName:groupName];
+    [self refreshDate];
+    [self hideLeftView];
+}
+
+- (void)leftWifiTableViewControllerDidDeleteGroupName:(NSString *)groupName{
+    // 如果删除的文件夹刚好是当前展示的数组,那么需要切换到"默认"的文件夹
+    if ([groupName isEqualToString:self.navTitleLab.text]){
+        self.navTitleLab.text = [XMWifiGroupTool getDefaultGroupName];
+        [self refreshDate];
+    }
 }
 
 #pragma mark - 监听上传的结果
 - (void)uploadFinish:(NSNotification *)noti{
     NSLog(@"%@",noti.userInfo);
     [self refreshDate];
-    [self.tableView reloadData];
+//    [self.tableView reloadData];
 }
 
 #pragma mark - UITableViewDataSource
@@ -446,7 +432,7 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:ID];
     }
     
-    // 添加长按重命名收税
+    // 添加重命名手势
     UILongPressGestureRecognizer *longGest = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressToEditCell:)];
     [cell.contentView addGestureRecognizer:longGest];
     
@@ -573,7 +559,7 @@
             NSError *error;
             if ([[NSFileManager defaultManager] moveItemAtPath:model.fullPath toPath:newFullPath error:&error]){
                 [weakSelf refreshDate];
-                [weakSelf.tableView reloadData];
+//                [weakSelf.tableView reloadData];
             }else{
                 [MBProgressHUD showMessage:@"名称已存在" toView:weakSelf.view];
             }

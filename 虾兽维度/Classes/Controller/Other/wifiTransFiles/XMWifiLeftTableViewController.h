@@ -11,7 +11,8 @@
 @protocol XMWifiLeftTableViewControllerDelegate <NSObject>
 
 @optional
-- (void)leftWifiTableViewControllerDidSelectChannel:(NSIndexPath *)indexPath;
+- (void)leftWifiTableViewControllerDidSelectGroupName:(NSString *)groupName;
+- (void)leftWifiTableViewControllerDidDeleteGroupName:(NSString *)groupName;
 
 @end
 

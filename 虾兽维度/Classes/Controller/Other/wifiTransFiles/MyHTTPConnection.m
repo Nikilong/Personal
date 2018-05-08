@@ -12,6 +12,7 @@
 
 #import "CommonHeader.h"
 #import "MBProgressHUD+NK.h"
+#import "XMWifiGroupTool.h"
 
 
 @interface MyHTTPConnection()
@@ -202,7 +203,7 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_VERBOSE; // | HTTP_LOG_FLAG_TRACE
     
     // 上传文件保存到的沙盒路径XMWifiUploadDirPath
     
-    NSString* filePath = [XMWifiUploadDirPath stringByAppendingPathComponent: filename];
+    NSString* filePath = [[XMWifiGroupTool getCurrentGroupPath] stringByAppendingPathComponent:filename];
     if( [[NSFileManager defaultManager] fileExistsAtPath:filePath] ) {
         storeFile = nil;
         HTTPLogWarn(@"File has exist at %@",filePath);
