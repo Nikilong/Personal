@@ -35,8 +35,10 @@
 
 @property (nonatomic, strong) NSMutableArray *dataArr;
 
-@property (weak, nonatomic)  UIView *toolBar;           // 批量编辑下的工具条
-@property (weak, nonatomic)  UILabel *navTitleLab;      // 自定义导航栏标题
+@property (weak, nonatomic)  UIView *toolBar;                // 批量编辑下的工具条
+@property (weak, nonatomic)  UIButton *toolBarDeleBtn;       // 工具条删除按钮
+@property (weak, nonatomic)  UIButton *toolBarSeleAllBtn;    // 工具条全选按钮
+@property (weak, nonatomic)  UILabel *navTitleLab;           // 自定义导航栏标题
 
 @end
 
@@ -47,22 +49,29 @@
     if (!_toolBar)
     {
         CGFloat toolH = 44;
+        CGFloat margin = 10;
         UIView *toolBar = [[UIView alloc] initWithFrame:CGRectMake(0, XMScreenH - toolH, XMScreenW, toolH)];
-        toolBar.backgroundColor = [UIColor grayColor];
+        toolBar.backgroundColor = [UIColor lightGrayColor];
         _toolBar = toolBar;
         UIWindow *window = [UIApplication sharedApplication].keyWindow;
         [window addSubview:toolBar];
-        UIButton *allSelectBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, toolH, toolH)];
+        // 全选/反选
+        UIButton *allSelectBtn = [[UIButton alloc] initWithFrame:CGRectMake(margin, 0, toolH * 2, toolH)];
+        self.toolBarSeleAllBtn = allSelectBtn;
         [toolBar addSubview:allSelectBtn];
-        [allSelectBtn addTarget:self action:@selector(selectAllCell) forControlEvents:UIControlEventTouchUpInside];
-        [allSelectBtn setTitle:@"全选" forState:UIControlStateNormal];
-        [allSelectBtn setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
-        
-        UIButton *deleBtn = [[UIButton alloc] initWithFrame:CGRectMake(XMScreenW - toolH, 0, toolH, toolH)];
+        [allSelectBtn addTarget:self action:@selector(selectAllCell:) forControlEvents:UIControlEventTouchUpInside];
+        [allSelectBtn setTitle:@"全选所有" forState:UIControlStateNormal];
+        [allSelectBtn setTitle:@"取消全选" forState:UIControlStateSelected];
+        [allSelectBtn setTitleColor:[UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0] forState:UIControlStateNormal];
+        // 删除按钮
+        UIButton *deleBtn = [[UIButton alloc] initWithFrame:CGRectMake(XMScreenW - toolH -margin, 0, toolH, toolH)];
+        self.toolBarDeleBtn = deleBtn;
         [toolBar addSubview:deleBtn];
-        [deleBtn addTarget:self action:@selector(deleteSelectCell) forControlEvents:UIControlEventTouchUpInside];
+        [deleBtn addTarget:self action:@selector(deleteSelectCell:) forControlEvents:UIControlEventTouchUpInside];
         [deleBtn setTitle:@"删除" forState:UIControlStateNormal];
-        [deleBtn setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+        [deleBtn setTitleColor:[UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0] forState:UIControlStateNormal];
+        [deleBtn setTitleColor:[UIColor grayColor] forState:UIControlStateDisabled];
+        deleBtn.enabled = NO;
     }
     return _toolBar;
 }
@@ -125,9 +134,7 @@
     
          [_dataArr addObject:model];
      }
-     
-     
- }
+}
 
 
 /// 初始化导航栏
@@ -158,6 +165,7 @@
     
 }
 #pragma mark - 导航栏/toolbar及点击事件
+#pragma mark 导航栏
 /// 打开/关闭一个http服务
 - (void)switchHttpServerConnect{
     if (self.connectFlag){
@@ -242,23 +250,33 @@
 - (void)setEditMode{
     if (![self.tableView isEditing]){
         self.toolBar.hidden = NO;
-        
+        self.toolBarSeleAllBtn.selected = NO;
+        self.toolBarDeleBtn.enabled = NO;
     }else{
         self.toolBar.hidden = YES;
-        
     }
     [self.tableView setEditing:![self.tableView isEditing] animated:YES];
 }
 
-#pragma mark toolbart
-/// 全选所有cell
-- (void)selectAllCell{
-    if (self.dataArr.count == 0) return;
-    for (NSInteger i = 0; i < self.dataArr.count; i++) {
-        [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0] animated:YES scrollPosition:UITableViewScrollPositionNone];
+#pragma mark toolbar
+/// 全选/取消全选所有cell
+- (void)selectAllCell:(UIButton *)btn{
+    btn.selected = !btn.selected;
+    if (btn.selected){
+        // 全选状态
+        if (self.dataArr.count == 0) return;
+        for (NSInteger i = 0; i < self.dataArr.count; i++) {
+            [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0] animated:YES scrollPosition:UITableViewScrollPositionNone];
+        }
+        self.toolBarDeleBtn.enabled = YES;
+    }else{
+        // 取消全选状态
+        NSArray *seleArr = [self.tableView indexPathsForSelectedRows];
+        for (NSIndexPath *indexPath in seleArr){
+            [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+        }
+        self.toolBarDeleBtn.enabled = NO;
     }
-   
-    
 }
 
 /// 数组降序,即arr[0]的数值最大
@@ -276,8 +294,8 @@
 }
 
 /// 删除所选的cell
-- (void)deleteSelectCell{
-    self.toolBar.userInteractionEnabled = NO;
+- (void)deleteSelectCell:(UIButton *)btn{
+    btn.enabled = NO;
     NSArray *seleArr = [self.tableView indexPathsForSelectedRows];
     // 先对数组进行降序处理,将indexPath.row最大(即最底下的数据先删除),防止序号紊乱
     NSArray *sortArr = [self sortArray:seleArr];
@@ -287,7 +305,6 @@
         }
     }
     [self.tableView setEditing:NO animated:YES];
-    self.toolBar.userInteractionEnabled = YES;
     self.toolBar.hidden = YES;
 }
 
@@ -319,52 +336,9 @@
 }
 
 #pragma mark - UITableViewDataSource
+#pragma mark cell的初始化方法
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     return self.dataArr.count;
-}
-
-- (void)longPressToEditCell:(UILongPressGestureRecognizer *)gest{
-    if (gest.state == UIGestureRecognizerStateBegan){
-        NSLog(@"%s",__func__);
-        
-        UIAlertController *tips = [UIAlertController alertControllerWithTitle:@"警告" message:@"确定要注销？？" preferredStyle:UIAlertControllerStyleAlert];
-        
-        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
-        __weak typeof(self) weakSelf = self;
-        UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action){
-            
-            // 获得输入内容
-            UITextField *textF = tips.textFields[0];
-            
-            // 根据触摸点推送indexPath
-            CGPoint point = [gest locationInView:weakSelf.tableView];
-            NSIndexPath *indexPath = [weakSelf.tableView indexPathForRowAtPoint:point];
-            XMWifiTransModel *model = weakSelf.dataArr[indexPath.row];
-            NSString *extesionStr = [[model.fileName lowercaseString] pathExtension];
-            NSString *newName = [NSString stringWithFormat:@"%@.%@",textF.text,extesionStr];
-            NSString *newFullPath = [XMWifiUploadDirPath stringByAppendingPathComponent:newName];
-#warning todo 有缓存,效果不好
-            // 重命名
-            NSError *error;
-            if ([[NSFileManager defaultManager] moveItemAtPath:model.fullPath toPath:newFullPath error:&error]){
-                model.fileName = newName;
-                model.fullPath = newFullPath;
-//                [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-                [weakSelf.tableView reloadData];
-//                [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-            }else{
-                [MBProgressHUD showMessage:@"名称已存在" toView:weakSelf.view];
-            }
-
-        }];
-        
-        [tips addAction:cancelAction];
-        [tips addAction:okAction];
-        [tips addTextFieldWithConfigurationHandler:nil];
-        [self presentViewController:tips animated:YES completion:nil];
-        
-    }
-
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -391,8 +365,25 @@
     return cell;
 }
 
--(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    if(self.tableView.isEditing){
+#pragma mark 选中与反选
+- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (tableView.isEditing){
+        // 编辑模式下如果没有选中按钮则删除按钮不可用
+        if([tableView indexPathsForSelectedRows].count ==  0){
+            self.toolBarDeleBtn.enabled = NO;
+            self.toolBarSeleAllBtn.selected = NO;
+        }
+    }
+    
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    if(tableView.isEditing){
+        // 编辑模式下,启用删除按钮
+        self.toolBarDeleBtn.enabled = YES;
+        if ([tableView indexPathsForSelectedRows].count == self.dataArr.count){
+            self.toolBarSeleAllBtn.selected = YES;
+        }
         return;
     }
     
@@ -438,6 +429,7 @@
 //    }
 }
 
+#pragma mark 编辑
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath{
     return YES;
 }
@@ -456,6 +448,50 @@
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath{
     
     return UITableViewCellEditingStyleDelete;
+}
+
+#pragma mark - cell长按编辑手势
+- (void)longPressToEditCell:(UILongPressGestureRecognizer *)gest{
+    if (gest.state == UIGestureRecognizerStateBegan){
+        // 根据触摸点t推算indexPath
+        CGPoint point = [gest locationInView:self.tableView];
+        NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:point];
+        // 提取模型,获得文件名称,后缀,然后把不带后缀的名称提取出来当做输入框的文字以便修改
+        XMWifiTransModel *model = self.dataArr[indexPath.row];
+        NSString *extesionStr = [[model.fileName lowercaseString] pathExtension];
+        NSString *fileName = [model.fileName componentsSeparatedByString:@"."][0];
+        //弹出
+        UIAlertController *tips = [UIAlertController alertControllerWithTitle:@"重命名" message:@"输入新的名称(不带后缀)" preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
+        __weak typeof(self) weakSelf = self;
+        UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action){
+            
+            // 获得输入内容
+            UITextField *textF = tips.textFields[0];
+            
+            NSString *newName = [NSString stringWithFormat:@"%@.%@",textF.text,extesionStr];
+            NSString *newFullPath = [XMWifiUploadDirPath stringByAppendingPathComponent:newName];
+            // 重命名,自己覆盖自己
+            NSError *error;
+            if ([[NSFileManager defaultManager] moveItemAtPath:model.fullPath toPath:newFullPath error:&error]){
+                [weakSelf refreshDate];
+                [weakSelf.tableView reloadData];
+            }else{
+                [MBProgressHUD showMessage:@"名称已存在" toView:weakSelf.view];
+            }
+            
+        }];
+        
+        [tips addAction:cancelAction];
+        [tips addAction:okAction];
+        [tips addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+            textField.text = fileName;
+        }];
+        [self presentViewController:tips animated:YES completion:nil];
+        
+    }
+    
 }
 
 @end
