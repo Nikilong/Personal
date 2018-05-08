@@ -21,15 +21,10 @@
 #import "XMFileDisplayWebViewViewController.h"
 #import "MBProgressHUD+NK.h"
 #import "CommonHeader.h"
+#import "XMWifiLeftTableViewController.h"
+#import "XMWifiGroupTool.h"
 
-//typedef enum : NSUInteger {
-//    XMAlertTypeMessage,
-//    XMAlertTypeOpen,
-//    XMAlertTypeClose,
-//} XMAlertType;
-
-@interface XMWifiTransFileViewController ()
-
+@interface XMWifiTransFileViewController ()<XMWifiLeftTableViewControllerDelegate>
 @property (nonatomic, strong) HTTPServer *httpServer;
 @property (nonatomic, assign)  BOOL connectFlag;
 
@@ -39,6 +34,11 @@
 @property (weak, nonatomic)  UIButton *toolBarDeleBtn;       // 工具条删除按钮
 @property (weak, nonatomic)  UIButton *toolBarSeleAllBtn;    // 工具条全选按钮
 @property (weak, nonatomic)  UILabel *navTitleLab;           // 自定义导航栏标题
+
+/** 强引用左侧边栏窗口 */
+@property (nonatomic, strong) XMWifiLeftTableViewController *leftVC;
+@property (weak, nonatomic)  UIView *leftContentView;
+@property (weak, nonatomic)  UIView *cover;
 
 @end
 
@@ -96,6 +96,25 @@
     return _dataArr;
 }
 
+- (UIView *)cover
+{
+    if (!_cover)
+    {
+        UIView *cover = [[UIView alloc] initWithFrame:CGRectMake(XMLeftViewTotalW, 0, XMScreenW - XMLeftViewTotalW, XMScreenH)];
+        cover.backgroundColor = [UIColor clearColor];
+        [self.view addSubview:cover];
+        _cover = cover;
+        
+        // 添加手势点击和拖，触发蒙板隐藏左侧边栏
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideLeftView)];
+        [cover addGestureRecognizer:tap];
+        UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self  action:@selector(hideLeftView)];
+        [cover addGestureRecognizer:pan];
+        
+    }
+    return _cover;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -107,6 +126,12 @@
 
     // 初始化导航栏
     [self createNav];
+    
+    // 添加左侧边栏
+    [self addLeftVC];
+    // 左侧抽屉手势
+    UISwipeGestureRecognizer *swip = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(showLeftView)];
+    [self.view addGestureRecognizer:swip];
 }
 
 
@@ -139,23 +164,28 @@
 
 /// 初始化导航栏
 - (void)createNav{
-    self.navigationItem.backBarButtonItem.title = @"返回";
-    // 增加文件夹按钮
-    UIBarButtonItem *createdBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemOrganize target:self action:@selector(creatGroupDir)];
+    CGFloat btnWH = 44;
+    // 返回按钮
+    UIBarButtonItem *backBtn = [[UIBarButtonItem alloc] initWithTitle:@"返回" style:UIBarButtonItemStylePlain target:self action:@selector(dismissCurrentViewController)];
     // 编辑模式
     UIBarButtonItem *editBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(setEditMode)];
-    self.navigationItem.leftBarButtonItems = @[createdBtn,editBtn];
-    // 右边为打开wifi的按钮
-    UIBarButtonItem *wifiBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(switchHttpServerConnect)];
+    self.navigationItem.leftBarButtonItems = @[backBtn,editBtn];
+    // 右边为打开wifi的按钮 wifiopen
+    UIButton *wifiBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, btnWH, btnWH)];
+    [wifiBtn setImage:[UIImage imageNamed:@"wifiopen"] forState:UIControlStateSelected];
+    [wifiBtn setImage:[UIImage imageNamed:@"wificlose"] forState:UIControlStateNormal];
+    [wifiBtn addTarget:self action:@selector(switchHttpServerConnect:) forControlEvents:UIControlEventTouchUpInside];
+    UIBarButtonItem *wifiBarBtn = [[UIBarButtonItem alloc] initWithCustomView:wifiBtn];
     UIBarButtonItem *ipBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemBookmarks target:self action:@selector(showIP)];
-    self.navigationItem.rightBarButtonItems = @[wifiBtn,ipBtn];
+    self.navigationItem.rightBarButtonItems = @[wifiBarBtn,ipBtn];
     
     // 设置标题
     UILabel *titleLab = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 44)];
     self.navTitleLab = titleLab;
     titleLab.font = [UIFont systemFontOfSize:17];
     titleLab.textColor = [UIColor blackColor];
-    titleLab.text = @"Wifi传输未打开";
+    titleLab.textAlignment = NSTextAlignmentCenter;
+    titleLab.text = @"Wifi-ON";
     // 添加刷新手势
     UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(navTitleViewDidDoubleTap)];
     doubleTap.numberOfTapsRequired = 2;
@@ -167,11 +197,12 @@
 #pragma mark - 导航栏/toolbar及点击事件
 #pragma mark 导航栏
 /// 打开/关闭一个http服务
-- (void)switchHttpServerConnect{
+- (void)switchHttpServerConnect:(UIButton *)wifiBtn{
+    wifiBtn.selected = !wifiBtn.selected;
     if (self.connectFlag){
         // 关闭http服务
         [self.httpServer stop];
-        self.navTitleLab.text = @"Wifi传输未打开";
+        self.navTitleLab.text = @"Wifi-OFF";
         self.connectFlag = NO;
         [MBProgressHUD showMessage:@"Wifi传输已关闭" toView:self.view];
         return;
@@ -203,7 +234,7 @@
         [MBProgressHUD showMessage:@"打开HTTP服务失败" toView:self.view];
     }else{
         NSLog(@"打开HTTP服务成功");
-        self.navTitleLab.text = @"Wifi传输已打开";
+        self.navTitleLab.text = @"Wifi-ON";
         self.connectFlag = YES;
         // 获得本机IP和端口号
         [self showIP];
@@ -256,6 +287,13 @@
         self.toolBar.hidden = YES;
     }
     [self.tableView setEditing:![self.tableView isEditing] animated:YES];
+}
+
+/// 退出模块
+- (void)dismissCurrentViewController{
+    dispatch_async(dispatch_get_main_queue(),^{
+        [self.navigationController popViewControllerAnimated:YES];
+    });
 }
 
 #pragma mark toolbar
@@ -327,6 +365,65 @@
     }
 }
 
+#pragma mark 左侧栏
+/**  添加左侧边栏*/
+-(void)addLeftVC
+{
+    // 创建左侧边栏容器
+    UIView *leftContentView = [[UIView alloc] initWithFrame:CGRectMake(-XMLeftViewTotalW, 0, XMLeftViewTotalW, XMScreenH)];
+    leftContentView.backgroundColor = [UIColor grayColor];
+    self.leftContentView = leftContentView;
+    
+    // 创建左侧边栏
+    self.leftVC = [[XMWifiLeftTableViewController alloc] initWithStyle:UITableViewStyleGrouped];
+    self.leftVC.delegate = self;
+    self.leftVC.view.frame = CGRectMake(XMLeftViewPadding, 40, XMLeftViewTotalW - 2 *XMLeftViewPadding, XMScreenH - XMLeftViewPadding - 20);
+    [self.leftContentView addSubview:self.leftVC.view];
+    
+    // 添加到导航条之上
+    [self.navigationController.view insertSubview:self.leftContentView aboveSubview:self.navigationController.navigationBar];
+    
+    // 左侧边栏添加左划取消手势
+    UISwipeGestureRecognizer *swip = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(hideLeftView)];
+    swip.direction = UISwipeGestureRecognizerDirectionLeft;
+    [self.leftVC.tableView addGestureRecognizer:swip];
+}
+
+/** 显示左侧边栏 */
+- (void)showLeftView
+{
+    // 显示蒙板
+    self.cover.hidden = NO;
+    
+    // 添加到导航栏的上面
+    [self.navigationController.view insertSubview:self.cover aboveSubview:self.navigationController.navigationBar];
+    // 添加到导航条之上
+    [self.navigationController.view insertSubview:self.leftContentView aboveSubview:self.navigationController.navigationBar];
+    
+    // 设置动画弹出左侧边栏
+    [UIView animateWithDuration:0.5 animations:^{
+        self.leftContentView.transform = CGAffineTransformMakeTranslation(XMLeftViewTotalW, 0);
+    }];
+    
+}
+
+/** 隐藏左侧边栏 */
+- (void)hideLeftView
+{
+    // 隐藏蒙板
+    self.cover.hidden = YES;
+    
+    [UIView animateWithDuration:0.5 animations:^{
+        // 恢复到最左边的位置
+        self.leftContentView.transform = CGAffineTransformIdentity;
+        
+    }];
+}
+
+#pragma mark
+-(void)leftWifiTableViewControllerDidSelectChannel:(NSIndexPath *)indexPath{
+    
+}
 
 #pragma mark - 监听上传的结果
 - (void)uploadFinish:(NSNotification *)noti{

@@ -9,7 +9,11 @@
 #ifndef CommonHeader_h
 #define CommonHeader_h
 
+// 左侧边栏
+#define XMLeftViewTotalW 200
+#define XMLeftViewPadding 10
 
+// 屏幕尺寸
 #define XMScreenW [UIScreen mainScreen].bounds.size.width
 #define XMScreenH [UIScreen mainScreen].bounds.size.height
 

@@ -7,8 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#define XMLeftViewTotalW 200
-#define XMLeftViewPadding 10
 
 @protocol XMLeftTableViewControllerDelegate <NSObject>
 

@@ -116,6 +116,10 @@
 		84BA255A1E65C7A800C8B204 /* XMWebTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84BA25581E65C7A800C8B204 /* XMWebTableViewCell.xib */; };
 		84D9ED061E656BC30046840E /* XMWebModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 84D9ED051E656BC30046840E /* XMWebModel.m */; };
 		FD3332E420A154D80017655F /* transportFile.py in Resources */ = {isa = PBXBuildFile; fileRef = FD3332E320A154D80017655F /* transportFile.py */; };
+		FD3332E820A1786A0017655F /* wificlose.png in Resources */ = {isa = PBXBuildFile; fileRef = FD3332E620A178690017655F /* wificlose.png */; };
+		FD3332E920A1786A0017655F /* wifiopen.png in Resources */ = {isa = PBXBuildFile; fileRef = FD3332E720A1786A0017655F /* wifiopen.png */; };
+		FD3332EC20A17DD80017655F /* XMWifiLeftTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FD3332EB20A17DD80017655F /* XMWifiLeftTableViewController.m */; };
+		FD3332EF20A181D40017655F /* XMWifiGroupTool.m in Sources */ = {isa = PBXBuildFile; fileRef = FD3332EE20A181D40017655F /* XMWifiGroupTool.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -342,6 +346,12 @@
 		84D9ED041E656BC30046840E /* XMWebModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMWebModel.h; sourceTree = "<group>"; };
 		84D9ED051E656BC30046840E /* XMWebModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMWebModel.m; sourceTree = "<group>"; };
 		FD3332E320A154D80017655F /* transportFile.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = transportFile.py; sourceTree = "<group>"; };
+		FD3332E620A178690017655F /* wificlose.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wificlose.png; sourceTree = "<group>"; };
+		FD3332E720A1786A0017655F /* wifiopen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wifiopen.png; sourceTree = "<group>"; };
+		FD3332EA20A17DD80017655F /* XMWifiLeftTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMWifiLeftTableViewController.h; sourceTree = "<group>"; };
+		FD3332EB20A17DD80017655F /* XMWifiLeftTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMWifiLeftTableViewController.m; sourceTree = "<group>"; };
+		FD3332ED20A181D40017655F /* XMWifiGroupTool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMWifiGroupTool.h; sourceTree = "<group>"; };
+		FD3332EE20A181D40017655F /* XMWifiGroupTool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMWifiGroupTool.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -450,12 +460,15 @@
 		204D23D9209ED84000F17E2E /* wifiTransFiles */ = {
 			isa = PBXGroup;
 			children = (
+				FD3332E520A178690017655F /* wifiIcon */,
 				20707EA0209F551200572604 /* Tool */,
 				204D23DD209ED88200F17E2E /* Third */,
 				2066C308209F642000799A1E /* web */,
 				20707E99209F3E5700572604 /* model */,
 				204D23DA209ED86800F17E2E /* XMWifiTransFileViewController.h */,
 				204D23DB209ED86800F17E2E /* XMWifiTransFileViewController.m */,
+				FD3332EA20A17DD80017655F /* XMWifiLeftTableViewController.h */,
+				FD3332EB20A17DD80017655F /* XMWifiLeftTableViewController.m */,
 				2066C306209F558600799A1E /* MyHTTPConnection.h */,
 				2066C305209F558600799A1E /* MyHTTPConnection.m */,
 				20707E9D209F446F00572604 /* XMFileDisplayWebViewViewController.h */,
@@ -714,6 +727,8 @@
 			children = (
 				20707EA1209F551200572604 /* ZBTool.h */,
 				20707EA2209F551200572604 /* ZBTool.m */,
+				FD3332ED20A181D40017655F /* XMWifiGroupTool.h */,
+				FD3332EE20A181D40017655F /* XMWifiGroupTool.m */,
 			);
 			path = Tool;
 			sourceTree = "<group>";
@@ -896,6 +911,15 @@
 			path = "虾兽维度UITests";
 			sourceTree = "<group>";
 		};
+		FD3332E520A178690017655F /* wifiIcon */ = {
+			isa = PBXGroup;
+			children = (
+				FD3332E620A178690017655F /* wificlose.png */,
+				FD3332E720A1786A0017655F /* wifiopen.png */,
+			);
+			path = wifiIcon;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1007,6 +1031,7 @@
 			files = (
 				FD3332E420A154D80017655F /* transportFile.py in Resources */,
 				849D27011E640E3200F0CA5D /* LaunchScreen.storyboard in Resources */,
+				FD3332E820A1786A0017655F /* wificlose.png in Resources */,
 				204D2438209ED91A00F17E2E /* README.txt in Resources */,
 				20C85E6920541F3B0057F483 /* tool_icon_default.png in Resources */,
 				2066C30B209F643600799A1E /* index.html in Resources */,
@@ -1018,6 +1043,7 @@
 				84BA255A1E65C7A800C8B204 /* XMWebTableViewCell.xib in Resources */,
 				849D26FE1E640E3200F0CA5D /* Assets.xcassets in Resources */,
 				200770342059775100551C00 /* XMShowCollectionViewCell.xib in Resources */,
+				FD3332E920A1786A0017655F /* wifiopen.png in Resources */,
 				205CECF61F488EF700821E38 /* webSpecial.plist in Resources */,
 				204D242E209ED91A00F17E2E /* About.txt in Resources */,
 				20C85E6320541F3B0057F483 /* tool_icon_2.png in Resources */,
@@ -1049,6 +1075,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FD3332EC20A17DD80017655F /* XMWifiLeftTableViewController.m in Sources */,
 				205CED131F49623200821E38 /* NSArray+Log.m in Sources */,
 				205CECEA1F48150E00821E38 /* UIImage+GIF.m in Sources */,
 				205CECF01F48150E00821E38 /* UIView+WebCacheOperation.m in Sources */,
@@ -1131,6 +1158,7 @@
 				205CECE71F48150E00821E38 /* SDWebImageManager.m in Sources */,
 				204D2408209ED8E800F17E2E /* DDRange.m in Sources */,
 				205CECEC1F48150E00821E38 /* UIImage+WebP.m in Sources */,
+				FD3332EF20A181D40017655F /* XMWifiGroupTool.m in Sources */,
 				204D240F209ED8E800F17E2E /* MultipartMessageHeaderField.m in Sources */,
 				20C85E53205419C80057F483 /* XMToolBoxConfig.m in Sources */,
 				202C84F01F2624AD0055FD7D /* XMQRCodeViewController.m in Sources */,
