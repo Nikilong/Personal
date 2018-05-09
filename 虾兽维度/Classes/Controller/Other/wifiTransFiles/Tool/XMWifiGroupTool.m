@@ -19,6 +19,10 @@ static NSString *defaultGroupName = @"默认";
 static NSString *currentGroupName = @"默认";
 static NSString *allFilesGroupName = @"所有";
 
+/// 返回所有(不可编辑)文件夹的名称
++ (NSArray *)nonDeleteGroupNames{
+    return @[(defaultGroupName),(allFilesGroupName)];
+}
 
 /// 返回所有文件夹的名称
 + (NSArray *)groupNames{
@@ -35,7 +39,10 @@ static NSString *allFilesGroupName = @"所有";
         for (NSString *name in defaultArr){
             [self creatNewWifiFilesGroupWithName:name];
         }
-        return defaultArr;
+        NSArray *dirsArr = [self updateGroupNameFile];
+        // 将最终的结果保存
+        [self saveGroupMessageWithNewArray:dirsArr];
+        return dirsArr;
     }
     return nil;
 }
@@ -55,10 +62,6 @@ static NSString *allFilesGroupName = @"所有";
 
 /// 删除一个新文件夹
 + (void)deleteWifiFilesGroupWithName:(NSString *)name{
-    // "默认"和"所有"文件夹不能删除
-    if([name isEqualToString:defaultGroupName] || [name isEqualToString:allFilesGroupName]){
-        return;
-    }
     // 如果删除的文件夹是当前文件夹,则切换至默认文件夹
     if([name isEqualToString:currentGroupName]){
         [self upgradeCurrentGroupName:defaultGroupName];
@@ -78,7 +81,29 @@ static NSString *allFilesGroupName = @"所有";
             break;
         }
     }
+    // 更新沙盒文件
     [self saveGroupMessageWithNewArray:arr];
+}
+
+/// 更新XMWifiGroupName.wifign文件
++ (NSArray *)updateGroupNameFile{
+    // 如果"默认"文件夹不存在,则创建默认文件夹
+    if(![[NSFileManager defaultManager] fileExistsAtPath:[XMWifiUploadDirPath stringByAppendingPathComponent:defaultGroupName]]){
+        [[NSFileManager defaultManager] createDirectoryAtPath:[XMWifiUploadDirPath stringByAppendingPathComponent:defaultGroupName] withIntermediateDirectories:YES attributes:nil error:nil];
+    }
+    // 遍历文件夹WifiTransPort,找出已经存在的其他文件夹
+    NSArray *allFileArr =  [[NSFileManager defaultManager] subpathsOfDirectoryAtPath:XMWifiUploadDirPath error:nil];
+    NSMutableArray *dirsArr = [NSMutableArray array];
+    for (NSString *ele in allFileArr){
+        if (![ele containsString:@"/"]){
+            if([ele containsString:@"DS_Store"]) continue;
+            if ([ele containsString:XMWifiGroupNameFileName]) continue;
+            if ([ele containsString:defaultGroupName]) continue;
+            [dirsArr addObject:ele];
+        }
+    }
+    [self saveGroupMessageWithNewArray:dirsArr];
+    return dirsArr;
 }
 
 /// 将文件夹组写进沙盒
@@ -156,7 +181,6 @@ static NSString *allFilesGroupName = @"所有";
 // 检查能否删除该文件
 + (BOOL)canDeleteFileAtPath:(NSString *)path{
     // todo  增加一个管理员权限,输入密码之类的
-    return YES;
     if([path containsString:XMWifiMainDirName]){
         return YES;
     }else{

@@ -422,6 +422,10 @@
 
 #pragma mark - UITableViewDataSource
 #pragma mark cell的初始化方法
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return 60;
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     return self.dataArr.count;
 }
@@ -544,7 +548,8 @@
         // 提取模型,获得文件名称,后缀,然后把不带后缀的名称提取出来当做输入框的文字以便修改
         XMWifiTransModel *model = self.dataArr[indexPath.row];
         NSString *extesionStr = [[model.fileName lowercaseString] pathExtension];
-        NSString *fileName = [model.fileName componentsSeparatedByString:@"."][0];
+        NSString *fileName = [model.fileName stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@".%@",extesionStr] withString:@""];
+        
         //弹出
         UIAlertController *tips = [UIAlertController alertControllerWithTitle:@"重命名" message:@"输入新的名称(不带后缀)" preferredStyle:UIAlertControllerStyleAlert];
         

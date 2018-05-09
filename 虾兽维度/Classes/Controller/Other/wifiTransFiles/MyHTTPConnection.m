@@ -23,6 +23,9 @@
 @property (nonatomic, assign)   double uploadFileTotalLength;   // 所有上传文件的总大小
 @property (nonatomic, assign)   double uploadFileLength;        // 当前文件已经上传的大小
 @property (nonatomic, assign)   double starTime;                // 上传开始时间
+@property (nonatomic, assign)   double percent;                 // 进度(百分比)
+@property (nonatomic, assign)   BOOL isTimer;                   // 标记是否在计时
+@property (nonatomic, assign)   BOOL isTransportSuccess;                   // 标记是否在计时
 
 @end
 
@@ -45,6 +48,8 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_VERBOSE; // | HTTP_LOG_FLAG_TRACE
         self.starTime = 0;
         self.uploadFileTotalLength = 0;
         self.uploadFileLength = 0;
+        self.isTimer = NO;
+        self.isTransportSuccess = NO;
     }
     return self;
 }
@@ -206,6 +211,8 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_VERBOSE; // | HTTP_LOG_FLAG_TRACE
     NSString* filePath = [[XMWifiGroupTool getCurrentGroupPath] stringByAppendingPathComponent:filename];
     if( [[NSFileManager defaultManager] fileExistsAtPath:filePath] ) {
         storeFile = nil;
+        double fileSize = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil].fileSize;
+        self.uploadFileTotalLength -= fileSize;
         HTTPLogWarn(@"File has exist at %@",filePath);
     }
     else {
@@ -234,6 +241,26 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_VERBOSE; // | HTTP_LOG_FLAG_TRACE
                 self.hud.detailsLabel.text = [NSString stringWithFormat:@"%@ 上传中.. 总大小:%.3fM",self.uploadFileName,self.uploadFileTotalLength /1024.0/ 1024.0];
             }
         });
+        // 开个异步计时,如果进度条太久没更新就强制隐藏hud
+        if (!self.isTimer){
+            self.isTimer = YES;
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                CGFloat per = 2.0;
+                while (per != self.percent) {
+                    per = self.percent;
+                    sleep(20);
+                }
+                // 进度条没有进展,而且反馈标志没有,表示卡住了
+                if (!self.isTransportSuccess){
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self.hud hideAnimated:YES];
+                        self.hud = nil;
+                        NSLog(@"强制结束%s-- %@",__func__,self);
+                        self.isTimer = NO;
+                    });
+                }
+            });
+        }
     }
 }
 
@@ -249,6 +276,7 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_VERBOSE; // | HTTP_LOG_FLAG_TRACE
         // 进度条显示
         dispatch_async(dispatch_get_main_queue(), ^{
             self.hud.progress = self.uploadFileLength/self.uploadFileTotalLength;
+            self.percent = self.hud.progress;
             self.hud.label.text = [NSString stringWithFormat:@"传输进度:%.2f%%",self.uploadFileLength/self.uploadFileTotalLength * 100];
         });
 	}
@@ -257,6 +285,7 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_VERBOSE; // | HTTP_LOG_FLAG_TRACE
 /// 上传完成
 - (void) processEndOfPartWithHeader:(MultipartMessageHeader*) header
 {
+    if (storeFile == nil) return;
 	// as the file part is over, we close the file.
 	[storeFile closeFile];
 	storeFile = nil;
@@ -284,7 +313,7 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_VERBOSE; // | HTTP_LOG_FLAG_TRACE
             self.hud = nil;
             // 通知外界传输完成
             [[NSNotificationCenter defaultCenter] postNotificationName:@"XMWifiTransfronFilesComplete" object:self.haveUploadFiles];
-            
+            self.isTransportSuccess = YES;
         }else{
             // 来到这里表示上传多个文件
             self.hud.detailsLabel.text = self.haveUploadFiles;
