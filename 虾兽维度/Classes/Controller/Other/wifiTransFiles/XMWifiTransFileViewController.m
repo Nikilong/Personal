@@ -326,6 +326,11 @@
         return;
     }
     XMWifiTransModel *model = self.dataArr[indexPath.row];
+    // 先判断文件能够进行操作
+    if (![XMWifiGroupTool canDeleteFileAtPath:model.fullPath]){
+        [MBProgressHUD showMessage:@"系统文件,不可操作!" toView:self.view];
+        return;
+    }
     NSError *error;
     BOOL succesFlag = [[NSFileManager defaultManager] removeItemAtPath:model.fullPath error:&error];
     if(succesFlag){
@@ -333,9 +338,7 @@
         [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
         
     }else{
-        
-        [MBProgressHUD showMessage:[NSString stringWithFormat:@"删除失败__>%@",error] toView:self.view];
-        
+        [MBProgressHUD showMessage:[NSString stringWithFormat:@"删除失败>%@",error] toView:self.view];
     }
 }
 
@@ -386,7 +389,6 @@
 {
     // 隐藏蒙板
     self.cover.hidden = YES;
-    
     [UIView animateWithDuration:0.5 animations:^{
         // 恢复到最左边的位置
         self.leftContentView.transform = CGAffineTransformIdentity;
@@ -554,7 +556,7 @@
             UITextField *textF = tips.textFields[0];
             
             NSString *newName = [NSString stringWithFormat:@"%@.%@",textF.text,extesionStr];
-            NSString *newFullPath = [XMWifiUploadDirPath stringByAppendingPathComponent:newName];
+            NSString *newFullPath = [model.rootPath stringByAppendingPathComponent:newName];
             // 重命名,自己覆盖自己
             NSError *error;
             if ([[NSFileManager defaultManager] moveItemAtPath:model.fullPath toPath:newFullPath error:&error]){

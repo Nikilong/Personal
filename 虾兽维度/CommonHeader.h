@@ -14,7 +14,7 @@
 #define XMLeftViewPadding 10
 
 // 左侧边栏(wifi传输)
-#define XMWifiLeftViewTotalW 130
+#define XMWifiLeftViewTotalW 160
 
 // 屏幕尺寸
 #define XMScreenW [UIScreen mainScreen].bounds.size.width
@@ -27,7 +27,8 @@
 #define XMHiwebHomeUrlPath [XMHomeDirectory stringByAppendingPathComponent:@"hiweb.homeurl"]
 
 // wifi传输的保存沙盒路径
-#define XMWifiUploadDirPath  [NSString stringWithFormat:@"%@/WifiTransPort",XMHomeDirectory]
+#define XMWifiMainDirName @"WifiTransPort"
+#define XMWifiUploadDirPath  [NSString stringWithFormat:@"%@/%@",XMHomeDirectory,XMWifiMainDirName]
 
 
 #endif /* CommonHeader_h */

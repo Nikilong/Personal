@@ -28,4 +28,6 @@
 /// 返回当前文件夹目录下的所有文件
 + (NSMutableArray *)getCurrentGroupFiles;
 
+// 检查能否删除该文件
++ (BOOL)canDeleteFileAtPath:(NSString *)path;
 @end
