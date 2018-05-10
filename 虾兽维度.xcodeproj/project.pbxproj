@@ -295,6 +295,7 @@
 		20707E9E209F446F00572604 /* XMFileDisplayWebViewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMFileDisplayWebViewViewController.m; sourceTree = "<group>"; };
 		20707EA1209F551200572604 /* ZBTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBTool.h; sourceTree = "<group>"; };
 		20707EA2209F551200572604 /* ZBTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZBTool.m; sourceTree = "<group>"; };
+		2096B0E620A49C8D00BA249C /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PrefixHeader.pch; path = "虾兽维度/PrefixHeader.pch"; sourceTree = SOURCE_ROOT; };
 		2099EB7C1F19DCD500F8BD42 /* XMOpenWebmoduleProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMOpenWebmoduleProtocol.h; sourceTree = "<group>"; };
 		20A3BCFD1F2E2D7400ED1699 /* XMAdvance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMAdvance.h; sourceTree = "<group>"; };
 		20A3BCFE1F2E2D7400ED1699 /* XMAdvance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMAdvance.m; sourceTree = "<group>"; };
@@ -318,7 +319,6 @@
 		20C85E6F20551B800057F483 /* XMTouchIDKeyboardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMTouchIDKeyboardViewController.m; sourceTree = "<group>"; };
 		20E9E371204C4BEC007D442E /* XMClipImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMClipImageViewController.h; sourceTree = "<group>"; };
 		20E9E372204C4BEC007D442E /* XMClipImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMClipImageViewController.m; sourceTree = "<group>"; };
-		20E9E374204C5136007D442E /* CommonHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CommonHeader.h; path = ../CommonHeader.h; sourceTree = "<group>"; };
 		20F112131E864FC000E64A70 /* web.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = web.plist; path = ../web.plist; sourceTree = "<group>"; };
 		20F112151E86697400E64A70 /* XMChannelModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMChannelModel.h; sourceTree = "<group>"; };
 		20F112161E86697400E64A70 /* XMChannelModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMChannelModel.m; sourceTree = "<group>"; };
@@ -404,7 +404,7 @@
 				205CECF51F488EF700821E38 /* webSpecial.plist */,
 				20C85E51205419C80057F483 /* XMToolBoxConfig.h */,
 				20C85E52205419C80057F483 /* XMToolBoxConfig.m */,
-				20E9E374204C5136007D442E /* CommonHeader.h */,
+				2096B0E620A49C8D00BA249C /* PrefixHeader.pch */,
 			);
 			name = config;
 			path = toolBoxIcons;
@@ -1307,6 +1307,9 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = S3RSD3BB8U;
+				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/虾兽维度/PrefixHeader.pch";
 				INFOPLIST_FILE = "虾兽维度/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1327,6 +1330,9 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = S3RSD3BB8U;
+				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/虾兽维度/PrefixHeader.pch";
 				INFOPLIST_FILE = "虾兽维度/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

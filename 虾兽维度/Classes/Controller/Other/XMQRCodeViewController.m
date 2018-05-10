@@ -10,7 +10,6 @@
 #import <AVFoundation/AVFoundation.h>
 #import "EXQRCodeImageDetectorUtil.h"
 //#import <Photos/Photos.h>
-#import "MBProgressHUD+NK.h"
 
 #define EX_SCREEN_WIDTH (NSFoundationVersionNumber <= NSFoundationVersionNumber_iOS_7_1 ? (UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation) ? [[UIScreen mainScreen] bounds].size.width : [[UIScreen mainScreen] bounds].size.height) : [[UIScreen mainScreen] bounds].size.width)
 

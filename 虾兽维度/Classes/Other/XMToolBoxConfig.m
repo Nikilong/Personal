@@ -17,16 +17,16 @@
 + (NSArray *)toolBoxs
 {
     return @[
+             @{ToolBox_kName:@"Wifi传送文件",
+               ToolBox_kType:@(XMToolBoxTypeWifiTransFiles),
+               ToolBox_kAuth:@(XMToolBoxAuthenTypeNeed)
+               },
              @{ToolBox_kName:@"裁剪圆环头像",
                ToolBox_kType:@(XMToolBoxTypeClipImg),
                ToolBox_kAuth:@(XMToolBoxAuthenTypeNone)
                },
              @{ToolBox_kName:@"Hiweb",
                ToolBox_kType:@(XMToolBoxTypeHiweb),
-               ToolBox_kAuth:@(XMToolBoxAuthenTypeNeed)
-               },
-             @{ToolBox_kName:@"Wifi传送文件",
-               ToolBox_kType:@(XMToolBoxTypeWifiTransFiles),
                ToolBox_kAuth:@(XMToolBoxAuthenTypeNeed)
                },
              @{ToolBox_kName:@"易",

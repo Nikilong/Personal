@@ -8,8 +8,6 @@
 
 #import "XMWifiLeftTableViewController.h"
 #import "XMWifiGroupTool.h"
-#import "CommonHeader.h"
-#import "MBProgressHUD+NK.h"
 
 @interface XMWifiLeftTableViewController ()
 

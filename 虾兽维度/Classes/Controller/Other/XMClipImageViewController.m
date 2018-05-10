@@ -7,8 +7,6 @@
 //
 
 #import "XMClipImageViewController.h"
-#import "MBProgressHUD+NK.h"
-#import "CommonHeader.h"
 
 typedef enum : NSUInteger {
     BGReviewBtnTypeRing,

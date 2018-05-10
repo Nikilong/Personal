@@ -19,10 +19,10 @@
 #import "XMWifiTransModel.h"
 //#import <AVFoundation/AVFoundation.h>
 #import "XMFileDisplayWebViewViewController.h"
-#import "MBProgressHUD+NK.h"
-#import "CommonHeader.h"
 #import "XMWifiLeftTableViewController.h"
 #import "XMWifiGroupTool.h"
+
+#import "XMWebTableViewCell.h"
 
 @interface XMWifiTransFileViewController ()
 <XMWifiLeftTableViewControllerDelegate,
@@ -44,6 +44,9 @@ UIImagePickerControllerDelegate>
 @property (nonatomic, strong) XMWifiLeftTableViewController *leftVC;
 @property (weak, nonatomic)  UIView *leftContentView;
 @property (weak, nonatomic)  UIView *cover;
+
+/// 添加的图片的展示框
+@property (weak, nonatomic)  UIView *showSeleImageView;
 
 @end
 
@@ -286,24 +289,23 @@ UIImagePickerControllerDelegate>
     
 }
 
-#pragma mark
+#pragma mark UIImagePickerControllerDelegate
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker{
     [picker dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info{
     
-    
-    // 获得原始的照片,转为NSData格式保存
+    // 获得原始的照片,转为NSData格式保存为jpg格式,如果是PNG格式尺寸太大
     UIImage *seleImg =info[UIImagePickerControllerOriginalImage];
-    // 拼接文件全路径,文件名是日期(排除空格和后面的时区)+jpg格式,如果是PNG格式尺寸太大
+    // 拼接文件全路径,文件名是日期(排除空格和后面的时区)
     NSString *fileName = [NSDate date].description;
     fileName = [[fileName substringToIndex:(fileName.length - 5)] stringByReplacingOccurrencesOfString:@" " withString:@""];
     NSString *savePath = [NSString stringWithFormat:@"%@/%@.jpg",[XMWifiGroupTool getCurrentGroupPath],fileName];
 
     BOOL isSave = [UIImageJPEGRepresentation(seleImg,0.5) writeToFile:savePath atomically:YES];
     if (isSave){
-        [MBProgressHUD showMessage:[NSString stringWithFormat:@"成功添加:%@.jpg",fileName] toView:picker.view];
+        [MBProgressHUD show:[NSString stringWithFormat:@"成功添加:/n%@.jpg",fileName] image:seleImg view:picker.view];
         [self refreshDate];
     }
 }
@@ -461,7 +463,7 @@ UIImagePickerControllerDelegate>
 #pragma mark - UITableViewDataSource
 #pragma mark cell的初始化方法
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 60;
+    return 80;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
@@ -469,26 +471,31 @@ UIImagePickerControllerDelegate>
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString *ID = @"cell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ID];
-    if (!cell)
-    {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:ID];
-    }
+//    static NSString *ID = @"cell";
+//    XMWebTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ID];
+//    if (!cell)
+//    {
+//        cell = [[XMWebTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:ID];
+//    }
+    XMWebTableViewCell *cell = [XMWebTableViewCell cellWithTableView:tableView];
     
     // 添加重命名手势
     UILongPressGestureRecognizer *longGest = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressToEditCell:)];
     [cell.contentView addGestureRecognizer:longGest];
     
     XMWifiTransModel *model = self.dataArr[indexPath.row];
-    cell.textLabel.text = model.fileName;
-    if(model.size < 0.001){
-        cell.detailTextLabel.text = [NSString stringWithFormat:@"文件大小:%.2f Byte",model.size * 1024.0 * 1024.0];
-    }else if (model.size < 1){
-        cell.detailTextLabel.text = [NSString stringWithFormat:@"文件大小:%.2fK",model.size  * 1024.0];
-    }else{
-        cell.detailTextLabel.text = [NSString stringWithFormat:@"文件大小:%.2fM",model.size];
-    }
+    cell.wifiModel = model;
+//    cell.textLabel.text = model.fileName;
+//    if(model.size < 0.001){
+//        cell.detailTextLabel.text = [NSString stringWithFormat:@"文件大小:%.2f Byte",model.size * 1024.0 * 1024.0];
+//    }else if (model.size < 1){
+//        cell.detailTextLabel.text = [NSString stringWithFormat:@"文件大小:%.2fK",model.size  * 1024.0];
+//    }else{
+//        cell.detailTextLabel.text = [NSString stringWithFormat:@"文件大小:%.2fM",model.size];
+//    }
+//    if ([@"png|jpg|jpeg" containsString:model.fileName.pathExtension]){
+//        cell.imageView.image = [UIImage imageWithContentsOfFile:model.fullPath];
+//    }
     return cell;
 }
 

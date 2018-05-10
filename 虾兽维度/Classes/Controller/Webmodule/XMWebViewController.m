@@ -8,7 +8,6 @@
 
 #import "XMWebViewController.h"
 #import "XMWebModelTool.h"
-#import "MBProgressHUD+NK.h"
 #import "UIView+getPointColor.h"
 #import "EXQRCodeImageDetectorUtil.h"
 

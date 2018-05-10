@@ -10,8 +10,6 @@
 #import "HTTPDynamicFileResponse.h"
 #import "HTTPFileResponse.h"
 
-#import "CommonHeader.h"
-#import "MBProgressHUD+NK.h"
 #import "XMWifiGroupTool.h"
 
 

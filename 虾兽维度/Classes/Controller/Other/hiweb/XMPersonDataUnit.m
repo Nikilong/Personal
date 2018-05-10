@@ -8,7 +8,6 @@
 
 #import "XMPersonDataUnit.h"
 #import "XMSingleFilmModle.h"
-#import "CommonHeader.h"
 
 static NSString *homUrl;
 @implementation XMPersonDataUnit

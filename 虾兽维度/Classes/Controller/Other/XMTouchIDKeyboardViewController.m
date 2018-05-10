@@ -7,7 +7,6 @@
 //
 
 #import "XMTouchIDKeyboardViewController.h"
-#import "CommonHeader.h"
 
 @interface XMTouchIDKeyboardViewController ()
 

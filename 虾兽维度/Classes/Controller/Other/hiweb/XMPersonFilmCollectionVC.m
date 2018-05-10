@@ -10,7 +10,6 @@
 #import "XMSingleFilmModle.h"
 #import "XMShowCollectionViewCell.h"
 #import "XMPersonDataUnit.h"
-#import "MBProgressHUD+NK.h"
 #import "XMHiwebViewController.h"
 
 #import "UIImageView+WebCache.h"

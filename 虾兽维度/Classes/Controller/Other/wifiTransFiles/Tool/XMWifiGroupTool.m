@@ -7,7 +7,6 @@
 //
 
 #import "XMWifiGroupTool.h"
-#import "CommonHeader.h"
 #import "XMWifiTransModel.h"
 
 #define XMWifiGroupNameFileName @"XMWifiGroupName.wifign"
@@ -158,6 +157,8 @@ static NSString *allFilesGroupName = @"所有";
             XMWifiTransModel *model = [[XMWifiTransModel alloc] init];
             dict = [[NSFileManager defaultManager] attributesOfItemAtPath:[NSString stringWithFormat:@"%@/%@",groupFullPath,ele] error:nil];
             model.fileName = ele;
+            model.pureFileName = [[ele componentsSeparatedByString:@"/"] lastObject];
+            model.prePath = [model.fileName stringByReplacingOccurrencesOfString:model.pureFileName withString:@""];
             model.rootPath = groupFullPath;
             model.fullPath = [NSString stringWithFormat:@"%@/%@",groupFullPath,ele];
             model.size = dict.fileSize/1024.0/1024.0;

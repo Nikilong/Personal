@@ -8,11 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
-@class XMWebModel;
+@class XMWebModel, XMWifiTransModel;
 
 @interface XMWebTableViewCell : UITableViewCell
 
 @property (nonatomic, strong) XMWebModel *model;
+@property (nonatomic, strong) XMWifiTransModel *wifiModel;
 
 + (instancetype)cellWithTableView:(UITableView *)tableView;
 

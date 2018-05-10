@@ -17,6 +17,9 @@
 + (void)showMessage:(NSString *)text toView:(UIView *)view;
 + (void)showSuccess:(NSString *)success toView:(UIView *)view;
 
-/** 显示一张图片*/
+/** 显示一张图标*/
 + (void)show:(NSString *)text icon:(NSString *)icon view:(UIView *)view;
+
+/** 显示一张样例图片*/
++ (void)show:(NSString *)text image:(UIImage *)image view:(UIView *)view;
 @end

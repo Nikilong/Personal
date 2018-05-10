@@ -22,9 +22,7 @@
 #import "XMNavWebViewController.h"
 
 #import "UIImageView+WebCache.h"
-#import "MBProgressHUD+NK.h"
 
-#import "CommonHeader.h"
 
 // 工具箱模块
 #import "XMToolboxViewController.h"

@@ -63,6 +63,23 @@
 
 }
 
++ (void)show:(NSString *)text image:(UIImage *)image view:(UIView *)view
+{
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:view animated:YES];
+    
+    // Set the custom view mode to show any view.
+    hud.mode = MBProgressHUDModeCustomView;
+    hud.customView = [[UIImageView alloc] initWithImage:image];
+    // Looks a bit nicer if we make it square.
+//    hud.square = YES;
+    // Optional label text.
+//    hud.label.text = NSLocalizedString(text, @"HUD done title");
+    hud.detailsLabel.text = NSLocalizedString(text, @"HUD done title");
+    
+    [hud hideAnimated:YES afterDelay:1.f];
+    
+}
+
 + (void)showSuccess:(NSString *)success toView:(UIView *)view
 {
     [self show:success icon:@"Checkmark.png" view:view];

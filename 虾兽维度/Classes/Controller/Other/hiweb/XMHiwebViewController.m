@@ -11,10 +11,7 @@
 #import "XMPersonFilmCollectionVC.h"
 #import "XMSingleFilmModle.h"
 
-#import "MBProgressHUD+NK.h"
 #import "UIImageView+WebCache.h"
-
-#import "CommonHeader.h"
 
 @interface XMHiwebViewController ()<UITextFieldDelegate,UIAlertViewDelegate>
 
