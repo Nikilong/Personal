@@ -8,8 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
+@class XMWifiTransModel;
+
 @interface XMFileDisplayWebViewViewController : UIViewController
 
 - (void)loadLocalFileWithPath:(NSString *)fullPath;
+
+@property (nonatomic, strong) XMWifiTransModel *wifiModel;
 
 @end

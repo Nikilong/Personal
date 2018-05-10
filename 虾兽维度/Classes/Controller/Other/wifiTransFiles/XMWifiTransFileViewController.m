@@ -24,7 +24,12 @@
 #import "XMWifiLeftTableViewController.h"
 #import "XMWifiGroupTool.h"
 
-@interface XMWifiTransFileViewController ()<XMWifiLeftTableViewControllerDelegate>
+@interface XMWifiTransFileViewController ()
+<XMWifiLeftTableViewControllerDelegate,
+UINavigationControllerDelegate,
+UIImagePickerControllerDelegate>
+
+
 @property (nonatomic, strong) HTTPServer *httpServer;
 @property (nonatomic, assign)  BOOL connectFlag;
 
@@ -150,7 +155,9 @@
     UIBarButtonItem *backBtn = [[UIBarButtonItem alloc] initWithTitle:@"返回" style:UIBarButtonItemStylePlain target:self action:@selector(dismissCurrentViewController)];
     // 编辑模式
     UIBarButtonItem *editBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(setEditMode)];
-    self.navigationItem.leftBarButtonItems = @[backBtn,editBtn];
+    // 从相册添加图片
+    UIBarButtonItem *addBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addImageFromAlbum)];
+    self.navigationItem.leftBarButtonItems = @[backBtn,editBtn,addBtn];
     // 右边为打开wifi的按钮 wifiopen
     UIButton *wifiBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, btnWH, btnWH)];
     [wifiBtn setImage:[UIImage imageNamed:@"wifiopen"] forState:UIControlStateSelected];
@@ -268,6 +275,37 @@
     dispatch_async(dispatch_get_main_queue(),^{
         [self.navigationController popViewControllerAnimated:YES];
     });
+}
+
+/// 从相册添加照片
+- (void)addImageFromAlbum{
+    UIImagePickerController *pickVC  = [[UIImagePickerController alloc] init];
+    pickVC.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+    pickVC.delegate = self;
+    [self presentViewController:pickVC animated:YES completion:nil];
+    
+}
+
+#pragma mark
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker{
+    [picker dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info{
+    
+    
+    // 获得原始的照片,转为NSData格式保存
+    UIImage *seleImg =info[UIImagePickerControllerOriginalImage];
+    // 拼接文件全路径,文件名是日期(排除空格和后面的时区)+jpg格式,如果是PNG格式尺寸太大
+    NSString *fileName = [NSDate date].description;
+    fileName = [[fileName substringToIndex:(fileName.length - 5)] stringByReplacingOccurrencesOfString:@" " withString:@""];
+    NSString *savePath = [NSString stringWithFormat:@"%@/%@.jpg",[XMWifiGroupTool getCurrentGroupPath],fileName];
+
+    BOOL isSave = [UIImageJPEGRepresentation(seleImg,0.5) writeToFile:savePath atomically:YES];
+    if (isSave){
+        [MBProgressHUD showMessage:[NSString stringWithFormat:@"成功添加:%@.jpg",fileName] toView:picker.view];
+        [self refreshDate];
+    }
 }
 
 #pragma mark toolbar
@@ -486,6 +524,7 @@
     
     // 用webview去预览
     XMFileDisplayWebViewViewController *displayVC = [[XMFileDisplayWebViewViewController alloc] init];
+    displayVC.wifiModel = model;
     displayVC.view.frame = self.view.bounds;
     [displayVC loadLocalFileWithPath:model.fullPath];
     

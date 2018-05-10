@@ -8,6 +8,7 @@
 
 #import "XMFileDisplayWebViewViewController.h"
 //#import <WebKit/WebKit.h>
+#import "XMWifiTransModel.h"
 
 @interface XMFileDisplayWebViewViewController ()<UIGestureRecognizerDelegate>
 
@@ -36,6 +37,20 @@
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showNavBar:)];
     tap.delegate = self;
     [self.displayWebview addGestureRecognizer:tap];
+    
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(shareFile)];
+    
+}
+
+/// 分享文件
+- (void)shareFile{
+    NSString *title = self.wifiModel.fileName;
+    NSURL *url = [NSURL fileURLWithPath:self.wifiModel.fullPath];
+    NSArray *params = @[title,url];
+    UIActivityViewController *shareVC = [[UIActivityViewController alloc] initWithActivityItems:params applicationActivities:nil];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self presentViewController:shareVC animated:YES completion:nil];
+    });
     
 }
 
