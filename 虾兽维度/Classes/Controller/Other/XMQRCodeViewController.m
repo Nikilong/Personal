@@ -1,6 +1,6 @@
 //
 //  XMQRCodeViewController.m
-//  虾兽新闻客户端
+//  虾兽维度
 //
 //  Created by Niki on 17/6/25.
 //  Copyright © 2017年 admin. All rights reserved.
@@ -10,6 +10,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import "EXQRCodeImageDetectorUtil.h"
 //#import <Photos/Photos.h>
+#import "MBProgressHUD+NK.h"
 
 #define EX_SCREEN_WIDTH (NSFoundationVersionNumber <= NSFoundationVersionNumber_iOS_7_1 ? (UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation) ? [[UIScreen mainScreen] bounds].size.width : [[UIScreen mainScreen] bounds].size.height) : [[UIScreen mainScreen] bounds].size.width)
 

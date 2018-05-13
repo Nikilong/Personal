@@ -23,6 +23,7 @@
 #import "XMWifiGroupTool.h"
 
 #import "XMWebTableViewCell.h"
+#import "MBProgressHUD+NK.h"
 
 @interface XMWifiTransFileViewController ()
 <XMWifiLeftTableViewControllerDelegate,
@@ -208,7 +209,7 @@ UIImagePickerControllerDelegate>
     [self.httpServer setType:@"_http._tcp."];
     
     // 指定端口号(用于测试),实际由系统随机分配即可
-    [self.httpServer setPort:50914];
+//    [self.httpServer setPort:50914];
     
     // 设置index.html的路径
     NSString *webPath = [[NSBundle mainBundle] resourcePath];
@@ -390,7 +391,7 @@ UIImagePickerControllerDelegate>
     UIView *leftContentView = [[UIView alloc] initWithFrame:CGRectMake(-XMWifiLeftViewTotalW, 0, XMWifiLeftViewTotalW, XMScreenH)];
     leftContentView.backgroundColor = [UIColor grayColor];
     self.leftContentView = leftContentView;
-    
+    self.leftContentView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
     // 创建左侧边栏
     self.leftVC = [[XMWifiLeftTableViewController alloc] initWithStyle:UITableViewStyleGrouped];
     self.leftVC.delegate = self;

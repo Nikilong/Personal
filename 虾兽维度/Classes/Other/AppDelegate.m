@@ -1,6 +1,6 @@
 //
 //  AppDelegate.m
-//  03 虾兽新闻客户端
+//  虾兽维度
 //
 //  Created by admin on 17/2/27.
 //  Copyright © 2017年 admin. All rights reserved.
@@ -28,7 +28,7 @@
     
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
      
-    self.mainVC = [[XMMainViewController alloc] init];
+    self.mainVC = [[XMHiwebViewController alloc] init];
     
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:_mainVC];
     

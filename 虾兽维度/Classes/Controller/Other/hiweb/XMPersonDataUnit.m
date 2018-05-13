@@ -36,7 +36,7 @@ static NSString *homUrl;
     NSString *dataStr = [arrCutTail firstObject];
     
     // 在提取终极哪有用的信息,第一项为演员信息
-    NSMutableArray *arr = [dataStr componentsSeparatedByString:@"<div class=\"item\">"];
+    NSMutableArray *arr = [NSMutableArray arrayWithArray:[dataStr componentsSeparatedByString:@"<div class=\"item\">"]];
     [arr removeObjectAtIndex:0];
     [arr removeObjectAtIndex:0];
     
@@ -93,7 +93,8 @@ static NSString *homUrl;
     NSString *dataStr = [arrCutTail firstObject];
     
     // 在提取终极哪有用的信息,第一项为演员信息
-    NSMutableArray *arr = [dataStr componentsSeparatedByString:@"class=\"avatar-box\""];
+    NSMutableArray *arr = [NSMutableArray arrayWithArray:[dataStr componentsSeparatedByString:@"class=\"avatar-box\""]];
+    if (arr.count == 1) return nil;
     // 去除演员的个人信息数据,可以留待以后发展
     [arr removeObjectAtIndex:0];
 
@@ -151,7 +152,7 @@ static NSString *homUrl;
     NSString *dataStr = [arrCutTail firstObject];
     
     // 在提取终极哪有用的信息,第一项为演员信息
-    NSMutableArray *arr = [dataStr componentsSeparatedByString:@">"];
+    NSMutableArray *arr = [NSMutableArray arrayWithArray:[dataStr componentsSeparatedByString:@">"]];
     
     NSString *imgURL;
     NSMutableArray *imgArr = [NSMutableArray array];
@@ -200,7 +201,7 @@ static NSString *homUrl;
     NSString *dataStr = [arrCutTail firstObject];
     
     // 在提取终极哪有用的信息,第一项为演员信息
-    NSMutableArray *arr = [dataStr componentsSeparatedByString:@"<div class=\"photo-info\""];
+    NSMutableArray *arr = [NSMutableArray arrayWithArray:[dataStr componentsSeparatedByString:@"<div class=\"photo-info\""]];
     // 当数组只有一个值,表示没有相关的影片
     if (arr.count == 1) return nil;
     // 去掉最后的空白数据

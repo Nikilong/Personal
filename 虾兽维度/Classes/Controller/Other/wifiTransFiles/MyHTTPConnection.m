@@ -11,6 +11,7 @@
 #import "HTTPFileResponse.h"
 
 #import "XMWifiGroupTool.h"
+#import "MBProgressHUD+NK.h"
 
 
 @interface MyHTTPConnection()

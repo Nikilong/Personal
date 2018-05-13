@@ -1,6 +1,6 @@
 //
 //  XMWebViewController.m
-//  03 虾兽新闻客户端
+//  虾兽维度
 //
 //  Created by admin on 17/2/27.
 //  Copyright © 2017年 admin. All rights reserved.
@@ -10,6 +10,7 @@
 #import "XMWebModelTool.h"
 #import "UIView+getPointColor.h"
 #import "EXQRCodeImageDetectorUtil.h"
+#import "MBProgressHUD+NK.h"
 
 #define XMBackImageVStarX ([UIScreen mainScreen].bounds.size.width / (3))
 #define XMSearchModePanDistance 150
@@ -69,6 +70,7 @@
         _web = [[UIWebView alloc] init];
         _web.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
         _web.delegate = self;
+        _web.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         [self.view addSubview:_web];
         
         // 初始化标记,能够加载
@@ -184,6 +186,8 @@
         CGFloat toolbarH = CGRectGetMaxY(showHideBtnF);
         CGFloat toolBarY = [UIScreen mainScreen].bounds.size.height - toolbarH - 50;
         _toolBar.frame = CGRectMake(20, toolBarY, toolbarW, toolbarH);
+        
+        _toolBar.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
     }
     return _toolBar;
 }
@@ -766,11 +770,13 @@
     backImgV.frame = CGRectMake(-imgVWH, CGRectGetMidY([UIScreen mainScreen].bounds), imgVWH, imgVWH);
     backImgV.hidden = YES;
     self.backImgV = backImgV;
+    self.backImgV.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
     [self.web addSubview:backImgV];
     UIImageView *forwardImgV = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"searchMode_forward"]];
     forwardImgV.frame = CGRectMake(CGRectGetMaxX([UIScreen mainScreen].bounds), CGRectGetMidY([UIScreen mainScreen].bounds), imgVWH, imgVWH);
     forwardImgV.hidden = YES;
     self.forwardImgV = forwardImgV;
+    self.forwardImgV.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin;
     [self.web addSubview:forwardImgV];
     
     // 为searchmode添加前进后退手势

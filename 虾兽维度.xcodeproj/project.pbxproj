@@ -1348,7 +1348,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				INFOPLIST_FILE = "03 虾兽新闻客户端Tests/Info.plist";
+				INFOPLIST_FILE = "虾兽维度Tests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "Apple.-3--------Tests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1361,7 +1361,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				INFOPLIST_FILE = "03 虾兽新闻客户端Tests/Info.plist";
+				INFOPLIST_FILE = "虾兽维度Tests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "Apple.-3--------Tests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1373,11 +1373,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				INFOPLIST_FILE = "03 虾兽新闻客户端UITests/Info.plist";
+				INFOPLIST_FILE = "虾兽维度UITests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "Apple.-3--------UITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_TARGET_NAME = "03 虾兽新闻客户端";
+				TEST_TARGET_NAME = "虾兽维度";
 			};
 			name = Debug;
 		};
@@ -1385,11 +1385,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				INFOPLIST_FILE = "03 虾兽新闻客户端UITests/Info.plist";
+				INFOPLIST_FILE = "虾兽维度UITests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "Apple.-3--------UITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_TARGET_NAME = "03 虾兽新闻客户端";
+				TEST_TARGET_NAME = "虾兽维度";
 			};
 			name = Release;
 		};

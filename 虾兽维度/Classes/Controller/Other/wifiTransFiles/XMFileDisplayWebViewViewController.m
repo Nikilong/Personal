@@ -31,6 +31,7 @@
     self.displayWebview = [[UIWebView alloc] initWithFrame:self.view.bounds];
     // 实现缩放
     self.displayWebview.scalesPageToFit = YES;
+    self.displayWebview.autoresizingMask = UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight;
     [self.view addSubview:self.displayWebview];
     
     // 增加点击手势隐藏或显示导航栏

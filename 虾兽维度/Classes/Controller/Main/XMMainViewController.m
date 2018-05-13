@@ -1,6 +1,6 @@
 //
 //  XMMainViewController.m
-//  03 虾兽新闻客户端
+//  虾兽维度
 //
 //  Created by Niki on 17/3/25.
 //  Copyright © 2017年 admin. All rights reserved.
@@ -22,6 +22,7 @@
 #import "XMNavWebViewController.h"
 
 #import "UIImageView+WebCache.h"
+#import "MBProgressHUD+NK.h"
 
 
 // 工具箱模块
@@ -156,7 +157,7 @@ UIGestureRecognizerDelegate>
     NSArray *imageArr = @[@"love-white",@"lajitong",@"more"];
     XMConerAccessoryView *conerAccessoryView = [XMConerAccessoryView conerAccessoryViewWithButtonWH:btnWH radius:radius imageArray:imageArr borderWidth:borderW tintColor:tintColor];
     conerAccessoryView.delegate = self;
-    
+    conerAccessoryView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
     [self.view addSubview:conerAccessoryView];
 }
 
@@ -246,6 +247,7 @@ UIGestureRecognizerDelegate>
     UIView *leftContentView = [[UIView alloc] initWithFrame:CGRectMake(-XMLeftViewTotalW, 0, XMLeftViewTotalW, XMScreenH)];
     leftContentView.backgroundColor = [UIColor grayColor];
     self.leftContentView = leftContentView;
+    self.leftContentView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
     
     // 创建左侧边栏
     self.leftVC = [[XMLeftTableViewController alloc] initWithStyle:UITableViewStyleGrouped];
@@ -300,6 +302,9 @@ UIGestureRecognizerDelegate>
     // 创建频道tableview
     self.navTitleVC = [[XMNavTitleTableViewController alloc] initWithStyle:UITableViewStylePlain];
     CGFloat height = [XMChannelModel channels].count * 44;
+    if (height + 64 > XMScreenH){
+        height = XMScreenH - 64;
+    }
     self.navTitleVC.tableView.frame = CGRectMake(0, 0, 150, height);
     self.navTitleVC.delegate = self;
 

@@ -13,6 +13,8 @@
 #import "XMHiwebViewController.h"
 
 #import "UIImageView+WebCache.h"
+#import "MBProgressHUD+NK.h"
+
 
 @interface XMPersonFilmCollectionVC ()<UIGestureRecognizerDelegate>
 
@@ -112,6 +114,7 @@ static NSString * const reuseIdentifier = @"Cell";
     
     // Uncomment the following line to preserve selection between presentations
     // self.clearsSelectionOnViewWillAppear = NO;
+    self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight;
     
     // Register cell classes
     [self.collectionView registerClass:[XMShowCollectionViewCell class] forCellWithReuseIdentifier:reuseIdentifier];
@@ -613,11 +616,13 @@ static NSString * const reuseIdentifier = @"Cell";
     backImgV.frame = CGRectMake(-imgVWH, CGRectGetMidY([UIScreen mainScreen].bounds), imgVWH, imgVWH);
     backImgV.hidden = YES;
     self.backImgV = backImgV;
+    self.backImgV.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
     [self.view addSubview:backImgV];
     UIImageView *forwardImgV = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"iconForward"]];
     forwardImgV.frame = CGRectMake(CGRectGetMaxX([UIScreen mainScreen].bounds), CGRectGetMidY([UIScreen mainScreen].bounds), imgVWH, imgVWH);
     forwardImgV.hidden = YES;
     self.forwardImgV = forwardImgV;
+    self.backImgV.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin;
     [self.view addSubview:forwardImgV];
     
     // 为添加前进后退手势

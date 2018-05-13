@@ -1,6 +1,6 @@
 //
 //  XMWebTableViewCell.m
-//  03 虾兽新闻客户端
+//  虾兽维度
 //
 //  Created by admin on 17/2/28.
 //  Copyright © 2017年 admin. All rights reserved.

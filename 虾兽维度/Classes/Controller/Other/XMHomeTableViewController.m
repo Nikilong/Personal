@@ -1,6 +1,6 @@
 //
 //  XMHomeTableViewController.m
-//  03 虾兽新闻客户端
+//  虾兽维度
 //
 //  Created by Niki on 17/3/24.
 //  Copyright © 2017年 admin. All rights reserved.
@@ -103,7 +103,8 @@
     CGFloat countLabelW = [UIScreen mainScreen].bounds.size.width;
     CGFloat countLabelH = 30;
     CGFloat countLabelX = 0;
-    CGFloat countLabelY = 34;
+    // 竖屏状态下,statusBar+navBAr=20+44=64,横屏状态下statusBar+navBAr=0+32=32,因此y的初始坐标需要在这基础上再减去countLabelH
+    CGFloat countLabelY =  ([UIDevice currentDevice].orientation == UIDeviceOrientationLandscapeLeft || [UIDevice currentDevice].orientation == UIDeviceOrientationLandscapeRight ) ? 2 : 34;
     countLabel.frame = CGRectMake(countLabelX, countLabelY, countLabelW, countLabelH);
     countLabel.text = content;
     countLabel.textAlignment = NSTextAlignmentCenter;
@@ -112,7 +113,7 @@
     // 设置动画
     NSTimeInterval duration = 0.4;
     [UIView animateWithDuration:duration animations:^{
-        countLabel.transform = CGAffineTransformMakeTranslation(0, countLabelY);
+        countLabel.transform = CGAffineTransformMakeTranslation(0, countLabelH);
     } completion:^(BOOL finished) {
         // 动画内嵌套动画
         [UIView animateWithDuration:duration animations:^{
@@ -158,6 +159,7 @@
 {
     UIButton *headerRefreshV = [[UIButton alloc] initWithFrame:CGRectMake(0, -44, [UIScreen mainScreen].bounds.size.width, 44)];
     self.headerRefreshV = headerRefreshV;
+    self.headerRefreshV.autoresizingMask =  UIViewAutoresizingFlexibleWidth;
     headerRefreshV.hidden = YES;
     
     [headerRefreshV setTitle:@"下拉刷新" forState:UIControlStateNormal];

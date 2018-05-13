@@ -1,6 +1,6 @@
 //
 //  UIView+getPointColor.h
-//  虾兽新闻客户端
+//  虾兽维度
 //
 //  Created by Niki on 17/8/19.
 //  Copyright © 2017年 admin. All rights reserved.

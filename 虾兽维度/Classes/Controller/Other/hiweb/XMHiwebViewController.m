@@ -12,6 +12,7 @@
 #import "XMSingleFilmModle.h"
 
 #import "UIImageView+WebCache.h"
+#import "MBProgressHUD+NK.h"
 
 @interface XMHiwebViewController ()<UITextFieldDelegate,UIAlertViewDelegate>
 
@@ -39,7 +40,7 @@
         _personCollectListVC.detailMode = NO;
         [self addChildViewController:_personCollectListVC];
         [self.view addSubview:_personCollectListVC.view];
-        _personCollectListVC.view.frame = CGRectMake(0, 64, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height - 64);
+        _personCollectListVC.view.frame = CGRectMake(0, 20, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height - 20);
     }
     return _personCollectListVC;
 }
