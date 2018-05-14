@@ -28,7 +28,7 @@
     
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
      
-    self.mainVC = [[XMHiwebViewController alloc] init];
+    self.mainVC = [[XMMainViewController alloc] init];
     
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:_mainVC];
     

@@ -115,6 +115,7 @@
 		84BA25591E65C7A800C8B204 /* XMWebTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BA25571E65C7A800C8B204 /* XMWebTableViewCell.m */; };
 		84BA255A1E65C7A800C8B204 /* XMWebTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84BA25581E65C7A800C8B204 /* XMWebTableViewCell.xib */; };
 		84D9ED061E656BC30046840E /* XMWebModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 84D9ED051E656BC30046840E /* XMWebModel.m */; };
+		FD1EA08920A9A96A00658F18 /* XMGlobalConst.m in Sources */ = {isa = PBXBuildFile; fileRef = FD1EA08820A9A96A00658F18 /* XMGlobalConst.m */; };
 		FD3332E420A154D80017655F /* transportFile.py in Resources */ = {isa = PBXBuildFile; fileRef = FD3332E320A154D80017655F /* transportFile.py */; };
 		FD3332E820A1786A0017655F /* wificlose.png in Resources */ = {isa = PBXBuildFile; fileRef = FD3332E620A178690017655F /* wificlose.png */; };
 		FD3332E920A1786A0017655F /* wifiopen.png in Resources */ = {isa = PBXBuildFile; fileRef = FD3332E720A1786A0017655F /* wifiopen.png */; };
@@ -270,7 +271,7 @@
 		205CECDA1F48150E00821E38 /* UIView+WebCacheOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+WebCacheOperation.m"; sourceTree = "<group>"; };
 		205CECF21F48151700821E38 /* UIView+getPointColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+getPointColor.h"; sourceTree = "<group>"; };
 		205CECF31F48151700821E38 /* UIView+getPointColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+getPointColor.m"; sourceTree = "<group>"; };
-		205CECF51F488EF700821E38 /* webSpecial.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = webSpecial.plist; path = ../webSpecial.plist; sourceTree = "<group>"; };
+		205CECF51F488EF700821E38 /* webSpecial.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = webSpecial.plist; path = ../Config/webSpecial.plist; sourceTree = "<group>"; };
 		205CECF71F4898A600821E38 /* XMDropView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMDropView.h; sourceTree = "<group>"; };
 		205CECF81F4898A600821E38 /* XMDropView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMDropView.m; sourceTree = "<group>"; };
 		205CECFA1F489A0000821E38 /* UIView+Extension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Extension.h"; sourceTree = "<group>"; };
@@ -305,8 +306,8 @@
 		20C85E2E204EE8850057F483 /* EXQRCodeImageDetectorUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EXQRCodeImageDetectorUtil.m; sourceTree = "<group>"; };
 		20C85E362053E1F40057F483 /* XMToolboxViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMToolboxViewController.h; sourceTree = "<group>"; };
 		20C85E372053E1F40057F483 /* XMToolboxViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMToolboxViewController.m; sourceTree = "<group>"; };
-		20C85E51205419C80057F483 /* XMToolBoxConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMToolBoxConfig.h; path = ../Classes/Other/XMToolBoxConfig.h; sourceTree = "<group>"; };
-		20C85E52205419C80057F483 /* XMToolBoxConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XMToolBoxConfig.m; path = ../Classes/Other/XMToolBoxConfig.m; sourceTree = "<group>"; };
+		20C85E51205419C80057F483 /* XMToolBoxConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMToolBoxConfig.h; path = ../Config/XMToolBoxConfig.h; sourceTree = "<group>"; };
+		20C85E52205419C80057F483 /* XMToolBoxConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XMToolBoxConfig.m; path = ../Config/XMToolBoxConfig.m; sourceTree = "<group>"; };
 		20C85E5620541F3B0057F483 /* tool_icon_0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tool_icon_0.png; sourceTree = "<group>"; };
 		20C85E5720541F3B0057F483 /* tool_icon_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tool_icon_1.png; sourceTree = "<group>"; };
 		20C85E5920541F3B0057F483 /* tool_icon_2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tool_icon_2.png; sourceTree = "<group>"; };
@@ -319,7 +320,7 @@
 		20C85E6F20551B800057F483 /* XMTouchIDKeyboardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMTouchIDKeyboardViewController.m; sourceTree = "<group>"; };
 		20E9E371204C4BEC007D442E /* XMClipImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMClipImageViewController.h; sourceTree = "<group>"; };
 		20E9E372204C4BEC007D442E /* XMClipImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMClipImageViewController.m; sourceTree = "<group>"; };
-		20F112131E864FC000E64A70 /* web.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = web.plist; path = ../web.plist; sourceTree = "<group>"; };
+		20F112131E864FC000E64A70 /* web.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = web.plist; path = ../Config/web.plist; sourceTree = "<group>"; };
 		20F112151E86697400E64A70 /* XMChannelModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMChannelModel.h; sourceTree = "<group>"; };
 		20F112161E86697400E64A70 /* XMChannelModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMChannelModel.m; sourceTree = "<group>"; };
 		20F112181E866F9C00E64A70 /* XMLeftViewUserCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMLeftViewUserCell.h; sourceTree = "<group>"; };
@@ -345,6 +346,8 @@
 		84BA25581E65C7A800C8B204 /* XMWebTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = XMWebTableViewCell.xib; sourceTree = "<group>"; };
 		84D9ED041E656BC30046840E /* XMWebModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMWebModel.h; sourceTree = "<group>"; };
 		84D9ED051E656BC30046840E /* XMWebModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMWebModel.m; sourceTree = "<group>"; };
+		FD1EA08720A9A96A00658F18 /* XMGlobalConst.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = XMGlobalConst.h; path = "虾兽维度/Config/XMGlobalConst.h"; sourceTree = SOURCE_ROOT; };
+		FD1EA08820A9A96A00658F18 /* XMGlobalConst.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = XMGlobalConst.m; path = "虾兽维度/Config/XMGlobalConst.m"; sourceTree = SOURCE_ROOT; };
 		FD3332E320A154D80017655F /* transportFile.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = transportFile.py; sourceTree = "<group>"; };
 		FD3332E620A178690017655F /* wificlose.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wificlose.png; sourceTree = "<group>"; };
 		FD3332E720A1786A0017655F /* wifiopen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wifiopen.png; sourceTree = "<group>"; };
@@ -404,7 +407,8 @@
 				205CECF51F488EF700821E38 /* webSpecial.plist */,
 				20C85E51205419C80057F483 /* XMToolBoxConfig.h */,
 				20C85E52205419C80057F483 /* XMToolBoxConfig.m */,
-				2096B0E620A49C8D00BA249C /* PrefixHeader.pch */,
+				FD1EA08720A9A96A00658F18 /* XMGlobalConst.h */,
+				FD1EA08820A9A96A00658F18 /* XMGlobalConst.m */,
 			);
 			name = config;
 			path = toolBoxIcons;
@@ -416,7 +420,7 @@
 				20E9E371204C4BEC007D442E /* XMClipImageViewController.h */,
 				20E9E372204C4BEC007D442E /* XMClipImageViewController.m */,
 			);
-			name = clipImage;
+			path = clipImage;
 			sourceTree = "<group>";
 		};
 		20077038205AA7E400551C00 /* Main */ = {
@@ -427,7 +431,7 @@
 				20C85E6E20551B800057F483 /* XMTouchIDKeyboardViewController.h */,
 				20C85E6F20551B800057F483 /* XMTouchIDKeyboardViewController.m */,
 			);
-			name = Main;
+			path = Main;
 			sourceTree = "<group>";
 		};
 		202C84E11F2624AD0055FD7D /* Other */ = {
@@ -733,7 +737,7 @@
 			path = Tool;
 			sourceTree = "<group>";
 		};
-		20C85E5420541BD50057F483 /* ToolBox */ = {
+		20C85E5420541BD50057F483 /* Toolbox */ = {
 			isa = PBXGroup;
 			children = (
 				204D23D9209ED84000F17E2E /* wifiTransFiles */,
@@ -741,8 +745,8 @@
 				20077037205AA7D200551C00 /* clipImage */,
 				200770242059775100551C00 /* hiweb */,
 			);
-			name = ToolBox;
-			path = Controller/Other;
+			name = Toolbox;
+			path = ../Toobox;
 			sourceTree = "<group>";
 		};
 		20C85E5520541F3B0057F483 /* toolBoxIcons */ = {
@@ -787,7 +791,7 @@
 				842970FA1E654644002BDBC0 /* Model */,
 				842970FE1E654644002BDBC0 /* View */,
 				842970FB1E654644002BDBC0 /* Other */,
-				20C85E5420541BD50057F483 /* ToolBox */,
+				20C85E5420541BD50057F483 /* Toolbox */,
 				205CECF11F48151700821E38 /* Category */,
 				20F112221E86BF1800E64A70 /* Tool */,
 			);
@@ -879,6 +883,7 @@
 				20077036205AA78F00551C00 /* config */,
 				20C85E5520541F3B0057F483 /* toolBoxIcons */,
 				849D26FF1E640E3200F0CA5D /* LaunchScreen.storyboard */,
+				2096B0E620A49C8D00BA249C /* PrefixHeader.pch */,
 				849D27021E640E3200F0CA5D /* Info.plist */,
 				849D26F11E640E3200F0CA5D /* Supporting Files */,
 			);
@@ -1088,6 +1093,7 @@
 				84D9ED061E656BC30046840E /* XMWebModel.m in Sources */,
 				204D2436209ED91A00F17E2E /* ContextFilterLogFormatter.m in Sources */,
 				204D2414209ED8E800F17E2E /* HTTPFileResponse.m in Sources */,
+				FD1EA08920A9A96A00658F18 /* XMGlobalConst.m in Sources */,
 				202C84F11F2624AD0055FD7D /* XMSaveWebsTableViewController.m in Sources */,
 				205CECE91F48150E00821E38 /* UIButton+WebCache.m in Sources */,
 				205CED0A1F489F2B00821E38 /* XMLeftTableViewController.m in Sources */,
