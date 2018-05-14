@@ -116,6 +116,7 @@
 		84BA255A1E65C7A800C8B204 /* XMWebTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84BA25581E65C7A800C8B204 /* XMWebTableViewCell.xib */; };
 		84D9ED061E656BC30046840E /* XMWebModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 84D9ED051E656BC30046840E /* XMWebModel.m */; };
 		FD1EA08920A9A96A00658F18 /* XMGlobalConst.m in Sources */ = {isa = PBXBuildFile; fileRef = FD1EA08820A9A96A00658F18 /* XMGlobalConst.m */; };
+		FD1EA08B20A9B59B00658F18 /* clipIcon.py in Resources */ = {isa = PBXBuildFile; fileRef = FD1EA08A20A9B59A00658F18 /* clipIcon.py */; };
 		FD3332E420A154D80017655F /* transportFile.py in Resources */ = {isa = PBXBuildFile; fileRef = FD3332E320A154D80017655F /* transportFile.py */; };
 		FD3332E820A1786A0017655F /* wificlose.png in Resources */ = {isa = PBXBuildFile; fileRef = FD3332E620A178690017655F /* wificlose.png */; };
 		FD3332E920A1786A0017655F /* wifiopen.png in Resources */ = {isa = PBXBuildFile; fileRef = FD3332E720A1786A0017655F /* wifiopen.png */; };
@@ -348,6 +349,7 @@
 		84D9ED051E656BC30046840E /* XMWebModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMWebModel.m; sourceTree = "<group>"; };
 		FD1EA08720A9A96A00658F18 /* XMGlobalConst.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = XMGlobalConst.h; path = "虾兽维度/Config/XMGlobalConst.h"; sourceTree = SOURCE_ROOT; };
 		FD1EA08820A9A96A00658F18 /* XMGlobalConst.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = XMGlobalConst.m; path = "虾兽维度/Config/XMGlobalConst.m"; sourceTree = SOURCE_ROOT; };
+		FD1EA08A20A9B59A00658F18 /* clipIcon.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = clipIcon.py; sourceTree = "<group>"; };
 		FD3332E320A154D80017655F /* transportFile.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = transportFile.py; sourceTree = "<group>"; };
 		FD3332E620A178690017655F /* wificlose.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wificlose.png; sourceTree = "<group>"; };
 		FD3332E720A1786A0017655F /* wifiopen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wifiopen.png; sourceTree = "<group>"; };
@@ -857,6 +859,7 @@
 			isa = PBXGroup;
 			children = (
 				FD3332E320A154D80017655F /* transportFile.py */,
+				FD1EA08A20A9B59A00658F18 /* clipIcon.py */,
 				849D26F01E640E3200F0CA5D /* 虾兽维度 */,
 				849D270A1E640E3300F0CA5D /* 虾兽维度Tests */,
 				849D27151E640E3300F0CA5D /* 虾兽维度UITests */,
@@ -1056,6 +1059,7 @@
 				20C85E6120541F3B0057F483 /* tool_icon_1.png in Resources */,
 				20C85E6020541F3B0057F483 /* tool_icon_0.png in Resources */,
 				20C85E6520541F3B0057F483 /* tool_icon_3.png in Resources */,
+				FD1EA08B20A9B59B00658F18 /* clipIcon.py in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
