@@ -8,7 +8,7 @@
 
 #import "XMConerAccessoryView.h"
 
-#define XMPlanetStarAngle 2.5
+CGFloat const XMPlanetStarAngle = 2.5;
 
 static NSMutableArray *_btnArr;
 static CGFloat _radius;

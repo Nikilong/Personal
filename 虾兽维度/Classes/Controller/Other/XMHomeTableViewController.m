@@ -12,8 +12,8 @@
 
 #import "XMMainViewController.h"
 
-#define XMRowHeight 100
-#define XMRrfreshHeight 100
+CGFloat const XMRowHeight = 100;
+CGFloat const XMRrfreshHeight = 100;
 
 @interface XMHomeTableViewController () <UITableViewDataSource,UITableViewDelegate,NSURLSessionDelegate>
 

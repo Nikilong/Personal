@@ -27,8 +27,15 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-     
-    self.mainVC = [[XMMainViewController alloc] init];
+    
+    if (TARGET_OS_SIMULATOR == 1 && TARGET_OS_IPHONE == 1) {
+        //模拟器
+        self.mainVC = [[XMMainViewController alloc] init];
+    }else{
+        //真机
+        self.mainVC = [[XMMainViewController alloc] init];
+    }
+
     
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:_mainVC];
     

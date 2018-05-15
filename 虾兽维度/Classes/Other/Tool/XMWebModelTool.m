@@ -8,8 +8,6 @@
 
 #import "XMWebModelTool.h"
 
-#define XMsaveWebModelArchier [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"webModel.archiver"]
-
 
 @implementation XMWebModelTool
 
@@ -20,7 +18,7 @@ static NSMutableArray *_saveWebModelArr;
     [super initialize];
     
     //  在这里创建一个全局变量
-    _saveWebModelArr = (NSMutableArray *)[NSKeyedUnarchiver unarchiveObjectWithFile:XMsaveWebModelArchier];
+    _saveWebModelArr = (NSMutableArray *)[NSKeyedUnarchiver unarchiveObjectWithFile:[XMSavePathUnit getSaveWebModelArchicerPath]];
     if (!_saveWebModelArr)
     {
         _saveWebModelArr = [NSMutableArray array];
@@ -32,7 +30,7 @@ static NSMutableArray *_saveWebModelArr;
     //  将最新使用的表情插到数组的前面
     [_saveWebModelArr insertObject:webModel atIndex:0];
     //  将表情数组保存进沙盒
-    [NSKeyedArchiver archiveRootObject:_saveWebModelArr toFile:XMsaveWebModelArchier];
+    [NSKeyedArchiver archiveRootObject:_saveWebModelArr toFile:[XMSavePathUnit getSaveWebModelArchicerPath]];
 }
 
 + (void)deleteWebModelAtIndex:(NSUInteger)index
@@ -40,7 +38,7 @@ static NSMutableArray *_saveWebModelArr;
     //  将最新使用的表情插到数组的前面
     [_saveWebModelArr removeObjectAtIndex:index];
     //  将表情数组保存进沙盒
-    [NSKeyedArchiver archiveRootObject:_saveWebModelArr toFile:XMsaveWebModelArchier];
+    [NSKeyedArchiver archiveRootObject:_saveWebModelArr toFile:[XMSavePathUnit getSaveWebModelArchicerPath]];
 }
 
 + (NSArray *)webModels

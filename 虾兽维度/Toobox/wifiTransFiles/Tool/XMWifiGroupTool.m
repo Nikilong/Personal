@@ -9,8 +9,6 @@
 #import "XMWifiGroupTool.h"
 #import "XMWifiTransModel.h"
 
-#define XMWifiGroupNameFileName @"XMWifiGroupName.wifign"
-#define XMWifiGroupNameFilePath ([NSString stringWithFormat:@"%@/%@",XMWifiUploadDirPath,XMWifiGroupNameFileName])
 
 @implementation XMWifiGroupTool
 
@@ -25,9 +23,8 @@ static NSString *allFilesGroupName = @"所有";
 
 /// 返回所有文件夹的名称
 + (NSArray *)groupNames{
-    //    NSString *path = [NSString stringWithFormat:@"%@/XMWifiGroupName.wifign",XMWifiUploadDirPath];
-    if([[NSFileManager defaultManager] fileExistsAtPath:XMWifiGroupNameFilePath]){
-        return [NSArray arrayWithContentsOfFile:XMWifiGroupNameFilePath];
+    if([[NSFileManager defaultManager] fileExistsAtPath:[XMSavePathUnit  getWifiGroupNameFilePath]]){
+        return [NSArray arrayWithContentsOfFile:[XMSavePathUnit getWifiGroupNameFilePath]];
     }else{
         // 初始化默认分组
         NSArray *defaultArr = @[(defaultGroupName),@"分组1",@"分组2",@"分组3"];
@@ -48,7 +45,7 @@ static NSString *allFilesGroupName = @"所有";
 
 /// 创建一个新文件夹
 + (void)creatNewWifiFilesGroupWithName:(NSString *)name{
-    NSString *newFilePath = [NSString stringWithFormat:@"%@/%@",XMWifiUploadDirPath,name];
+    NSString *newFilePath = [NSString stringWithFormat:@"%@/%@",[XMSavePathUnit getWifiUploadDirPath],name];
     [self checkRootDirectry];
     // 文件名不可用则跳过
     if (![self isGroupNameEnable:name]) return;
@@ -65,9 +62,9 @@ static NSString *allFilesGroupName = @"所有";
     if([name isEqualToString:currentGroupName]){
         [self upgradeCurrentGroupName:defaultGroupName];
     }
-    NSMutableArray *arr = [NSMutableArray arrayWithContentsOfFile:XMWifiGroupNameFilePath];
+    NSMutableArray *arr = [NSMutableArray arrayWithContentsOfFile:[XMSavePathUnit getWifiGroupNameFilePath]];
     
-    NSString *fullPath = [XMWifiUploadDirPath stringByAppendingPathComponent:name];
+    NSString *fullPath = [[XMSavePathUnit getWifiUploadDirPath] stringByAppendingPathComponent:name];
     // 删除整个文件夹目录
     if ([[NSFileManager defaultManager] fileExistsAtPath:fullPath]){
         [[NSFileManager defaultManager] removeItemAtPath:fullPath error:nil];
@@ -87,11 +84,11 @@ static NSString *allFilesGroupName = @"所有";
 /// 更新XMWifiGroupName.wifign文件
 + (NSArray *)updateGroupNameFile{
     // 如果"默认"文件夹不存在,则创建默认文件夹
-    if(![[NSFileManager defaultManager] fileExistsAtPath:[XMWifiUploadDirPath stringByAppendingPathComponent:defaultGroupName]]){
-        [[NSFileManager defaultManager] createDirectoryAtPath:[XMWifiUploadDirPath stringByAppendingPathComponent:defaultGroupName] withIntermediateDirectories:YES attributes:nil error:nil];
+    if(![[NSFileManager defaultManager] fileExistsAtPath:[[XMSavePathUnit getWifiUploadDirPath] stringByAppendingPathComponent:defaultGroupName]]){
+        [[NSFileManager defaultManager] createDirectoryAtPath:[[XMSavePathUnit getWifiUploadDirPath] stringByAppendingPathComponent:defaultGroupName] withIntermediateDirectories:YES attributes:nil error:nil];
     }
     // 遍历文件夹WifiTransPort,找出已经存在的其他文件夹
-    NSArray *allFileArr =  [[NSFileManager defaultManager] subpathsOfDirectoryAtPath:XMWifiUploadDirPath error:nil];
+    NSArray *allFileArr =  [[NSFileManager defaultManager] subpathsOfDirectoryAtPath:[XMSavePathUnit getWifiUploadDirPath] error:nil];
     NSMutableArray *dirsArr = [NSMutableArray array];
     for (NSString *ele in allFileArr){
         if (![ele containsString:@"/"]){
@@ -107,7 +104,7 @@ static NSString *allFilesGroupName = @"所有";
 
 /// 将文件夹组写进沙盒
 + (void)saveGroupMessageWithNewArray:(NSArray *)newArr{
-    [newArr writeToFile:XMWifiGroupNameFilePath atomically:YES];
+    [newArr writeToFile:[XMSavePathUnit getWifiGroupNameFilePath] atomically:YES];
 }
 
 /// 更新当前文件夹
@@ -120,9 +117,9 @@ static NSString *allFilesGroupName = @"所有";
 + (NSString *)getCurrentGroupPath{
     // 如果当前目录是"所有",则切换至documents文件夹
     if ([currentGroupName isEqualToString:allFilesGroupName]){
-        return XMHomeDirectory;
+        return [XMSavePathUnit getDocumentsPath];
     }else{
-        return [NSString stringWithFormat:@"%@/%@",XMWifiUploadDirPath,currentGroupName];
+        return [NSString stringWithFormat:@"%@/%@",[XMSavePathUnit getWifiUploadDirPath],currentGroupName];
     }
 }
 
@@ -174,8 +171,8 @@ static NSString *allFilesGroupName = @"所有";
 #pragma mark - 判断方法
 /// 检查根目录是否存在
 + (void)checkRootDirectry{
-    if(![[NSFileManager defaultManager] fileExistsAtPath:XMWifiUploadDirPath]){
-        [[NSFileManager defaultManager] createDirectoryAtPath:XMWifiUploadDirPath withIntermediateDirectories:YES attributes:nil error:nil];
+    if(![[NSFileManager defaultManager] fileExistsAtPath:[XMSavePathUnit getWifiUploadDirPath]]){
+        [[NSFileManager defaultManager] createDirectoryAtPath:[XMSavePathUnit getWifiUploadDirPath] withIntermediateDirectories:YES attributes:nil error:nil];
     }
 }
 

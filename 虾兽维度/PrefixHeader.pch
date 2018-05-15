@@ -12,30 +12,17 @@
 // Include any system framework and library headers here that should be included in all compilation units.
 // You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
 /// 导入公用的头文件
+#import "XMGlobalConst.h"
+#import "XMSavePathUnit.h"
 
-
-
-// 左侧边栏(首页)
-#define XMLeftViewTotalW 200
-#define XMLeftViewPadding 10
-
-// 左侧边栏(wifi传输)
-#define XMWifiLeftViewTotalW 160
 
 // 屏幕尺寸(iOS7需要区分横竖屏状态)
 #define XMScreenW [UIScreen mainScreen].bounds.size.width
 #define XMScreenH [UIScreen mainScreen].bounds.size.height
 
-// app的documents路径
-#define XMHomeDirectory NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0]
-
-// hiweb主页路径
-#define XMHiwebHomeUrlPath [XMHomeDirectory stringByAppendingPathComponent:@"hiweb.homeurl"]
-
-// wifi传输的保存沙盒路径
-#define XMWifiMainDirName @"WifiTransPort"
-#define XMWifiUploadDirPath  [NSString stringWithFormat:@"%@/%@",XMHomeDirectory,XMWifiMainDirName]
-
+// 屏幕尺寸(适用于iOS7及以上系统)
+//#define XM_SCREEN_WIDTH (NSFoundationVersionNumber <= NSFoundationVersionNumber_iOS_7_1 ? (UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation) ? [[UIScreen mainScreen] bounds].size.width : [[UIScreen mainScreen] bounds].size.height) : [[UIScreen mainScreen] bounds].size.width)
+//#define XM_SCREEN_HEIGHT (NSFoundationVersionNumber <= NSFoundationVersionNumber_iOS_7_1 ? (UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation) ? [[UIScreen mainScreen] bounds].size.height : [[UIScreen mainScreen] bounds].size.width) : [[UIScreen mainScreen] bounds].size.height)
 
 
 #endif /* PrefixHeader_pch */

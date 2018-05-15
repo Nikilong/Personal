@@ -17,7 +17,7 @@ static NSString *homUrl;
     if (homUrl){
         return homUrl;
     }else{
-        homUrl = [NSString stringWithContentsOfFile:XMHiwebHomeUrlPath encoding:NSUTF8StringEncoding error:nil];
+        homUrl = [NSString stringWithContentsOfFile:[XMSavePathUnit getHiwebHomeUrlPath] encoding:NSUTF8StringEncoding error:nil];
         return homUrl;
     }
 }

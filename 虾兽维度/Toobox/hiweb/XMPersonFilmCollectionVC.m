@@ -114,7 +114,7 @@ static NSString * const reuseIdentifier = @"Cell";
     
     // Uncomment the following line to preserve selection between presentations
     // self.clearsSelectionOnViewWillAppear = NO;
-    self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight;
+    self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin;
     
     // Register cell classes
     [self.collectionView registerClass:[XMShowCollectionViewCell class] forCellWithReuseIdentifier:reuseIdentifier];
@@ -178,10 +178,6 @@ static NSString * const reuseIdentifier = @"Cell";
     CGRect tarF = self.view.frame;
     tarF.origin.y = 0;
     self.view.frame = tarF;
-    CGRect tarCF = self.collectionView.frame;
-    tarCF.size.height = [UIScreen mainScreen].bounds.size.height;
-    self.collectionView.frame = tarCF;
-    
 }
 - (void)dealloc
 {
@@ -357,7 +353,7 @@ static NSString * const reuseIdentifier = @"Cell";
     vc.currentModel = detatilModel;
     vc.detailMode = YES;
     vc.delegate = self.parentViewController;
-    vc.view.frame = CGRectMake(0, 64, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height - 64);
+    vc.view.frame = CGRectMake(0, 64, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
     vc.cellSize = CGSizeMake([UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
     vc.cellInset = UIEdgeInsetsMake(0, 0, 0, 0);
     vc.data = dataArr;
@@ -374,8 +370,8 @@ static NSString * const reuseIdentifier = @"Cell";
     if(self.detailMode)
     {
         self.cellSize = [UIScreen mainScreen].bounds.size;
-        [self.collectionView reloadData];
     }
+    [self.collectionView reloadData];
 }
 
 #pragma mark - scrollerview delegate
@@ -616,13 +612,13 @@ static NSString * const reuseIdentifier = @"Cell";
     backImgV.frame = CGRectMake(-imgVWH, CGRectGetMidY([UIScreen mainScreen].bounds), imgVWH, imgVWH);
     backImgV.hidden = YES;
     self.backImgV = backImgV;
-    self.backImgV.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
+    self.backImgV.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin;
     [self.view addSubview:backImgV];
     UIImageView *forwardImgV = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"iconForward"]];
     forwardImgV.frame = CGRectMake(CGRectGetMaxX([UIScreen mainScreen].bounds), CGRectGetMidY([UIScreen mainScreen].bounds), imgVWH, imgVWH);
     forwardImgV.hidden = YES;
     self.forwardImgV = forwardImgV;
-    self.backImgV.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin;
+    self.forwardImgV.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin;
     [self.view addSubview:forwardImgV];
     
     // 为添加前进后退手势

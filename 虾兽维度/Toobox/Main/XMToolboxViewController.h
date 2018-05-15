@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "XMToolBoxConfig.h"
 
-#define XMToolBoxViewAnimationTime 0.2
+extern double const XMToolBoxViewAnimationTime;
 
 typedef void(^touchIDCallbackBlock)(BOOL);
 @protocol XMToolBoxViewControllerDelegate <NSObject>

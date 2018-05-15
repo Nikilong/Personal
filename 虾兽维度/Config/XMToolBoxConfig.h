@@ -14,9 +14,9 @@
  
  */
 
-#define ToolBox_kName @"ToolBox_kName"
-#define ToolBox_kType @"ToolBox_kType"
-#define ToolBox_kAuth @"ToolBox_kAuth"
+extern NSString *const ToolBox_kName;
+extern NSString *const ToolBox_kType;
+extern NSString *const ToolBox_kAuth;
 
 typedef enum : NSUInteger {
     XMToolBoxTypeClipImg,           // 裁剪图片

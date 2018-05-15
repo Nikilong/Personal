@@ -50,6 +50,7 @@
 		204D2437209ED91A00F17E2E /* DispatchQueueLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 204D242C209ED91A00F17E2E /* DispatchQueueLogFormatter.m */; };
 		204D2438209ED91A00F17E2E /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = 204D242D209ED91A00F17E2E /* README.txt */; };
 		2056D8731E8D67B200EB4BB5 /* XMConerAccessoryView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2056D8721E8D67B200EB4BB5 /* XMConerAccessoryView.m */; };
+		205BCF9720AB174900FF9652 /* XMSavePathUnit.m in Sources */ = {isa = PBXBuildFile; fileRef = 205BCF9620AB174900FF9652 /* XMSavePathUnit.m */; };
 		205CECDB1F48150E00821E38 /* MBProgressHUD+NK.m in Sources */ = {isa = PBXBuildFile; fileRef = 205CECAF1F48150E00821E38 /* MBProgressHUD+NK.m */; };
 		205CECDC1F48150E00821E38 /* MBProgressHUD.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 205CECB01F48150E00821E38 /* MBProgressHUD.bundle */; };
 		205CECDD1F48150E00821E38 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 205CECB21F48150E00821E38 /* MBProgressHUD.m */; };
@@ -226,6 +227,8 @@
 		204D242D209ED91A00F17E2E /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
 		2056D8711E8D67B200EB4BB5 /* XMConerAccessoryView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMConerAccessoryView.h; sourceTree = "<group>"; };
 		2056D8721E8D67B200EB4BB5 /* XMConerAccessoryView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMConerAccessoryView.m; sourceTree = "<group>"; };
+		205BCF9520AB174900FF9652 /* XMSavePathUnit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMSavePathUnit.h; path = "虾兽维度/Config/XMSavePathUnit.h"; sourceTree = SOURCE_ROOT; };
+		205BCF9620AB174900FF9652 /* XMSavePathUnit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XMSavePathUnit.m; path = "虾兽维度/Config/XMSavePathUnit.m"; sourceTree = SOURCE_ROOT; };
 		205CECAE1F48150E00821E38 /* MBProgressHUD+NK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MBProgressHUD+NK.h"; sourceTree = "<group>"; };
 		205CECAF1F48150E00821E38 /* MBProgressHUD+NK.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MBProgressHUD+NK.m"; sourceTree = "<group>"; };
 		205CECB01F48150E00821E38 /* MBProgressHUD.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = MBProgressHUD.bundle; sourceTree = "<group>"; };
@@ -411,6 +414,8 @@
 				20C85E52205419C80057F483 /* XMToolBoxConfig.m */,
 				FD1EA08720A9A96A00658F18 /* XMGlobalConst.h */,
 				FD1EA08820A9A96A00658F18 /* XMGlobalConst.m */,
+				205BCF9520AB174900FF9652 /* XMSavePathUnit.h */,
+				205BCF9620AB174900FF9652 /* XMSavePathUnit.m */,
 			);
 			name = config;
 			path = toolBoxIcons;
@@ -1141,6 +1146,7 @@
 				204D2433209ED91A00F17E2E /* DDFileLogger.m in Sources */,
 				200770332059775100551C00 /* XMShowCollectionViewCell.m in Sources */,
 				205CECE31F48150E00821E38 /* SDWebImageCompat.m in Sources */,
+				205BCF9720AB174900FF9652 /* XMSavePathUnit.m in Sources */,
 				205CED0C1F489F2B00821E38 /* XMNavTitleTableViewController.m in Sources */,
 				20F1121B1E866F9C00E64A70 /* XMLeftViewUserCell.m in Sources */,
 				200770312059775100551C00 /* XMPersonDataUnit.m in Sources */,

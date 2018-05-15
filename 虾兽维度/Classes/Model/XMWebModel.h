@@ -8,9 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-// web的网址，需要拼接参数
-#define XMWebURL(name) [NSString stringWithFormat:@"http://m.uczzd.cn/webview/news?app=uc-iflow&aid=%@&cid=100&zzd_from=uc-iflow&uc_param_str=dndsfrvesvntnwpfgicp&recoid=3902548323263252739&rd_type=reco&sp_gz=1",(name)]
-
 @interface XMWebModel : NSObject
 
 @property (nonatomic, copy) NSString *ID;           // 发布者id
@@ -28,5 +25,8 @@
 /** 是否从main发送的网络请求,即是否第一个webmodule的标记 */
 @property (nonatomic, assign, getter=isFirstRequest)  BOOL firstRequest;
 + (NSArray *)websWithDict:(NSDictionary *)dict refreshCount:(NSUInteger)count keyWordArray:(NSArray *)keyWordArr;
+
+/// web的网址，需要拼接参数
++ (NSString *)appendWebURLByName:(NSString *)name;
 
 @end

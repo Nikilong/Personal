@@ -8,6 +8,10 @@
 
 #import "XMToolBoxConfig.h"
 
+NSString *const ToolBox_kName = @"ToolBox_kName";
+NSString *const ToolBox_kType = @"ToolBox_kType";
+NSString *const ToolBox_kAuth = @"ToolBox_kAuth";
+
 @implementation XMToolBoxConfig
 
 

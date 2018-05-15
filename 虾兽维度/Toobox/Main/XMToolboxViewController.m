@@ -14,7 +14,8 @@
 
 #import "XMTouchIDKeyboardViewController.h"
 
-#define kAuthenCallBackNotificaiton @"kAuthenCallBackNotificaiton"
+static NSString * const kAuthenCallBackNotificaiton = @"kAuthenCallBackNotificaiton";
+double const XMToolBoxViewAnimationTime = 0.2;
 
 typedef enum : NSUInteger {
     AuthenResultTypeSuccess,    //验证成功
@@ -82,7 +83,7 @@ typedef enum : NSUInteger {
     CGFloat btnWH = 58;         // 工具箱按钮宽高,根据bundle下toolBixIcons文件夹的图标确定
     CGFloat btnLabelH = 20;     // 工具箱按钮标签高度
     CGFloat padding = 10;       // 间隙
-    NSUInteger colMaxNum = 4;      // 每行允许排列的图标个数
+    NSUInteger colMaxNum = 4;   // 每行允许排列的图标个数
     
     // 工具箱菜单栏整体
     UIView *toolView = [[UIView alloc] init];
@@ -216,6 +217,10 @@ typedef enum : NSUInteger {
     NSUInteger result = [noti.userInfo[@"result"] integerValue];
     NSString *msg = @"";
     BOOL touchIDKeyboardFlag = NO;
+    //模拟器强制判断为成功验证
+    if (TARGET_OS_SIMULATOR == 1 && TARGET_OS_IPHONE == 1) {
+        result = AuthenResultTypeSuccess;
+    }
     // 处理验证的结果
     switch (result) {
         case AuthenResultTypeSuccess:{ //验证成功

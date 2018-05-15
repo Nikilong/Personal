@@ -10,6 +10,9 @@
 #import "XMSingleFilmModle.h"
 #import "UIImageView+WebCache.h"
 
+double const CellW = 160.0;
+double const CellH = 200.0;
+
 @interface XMShowCollectionViewCell()
 
 @property (weak, nonatomic) IBOutlet UIImageView *imagV;

@@ -216,7 +216,7 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_VERBOSE; // | HTTP_LOG_FLAG_TRACE
     }
     else {
 		HTTPLogVerbose(@"Saving file to %@", filePath);
-		if(![[NSFileManager defaultManager] createDirectoryAtPath:XMWifiUploadDirPath withIntermediateDirectories:true attributes:nil error:nil]) {
+		if(![[NSFileManager defaultManager] createDirectoryAtPath:[XMSavePathUnit getWifiUploadDirPath] withIntermediateDirectories:true attributes:nil error:nil]) {
 			HTTPLogError(@"Could not create directory at path: %@", filePath);
 		}
 		if(![[NSFileManager defaultManager] createFileAtPath:filePath contents:nil attributes:nil]) {

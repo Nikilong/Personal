@@ -8,8 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-#define CellW 160
-#define CellH 200
+extern double const CellW;
+extern double const CellH;
 
 @class XMSingleFilmModle;
 

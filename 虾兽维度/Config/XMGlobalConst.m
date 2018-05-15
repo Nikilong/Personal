@@ -8,6 +8,13 @@
 
 #import "XMGlobalConst.h"
 
+// 左侧边栏(首页)
+double const XMLeftViewTotalW = 200;
+double const XMLeftViewPadding = 10;
+
+// 左侧边栏(wifi传输)
+double const XMWifiLeftViewTotalW = 160;
+
 @implementation XMGlobalConst
 
 @end

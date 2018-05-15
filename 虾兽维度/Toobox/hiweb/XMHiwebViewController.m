@@ -40,7 +40,7 @@
         _personCollectListVC.detailMode = NO;
         [self addChildViewController:_personCollectListVC];
         [self.view addSubview:_personCollectListVC.view];
-        _personCollectListVC.view.frame = CGRectMake(0, 20, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height - 20);
+        _personCollectListVC.view.frame = CGRectMake(0, 20, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
     }
     return _personCollectListVC;
 }
@@ -84,7 +84,7 @@
 //    self.url = @"https://www.javbus2.com/star/n4r";
 //    self.url = @"https://www.javbus2.com/page";
 //    self.url = @"https://www.javbus2.pw/search/abp";
-    self.homeUrl = [NSString stringWithContentsOfFile:XMHiwebHomeUrlPath encoding:NSUTF8StringEncoding error:nil];
+    self.homeUrl = [NSString stringWithContentsOfFile:[XMSavePathUnit getHiwebHomeUrlPath] encoding:NSUTF8StringEncoding error:nil];
     if (self.homeUrl){
         self.url = [NSString stringWithFormat:@"%@/search/abp",self.homeUrl];
         // 开始加载数据
@@ -252,7 +252,7 @@
                     UIAlertAction *okAction = [UIAlertAction actionWithTitle:urlArr[i] style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action){
                         weakSelf.homeUrl = urlArr[i];
                         weakSelf.url = [NSString stringWithFormat:@"%@/search/abp",urlArr[i]];
-                        [urlArr[i] writeToFile:XMHiwebHomeUrlPath atomically:YES encoding:NSUTF8StringEncoding error:nil];
+                        [urlArr[i] writeToFile:[XMSavePathUnit getHiwebHomeUrlPath] atomically:YES encoding:NSUTF8StringEncoding error:nil];
                         
                         [weakSelf starRequest];
                         

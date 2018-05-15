@@ -12,9 +12,6 @@
 #import "EXQRCodeImageDetectorUtil.h"
 #import "MBProgressHUD+NK.h"
 
-#define XMBackImageVStarX ([UIScreen mainScreen].bounds.size.width / (3))
-#define XMSearchModePanDistance 150
-
 @interface XMWebViewController ()<UIWebViewDelegate,NSURLSessionDelegate,UIGestureRecognizerDelegate>
 
 /** 网页高度 */
@@ -63,6 +60,17 @@
 
 @implementation XMWebViewController
 
+#pragma mark 产量区
+- (double)getBackImageVStarX{
+    return  [UIScreen mainScreen].bounds.size.width / 3;
+}
+
+- (double)getSearchModePanDistance{
+    return 150;
+}
+
+
+#pragma mark - 初始化
 - (UIWebView *)web
 {
     if (_web == nil)
@@ -248,7 +256,7 @@
     if (!self.backImageV)
     {
         UIImageView *backImageV = [[UIImageView alloc] initWithImage:img];
-        backImageV.frame = CGRectMake(-XMBackImageVStarX, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
+        backImageV.frame = CGRectMake(-[self getBackImageVStarX], 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
         _backImageV = backImageV;
     
 #warning 核心代码,需要把图片加到这上面,如果加到self.view上面会在pop之后闪一下黑色
@@ -607,7 +615,7 @@
             self.web.transform = CGAffineTransformMakeTranslation(currentX - self.starX, 0);
             // 同时让toolbar  backImageV  statusCover跟着移动
             self.toolBar.transform = CGAffineTransformMakeTranslation(currentX - self.starX, 0);;
-            self.backImageV.transform = CGAffineTransformMakeTranslation((currentX - self.starX) * XMBackImageVStarX / [UIScreen mainScreen].bounds.size.width, 0);
+            self.backImageV.transform = CGAffineTransformMakeTranslation((currentX - self.starX) * [self getBackImageVStarX] / [UIScreen mainScreen].bounds.size.width, 0);
             if (self.isFirstWebmodule)
             {
                 self.statusCover.transform = CGAffineTransformMakeTranslation(currentX - self.starX, 0);;
@@ -620,7 +628,7 @@
         {
             if(self.searchMode)
             {
-                if(![self.web canGoBack] && self.starX - currentX > XMSearchModePanDistance)
+                if(![self.web canGoBack] && self.starX - currentX > [self getSearchModePanDistance])
                 {
                     self.forwardImgV.transform = CGAffineTransformIdentity;
                     self.forwardImgV.hidden = YES;
@@ -662,7 +670,7 @@
             // web backImageV toolBar 三个要联动
             self.web.transform = CGAffineTransformMakeTranslation([UIScreen mainScreen].bounds.size.width, 0);
             self.toolBar.transform = CGAffineTransformMakeTranslation([UIScreen mainScreen].bounds.size.width, 0);
-            self.backImageV.transform = CGAffineTransformMakeTranslation(XMBackImageVStarX, 0);
+            self.backImageV.transform = CGAffineTransformMakeTranslation([self getBackImageVStarX], 0);
             if (self.isFirstWebmodule)
             {
                 self.statusCover.transform = CGAffineTransformMakeTranslation([UIScreen mainScreen].bounds.size.width, 0);
@@ -722,7 +730,7 @@
             {
                 CGFloat panShift = [gesture locationInView:self.web].x - self.starX;
                 // 右划且滑动距离大于50,表示应该返回,反之左划并且距离大于50表示向前,并复位左右两个箭头
-                if (panShift > XMSearchModePanDistance)
+                if (panShift > [self getSearchModePanDistance])
                 {
                     self.backImgV.transform = CGAffineTransformIdentity;
                     [self.web goBack];
@@ -732,7 +740,7 @@
                         [self.web removeGestureRecognizer:self.panSearchMode];
                     }
                     
-                }else if(panShift < -XMSearchModePanDistance)
+                }else if(panShift < -[self getSearchModePanDistance])
                 {
                     self.forwardImgV.transform = CGAffineTransformIdentity;
                     [self.web goForward];

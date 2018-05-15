@@ -8,8 +8,8 @@
 
 #import "XMSearchTableViewController.h"
 
-#define kName @"name"
-#define kEngine @"engine"
+static NSString *const kName = @"name";
+static NSString *const kEngine = @"engine";
 
 @interface XMSearchTableViewController ()<UITextFieldDelegate,UIGestureRecognizerDelegate>
 

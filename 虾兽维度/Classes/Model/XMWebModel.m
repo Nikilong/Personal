@@ -16,6 +16,11 @@
 
 @implementation XMWebModel
 
+/// web的网址，需要拼接参数
++ (NSString *)appendWebURLByName:(NSString *)name{
+    return [NSString stringWithFormat:@"http://m.uczzd.cn/webview/news?app=uc-iflow&aid=%@&cid=100&zzd_from=uc-iflow&uc_param_str=dndsfrvesvntnwpfgicp&recoid=3902548323263252739&rd_type=reco&sp_gz=1",name];
+}
+
 + (NSArray *)websWithDict:(NSDictionary *)dict refreshCount:(NSUInteger)count keyWordArray:(NSArray *)keyWordArr
 {
     NSMutableArray *arrM = [NSMutableArray array];
@@ -44,7 +49,7 @@
                 continue;
             }
         }
-        model.webURL = [NSURL URLWithString:XMWebURL(model.ID)];
+        model.webURL = [NSURL URLWithString:[XMWebModel appendWebURLByName:model.ID]];
         model.cmt_cnt = [dict[@"data"][@"articles"][model.ID][@"cmt_cnt"] unsignedIntegerValue];
         model.source = dict[@"data"][@"articles"][model.ID][@"source_name"];
 //model.source = model.ID;

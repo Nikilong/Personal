@@ -8,6 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
+// 左侧边栏(首页)
+extern double const XMLeftViewTotalW;
+extern double const XMLeftViewPadding;
+
+// 左侧边栏(wifi传输)
+extern double const XMWifiLeftViewTotalW;
+
 @interface XMGlobalConst : NSObject
 
 @end
