@@ -8,7 +8,7 @@
 
 #import "XMWifiGroupTool.h"
 #import "XMWifiTransModel.h"
-
+#import "SSZipArchive.h"
 
 @implementation XMWifiGroupTool
 
@@ -16,8 +16,21 @@ static NSString *defaultGroupName = @"默认";
 static NSString *currentGroupName = @"默认";
 static NSString *allFilesGroupName = @"所有";
 
+
+
++ (void)aaa{
+    NSString *zipPath = [[XMSavePathUnit getDocumentsPath] stringByAppendingPathComponent:@"aa.zip"];
+    NSString *sampleDataPath = [XMSavePathUnit getWifiUploadDirPath];
+    
+    // 压缩整个文件夹
+//    [SSZipArchive createZipFileAtPath:zipPath withContentsOfDirectory:sampleDataPath];
+    // 压缩多个文件
+    [SSZipArchive createZipFileAtPath:zipPath withFilesAtPaths:@[[XMSavePathUnit getHiwebHomeUrlPath],[XMSavePathUnit getWifiGroupNameFilePath],[XMSavePathUnit getSaveWebModelArchicerPath]]];
+}
+
 /// 返回所有(不可编辑)文件夹的名称
 + (NSArray *)nonDeleteGroupNames{
+    [self aaa];
     return @[(defaultGroupName),(allFilesGroupName)];
 }
 
@@ -42,6 +55,7 @@ static NSString *allFilesGroupName = @"所有";
     }
     return nil;
 }
+
 
 /// 创建一个新文件夹
 + (void)creatNewWifiFilesGroupWithName:(NSString *)name{
