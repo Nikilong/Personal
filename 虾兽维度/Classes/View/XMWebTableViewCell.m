@@ -30,6 +30,14 @@
 {
     _wifiModel = wifiModel;
     
+    _imageV.hidden = NO;
+    _title.hidden = NO;
+    // 隐藏不必要的标签
+    _pureTitle.hidden = YES;
+    _commitCount.hidden = YES;
+    _sourceLabel.hidden = YES;
+    _number.hidden = YES;
+    
     // 显示大小标签
     if(wifiModel.size < 0.001){
         _publishTime.text = [NSString stringWithFormat:@"%.2f Byte",wifiModel.size * 1024.0 * 1024.0];
@@ -38,34 +46,26 @@
     }else{
         _publishTime.text = [NSString stringWithFormat:@"%.2fM",wifiModel.size];
     }
+    // 设置标题
+    if (wifiModel.prePath.length > 0){
+        _title.text = [NSString stringWithFormat:@"%@--(%@)",wifiModel.pureFileName,[wifiModel.prePath substringToIndex:(wifiModel.prePath.length - 1)]];
+    }else{
+        _title.text = wifiModel.pureFileName;
+    }
     // 设置图片
     if ([@"png|jpg|jpeg" containsString:wifiModel.fileName.pathExtension]){
-        _imageV.hidden = NO;
-        _pureTitle.hidden = YES;
-        _title.hidden = NO;
+        _imageV.contentMode = UIViewContentModeScaleAspectFill;
         _imageV.image = [UIImage imageWithContentsOfFile:wifiModel.fullPath];
-        // 设置标题
-        if (wifiModel.prePath.length > 0){
-            _title.text = [NSString stringWithFormat:@"%@--(%@)",wifiModel.pureFileName,[wifiModel.prePath substringToIndex:(wifiModel.prePath.length - 1)]];
-        }else{
-            _title.text = wifiModel.pureFileName;
-        }
     }else{
-        _imageV.hidden = YES;
-        _pureTitle.hidden = NO;
-        _title.hidden = YES;
-        // 设置纯标题
-        if (wifiModel.prePath.length > 0){
-            _pureTitle.text = [NSString stringWithFormat:@"%@--(%@)",wifiModel.pureFileName,[wifiModel.prePath substringToIndex:(wifiModel.prePath.length - 1)]];
-        }else{
-            _pureTitle.text = wifiModel.pureFileName;
+        _imageV.contentMode = UIViewContentModeScaleAspectFit;
+        UIImage *image = [UIImage imageNamed:[NSString stringWithFormat:@"documents_icon_%@",wifiModel.fileName.pathExtension]];
+        if (!image){
+            image = [UIImage imageNamed:@"documents_icon_other"];
         }
+        _imageV.image = image;
     }
     
-    // 隐藏不必要的标签
-    _commitCount.hidden = YES;
-    _sourceLabel.hidden = YES;
-    _number.hidden = YES;
+    
 
 }
 

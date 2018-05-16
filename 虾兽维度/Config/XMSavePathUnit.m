@@ -24,6 +24,11 @@ NSString * const XMWifiGroupNameFileName = @"XMWifiGroupName.wifign";
     return NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
 }
 
+/// app的tmp路径
++ (NSString *)getTmpPath{
+    return NSTemporaryDirectory();
+}
+
 /// web模块收藏网页的文件保存路径
 + (NSString *)getSaveWebModelArchicerPath{
     return [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"webModel.archiver"];

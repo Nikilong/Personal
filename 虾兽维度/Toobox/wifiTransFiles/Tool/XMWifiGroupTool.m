@@ -12,71 +12,118 @@
 
 @implementation XMWifiGroupTool
 
-static NSString *defaultGroupName = @"默认";
+NSString * const defaultGroupName = @"默认";
+NSString * const allFilesGroupName = @"所有";
+
 static NSString *currentGroupName = @"默认";
-static NSString *allFilesGroupName = @"所有";
+static NSString *backupGroupName = @"备份";
 
-
-
-+ (void)aaa{
-    NSString *zipPath = [[XMSavePathUnit getDocumentsPath] stringByAppendingPathComponent:@"aa.zip"];
-    NSString *sampleDataPath = [XMSavePathUnit getWifiUploadDirPath];
-    
-    // 压缩整个文件夹
-//    [SSZipArchive createZipFileAtPath:zipPath withContentsOfDirectory:sampleDataPath];
+#pragma mark - 压缩解压类,备份类
+/// 压缩系统配置类文件,例如收藏网页文件,文件组民文件等
++ (BOOL)zipConfigFiles{
+    NSString *zipPath = [NSString stringWithFormat:@"%@/%@/config_%@.zip",[XMSavePathUnit getWifiUploadDirPath],backupGroupName,[self getNowTimeTimestamp]];
+    NSArray *saveFilesPathArr =@[[XMSavePathUnit getHiwebHomeUrlPath],[XMSavePathUnit getWifiGroupNameFilePath],[XMSavePathUnit getSaveWebModelArchicerPath]];
     // 压缩多个文件
-    [SSZipArchive createZipFileAtPath:zipPath withFilesAtPaths:@[[XMSavePathUnit getHiwebHomeUrlPath],[XMSavePathUnit getWifiGroupNameFilePath],[XMSavePathUnit getSaveWebModelArchicerPath]]];
+    return [SSZipArchive createZipFileAtPath:zipPath withFilesAtPaths:saveFilesPathArr];
 }
 
+/// 压缩带有标记备份的文件夹
++ (BOOL)zipBackUpDirs{
+    NSString *zipPath = [NSString stringWithFormat:@"%@/%@/dirs_%@.zip",[XMSavePathUnit getWifiUploadDirPath],backupGroupName,[self getNowTimeTimestamp]];
+    NSString *tmpDirPatn = [NSString stringWithFormat:@"%@/backup",[XMSavePathUnit getTmpPath]];
+    // 备份前检查临时文件是否存在,没有就创建空文件夹,有就删除
+    if (![[NSFileManager defaultManager] fileExistsAtPath:tmpDirPatn]){
+        [[NSFileManager defaultManager] createDirectoryAtPath:tmpDirPatn withIntermediateDirectories:YES attributes:nil error:nil];
+    }else{
+        [[NSFileManager defaultManager] removeItemAtPath:tmpDirPatn error:nil];
+    }
+    NSArray *fileArr = [self groupNameDirsModels];
+    for(XMWifiTransModel *model in fileArr){
+        if (model.isBackup){
+            
+            [[NSFileManager defaultManager] copyItemAtPath:[NSString stringWithFormat:@"%@/%@",[XMSavePathUnit getWifiUploadDirPath],model.groupName] toPath:[NSString stringWithFormat:@"%@/%@",tmpDirPatn,model.groupName]  error:nil];
+        }
+    }
+    // 压缩多个文件
+    BOOL success = [SSZipArchive createZipFileAtPath:zipPath withContentsOfDirectory:[XMSavePathUnit getTmpPath]];
+    [[NSFileManager defaultManager] removeItemAtPath:tmpDirPatn error:nil];
+    return success;
+}
+
+
+#pragma mark - 文件夹操作类
 /// 返回所有(不可编辑)文件夹的名称
 + (NSArray *)nonDeleteGroupNames{
-    [self aaa];
-    return @[(defaultGroupName),(allFilesGroupName)];
+    return @[(defaultGroupName),(allFilesGroupName),(backupGroupName)];
 }
 
 /// 返回所有文件夹的名称
-+ (NSArray *)groupNames{
++ (NSArray *)groupNameDirsModels{
     if([[NSFileManager defaultManager] fileExistsAtPath:[XMSavePathUnit  getWifiGroupNameFilePath]]){
-        return [NSArray arrayWithContentsOfFile:[XMSavePathUnit getWifiGroupNameFilePath]];
+        return [NSKeyedUnarchiver unarchiveObjectWithFile:[XMSavePathUnit getWifiGroupNameFilePath]];
+//        return [NSArray arrayWithContentsOfFile:[XMSavePathUnit getWifiGroupNameFilePath]];
     }else{
         // 初始化默认分组
-        NSArray *defaultArr = @[(defaultGroupName),@"分组1",@"分组2",@"分组3"];
+        NSArray *defaultArr = @[(defaultGroupName),(backupGroupName),@"分组1",@"分组2"];
         [self checkRootDirectry];
-        // 先创建文件,同时"所有"不需要创建分组,先写进文件
-        [self saveGroupMessageWithNewArray:@[allFilesGroupName]];
-        // 在沙盒创建默认的分组
-        for (NSString *name in defaultArr){
-            [self creatNewWifiFilesGroupWithName:name];
+        NSMutableArray *dirModelArr = [NSMutableArray array];
+        for (NSUInteger i = 0; i < defaultArr.count; i++) {
+            NSString *fullDirPath =[NSString stringWithFormat:@"%@/%@",[XMSavePathUnit getWifiUploadDirPath],defaultArr[i]];
+            if (![[NSFileManager defaultManager] fileExistsAtPath:fullDirPath]){
+                [[NSFileManager defaultManager] createDirectoryAtPath:fullDirPath withIntermediateDirectories:YES attributes:nil error:nil];
+            }
+            if (i > 1){
+                XMWifiTransModel *model = [[XMWifiTransModel alloc] init];
+                model.groupName =defaultArr[i];
+                model.isBackup = NO;
+                [dirModelArr addObject:model];
+            }
         }
-        NSArray *dirsArr = [self updateGroupNameFile];
+        
+        // 先创建文件
+        [self saveGroupMessageWithNewArray:dirModelArr];
+        // 在沙盒创建默认的分组
+//        for (NSString *name in defaultArr){
+//            [self creatNewWifiFilesGroupWithName:name isBackup:NO];
+//            XMWifiTransModel *model = [[XMWifiTransModel alloc] init];
+//            model.groupName = name;
+//            model.isBackup = YES;
+//            [dirModelArr addObject:model];
+//        }
+//        NSArray *dirsArr = [self updateGroupNameFile];
         // 将最终的结果保存
-        [self saveGroupMessageWithNewArray:dirsArr];
-        return dirsArr;
+//        [self saveGroupMessageWithNewArray:dirsArr];
+        return [self updateGroupNameFile];
     }
     return nil;
 }
 
 
 /// 创建一个新文件夹
-+ (void)creatNewWifiFilesGroupWithName:(NSString *)name{
++ (void)creatNewWifiFilesGroupWithName:(NSString *)name isBackup:(BOOL)isBackup{
     NSString *newFilePath = [NSString stringWithFormat:@"%@/%@",[XMSavePathUnit getWifiUploadDirPath],name];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:newFilePath]) return;
     [self checkRootDirectry];
     // 文件名不可用则跳过
     if (![self isGroupNameEnable:name]) return;
     if ([[NSFileManager defaultManager] createDirectoryAtPath:newFilePath withIntermediateDirectories:YES attributes:nil error:nil]){
-        NSMutableArray *fileArr = [NSMutableArray arrayWithArray:[self groupNames]];
-        [fileArr addObject:name];
+        NSMutableArray *fileArr = [NSMutableArray arrayWithArray:[self groupNameDirsModels]];
+        XMWifiTransModel *model = [[XMWifiTransModel alloc] init];
+        model.groupName = name;
+        model.isBackup = isBackup;
+        [fileArr addObject:model];
         [self saveGroupMessageWithNewArray:fileArr];
     }
 }
 
 /// 删除一个新文件夹
 + (void)deleteWifiFilesGroupWithName:(NSString *)name{
+
     // 如果删除的文件夹是当前文件夹,则切换至默认文件夹
     if([name isEqualToString:currentGroupName]){
         [self upgradeCurrentGroupName:defaultGroupName];
     }
-    NSMutableArray *arr = [NSMutableArray arrayWithContentsOfFile:[XMSavePathUnit getWifiGroupNameFilePath]];
+    NSMutableArray *arr = [NSMutableArray arrayWithArray:[self groupNameDirsModels]];
     
     NSString *fullPath = [[XMSavePathUnit getWifiUploadDirPath] stringByAppendingPathComponent:name];
     // 删除整个文件夹目录
@@ -85,9 +132,9 @@ static NSString *allFilesGroupName = @"所有";
     }
     
     // 更新文件夹列表
-    for (NSString *ele in arr){
-        if ([ele isEqualToString:name]){
-            [arr removeObject:ele];
+    for (XMWifiTransModel *model in arr){
+        if ([model.groupName isEqualToString:name]){
+            [arr removeObject:model];
             break;
         }
     }
@@ -109,16 +156,22 @@ static NSString *allFilesGroupName = @"所有";
             if([ele containsString:@"DS_Store"]) continue;
             if ([ele containsString:XMWifiGroupNameFileName]) continue;
             if ([ele containsString:defaultGroupName]) continue;
-            [dirsArr addObject:ele];
+            if ([ele containsString:backupGroupName]) continue;
+            XMWifiTransModel *model = [[XMWifiTransModel alloc] init];
+            model.groupName = ele;
+            model.isBackup = NO;
+            [dirsArr addObject:model];
         }
     }
+//    [self saveGroupMessageWithNewArray:dirsArr];
     [self saveGroupMessageWithNewArray:dirsArr];
     return dirsArr;
 }
 
 /// 将文件夹组写进沙盒
 + (void)saveGroupMessageWithNewArray:(NSArray *)newArr{
-    [newArr writeToFile:[XMSavePathUnit getWifiGroupNameFilePath] atomically:YES];
+//    [newArr writeToFile:[XMSavePathUnit getWifiGroupNameFilePath] atomically:YES];
+    [NSKeyedArchiver archiveRootObject:newArr toFile:[XMSavePathUnit getWifiGroupNameFilePath]];
 }
 
 /// 更新当前文件夹
@@ -212,6 +265,19 @@ static NSString *allFilesGroupName = @"所有";
         return NO;
     }
     return YES;
+}
+
+/// 获取时间戳
++ (NSString *)getNowTimeTimestamp{
+    
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    //设置你想要的格式,hh与HH的区别:分别表示12小时制,24小时制
+    [formatter setDateFormat:@"YYYY-MM-dd_HH:mm:ss"];
+    NSDate *datenow = [NSDate date];
+    //将nsdate按formatter格式转成nsstring
+    NSString *currentTimeString = [formatter stringFromDate:datenow];
+    return currentTimeString;
+    
 }
 
 @end

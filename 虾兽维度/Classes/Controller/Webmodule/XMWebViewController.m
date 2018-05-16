@@ -342,7 +342,7 @@
         // 保存网站到本地
         [XMWebModelTool saveWebModel:self.model];
         // 提示用户保存网页成功
-        [MBProgressHUD showSuccess:@"已成功添加到收藏夹" toView:self.web];
+        [MBProgressHUD showSuccess];
     }
 }
 

@@ -13,9 +13,13 @@
 /** 创建一个进度条，仅仅是延时作用，实际不作任何操作 */
 + (void)showProgressInView:(UIView *)view mode:(MBProgressHUDMode)mode duration:(NSTimeInterval)duration title:(NSString *)title;
 
+/** 创建一个加载动画 */
++ (MBProgressHUD *)showLoadingViewInView:(UIView *)view title:(NSString *)title;
+
 /** 显示消息 */
 + (void)showMessage:(NSString *)text toView:(UIView *)view;
-+ (void)showSuccess:(NSString *)success toView:(UIView *)view;
++ (void)showSuccess;
++ (void)showFailed;
 
 /** 显示一张图标*/
 + (void)show:(NSString *)text icon:(NSString *)icon view:(UIView *)view;

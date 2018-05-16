@@ -38,6 +38,7 @@ UIImagePickerControllerDelegate>
 
 @property (weak, nonatomic)  UIView *toolBar;                // 批量编辑下的工具条
 @property (weak, nonatomic)  UIButton *toolBarDeleBtn;       // 工具条删除按钮
+@property (weak, nonatomic)  UIButton *toolBarMoveBtn;       // 工具条移动按钮
 @property (weak, nonatomic)  UIButton *toolBarSeleAllBtn;    // 工具条全选按钮
 @property (weak, nonatomic)  UILabel *navTitleLab;           // 自定义导航栏标题
 
@@ -49,6 +50,10 @@ UIImagePickerControllerDelegate>
 /// 添加的图片的展示框
 @property (weak, nonatomic)  UIView *showSeleImageView;
 
+/// 是否是移动文件模式,yes下点击cell不会展示文件夹内容
+@property (nonatomic, assign)  BOOL isMoveFilesMode;
+
+
 @end
 
 @implementation XMWifiTransFileViewController
@@ -57,7 +62,7 @@ UIImagePickerControllerDelegate>
 {
     if (!_toolBar)
     {
-        CGFloat toolH = 44;
+        CGFloat toolH = 50;
         CGFloat margin = 10;
         UIView *toolBar = [[UIView alloc] initWithFrame:CGRectMake(0, XMScreenH - toolH, XMScreenW, toolH)];
         toolBar.backgroundColor = [UIColor lightGrayColor];
@@ -65,7 +70,7 @@ UIImagePickerControllerDelegate>
         UIWindow *window = [UIApplication sharedApplication].keyWindow;
         [window addSubview:toolBar];
         // 全选/反选
-        UIButton *allSelectBtn = [[UIButton alloc] initWithFrame:CGRectMake(margin, 0, toolH * 2, toolH)];
+        UIButton *allSelectBtn = [[UIButton alloc] initWithFrame:CGRectMake(XMScreenW - toolH * 2 - margin, 0, toolH * 2, toolH)];
         self.toolBarSeleAllBtn = allSelectBtn;
         [toolBar addSubview:allSelectBtn];
         [allSelectBtn addTarget:self action:@selector(selectAllCell:) forControlEvents:UIControlEventTouchUpInside];
@@ -73,14 +78,26 @@ UIImagePickerControllerDelegate>
         [allSelectBtn setTitle:@"取消全选" forState:UIControlStateSelected];
         [allSelectBtn setTitleColor:[UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0] forState:UIControlStateNormal];
         // 删除按钮
-        UIButton *deleBtn = [[UIButton alloc] initWithFrame:CGRectMake(XMScreenW - toolH -margin, 0, toolH, toolH)];
+        UIButton *deleBtn = [[UIButton alloc] initWithFrame:CGRectMake(margin, 0, toolH, toolH)];
         self.toolBarDeleBtn = deleBtn;
         [toolBar addSubview:deleBtn];
         [deleBtn addTarget:self action:@selector(deleteSelectCell:) forControlEvents:UIControlEventTouchUpInside];
-        [deleBtn setTitle:@"删除" forState:UIControlStateNormal];
+//        [deleBtn setTitle:@"删除" forState:UIControlStateNormal];
+        [deleBtn setImage:[UIImage imageNamed:@"newui_disable_delete"] forState:UIControlStateDisabled];
+        [deleBtn setImage:[UIImage imageNamed:@"newui_able_delete"] forState:UIControlStateNormal];
         [deleBtn setTitleColor:[UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0] forState:UIControlStateNormal];
         [deleBtn setTitleColor:[UIColor grayColor] forState:UIControlStateDisabled];
         deleBtn.enabled = NO;
+        
+        // 移动按钮
+        UIButton *moveBtn = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetMaxX(deleBtn.frame), 0, toolH, toolH)];
+        self.toolBarMoveBtn = moveBtn;
+        [toolBar addSubview:moveBtn];
+        [moveBtn addTarget:self action:@selector(moveSelectCell:) forControlEvents:UIControlEventTouchUpInside];
+        [moveBtn setTitle:@"移动" forState:UIControlStateNormal];
+        [moveBtn setTitleColor:[UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0] forState:UIControlStateNormal];
+        [moveBtn setTitleColor:[UIColor grayColor] forState:UIControlStateDisabled];
+        moveBtn.enabled = NO;
     }
     return _toolBar;
 }
@@ -120,6 +137,7 @@ UIImagePickerControllerDelegate>
     self.view.backgroundColor = [UIColor whiteColor];
     self.connectFlag = NO;
     self.tableView.allowsMultipleSelectionDuringEditing = YES;
+    self.isMoveFilesMode = NO;
     // 更新本地数据
     [self refreshDate];
 
@@ -177,7 +195,7 @@ UIImagePickerControllerDelegate>
     titleLab.font = [UIFont systemFontOfSize:17];
     titleLab.textColor = [UIColor blackColor];
     titleLab.textAlignment = NSTextAlignmentCenter;
-    titleLab.text = [XMWifiGroupTool getDefaultGroupName];
+    titleLab.text = defaultGroupName;
     // 添加刷新手势
     UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(navTitleViewDidDoubleTap)];
     doubleTap.numberOfTapsRequired = 2;
@@ -268,6 +286,8 @@ UIImagePickerControllerDelegate>
         self.toolBar.hidden = NO;
         self.toolBarSeleAllBtn.selected = NO;
         self.toolBarDeleBtn.enabled = NO;
+        self.toolBarMoveBtn.enabled = NO;
+        self.toolBar.userInteractionEnabled = YES;
     }else{
         self.toolBar.hidden = YES;
     }
@@ -322,6 +342,7 @@ UIImagePickerControllerDelegate>
             [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0] animated:YES scrollPosition:UITableViewScrollPositionNone];
         }
         self.toolBarDeleBtn.enabled = YES;
+        self.toolBarMoveBtn.enabled = YES;
     }else{
         // 取消全选状态
         NSArray *seleArr = [self.tableView indexPathsForSelectedRows];
@@ -329,6 +350,7 @@ UIImagePickerControllerDelegate>
             [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
         }
         self.toolBarDeleBtn.enabled = NO;
+        self.toolBarMoveBtn.enabled = NO;
     }
 }
 
@@ -346,9 +368,18 @@ UIImagePickerControllerDelegate>
     return [arr sortedArrayUsingComparator:comp];
 }
 
+/// 移动所选的cell
+- (void)moveSelectCell:(UIButton *)btn{
+//    btn.enabled = NO;
+    self.toolBar.userInteractionEnabled = NO;
+    self.isMoveFilesMode = YES;
+    [self showLeftView];
+}
+
 /// 删除所选的cell
 - (void)deleteSelectCell:(UIButton *)btn{
     btn.enabled = NO;
+    self.toolBar.userInteractionEnabled = NO;
     NSArray *seleArr = [self.tableView indexPathsForSelectedRows];
     // 先对数组进行降序处理,将indexPath.row最大(即最底下的数据先删除),防止序号紊乱
     NSArray *sortArr = [self sortArray:seleArr];
@@ -433,23 +464,56 @@ UIImagePickerControllerDelegate>
     [UIView animateWithDuration:0.5 animations:^{
         // 恢复到最左边的位置
         self.leftContentView.transform = CGAffineTransformIdentity;
-        
+        // 当isMoveFilesMode隐藏左边栏,需要回复toolbar的可用
+        if(self.isMoveFilesMode){
+            self.toolBar.userInteractionEnabled = YES;
+        }
+        self.isMoveFilesMode = NO;
     }];
 }
 
 #pragma mark XMWifiLeftTableViewControllerDelegate
 - (void)leftWifiTableViewControllerDidSelectGroupName:(NSString *)groupName{
-    // 一系列设置标题
-    self.navTitleLab.text = groupName;
-    [XMWifiGroupTool upgradeCurrentGroupName:groupName];
-    [self refreshDate];
-    [self hideLeftView];
+    if (self.isMoveFilesMode){
+        if([groupName isEqualToString:allFilesGroupName]){
+            [MBProgressHUD showMessage:@"不可移动到该文件夹" toView:self.view];
+            
+            return;
+        }
+        NSArray *seleArr = [self.tableView indexPathsForSelectedRows];
+        // 先对数组进行降序处理,将indexPath.row最大(即最底下的数据先删除),防止序号紊乱
+        NSArray *sortArr = [self sortArray:seleArr];
+        for (NSIndexPath *indexPath in sortArr){
+            XMWifiTransModel *model = self.dataArr[indexPath.row];
+            NSString *newFullPath = [NSString stringWithFormat:@"%@/%@/%@",[XMSavePathUnit getWifiUploadDirPath],groupName,model.pureFileName];
+            NSLog(@"%@",newFullPath);
+            // 重命名,自己覆盖自己
+            NSError *error;
+            if ([[NSFileManager defaultManager] moveItemAtPath:model.fullPath toPath:newFullPath error:&error]){
+                [self refreshDate];
+            }else{
+                [MBProgressHUD showMessage:@"名称已存在" toView:self.view];
+            }
+        }
+        [self hideLeftView];
+        // 取消全选状态和设置删除和移动按钮不可用
+        self.toolBarSeleAllBtn.selected = NO;
+        self.toolBarDeleBtn.enabled = NO;
+        self.toolBarMoveBtn.enabled = NO;
+    }else{
+        // 一系列设置标题
+        self.navTitleLab.text = groupName;
+        [XMWifiGroupTool upgradeCurrentGroupName:groupName];
+        [self refreshDate];
+        [self hideLeftView];
+        
+    }
 }
 
 - (void)leftWifiTableViewControllerDidDeleteGroupName:(NSString *)groupName{
     // 如果删除的文件夹刚好是当前展示的数组,那么需要切换到"默认"的文件夹
     if ([groupName isEqualToString:self.navTitleLab.text]){
-        self.navTitleLab.text = [XMWifiGroupTool getDefaultGroupName];
+        self.navTitleLab.text = defaultGroupName;
         [self refreshDate];
     }
 }
@@ -458,7 +522,6 @@ UIImagePickerControllerDelegate>
 - (void)uploadFinish:(NSNotification *)noti{
     NSLog(@"%@",noti.userInfo);
     [self refreshDate];
-//    [self.tableView reloadData];
 }
 
 #pragma mark - UITableViewDataSource
@@ -472,12 +535,7 @@ UIImagePickerControllerDelegate>
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-//    static NSString *ID = @"cell";
-//    XMWebTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ID];
-//    if (!cell)
-//    {
-//        cell = [[XMWebTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:ID];
-//    }
+
     XMWebTableViewCell *cell = [XMWebTableViewCell cellWithTableView:tableView];
     
     // 添加重命名手势
@@ -486,26 +544,16 @@ UIImagePickerControllerDelegate>
     
     XMWifiTransModel *model = self.dataArr[indexPath.row];
     cell.wifiModel = model;
-//    cell.textLabel.text = model.fileName;
-//    if(model.size < 0.001){
-//        cell.detailTextLabel.text = [NSString stringWithFormat:@"文件大小:%.2f Byte",model.size * 1024.0 * 1024.0];
-//    }else if (model.size < 1){
-//        cell.detailTextLabel.text = [NSString stringWithFormat:@"文件大小:%.2fK",model.size  * 1024.0];
-//    }else{
-//        cell.detailTextLabel.text = [NSString stringWithFormat:@"文件大小:%.2fM",model.size];
-//    }
-//    if ([@"png|jpg|jpeg" containsString:model.fileName.pathExtension]){
-//        cell.imageView.image = [UIImage imageWithContentsOfFile:model.fullPath];
-//    }
     return cell;
 }
 
 #pragma mark 选中与反选
 - (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath{
     if (tableView.isEditing){
-        // 编辑模式下如果没有选中按钮则删除按钮不可用
+        // 编辑模式下如果没有选中按钮则删除和移动按钮不可用
         if([tableView indexPathsForSelectedRows].count ==  0){
             self.toolBarDeleBtn.enabled = NO;
+            self.toolBarMoveBtn.enabled = NO;
             self.toolBarSeleAllBtn.selected = NO;
         }
     }
@@ -514,8 +562,9 @@ UIImagePickerControllerDelegate>
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     if(tableView.isEditing){
-        // 编辑模式下,启用删除按钮
+        // 编辑模式下,启用删除,移动按钮
         self.toolBarDeleBtn.enabled = YES;
+        self.toolBarMoveBtn.enabled = YES;
         if ([tableView indexPathsForSelectedRows].count == self.dataArr.count){
             self.toolBarSeleAllBtn.selected = YES;
         }
@@ -589,45 +638,83 @@ UIImagePickerControllerDelegate>
 #pragma mark - cell长按编辑手势
 - (void)longPressToEditCell:(UILongPressGestureRecognizer *)gest{
     if (gest.state == UIGestureRecognizerStateBegan){
+        // 退出编辑模式
+        [self.tableView setEditing:NO animated:YES];
+        self.toolBar.hidden = YES;
         // 根据触摸点t推算indexPath
         CGPoint point = [gest locationInView:self.tableView];
         NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:point];
-        // 提取模型,获得文件名称,后缀,然后把不带后缀的名称提取出来当做输入框的文字以便修改
-        XMWifiTransModel *model = self.dataArr[indexPath.row];
-        NSString *extesionStr = [[model.fileName lowercaseString] pathExtension];
-        NSString *fileName = [model.fileName stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@".%@",extesionStr] withString:@""];
-        
-        //弹出
-        UIAlertController *tips = [UIAlertController alertControllerWithTitle:@"重命名" message:@"输入新的名称(不带后缀)" preferredStyle:UIAlertControllerStyleAlert];
+        __weak typeof(self) weakSelf = self;
+        UIAlertController *tips = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
         
         UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
-        __weak typeof(self) weakSelf = self;
-        UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action){
-            
-            // 获得输入内容
-            UITextField *textF = tips.textFields[0];
-            
-            NSString *newName = [NSString stringWithFormat:@"%@.%@",textF.text,extesionStr];
-            NSString *newFullPath = [model.rootPath stringByAppendingPathComponent:newName];
-            // 重命名,自己覆盖自己
-            NSError *error;
-            if ([[NSFileManager defaultManager] moveItemAtPath:model.fullPath toPath:newFullPath error:&error]){
-                [weakSelf refreshDate];
-//                [weakSelf.tableView reloadData];
-            }else{
-                [MBProgressHUD showMessage:@"名称已存在" toView:weakSelf.view];
-            }
-            
+        UIAlertAction *deleAction = [UIAlertAction actionWithTitle:@"删除" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action){
+            [weakSelf deleteOneCellAtIndexPath:indexPath];
+        }];
+        UIAlertAction *renameAction = [UIAlertAction actionWithTitle:@"重命名" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
+            [weakSelf renameFileAtIndexPath:indexPath];
+        }];
+        UIAlertAction *shareAction = [UIAlertAction actionWithTitle:@"分享" style: UIAlertActionStyleDefault  handler:^(UIAlertAction * _Nonnull action){
+            [weakSelf shareFileAtIndexPath:indexPath];
         }];
         
         [tips addAction:cancelAction];
-        [tips addAction:okAction];
-        [tips addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-            textField.text = fileName;
-        }];
-        [self presentViewController:tips animated:YES completion:nil];
+        [tips addAction:deleAction];
+        [tips addAction:renameAction];
+        [tips addAction:shareAction];
         
+        [self presentViewController:tips animated:YES completion:nil];
+    
     }
+    
+}
+
+
+/// 重命名文件
+- (void)renameFileAtIndexPath:(NSIndexPath *)indexPath{
+    // 提取模型,获得文件名称,后缀,然后把不带后缀的名称提取出来当做输入框的文字以便修改
+    XMWifiTransModel *model = self.dataArr[indexPath.row];
+    NSString *extesionStr = [[model.fileName lowercaseString] pathExtension];
+    NSString *fileName = [model.fileName stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@".%@",extesionStr] withString:@""];
+    //弹出
+    UIAlertController *tips = [UIAlertController alertControllerWithTitle:@"重命名" message:@"输入新的名称(不带后缀)" preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
+    __weak typeof(self) weakSelf = self;
+    UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action){
+        
+        // 获得输入内容
+        UITextField *textF = tips.textFields[0];
+        
+        NSString *newName = [NSString stringWithFormat:@"%@.%@",textF.text,extesionStr];
+        NSString *newFullPath = [model.rootPath stringByAppendingPathComponent:newName];
+        // 重命名,自己覆盖自己
+        NSError *error;
+        if ([[NSFileManager defaultManager] moveItemAtPath:model.fullPath toPath:newFullPath error:&error]){
+            [weakSelf refreshDate];
+        }else{
+            [MBProgressHUD showMessage:@"名称已存在" toView:weakSelf.view];
+        }
+        
+    }];
+    
+    [tips addAction:cancelAction];
+    [tips addAction:okAction];
+    [tips addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+        textField.text = fileName;
+    }];
+    [self presentViewController:tips animated:YES completion:nil];
+    
+}
+
+/// 分享文件
+- (void)shareFileAtIndexPath:(NSIndexPath *)indexPath{
+    XMWifiTransModel *model = self.dataArr[indexPath.row];
+    NSString *title = model.pureFileName;
+    NSURL *url = [NSURL fileURLWithPath:model.fullPath];
+    NSArray *params = @[title, url];
+    UIActivityViewController *actVC = [[UIActivityViewController alloc] initWithActivityItems:params applicationActivities:nil];
+    [self presentViewController:actVC animated:YES completion:nil];
     
 }
 

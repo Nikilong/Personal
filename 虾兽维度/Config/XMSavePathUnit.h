@@ -15,6 +15,8 @@ extern NSString *const XMWifiGroupNameFileName;
 
 /// app的documents路径
 + (NSString *)getDocumentsPath;
+/// app的tmp路径
++ (NSString *)getTmpPath;
 
 /// web模块收藏网页的文件保存路径
 + (NSString *)getSaveWebModelArchicerPath;

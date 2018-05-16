@@ -13,6 +13,9 @@
 #pragma mark 显示进度条
 + (void)showProgressInView:(UIView *)view mode:(MBProgressHUDMode)mode duration:(NSTimeInterval)duration title:(NSString *)title
 {
+    if (view == nil){
+        view = [UIApplication sharedApplication].keyWindow;
+    }
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:view animated:YES];
     // Set the bar determinate mode to show task progress.
     hud.mode = mode;
@@ -41,9 +44,25 @@
    
 }
 
+#pragma mark 显示加载动画
++ (MBProgressHUD *)showLoadingViewInView:(UIView *)view title:(NSString *)title
+{
+    if (view == nil){
+        view = [UIApplication sharedApplication].keyWindow;
+    }
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:view animated:YES];
+    // Set the bar determinate mode to show task progress.
+    hud.mode = MBProgressHUDModeIndeterminate;
+    hud.label.text = NSLocalizedString(title, @"HUD loading title");
+    return hud;
+}
+
 #pragma mark 显示信息
 + (void)show:(NSString *)text icon:(NSString *)icon view:(UIView *)view
 {
+    if (view == nil){
+        view = [UIApplication sharedApplication].keyWindow;
+    }
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:view animated:YES];
     
     // Set the custom view mode to show any view.
@@ -80,9 +99,14 @@
     
 }
 
-+ (void)showSuccess:(NSString *)success toView:(UIView *)view
++ (void)showSuccess
 {
-    [self show:success icon:@"Checkmark.png" view:view];
+    [self show:@"成功" icon:@"Checkmark.png" view:nil];
+}
+
++ (void)showFailed
+{
+    [self show:@"失败" icon:@"UNCheckmark.png" view:nil];
 }
 
 + (void)showMessage:(NSString *)text toView:(UIView *)view
