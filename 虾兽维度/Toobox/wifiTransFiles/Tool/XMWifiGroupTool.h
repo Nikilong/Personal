@@ -12,6 +12,8 @@
 
 extern NSString * const defaultGroupName;
 extern NSString * const allFilesGroupName;
+extern NSString * const backupGroupName;
+extern NSString * const settingZipFilePre;
 
 /**  文件夹操作方法 */
 /// 创建一个新文件夹
@@ -24,8 +26,6 @@ extern NSString * const allFilesGroupName;
 + (NSArray *)nonDeleteGroupNames;
 /// 更新XMWifiGroupName.wifign文件
 + (NSArray *)updateGroupNameFile;
-/// 返回默认文件夹名称
-//+ (NSString *)getDefaultGroupName;
 /// 更新当前文件夹
 + (void)upgradeCurrentGroupName:(NSString *)name;
 
@@ -50,4 +50,8 @@ extern NSString * const allFilesGroupName;
 + (BOOL)zipBackUpDirs;
 /// 压缩系统配置类文件,例如收藏网页文件,文件组民文件等
 + (BOOL)zipConfigFiles;
+/// 解压文件
++ (BOOL)unzipFileAtPath:(NSString *)path;
+/// 解压并同步本地配置文件
++ (BOOL)unzipSettingFilesAtPath:(NSString *)path;
 @end

@@ -326,6 +326,10 @@
 /** 临时方法,将webmodule关闭掉 */
 - (void)closeWebModule
 {
+    self.navigationController.navigationBarHidden = NO;
+    // 恢复状态栏颜色,原来的为空
+    self.statusBar.backgroundColor = nil;
+    [self.statusCover removeFromSuperview];
     [self.navigationController popViewControllerAnimated:YES];
 }
 

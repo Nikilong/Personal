@@ -13,10 +13,6 @@
 NSString * const XMWifiMainDirName = @"WifiTransPort";
 NSString * const XMWifiGroupNameFileName = @"XMWifiGroupName.wifign";
 
-/// web
-/// 收藏网页的文件名称
-//NSString * const XMSaveWebModelArchierName = @"webModel.archiver";
-
 @implementation XMSavePathUnit
 
 /// app的documents路径

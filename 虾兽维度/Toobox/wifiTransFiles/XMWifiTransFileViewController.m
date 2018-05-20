@@ -25,6 +25,8 @@
 #import "XMWebTableViewCell.h"
 #import "MBProgressHUD+NK.h"
 
+#import "SSZipArchive.h"
+
 @interface XMWifiTransFileViewController ()
 <XMWifiLeftTableViewControllerDelegate,
 UINavigationControllerDelegate,
@@ -62,10 +64,12 @@ UIImagePickerControllerDelegate>
 {
     if (!_toolBar)
     {
-        CGFloat toolH = 50;
+        CGFloat toolH = 44;
         CGFloat margin = 10;
+        CGFloat btnWH = 30;
+        CGFloat btnY = (toolH - btnWH) * 0.5;
         UIView *toolBar = [[UIView alloc] initWithFrame:CGRectMake(0, XMScreenH - toolH, XMScreenW, toolH)];
-        toolBar.backgroundColor = [UIColor lightGrayColor];
+        toolBar.backgroundColor = [UIColor colorWithRed:249/255.0 green:249/255.0 blue:249/255.0 alpha:1.0f];
         _toolBar = toolBar;
         UIWindow *window = [UIApplication sharedApplication].keyWindow;
         [window addSubview:toolBar];
@@ -77,26 +81,24 @@ UIImagePickerControllerDelegate>
         [allSelectBtn setTitle:@"全选所有" forState:UIControlStateNormal];
         [allSelectBtn setTitle:@"取消全选" forState:UIControlStateSelected];
         [allSelectBtn setTitleColor:[UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0] forState:UIControlStateNormal];
+        
+        [UIButton buttonWithType:UIButtonTypeSystem];
         // 删除按钮
-        UIButton *deleBtn = [[UIButton alloc] initWithFrame:CGRectMake(margin, 0, toolH, toolH)];
+        UIButton *deleBtn = [[UIButton alloc] initWithFrame:CGRectMake(margin, btnY, btnWH, btnWH)];
         self.toolBarDeleBtn = deleBtn;
         [toolBar addSubview:deleBtn];
         [deleBtn addTarget:self action:@selector(deleteSelectCell:) forControlEvents:UIControlEventTouchUpInside];
-//        [deleBtn setTitle:@"删除" forState:UIControlStateNormal];
-        [deleBtn setImage:[UIImage imageNamed:@"newui_disable_delete"] forState:UIControlStateDisabled];
-        [deleBtn setImage:[UIImage imageNamed:@"newui_able_delete"] forState:UIControlStateNormal];
-        [deleBtn setTitleColor:[UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0] forState:UIControlStateNormal];
-        [deleBtn setTitleColor:[UIColor grayColor] forState:UIControlStateDisabled];
+        [deleBtn setImage:[UIImage imageNamed:@"file_delete_disable"] forState:UIControlStateDisabled];
+        [deleBtn setImage:[UIImage imageNamed:@"file_delete_able"] forState:UIControlStateNormal];
         deleBtn.enabled = NO;
         
         // 移动按钮
-        UIButton *moveBtn = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetMaxX(deleBtn.frame), 0, toolH, toolH)];
+        UIButton *moveBtn = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetMaxX(deleBtn.frame) + 40, btnY, btnWH, btnWH)];
         self.toolBarMoveBtn = moveBtn;
         [toolBar addSubview:moveBtn];
         [moveBtn addTarget:self action:@selector(moveSelectCell:) forControlEvents:UIControlEventTouchUpInside];
-        [moveBtn setTitle:@"移动" forState:UIControlStateNormal];
-        [moveBtn setTitleColor:[UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0] forState:UIControlStateNormal];
-        [moveBtn setTitleColor:[UIColor grayColor] forState:UIControlStateDisabled];
+        [moveBtn setImage:[UIImage imageNamed:@"file_move_disable"] forState:UIControlStateDisabled];
+        [moveBtn setImage:[UIImage imageNamed:@"file_move_able"] forState:UIControlStateNormal];
         moveBtn.enabled = NO;
     }
     return _toolBar;
@@ -166,7 +168,9 @@ UIImagePickerControllerDelegate>
  - (void)refreshDate{
      [self.dataArr removeAllObjects];
      self.dataArr = [XMWifiGroupTool getCurrentGroupFiles];
-     [self.tableView reloadData];
+     dispatch_async(dispatch_get_main_queue(), ^{
+         [self.tableView reloadData];
+     });
 }
 
 
@@ -408,6 +412,10 @@ UIImagePickerControllerDelegate>
     if(succesFlag){
         [self.dataArr removeObjectAtIndex:indexPath.row];
         [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+        // 当删除了一个文件夹,还会把里面的文件也删除,需要刷新数据
+        if (model.isDir){
+            [self refreshDate];
+        }
         
     }else{
         [MBProgressHUD showMessage:[NSString stringWithFormat:@"删除失败>%@",error] toView:self.view];
@@ -477,7 +485,6 @@ UIImagePickerControllerDelegate>
     if (self.isMoveFilesMode){
         if([groupName isEqualToString:allFilesGroupName]){
             [MBProgressHUD showMessage:@"不可移动到该文件夹" toView:self.view];
-            
             return;
         }
         NSArray *seleArr = [self.tableView indexPathsForSelectedRows];
@@ -495,19 +502,19 @@ UIImagePickerControllerDelegate>
                 [MBProgressHUD showMessage:@"名称已存在" toView:self.view];
             }
         }
-        [self hideLeftView];
-        // 取消全选状态和设置删除和移动按钮不可用
-        self.toolBarSeleAllBtn.selected = NO;
-        self.toolBarDeleBtn.enabled = NO;
-        self.toolBarMoveBtn.enabled = NO;
     }else{
         // 一系列设置标题
         self.navTitleLab.text = groupName;
         [XMWifiGroupTool upgradeCurrentGroupName:groupName];
         [self refreshDate];
-        [self hideLeftView];
         
     }
+    
+    [self hideLeftView];
+    // 不论何种模式,点击了选择组别,取消全选状态和设置删除和移动按钮不可用
+    self.toolBarSeleAllBtn.selected = NO;
+    self.toolBarDeleBtn.enabled = NO;
+    self.toolBarMoveBtn.enabled = NO;
 }
 
 - (void)leftWifiTableViewControllerDidDeleteGroupName:(NSString *)groupName{
@@ -625,7 +632,20 @@ UIImagePickerControllerDelegate>
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
     if (editingStyle == UITableViewCellEditingStyleDelete){
-        [self deleteOneCellAtIndexPath:indexPath];
+        XMWifiTransModel *model = self.dataArr[indexPath.row];
+        // 如果是文件夹着弹出警告
+        if (model.isDir){
+            UIAlertController *tips = [UIAlertController alertControllerWithTitle:@"警告" message:@"你即将删除一个文件夹及里面的所有文件" preferredStyle:UIAlertControllerStyleActionSheet];
+            __weak typeof(self) weakSelf = self;
+            [tips addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+            [tips addAction:[UIAlertAction actionWithTitle:@"删除" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action){
+                [weakSelf deleteOneCellAtIndexPath:indexPath];
+            }]];
+            
+            [self presentViewController:tips animated:YES completion:nil];
+        }else{
+            [self deleteOneCellAtIndexPath:indexPath];
+        }
     }
     
 }
@@ -641,7 +661,7 @@ UIImagePickerControllerDelegate>
         // 退出编辑模式
         [self.tableView setEditing:NO animated:YES];
         self.toolBar.hidden = YES;
-        // 根据触摸点t推算indexPath
+        // 根据触摸点推算indexPath
         CGPoint point = [gest locationInView:self.tableView];
         NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:point];
         __weak typeof(self) weakSelf = self;
@@ -663,6 +683,28 @@ UIImagePickerControllerDelegate>
         [tips addAction:renameAction];
         [tips addAction:shareAction];
         
+        // 根据文件类型是否增加"解压"按钮
+        XMWifiTransModel *model = self.dataArr[indexPath.row];
+        if ([model.fileType isEqualToString:fileTypeZipName]){
+            [tips addAction:[UIAlertAction actionWithTitle:@"解压" style: UIAlertActionStyleDefault  handler:^(UIAlertAction * _Nonnull action){
+                BOOL success = [XMWifiGroupTool unzipFileAtPath:model.fullPath];
+                [MBProgressHUD showResult:success message:nil];
+                if (success){
+                    [weakSelf refreshDate];
+                   
+                }
+            }]];
+            // 如果是配置文件的zip文件,还多一个同步到本地的选项
+            if ([model.fullPath containsString:[NSString stringWithFormat:@"%@/%@",backupGroupName,settingZipFilePre]]){
+                [tips addAction:[UIAlertAction actionWithTitle:@"更新本地配置文件" style: UIAlertActionStyleDefault  handler:^(UIAlertAction * _Nonnull action){
+                    BOOL success = [XMWifiGroupTool unzipSettingFilesAtPath:model.fullPath];
+                    [MBProgressHUD showResult:success message:((success)? @"更新本地配置文件成功":@"更新本地配置文件失败")];
+            
+                    [weakSelf refreshDate];
+                }]];
+            }
+        }
+        
         [self presentViewController:tips animated:YES completion:nil];
     
     }
@@ -675,7 +717,7 @@ UIImagePickerControllerDelegate>
     // 提取模型,获得文件名称,后缀,然后把不带后缀的名称提取出来当做输入框的文字以便修改
     XMWifiTransModel *model = self.dataArr[indexPath.row];
     NSString *extesionStr = [[model.fileName lowercaseString] pathExtension];
-    NSString *fileName = [model.fileName stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@".%@",extesionStr] withString:@""];
+    NSString *fileName = [[model.fileName lastPathComponent] stringByDeletingPathExtension];;
     //弹出
     UIAlertController *tips = [UIAlertController alertControllerWithTitle:@"重命名" message:@"输入新的名称(不带后缀)" preferredStyle:UIAlertControllerStyleAlert];
     

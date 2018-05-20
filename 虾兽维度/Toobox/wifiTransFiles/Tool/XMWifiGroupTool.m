@@ -14,23 +14,41 @@
 
 NSString * const defaultGroupName = @"默认";
 NSString * const allFilesGroupName = @"所有";
+NSString * const backupGroupName = @"备份";
+NSString * const settingZipFilePre = @"config";
 
 static NSString *currentGroupName = @"默认";
-static NSString *backupGroupName = @"备份";
+
+/// 返回一个数组,包含所有配置类文件的全路径
++ (NSArray *)getSettingFilesPaths{
+    return @[[XMSavePathUnit getHiwebHomeUrlPath],[XMSavePathUnit getWifiGroupNameFilePath],[XMSavePathUnit getSaveWebModelArchicerPath]];
+}
 
 #pragma mark - 压缩解压类,备份类
-/// 压缩系统配置类文件,例如收藏网页文件,文件组民文件等
+#pragma mark 压缩
+/// 压缩系统配置类文件,例如收藏网页文件,文件组名文件等
 + (BOOL)zipConfigFiles{
-    NSString *zipPath = [NSString stringWithFormat:@"%@/%@/config_%@.zip",[XMSavePathUnit getWifiUploadDirPath],backupGroupName,[self getNowTimeTimestamp]];
-    NSArray *saveFilesPathArr =@[[XMSavePathUnit getHiwebHomeUrlPath],[XMSavePathUnit getWifiGroupNameFilePath],[XMSavePathUnit getSaveWebModelArchicerPath]];
+    // 先检查"备份"文件夹是否存在
+    NSString *backupDirPath = [[XMSavePathUnit getWifiUploadDirPath] stringByAppendingPathComponent:backupGroupName];
+    if (![[NSFileManager defaultManager] fileExistsAtPath:backupDirPath]){
+        [[NSFileManager defaultManager] createDirectoryAtPath:backupDirPath withIntermediateDirectories:YES attributes:nil error:nil];
+    }
+    // 保存到"备份"文件夹 ..../备份/config_日期.zip
+    NSString *zipPath = [NSString stringWithFormat:@"%@/%@_%@.zip",backupDirPath,settingZipFilePre,[self getNowTimeTimestamp]];
+    NSArray *saveFilesPathArr =[self getSettingFilesPaths];
     // 压缩多个文件
     return [SSZipArchive createZipFileAtPath:zipPath withFilesAtPaths:saveFilesPathArr];
 }
 
 /// 压缩带有标记备份的文件夹
 + (BOOL)zipBackUpDirs{
-    NSString *zipPath = [NSString stringWithFormat:@"%@/%@/dirs_%@.zip",[XMSavePathUnit getWifiUploadDirPath],backupGroupName,[self getNowTimeTimestamp]];
-    NSString *tmpDirPatn = [NSString stringWithFormat:@"%@/backup",[XMSavePathUnit getTmpPath]];
+    // 先检查"备份"文件夹是否存在
+    NSString *backupDirPath = [[XMSavePathUnit getWifiUploadDirPath] stringByAppendingPathComponent:backupGroupName];
+    if (![[NSFileManager defaultManager] fileExistsAtPath:backupDirPath]){
+        [[NSFileManager defaultManager] createDirectoryAtPath:backupDirPath withIntermediateDirectories:YES attributes:nil error:nil];
+    }
+    NSString *zipPath = [NSString stringWithFormat:@"%@/dirs_%@.zip",backupDirPath,[self getNowTimeTimestamp]];
+    NSString *tmpDirPatn = [[XMSavePathUnit getTmpPath] stringByAppendingPathComponent:@"backup"];
     // 备份前检查临时文件是否存在,没有就创建空文件夹,有就删除
     if (![[NSFileManager defaultManager] fileExistsAtPath:tmpDirPatn]){
         [[NSFileManager defaultManager] createDirectoryAtPath:tmpDirPatn withIntermediateDirectories:YES attributes:nil error:nil];
@@ -50,6 +68,42 @@ static NSString *backupGroupName = @"备份";
     return success;
 }
 
+#pragma mark 解压
++ (BOOL)unzipFileAtPath:(NSString *)path{
+    NSString *newPath = [path stringByDeletingPathExtension];
+    return [SSZipArchive unzipFileAtPath:path toDestination:newPath];
+}
+
+
+/// 解压并同步本地配置文件
++ (BOOL)unzipSettingFilesAtPath:(NSString *)path{
+    NSString *newPath = [[XMSavePathUnit getTmpPath] stringByAppendingPathComponent:@"setting"];
+    NSFileManager *fileM = [NSFileManager defaultManager];
+    // 确保文件夹是空的
+    if (![fileM fileExistsAtPath:newPath]){
+        [fileM createDirectoryAtPath:newPath withIntermediateDirectories:YES attributes:nil error:nil];
+    }else{
+        [fileM removeItemAtPath:newPath error:nil];
+        [fileM createDirectoryAtPath:newPath withIntermediateDirectories:YES attributes:nil error:nil];
+    }
+    if([SSZipArchive unzipFileAtPath:path toDestination:newPath]){
+        NSArray *saveFilesPathArr =[self getSettingFilesPaths];
+        BOOL result = YES;
+        NSString *destPath = @""; // 移动的目标位置
+        for (NSString *filePath in saveFilesPathArr){
+            destPath = [newPath stringByAppendingPathComponent:[filePath lastPathComponent]];
+            // 替换
+            if (![fileM replaceItemAtURL:[NSURL fileURLWithPath:filePath] withItemAtURL:[NSURL fileURLWithPath:destPath] backupItemName:nil options:0 resultingItemURL:nil error:nil]){
+                result = NO;
+            }
+            
+        }
+        // 移除tmp中的文件夹
+        [fileM removeItemAtPath:newPath error:nil];
+        return result;
+    }
+    return NO;
+}
 
 #pragma mark - 文件夹操作类
 /// 返回所有(不可编辑)文件夹的名称
@@ -61,7 +115,6 @@ static NSString *backupGroupName = @"备份";
 + (NSArray *)groupNameDirsModels{
     if([[NSFileManager defaultManager] fileExistsAtPath:[XMSavePathUnit  getWifiGroupNameFilePath]]){
         return [NSKeyedUnarchiver unarchiveObjectWithFile:[XMSavePathUnit getWifiGroupNameFilePath]];
-//        return [NSArray arrayWithContentsOfFile:[XMSavePathUnit getWifiGroupNameFilePath]];
     }else{
         // 初始化默认分组
         NSArray *defaultArr = @[(defaultGroupName),(backupGroupName),@"分组1",@"分组2"];
@@ -82,17 +135,6 @@ static NSString *backupGroupName = @"备份";
         
         // 先创建文件
         [self saveGroupMessageWithNewArray:dirModelArr];
-        // 在沙盒创建默认的分组
-//        for (NSString *name in defaultArr){
-//            [self creatNewWifiFilesGroupWithName:name isBackup:NO];
-//            XMWifiTransModel *model = [[XMWifiTransModel alloc] init];
-//            model.groupName = name;
-//            model.isBackup = YES;
-//            [dirModelArr addObject:model];
-//        }
-//        NSArray *dirsArr = [self updateGroupNameFile];
-        // 将最终的结果保存
-//        [self saveGroupMessageWithNewArray:dirsArr];
         return [self updateGroupNameFile];
     }
     return nil;
@@ -163,14 +205,12 @@ static NSString *backupGroupName = @"备份";
             [dirsArr addObject:model];
         }
     }
-//    [self saveGroupMessageWithNewArray:dirsArr];
     [self saveGroupMessageWithNewArray:dirsArr];
     return dirsArr;
 }
 
 /// 将文件夹组写进沙盒
 + (void)saveGroupMessageWithNewArray:(NSArray *)newArr{
-//    [newArr writeToFile:[XMSavePathUnit getWifiGroupNameFilePath] atomically:YES];
     [NSKeyedArchiver archiveRootObject:newArr toFile:[XMSavePathUnit getWifiGroupNameFilePath]];
 }
 
@@ -190,12 +230,6 @@ static NSString *backupGroupName = @"备份";
     }
 }
 
-
-/// 返回默认文件夹名称
-+ (NSString *)getDefaultGroupName{
-    return defaultGroupName;
-}
-
 /// 返回文件夹目录下的所有文件
 + (NSMutableArray *)getCurrentGroupFiles{
     NSString *groupFullPath = [self getCurrentGroupPath];
@@ -203,33 +237,9 @@ static NSString *backupGroupName = @"备份";
     if([currentGroupName isEqualToString:allFilesGroupName]){
         isAllFile = YES;
     }
-    
+    // 如果文件夹路径存在,则让模型处理
     if([[NSFileManager defaultManager] fileExistsAtPath:groupFullPath]){
-        NSMutableArray *fileFilterArr = [NSMutableArray array];
-        NSArray *fileArr = [[NSFileManager defaultManager] subpathsAtPath:groupFullPath];
-        BOOL dirFlag;
-        NSDictionary *dict = @{};
-        for (NSString *ele in fileArr) {
-            if([ele containsString:@"DS_Store"]) continue;
-            // "所有"要过滤空文件夹
-            if (isAllFile){
-                dirFlag = NO;
-                [[NSFileManager defaultManager] fileExistsAtPath:[NSString stringWithFormat:@"%@/%@",groupFullPath,ele] isDirectory:&dirFlag];
-                if(dirFlag ) continue;
-            }
-            // 转换为模型
-            XMWifiTransModel *model = [[XMWifiTransModel alloc] init];
-            dict = [[NSFileManager defaultManager] attributesOfItemAtPath:[NSString stringWithFormat:@"%@/%@",groupFullPath,ele] error:nil];
-            model.fileName = ele;
-            model.pureFileName = [[ele componentsSeparatedByString:@"/"] lastObject];
-            model.prePath = [model.fileName stringByReplacingOccurrencesOfString:model.pureFileName withString:@""];
-            model.rootPath = groupFullPath;
-            model.fullPath = [NSString stringWithFormat:@"%@/%@",groupFullPath,ele];
-            model.size = dict.fileSize/1024.0/1024.0;
-            [fileFilterArr addObject:model];
-            
-        }
-        return fileFilterArr;
+        return [XMWifiTransModel getFilesModelAtDirFullPath:groupFullPath isReturnAllFile:isAllFile];
     }else{
         return nil;
     }

@@ -13,7 +13,7 @@ double const XMLeftViewTotalW = 200;
 double const XMLeftViewPadding = 10;
 
 // 左侧边栏(wifi传输)
-double const XMWifiLeftViewTotalW = 160;
+double const XMWifiLeftViewTotalW = 161;
 
 @implementation XMGlobalConst
 

@@ -99,6 +99,13 @@
     
 }
 
++ (void)showResult:(BOOL)result message:(NSString *)message{
+    if (message == nil){
+        message = result ? @"成功" : @"失败";
+    }
+    [self show:message icon:((result)? @"Checkmark.png":@"UNCheckmark.png") view:nil];
+}
+
 + (void)showSuccess
 {
     [self show:@"成功" icon:@"Checkmark.png" view:nil];

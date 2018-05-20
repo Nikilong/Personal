@@ -38,13 +38,25 @@
 
 
 #pragma mark - Table view data source
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
+    return 5;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
+    return (section == 0) ? 20 : 5;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return (indexPath.section == 0) ? 100 : 40;
+}
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
     return 3;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (section == 0){
-        return 2;
+        return 1;
     }else if(section == 1){
         return [XMWifiGroupTool nonDeleteGroupNames].count;
     }else{
@@ -63,7 +75,8 @@
     }
     
     if (indexPath.section == 0){
-        cell.textLabel.text = (indexPath.row == 0) ? @"添加分组" : @"备份文件";
+//        cell.textLabel.text = (indexPath.row == 0) ? @"添加分组" : @"备份文件";
+        [cell.contentView addSubview:[self setSectionOneCustomView]];
     }else if (indexPath.section == 1){
         cell.textLabel.text = [XMWifiGroupTool nonDeleteGroupNames][indexPath.row];
     }else{
@@ -82,55 +95,12 @@
     // 取消选中状态
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (indexPath.section == 0){
-        if(indexPath.row == 0){  // 创建新文件夹
-            
-            __weak typeof(self) weakSelf = self;
-            UIAlertController *tips = [UIAlertController alertControllerWithTitle:@"创建新文件夹(不能超过6个字)" message:@"输入新名称" preferredStyle:UIAlertControllerStyleAlert];
-            UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
-            UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action){
-                // 当点击确定执行的块代码
-                UITextField *textF = tips.textFields[0];
-                UITextField *backF = tips.textFields[1];
-                BOOL isBackup = (backF.text.length > 0 ) ? YES : NO;
-                [XMWifiGroupTool creatNewWifiFilesGroupWithName:textF.text isBackup:isBackup];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    
-                    [weakSelf refreshData];
-                });
-            }];
-            
-            [tips addAction:cancelAction];
-            [tips addAction:okAction];
-            [tips addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-                textField.placeholder = @"新文件夹名称";
-            }];
-            [tips addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-                textField.placeholder = @"随便输入要备份,不输入不备份";
-            }];
-            [self presentViewController:tips animated:YES completion:nil];
-        
-        
-        }else if(indexPath.row == 1){  // 刷新列表
-            dispatch_async(dispatch_get_main_queue(), ^{
-                MBProgressHUD *hud = [MBProgressHUD showLoadingViewInView:nil title:@"loading"];
-                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                    BOOL success = [XMWifiGroupTool zipBackUpDirs];
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [hud hideAnimated:YES];
-                        if (success){
-                            [MBProgressHUD showSuccess];
-                        }else{
-                            [MBProgressHUD showMessage:@"失败" toView:nil];
-                        }
-                    });
-                });
-                
-            });
-            return;
-            [self.groupNameArr removeAllObjects];
-            self.groupNameArr = [NSMutableArray arrayWithArray:[XMWifiGroupTool updateGroupNameFile]];
-            [self.tableView reloadData];
-        }
+    
+//        if(indexPath.row == 0){  // 创建新文件夹
+//            
+//        }else if(indexPath.row == 1){  // 刷新列表
+//           
+//        }
     }else{
 
         NSString *groupName;
@@ -144,6 +114,107 @@
             [self.delegate leftWifiTableViewControllerDidSelectGroupName:groupName];
         }
     }
+}
+
+#pragma mark 第一组的按钮创建以及点击方法
+/// 左侧栏第一组自定义按钮
+- (UIView *)setSectionOneCustomView{
+    UIView *contentV = [[UIView alloc] init];
+    // 每一行排3个按钮
+    NSUInteger colMax = 3;
+    CGFloat btnWH = ( XMWifiLeftViewTotalW - (colMax + 3) * XMLeftViewPadding ) / colMax;
+    // 创建分组
+    UIButton *creatGroupBtn = [self addSystemButtonWithImageName:@"dir_add" selector:@selector(creatNewGroup) parentView:contentV];
+    creatGroupBtn.frame = CGRectMake(XMLeftViewPadding, XMLeftViewPadding, btnWH, btnWH);
+    // 刷新组列表
+    UIButton *refreshGroupBtn = [self addSystemButtonWithImageName:@"dir_fresh" selector:@selector(refreshGroupData) parentView:contentV];
+    refreshGroupBtn.frame = CGRectMake(CGRectGetMaxX(creatGroupBtn.frame) + XMLeftViewPadding, XMLeftViewPadding, btnWH, btnWH);
+    // 备份配置文件
+    UIButton *backFileBtn = [self addSystemButtonWithImageName:@"setting_backup" selector:@selector(backupConfigFiles) parentView:contentV];
+    backFileBtn.frame = CGRectMake(CGRectGetMaxX(refreshGroupBtn.frame) + XMLeftViewPadding, XMLeftViewPadding, btnWH, btnWH);
+    // 备份文件夹
+    UIButton *backDirBtn = [self addSystemButtonWithImageName:@"dir_backup" selector:@selector(backupDirFiles) parentView:contentV];
+    backDirBtn.frame = CGRectMake(XMLeftViewPadding, CGRectGetMaxY(backFileBtn.frame) + XMLeftViewPadding, btnWH, btnWH);
+    // 最后根据按钮的个数和行数计算contentV的高度
+    contentV.frame = CGRectMake(0, 0, XMWifiLeftViewTotalW, CGRectGetMaxY(backDirBtn.frame) + 3 * XMLeftViewPadding);
+    return contentV;
+}
+
+- (void)creatNewGroup{
+    __weak typeof(self) weakSelf = self;
+    UIAlertController *tips = [UIAlertController alertControllerWithTitle:@"创建新文件夹(不能超过6个字)" message:@"输入新名称" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
+    UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action){
+        // 当点击确定执行的块代码
+        UITextField *textF = tips.textFields[0];
+        UITextField *backF = tips.textFields[1];
+        BOOL isBackup = (backF.text.length > 0 ) ? YES : NO;
+        [XMWifiGroupTool creatNewWifiFilesGroupWithName:textF.text isBackup:isBackup];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            [weakSelf refreshData];
+        });
+    }];
+    
+    [tips addAction:cancelAction];
+    [tips addAction:okAction];
+    [tips addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+        textField.placeholder = @"新文件夹名称";
+    }];
+    [tips addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+        textField.placeholder = @"随便输入要备份,不输入不备份";
+    }];
+    [self presentViewController:tips animated:YES completion:nil];
+}
+
+- (void)refreshGroupData{
+    [XMWifiGroupTool updateGroupNameFile];
+    [self refreshData];
+}
+
+- (void)backupConfigFiles{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        MBProgressHUD *hud = [MBProgressHUD showLoadingViewInView:nil title:@"loading"];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            BOOL success = [XMWifiGroupTool zipConfigFiles];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [hud hideAnimated:YES];
+                [MBProgressHUD showResult:success message:nil];
+            });
+        });
+        
+    });
+}
+
+- (void)backupDirFiles{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        MBProgressHUD *hud = [MBProgressHUD showLoadingViewInView:nil title:@"loading"];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            BOOL success = [XMWifiGroupTool zipBackUpDirs];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [hud hideAnimated:YES];
+                [MBProgressHUD showResult:success message:nil];
+            });
+        });
+        
+    });
+}
+
+- (UIButton *)addButtonWithTitle:(NSString *)title selector:(SEL)selctror parentView:(UIView *)parentView{
+    UIButton *btn = [[UIButton alloc] init];
+    [parentView addSubview:btn];
+    [btn addTarget:self action:selctror forControlEvents:UIControlEventTouchUpInside];
+    [btn setTitle:title forState:UIControlStateNormal];
+    [btn setTitleColor:[UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0] forState:UIControlStateNormal];
+    return btn;
+}
+
+- (UIButton *)addSystemButtonWithImageName:(NSString *)imageName selector:(SEL)selctror parentView:(UIView *)parentView{
+    UIButton *btn = [UIButton buttonWithType:UIButtonTypeSystem];
+    [parentView addSubview:btn];
+    [btn addTarget:self action:selctror forControlEvents:UIControlEventTouchUpInside];
+    [btn setImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
+    return btn;
 }
 
 #pragma mark 编辑操作

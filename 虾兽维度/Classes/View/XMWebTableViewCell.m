@@ -53,19 +53,17 @@
         _title.text = wifiModel.pureFileName;
     }
     // 设置图片
-    if ([@"png|jpg|jpeg" containsString:wifiModel.fileName.pathExtension]){
+    if ([wifiModel.fileType isEqualToString:@"image"]){
         _imageV.contentMode = UIViewContentModeScaleAspectFill;
         _imageV.image = [UIImage imageWithContentsOfFile:wifiModel.fullPath];
     }else{
         _imageV.contentMode = UIViewContentModeScaleAspectFit;
-        UIImage *image = [UIImage imageNamed:[NSString stringWithFormat:@"documents_icon_%@",wifiModel.fileName.pathExtension]];
+        UIImage *image = [UIImage imageNamed:[NSString stringWithFormat:@"MISFileType.bundle/icon_%@", wifiModel.fileType]];
         if (!image){
-            image = [UIImage imageNamed:@"documents_icon_other"];
+            image = [UIImage imageNamed:@"MISFileType.bundle/icon_unknown"];
         }
         _imageV.image = image;
     }
-    
-    
 
 }
 
@@ -103,7 +101,6 @@
     XMWebTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ID];
     
     if (cell == nil) {
-//        NSLog(@"---XMWebTableViewCell-----build cell====");
         cell = [[[NSBundle mainBundle] loadNibNamed:@"XMWebTableViewCell" owner:nil options:nil] lastObject];
     }
     
