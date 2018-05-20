@@ -74,15 +74,21 @@ UIImagePickerControllerDelegate>
         UIWindow *window = [UIApplication sharedApplication].keyWindow;
         [window addSubview:toolBar];
         // 全选/反选
-        UIButton *allSelectBtn = [[UIButton alloc] initWithFrame:CGRectMake(XMScreenW - toolH * 2 - margin, 0, toolH * 2, toolH)];
+        UIButton *allSelectBtn = [UIButton buttonWithType:UIButtonTypeSystem];
+        allSelectBtn.frame = CGRectMake(XMScreenW - toolH * 2 - margin, 0, toolH * 2, toolH);
         self.toolBarSeleAllBtn = allSelectBtn;
         [toolBar addSubview:allSelectBtn];
         [allSelectBtn addTarget:self action:@selector(selectAllCell:) forControlEvents:UIControlEventTouchUpInside];
         [allSelectBtn setTitle:@"全选所有" forState:UIControlStateNormal];
         [allSelectBtn setTitle:@"取消全选" forState:UIControlStateSelected];
-        [allSelectBtn setTitleColor:[UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0] forState:UIControlStateNormal];
         
-        [UIButton buttonWithType:UIButtonTypeSystem];
+        // 退出编辑
+        UIButton *cancelBtn = [UIButton buttonWithType:UIButtonTypeSystem];
+        cancelBtn.frame = CGRectMake(CGRectGetMinX(allSelectBtn.frame) - margin - toolH, 0, toolH, toolH);
+        [toolBar addSubview:cancelBtn];
+        [cancelBtn addTarget:self action:@selector(cancelEdit:) forControlEvents:UIControlEventTouchUpInside];
+        [cancelBtn setTitle:@"取消" forState:UIControlStateNormal];
+        
         // 删除按钮
         UIButton *deleBtn = [[UIButton alloc] initWithFrame:CGRectMake(margin, btnY, btnWH, btnWH)];
         self.toolBarDeleBtn = deleBtn;
@@ -181,17 +187,17 @@ UIImagePickerControllerDelegate>
     UIBarButtonItem *backBtn = [[UIBarButtonItem alloc] initWithTitle:@"返回" style:UIBarButtonItemStylePlain target:self action:@selector(dismissCurrentViewController)];
     // 编辑模式
     UIBarButtonItem *editBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(setEditMode)];
-    // 从相册添加图片
-    UIBarButtonItem *addBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addImageFromAlbum)];
-    self.navigationItem.leftBarButtonItems = @[backBtn,editBtn,addBtn];
+    self.navigationItem.leftBarButtonItems = @[backBtn,editBtn];
+    
     // 右边为打开wifi的按钮 wifiopen
     UIButton *wifiBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, btnWH, btnWH)];
     [wifiBtn setImage:[UIImage imageNamed:@"wifiopen"] forState:UIControlStateSelected];
     [wifiBtn setImage:[UIImage imageNamed:@"wificlose"] forState:UIControlStateNormal];
     [wifiBtn addTarget:self action:@selector(switchHttpServerConnect:) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *wifiBarBtn = [[UIBarButtonItem alloc] initWithCustomView:wifiBtn];
-    UIBarButtonItem *ipBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemBookmarks target:self action:@selector(showIP)];
-    self.navigationItem.rightBarButtonItems = @[wifiBarBtn,ipBtn];
+    // 从相册添加图片
+    UIBarButtonItem *addBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addImageFromAlbum)];
+    self.navigationItem.rightBarButtonItems = @[wifiBarBtn,addBtn];
     
     // 设置标题
     UILabel *titleLab = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 44)];
@@ -200,10 +206,17 @@ UIImagePickerControllerDelegate>
     titleLab.textColor = [UIColor blackColor];
     titleLab.textAlignment = NSTextAlignmentCenter;
     titleLab.text = defaultGroupName;
-    // 添加刷新手势
+    // 添加双击刷新手势
     UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(navTitleViewDidDoubleTap)];
     doubleTap.numberOfTapsRequired = 2;
     [titleLab addGestureRecognizer:doubleTap];
+    
+    // 添加单击显示IP信息
+    UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showIP)];
+    [titleLab addGestureRecognizer:singleTap];
+    
+    // 解决单击和双击同时触发问题,只有双击失败时才允许单击
+    [singleTap requireGestureRecognizerToFail:doubleTap];
     self.navigationItem.titleView = titleLab;
     self.navigationItem.titleView.userInteractionEnabled = YES;
     
@@ -280,7 +293,6 @@ UIImagePickerControllerDelegate>
 /// 导航栏双击刷新
 - (void)navTitleViewDidDoubleTap{
     [self refreshDate];
-//    [self.tableView reloadData];
 }
 
 
@@ -392,8 +404,7 @@ UIImagePickerControllerDelegate>
             [self deleteOneCellAtIndexPath:indexPath];
         }
     }
-    [self.tableView setEditing:NO animated:YES];
-    self.toolBar.hidden = YES;
+    [self cancelEdit:nil];
 }
 
 /// 根据indexPath删除单个cell
@@ -420,6 +431,12 @@ UIImagePickerControllerDelegate>
     }else{
         [MBProgressHUD showMessage:[NSString stringWithFormat:@"删除失败>%@",error] toView:self.view];
     }
+}
+
+/// 退出编辑模式
+- (void)cancelEdit:(UIButton *)btn{
+    [self.tableView setEditing:NO animated:YES];
+    self.toolBar.hidden = YES;
 }
 
 #pragma mark 左侧栏
@@ -659,8 +676,7 @@ UIImagePickerControllerDelegate>
 - (void)longPressToEditCell:(UILongPressGestureRecognizer *)gest{
     if (gest.state == UIGestureRecognizerStateBegan){
         // 退出编辑模式
-        [self.tableView setEditing:NO animated:YES];
-        self.toolBar.hidden = YES;
+        [self cancelEdit:nil];
         // 根据触摸点推算indexPath
         CGPoint point = [gest locationInView:self.tableView];
         NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:point];

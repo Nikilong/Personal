@@ -10,7 +10,7 @@
 
 extern NSString *const XMWifiMainDirName;
 extern NSString *const XMWifiGroupNameFileName;
-
+extern NSString * const XMWifiGroupMarkZipFileName;
 @interface XMSavePathUnit : NSObject
 
 /// app的documents路径
@@ -28,5 +28,11 @@ extern NSString *const XMWifiGroupNameFileName;
 + (NSString *)getWifiUploadDirPath;
 /// wifi传输组名列表保存路径
 + (NSString *)getWifiGroupNameFilePath;
+/// wifi传输需要压缩备份的组名列表保存路径
++ (NSString *)getWifiGroupMarkZipFilePath;
+
+
+/// 返回一个数组,包含所有配置类文件的全路径
++ (NSArray *)getSettingFilesPaths;
 
 @end

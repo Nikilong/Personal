@@ -75,7 +75,8 @@
     }
     
     if (indexPath.section == 0){
-//        cell.textLabel.text = (indexPath.row == 0) ? @"添加分组" : @"备份文件";
+        // 该组的cell不可点击
+        [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
         [cell.contentView addSubview:[self setSectionOneCustomView]];
     }else if (indexPath.section == 1){
         cell.textLabel.text = [XMWifiGroupTool nonDeleteGroupNames][indexPath.row];
@@ -94,25 +95,16 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     // 取消选中状态
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if (indexPath.section == 0){
-    
-//        if(indexPath.row == 0){  // 创建新文件夹
-//            
-//        }else if(indexPath.row == 1){  // 刷新列表
-//           
-//        }
-    }else{
 
-        NSString *groupName;
-        if (indexPath.section == 1){
-            groupName = [XMWifiGroupTool nonDeleteGroupNames][indexPath.row];
-        }else if (indexPath.section == 2){
-            XMWifiTransModel *model = self.groupNameArr[indexPath.row];
-            groupName = model.groupName;
-        }
-        if ([self.delegate respondsToSelector:@selector(leftWifiTableViewControllerDidSelectGroupName:)]){
-            [self.delegate leftWifiTableViewControllerDidSelectGroupName:groupName];
-        }
+    NSString *groupName;
+    if (indexPath.section == 1){
+        groupName = [XMWifiGroupTool nonDeleteGroupNames][indexPath.row];
+    }else if (indexPath.section == 2){
+        XMWifiTransModel *model = self.groupNameArr[indexPath.row];
+        groupName = model.groupName;
+    }
+    if ([self.delegate respondsToSelector:@selector(leftWifiTableViewControllerDidSelectGroupName:)]){
+        [self.delegate leftWifiTableViewControllerDidSelectGroupName:groupName];
     }
 }
 
@@ -140,6 +132,7 @@
     return contentV;
 }
 
+/// 创建分组
 - (void)creatNewGroup{
     __weak typeof(self) weakSelf = self;
     UIAlertController *tips = [UIAlertController alertControllerWithTitle:@"创建新文件夹(不能超过6个字)" message:@"输入新名称" preferredStyle:UIAlertControllerStyleAlert];
@@ -167,11 +160,14 @@
     [self presentViewController:tips animated:YES completion:nil];
 }
 
+/// 刷新数据
 - (void)refreshGroupData{
     [XMWifiGroupTool updateGroupNameFile];
     [self refreshData];
 }
 
+
+/// 备份设置文件
 - (void)backupConfigFiles{
     dispatch_async(dispatch_get_main_queue(), ^{
         MBProgressHUD *hud = [MBProgressHUD showLoadingViewInView:nil title:@"loading"];
@@ -186,6 +182,7 @@
     });
 }
 
+/// 备份标记的文件夹
 - (void)backupDirFiles{
     dispatch_async(dispatch_get_main_queue(), ^{
         MBProgressHUD *hud = [MBProgressHUD showLoadingViewInView:nil title:@"loading"];
@@ -256,7 +253,10 @@
     }];
     UIAlertAction *backupAction = [UIAlertAction actionWithTitle:( model.isBackup ? @"取消备份" : @"标记备份") style: UIAlertActionStyleDefault  handler:^(UIAlertAction * _Nonnull action){
         model.isBackup = !model.isBackup;
+        // 更新文件的model归档
         [XMWifiGroupTool saveGroupMessageWithNewArray:weakSelf.groupNameArr];
+        // 更新保存标记的文件
+        [XMWifiGroupTool updateZipMarkGroupName:model.groupName isMark:model.isBackup];
         [weakSelf refreshData];
     }];
     

@@ -26,6 +26,8 @@ extern NSString * const settingZipFilePre;
 + (NSArray *)nonDeleteGroupNames;
 /// 更新XMWifiGroupName.wifign文件
 + (NSArray *)updateGroupNameFile;
+/// 当增加标记或者取消备份的标记,需要更新记录zip的文件
++ (void)updateZipMarkGroupName:(NSString *)name isMark:(BOOL)isMark;
 /// 更新当前文件夹
 + (void)upgradeCurrentGroupName:(NSString *)name;
 

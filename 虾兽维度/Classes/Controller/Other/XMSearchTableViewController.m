@@ -44,12 +44,13 @@ static NSString *const kEngine = @"engine";
         NSDictionary *sogouDict = @{kName : @"搜狗",
                                      kEngine : @"https://www.sogou.com/web?query="
                                      };
-//        NSDictionary *googleDict = @{@"name" : @"谷歌",
-//                                   @"engine" : @""
-//                                   };
+        NSDictionary *googleDict = @{@"name" : @"谷歌",
+                                   @"engine" : @"https://www.google.com/search?q="
+                                   };
         [_engineArr addObject:bingDict];
         [_engineArr addObject:baiduDict];
         [_engineArr addObject:sogouDict];
+        [_engineArr addObject:googleDict];
 
     }
     return _engineArr;

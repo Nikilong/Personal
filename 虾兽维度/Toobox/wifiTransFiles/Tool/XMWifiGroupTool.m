@@ -19,11 +19,6 @@ NSString * const settingZipFilePre = @"config";
 
 static NSString *currentGroupName = @"默认";
 
-/// 返回一个数组,包含所有配置类文件的全路径
-+ (NSArray *)getSettingFilesPaths{
-    return @[[XMSavePathUnit getHiwebHomeUrlPath],[XMSavePathUnit getWifiGroupNameFilePath],[XMSavePathUnit getSaveWebModelArchicerPath]];
-}
-
 #pragma mark - 压缩解压类,备份类
 #pragma mark 压缩
 /// 压缩系统配置类文件,例如收藏网页文件,文件组名文件等
@@ -35,7 +30,7 @@ static NSString *currentGroupName = @"默认";
     }
     // 保存到"备份"文件夹 ..../备份/config_日期.zip
     NSString *zipPath = [NSString stringWithFormat:@"%@/%@_%@.zip",backupDirPath,settingZipFilePre,[self getNowTimeTimestamp]];
-    NSArray *saveFilesPathArr =[self getSettingFilesPaths];
+    NSArray *saveFilesPathArr =[XMSavePathUnit getSettingFilesPaths];
     // 压缩多个文件
     return [SSZipArchive createZipFileAtPath:zipPath withFilesAtPaths:saveFilesPathArr];
 }
@@ -50,11 +45,10 @@ static NSString *currentGroupName = @"默认";
     NSString *zipPath = [NSString stringWithFormat:@"%@/dirs_%@.zip",backupDirPath,[self getNowTimeTimestamp]];
     NSString *tmpDirPatn = [[XMSavePathUnit getTmpPath] stringByAppendingPathComponent:@"backup"];
     // 备份前检查临时文件是否存在,没有就创建空文件夹,有就删除
-    if (![[NSFileManager defaultManager] fileExistsAtPath:tmpDirPatn]){
-        [[NSFileManager defaultManager] createDirectoryAtPath:tmpDirPatn withIntermediateDirectories:YES attributes:nil error:nil];
-    }else{
+    if ([[NSFileManager defaultManager] fileExistsAtPath:tmpDirPatn]){
         [[NSFileManager defaultManager] removeItemAtPath:tmpDirPatn error:nil];
     }
+    [[NSFileManager defaultManager] createDirectoryAtPath:tmpDirPatn withIntermediateDirectories:YES attributes:nil error:nil];
     NSArray *fileArr = [self groupNameDirsModels];
     for(XMWifiTransModel *model in fileArr){
         if (model.isBackup){
@@ -87,7 +81,7 @@ static NSString *currentGroupName = @"默认";
         [fileM createDirectoryAtPath:newPath withIntermediateDirectories:YES attributes:nil error:nil];
     }
     if([SSZipArchive unzipFileAtPath:path toDestination:newPath]){
-        NSArray *saveFilesPathArr =[self getSettingFilesPaths];
+        NSArray *saveFilesPathArr =[XMSavePathUnit getSettingFilesPaths];
         BOOL result = YES;
         NSString *destPath = @""; // 移动的目标位置
         for (NSString *filePath in saveFilesPathArr){
@@ -193,15 +187,17 @@ static NSString *currentGroupName = @"默认";
     // 遍历文件夹WifiTransPort,找出已经存在的其他文件夹
     NSArray *allFileArr =  [[NSFileManager defaultManager] subpathsOfDirectoryAtPath:[XMSavePathUnit getWifiUploadDirPath] error:nil];
     NSMutableArray *dirsArr = [NSMutableArray array];
+    NSString *markZipString = [NSString stringWithContentsOfFile:[XMSavePathUnit getWifiGroupMarkZipFilePath] encoding:NSUTF8StringEncoding error:nil];
     for (NSString *ele in allFileArr){
         if (![ele containsString:@"/"]){
             if([ele containsString:@"DS_Store"]) continue;
             if ([ele containsString:XMWifiGroupNameFileName]) continue;
+            if ([ele containsString:XMWifiGroupMarkZipFileName]) continue;
             if ([ele containsString:defaultGroupName]) continue;
             if ([ele containsString:backupGroupName]) continue;
             XMWifiTransModel *model = [[XMWifiTransModel alloc] init];
             model.groupName = ele;
-            model.isBackup = NO;
+            model.isBackup = ([markZipString containsString:ele]) ? YES : NO;
             [dirsArr addObject:model];
         }
     }
@@ -212,6 +208,21 @@ static NSString *currentGroupName = @"默认";
 /// 将文件夹组写进沙盒
 + (void)saveGroupMessageWithNewArray:(NSArray *)newArr{
     [NSKeyedArchiver archiveRootObject:newArr toFile:[XMSavePathUnit getWifiGroupNameFilePath]];
+}
+
+/// 当增加标记或者取消备份的标记,需要更新记录zip的文件
++ (void)updateZipMarkGroupName:(NSString *)name isMark:(BOOL)isMark{
+    NSString *markZipStr = [NSString stringWithContentsOfURL:[NSURL fileURLWithPath:[XMSavePathUnit getWifiGroupMarkZipFilePath]] encoding:NSUTF8StringEncoding error:nil];
+    // 根据新增或者取消,更新数据
+    if (isMark){
+        markZipStr = [NSString stringWithFormat:@"%@|%@",markZipStr,name];
+    }else{
+        markZipStr = [markZipStr stringByReplacingOccurrencesOfString:name withString:@""];
+    }
+    // 将删除那么之后的||替换成|
+    markZipStr = [markZipStr stringByReplacingOccurrencesOfString:@"||" withString:@"|"];
+    [markZipStr writeToFile:[XMSavePathUnit getWifiGroupMarkZipFilePath] atomically:YES encoding:NSUTF8StringEncoding error:nil];
+    
 }
 
 /// 更新当前文件夹

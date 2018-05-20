@@ -11,7 +11,8 @@
 /// wifi模块
 /// wifi传输的保存沙盒路径(主路径)
 NSString * const XMWifiMainDirName = @"WifiTransPort";
-NSString * const XMWifiGroupNameFileName = @"XMWifiGroupName.wifign";
+NSString * const XMWifiGroupNameFileName = @"XMWifiGroupName.wifign";  // 分组的model归档文件名
+NSString * const XMWifiGroupMarkZipFileName = @"XMWifiGroupZipMark.wifign";  // 需要备份的文件夹的文件名
 
 @implementation XMSavePathUnit
 
@@ -41,9 +42,19 @@ NSString * const XMWifiGroupNameFileName = @"XMWifiGroupName.wifign";
 }
 
 
+/// wifi传输需要压缩备份的组名列表保存路径
++ (NSString *)getWifiGroupMarkZipFilePath{
+    return [NSString stringWithFormat:@"%@/%@",[self getWifiUploadDirPath],XMWifiGroupMarkZipFileName];
+}
+
 /// wifi传输组名列表保存路径
 + (NSString *)getWifiGroupNameFilePath{
     return [NSString stringWithFormat:@"%@/%@",[self getWifiUploadDirPath],XMWifiGroupNameFileName];
+}
+
+/// 返回一个数组,包含所有配置类文件的全路径
++ (NSArray *)getSettingFilesPaths{
+    return @[[self getHiwebHomeUrlPath],[self getWifiGroupNameFilePath],[self getSaveWebModelArchicerPath],[self getWifiGroupMarkZipFilePath]];
 }
 
 @end
