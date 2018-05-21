@@ -19,7 +19,7 @@
 
 /** 工具条 */
 @property (nonatomic, strong) UIView *toolBar;
-//@property (weak, nonatomic)  UIButton *saveBtn;
+@property (weak, nonatomic)  UIButton *saveBtn;
 @property (nonatomic, strong) NSMutableArray *toolBarArr;  // 应该隐藏的工具栏按钮
 
 /** 网页view */
@@ -60,7 +60,7 @@
 
 @implementation XMWebViewController
 
-#pragma mark 产量区
+#pragma mark 常量区
 - (double)getBackImageVStarX{
     return  [UIScreen mainScreen].bounds.size.width / 3;
 }
@@ -164,6 +164,7 @@
         // 添加收藏按钮
         UIButton *addBtn = [[UIButton alloc] init];
         addBtn.hidden = YES;
+        self.saveBtn = addBtn;
         [addBtn addTarget:self action:@selector(saveWeb:) forControlEvents:UIControlEventTouchUpInside];
         [addBtn setImage:[UIImage imageNamed:@"save_normal"] forState:UIControlStateNormal];
         [addBtn setImage:[UIImage imageNamed:@"save_selected"] forState:UIControlStateSelected];
@@ -341,10 +342,13 @@
 #warning undo 重复收藏该网页,以及searchMode下的切换
     if (button.isSelected)
     {
+        XMWebModel *model = [[XMWebModel alloc] init];
         // 保存的网站需要取消searchMode标记
-        self.model.searchMode = NO;
+        model.searchMode = NO;
+        model.webURL = [NSURL URLWithString:self.web.request.URL.absoluteString];
+        model.title =  [self.web stringByEvaluatingJavaScriptFromString:@"document.title"];
         // 保存网站到本地
-        [XMWebModelTool saveWebModel:self.model];
+        [XMWebModelTool saveWebModel:model];
         // 提示用户保存网页成功
         [MBProgressHUD showSuccess];
     }
@@ -541,8 +545,9 @@
     {
         [self.web addGestureRecognizer:self.panSearchMode];
     }
-    // 记录当前网页的信息
-    self.model.title = [self.web stringByEvaluatingJavaScriptFromString:@"document.title"];
+    if (self.isSearchMode){
+        self.saveBtn.selected = NO;
+    }
     
     // 设置网页自动缩放,user-scalable为NO即可禁止缩放
     NSString *injectionJSString =@"var script = document.createElement('meta');"

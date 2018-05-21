@@ -147,10 +147,13 @@ UIImagePickerControllerDelegate>
     self.tableView.allowsMultipleSelectionDuringEditing = YES;
     self.isMoveFilesMode = NO;
     // 更新本地数据
-    [self refreshDate];
+//    [self refreshDate:nil];
 
     // 初始化导航栏
     [self createNav];
+    
+    // 添加系统原生下拉刷新
+    [self creatRefreshKit];
     
     // 添加左侧边栏
     [self addLeftVC];
@@ -171,7 +174,10 @@ UIImagePickerControllerDelegate>
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"XMWifiTransfronFilesComplete" object:nil];
 }
 
- - (void)refreshDate{
+- (void)refreshDate:(UIRefreshControl *)con{
+    if (con){
+        [con endRefreshing];
+    }
      [self.dataArr removeAllObjects];
      self.dataArr = [XMWifiGroupTool getCurrentGroupFiles];
      dispatch_async(dispatch_get_main_queue(), ^{
@@ -179,6 +185,14 @@ UIImagePickerControllerDelegate>
      });
 }
 
+/// 添加系统原生下拉刷新
+- (void)creatRefreshKit{
+    UIRefreshControl *con = [[UIRefreshControl alloc] init];
+    [self.tableView addSubview:con];
+    [con addTarget:self action:@selector(refreshDate:) forControlEvents:UIControlEventValueChanged];
+    [con beginRefreshing];
+    [self refreshDate:con];
+}
 
 /// 初始化导航栏
 - (void)createNav{
@@ -292,7 +306,7 @@ UIImagePickerControllerDelegate>
 
 /// 导航栏双击刷新
 - (void)navTitleViewDidDoubleTap{
-    [self refreshDate];
+    [self refreshDate:nil];
 }
 
 
@@ -343,7 +357,7 @@ UIImagePickerControllerDelegate>
     BOOL isSave = [UIImageJPEGRepresentation(seleImg,0.5) writeToFile:savePath atomically:YES];
     if (isSave){
         [MBProgressHUD show:[NSString stringWithFormat:@"成功添加:/n%@.jpg",fileName] image:seleImg view:picker.view];
-        [self refreshDate];
+        [self refreshDate:nil];
     }
 }
 
@@ -425,7 +439,7 @@ UIImagePickerControllerDelegate>
         [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
         // 当删除了一个文件夹,还会把里面的文件也删除,需要刷新数据
         if (model.isDir){
-            [self refreshDate];
+            [self refreshDate:nil];
         }
         
     }else{
@@ -514,7 +528,7 @@ UIImagePickerControllerDelegate>
             // 重命名,自己覆盖自己
             NSError *error;
             if ([[NSFileManager defaultManager] moveItemAtPath:model.fullPath toPath:newFullPath error:&error]){
-                [self refreshDate];
+                [self refreshDate:nil];
             }else{
                 [MBProgressHUD showMessage:@"名称已存在" toView:self.view];
             }
@@ -523,7 +537,7 @@ UIImagePickerControllerDelegate>
         // 一系列设置标题
         self.navTitleLab.text = groupName;
         [XMWifiGroupTool upgradeCurrentGroupName:groupName];
-        [self refreshDate];
+        [self refreshDate:nil];
         
     }
     
@@ -538,14 +552,14 @@ UIImagePickerControllerDelegate>
     // 如果删除的文件夹刚好是当前展示的数组,那么需要切换到"默认"的文件夹
     if ([groupName isEqualToString:self.navTitleLab.text]){
         self.navTitleLab.text = defaultGroupName;
-        [self refreshDate];
+        [self refreshDate:nil];
     }
 }
 
 #pragma mark - 监听上传的结果
 - (void)uploadFinish:(NSNotification *)noti{
     NSLog(@"%@",noti.userInfo);
-    [self refreshDate];
+    [self refreshDate:nil];
 }
 
 #pragma mark - UITableViewDataSource
@@ -706,7 +720,7 @@ UIImagePickerControllerDelegate>
                 BOOL success = [XMWifiGroupTool unzipFileAtPath:model.fullPath];
                 [MBProgressHUD showResult:success message:nil];
                 if (success){
-                    [weakSelf refreshDate];
+                    [weakSelf refreshDate:nil];
                    
                 }
             }]];
@@ -716,7 +730,7 @@ UIImagePickerControllerDelegate>
                     BOOL success = [XMWifiGroupTool unzipSettingFilesAtPath:model.fullPath];
                     [MBProgressHUD showResult:success message:((success)? @"更新本地配置文件成功":@"更新本地配置文件失败")];
             
-                    [weakSelf refreshDate];
+                    [weakSelf refreshDate:nil];
                 }]];
             }
         }
@@ -749,7 +763,7 @@ UIImagePickerControllerDelegate>
         // 重命名,自己覆盖自己
         NSError *error;
         if ([[NSFileManager defaultManager] moveItemAtPath:model.fullPath toPath:newFullPath error:&error]){
-            [weakSelf refreshDate];
+            [weakSelf refreshDate:nil];
         }else{
             [MBProgressHUD showMessage:@"名称已存在" toView:weakSelf.view];
         }
