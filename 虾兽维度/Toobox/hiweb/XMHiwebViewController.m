@@ -78,7 +78,6 @@
 
     // 初始化导航栏
     [self setNavBar];
-    
     // 开始加载
     self.index = 1;
 //    self.url = @"https://www.javbus2.com/star/n4r";
@@ -103,6 +102,8 @@
 }
     
 - (void)setNavBar{
+    CGFloat btnWH = 30;
+    CGFloat btnY = (44 - btnWH ) * 0.5;
     // 设置左右导航栏的功能键
     UIView *leftContenV = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 44 * 3, 44)];
     // 上一页
@@ -115,12 +116,12 @@
     //    [clearBtn setImage:[UIImage imageNamed:@"iconDelete"] forState:UIControlStateNormal];
     //    [clearBtn addTarget:self action:@selector(clear) forControlEvents:UIControlEventTouchUpInside];
     // 获取最新的地址
-    UIButton *homeUrlBtn = [[UIButton alloc] initWithFrame:CGRectMake(44, 0, 44, 44)];
+    UIButton *homeUrlBtn = [[UIButton alloc] initWithFrame:CGRectMake(44, btnY, btnWH, btnWH)];
     [homeUrlBtn setImage:[UIImage imageNamed:@"iconSetting"] forState:UIControlStateNormal];
     [homeUrlBtn addTarget:self action:@selector(getNewHomeUrl) forControlEvents:UIControlEventTouchUpInside];
     
     // 退出模块
-    UIButton *closeBtn = [[UIButton alloc] initWithFrame:CGRectMake(88, 0, 44, 44)];
+    UIButton *closeBtn = [[UIButton alloc] initWithFrame:CGRectMake(88, btnY, btnWH, btnWH)];
     [closeBtn setImage:[UIImage imageNamed:@"iconOffline"] forState:UIControlStateNormal];
     [closeBtn addTarget:self action:@selector(closeCurrentViewController) forControlEvents:UIControlEventTouchUpInside];
     
@@ -139,11 +140,11 @@
     [forwardBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [forwardBtn addTarget:self action:@selector(forward) forControlEvents:UIControlEventTouchUpInside];
     // 搜索按钮
-    UIButton *searchBtn = [[UIButton alloc] initWithFrame:CGRectMake(44, 0, 44, 44)];
+    UIButton *searchBtn = [[UIButton alloc] initWithFrame:CGRectMake(44, btnY, btnWH, btnWH)];
     [searchBtn setImage:[UIImage imageNamed:@"iconSearch"] forState:UIControlStateNormal];
     [searchBtn addTarget:self action:@selector(search) forControlEvents:UIControlEventTouchUpInside];
     // 重载
-    UIButton *reloadBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
+    UIButton *reloadBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, btnY, btnWH, btnWH)];
     [reloadBtn setImage:[UIImage imageNamed:@"refresh"] forState:UIControlStateNormal];
     [reloadBtn addTarget:self action:@selector(starRequest) forControlEvents:UIControlEventTouchUpInside];
     

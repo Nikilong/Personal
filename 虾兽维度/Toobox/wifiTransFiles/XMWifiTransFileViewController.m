@@ -26,6 +26,8 @@
 #import "MBProgressHUD+NK.h"
 
 #import "SSZipArchive.h"
+#import "XMPhotoCollectionViewController.h"
+
 
 @interface XMWifiTransFileViewController ()
 <XMWifiLeftTableViewControllerDelegate,
@@ -617,39 +619,36 @@ UIImagePickerControllerDelegate>
         return;
     }
     
-    // 用webview去预览
-    XMFileDisplayWebViewViewController *displayVC = [[XMFileDisplayWebViewViewController alloc] init];
-    displayVC.wifiModel = model;
-    displayVC.view.frame = self.view.bounds;
-    [displayVC loadLocalFileWithPath:model.fullPath];
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self.navigationController pushViewController:displayVC animated:YES];
-    });
-    
-    
-//    NSString *extesionStr = [[model.fileName lowercaseString] pathExtension];
-//    if ([@"jpg|png" containsString:extesionStr]){
-//    
-//    }else if ([@"mp4|avi" containsString:extesionStr]){
-//        NSURL *sourceMovieURL = [NSURL fileURLWithPath:model.fullPath];
-//        
-//        AVAsset *movieAsset = [AVURLAsset URLAssetWithURL:sourceMovieURL options:nil];
-//        
-//        AVPlayerItem *playerItem = [AVPlayerItem playerItemWithAsset:movieAsset];
-//        
-//        AVPlayer *player = [AVPlayer playerWithPlayerItem:playerItem];
-//        
-//        AVPlayerLayer *playerLayer = [AVPlayerLayer playerLayerWithPlayer:player];
-//        
-//        playerLayer.frame = self.view.layer.bounds;
-//        
-//        playerLayer.videoGravity = AVLayerVideoGravityResizeAspect;
-//        
-//        [self.view.layer addSublayer:playerLayer];
-//        
-//        [player play];
-//    }
+    if(model.fileType == fileTypeImageName){
+        NSMutableArray *imgArr = [NSMutableArray array];
+        NSMutableArray *cellSizeArr = [NSMutableArray array];
+        for (XMWifiTransModel *ele in self.dataArr){
+            if (ele.fileType == fileTypeImageName){
+                [imgArr addObject:ele];
+                [cellSizeArr addObject:[NSValue valueWithCGSize:CGSizeMake(XMScreenW, XMScreenH)]];
+            }
+        }
+        UICollectionViewFlowLayout * layout = [[UICollectionViewFlowLayout alloc]init];
+        layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+        XMPhotoCollectionViewController *photoVC = [[XMPhotoCollectionViewController alloc] initWithCollectionViewLayout:layout];
+        photoVC.photoModelArr = imgArr;
+        photoVC.cellSize = CGSizeMake(XMScreenW, XMScreenH);
+        photoVC.cellInset = UIEdgeInsetsMake(0, 0, 0, 0);
+        photoVC.collectionView.contentSize = CGSizeMake(XMScreenW * imgArr.count, XMScreenH);
+        [self.navigationController pushViewController:photoVC animated:YES];
+        
+    }else{
+        // 用webview去预览
+        XMFileDisplayWebViewViewController *displayVC = [[XMFileDisplayWebViewViewController alloc] init];
+        displayVC.wifiModel = model;
+        displayVC.view.frame = self.view.bounds;
+        [displayVC loadLocalFileWithPath:model.fullPath];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.navigationController pushViewController:displayVC animated:YES];
+        });
+        
+    }
 }
 
 #pragma mark 编辑

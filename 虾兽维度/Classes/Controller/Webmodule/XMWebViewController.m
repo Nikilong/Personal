@@ -242,6 +242,14 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    [[NSUserDefaults standardUserDefaults] setInteger:2 forKey: @"WebKitCacheModelPreferenceKey"];
+    //这里是调用的私有api，
+    //把WevView类的cacheModel设置成WebCacheModelPrimaryWebBrowser，
+    //因为这个上架被拒绝的人可不在少数，这里需要进行特殊处理。
+    id webView = [self.web valueForKeyPath:@"_internal.browserView._webView"];
+    id preferences = [webView valueForKey:@"preferences"];
+    [preferences performSelector:@selector(_postCacheModelChangedNotification)];
 }
 
 - (void)viewWillAppear:(BOOL)animated

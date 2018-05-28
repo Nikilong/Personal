@@ -88,6 +88,7 @@
 		20707E9C209F3E8400572604 /* XMWifiTransModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 20707E9B209F3E8400572604 /* XMWifiTransModel.m */; };
 		20707E9F209F446F00572604 /* XMFileDisplayWebViewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20707E9E209F446F00572604 /* XMFileDisplayWebViewViewController.m */; };
 		20707EA3209F551200572604 /* ZBTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 20707EA2209F551200572604 /* ZBTool.m */; };
+		207BBE8120B7078F00C86EAD /* XMPhotoCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 207BBE8020B7078F00C86EAD /* XMPhotoCollectionViewCell.m */; };
 		2086642620AB403D00D51CCB /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 208663FD20AB403D00D51CCB /* Info.plist */; };
 		2086642720AB403D00D51CCB /* aes_ni.c in Sources */ = {isa = PBXBuildFile; fileRef = 2086640120AB403D00D51CCB /* aes_ni.c */; };
 		2086642820AB403D00D51CCB /* aescrypt.c in Sources */ = {isa = PBXBuildFile; fileRef = 2086640320AB403D00D51CCB /* aescrypt.c */; };
@@ -152,6 +153,7 @@
 		FD3332E920A1786A0017655F /* wifiopen.png in Resources */ = {isa = PBXBuildFile; fileRef = FD3332E720A1786A0017655F /* wifiopen.png */; };
 		FD3332EC20A17DD80017655F /* XMWifiLeftTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FD3332EB20A17DD80017655F /* XMWifiLeftTableViewController.m */; };
 		FD3332EF20A181D40017655F /* XMWifiGroupTool.m in Sources */ = {isa = PBXBuildFile; fileRef = FD3332EE20A181D40017655F /* XMWifiGroupTool.m */; };
+		FD7407E820B4306D00A83979 /* XMPhotoCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FD7407E720B4306D00A83979 /* XMPhotoCollectionViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -329,6 +331,8 @@
 		20707E9E209F446F00572604 /* XMFileDisplayWebViewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMFileDisplayWebViewViewController.m; sourceTree = "<group>"; };
 		20707EA1209F551200572604 /* ZBTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBTool.h; sourceTree = "<group>"; };
 		20707EA2209F551200572604 /* ZBTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZBTool.m; sourceTree = "<group>"; };
+		207BBE7F20B7078F00C86EAD /* XMPhotoCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPhotoCollectionViewCell.h; sourceTree = "<group>"; };
+		207BBE8020B7078F00C86EAD /* XMPhotoCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPhotoCollectionViewCell.m; sourceTree = "<group>"; };
 		208663FD20AB403D00D51CCB /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2086640020AB403D00D51CCB /* aes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = aes.h; sourceTree = "<group>"; };
 		2086640120AB403D00D51CCB /* aes_ni.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = aes_ni.c; sourceTree = "<group>"; };
@@ -439,6 +443,8 @@
 		FD3332EB20A17DD80017655F /* XMWifiLeftTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMWifiLeftTableViewController.m; sourceTree = "<group>"; };
 		FD3332ED20A181D40017655F /* XMWifiGroupTool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMWifiGroupTool.h; sourceTree = "<group>"; };
 		FD3332EE20A181D40017655F /* XMWifiGroupTool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMWifiGroupTool.m; sourceTree = "<group>"; };
+		FD7407E620B4306D00A83979 /* XMPhotoCollectionViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMPhotoCollectionViewController.h; sourceTree = "<group>"; };
+		FD7407E720B4306D00A83979 /* XMPhotoCollectionViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMPhotoCollectionViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -564,6 +570,10 @@
 				2066C305209F558600799A1E /* MyHTTPConnection.m */,
 				20707E9D209F446F00572604 /* XMFileDisplayWebViewViewController.h */,
 				20707E9E209F446F00572604 /* XMFileDisplayWebViewViewController.m */,
+				FD7407E620B4306D00A83979 /* XMPhotoCollectionViewController.h */,
+				FD7407E720B4306D00A83979 /* XMPhotoCollectionViewController.m */,
+				207BBE7F20B7078F00C86EAD /* XMPhotoCollectionViewCell.h */,
+				207BBE8020B7078F00C86EAD /* XMPhotoCollectionViewCell.m */,
 			);
 			path = wifiTransFiles;
 			sourceTree = "<group>";
@@ -1334,10 +1344,12 @@
 				2086643120AB403D00D51CCB /* ioapi.c in Sources */,
 				20F1121B1E866F9C00E64A70 /* XMLeftViewUserCell.m in Sources */,
 				2086643320AB403D00D51CCB /* ioapi_mem.c in Sources */,
+				FD7407E820B4306D00A83979 /* XMPhotoCollectionViewController.m in Sources */,
 				200770312059775100551C00 /* XMPersonDataUnit.m in Sources */,
 				204D2410209ED8E800F17E2E /* HTTPAsyncFileResponse.m in Sources */,
 				204D240B209ED8E800F17E2E /* HTTPMessage.m in Sources */,
 				204D2415209ED8E800F17E2E /* HTTPRedirectResponse.m in Sources */,
+				207BBE8120B7078F00C86EAD /* XMPhotoCollectionViewCell.m in Sources */,
 				204D2437209ED91A00F17E2E /* DispatchQueueLogFormatter.m in Sources */,
 				202C84F21F2624AD0055FD7D /* XMSearchTableViewController.m in Sources */,
 				205CECF41F48151700821E38 /* UIView+getPointColor.m in Sources */,
