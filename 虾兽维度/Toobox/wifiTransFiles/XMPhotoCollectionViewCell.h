@@ -16,4 +16,7 @@
 @property (nonatomic, strong) UIScrollView *imgScroV;
 @property (nonatomic, strong) UIImageView *imgV;
 
+/// 提供方法让外界获取计算的原始图片尺寸
+- (CGSize)getImgOriginSize;
+
 @end

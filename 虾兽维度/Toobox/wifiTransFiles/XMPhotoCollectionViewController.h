@@ -13,5 +13,7 @@
 @property (nonatomic, strong) NSArray *photoModelArr;
 @property (nonatomic, assign)  UIEdgeInsets cellInset;   //分别为上、左、下、右
 @property (nonatomic, assign)  CGSize cellSize;
+@property (nonatomic, assign)  NSInteger selectImgIndex;
+
 
 @end

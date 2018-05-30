@@ -177,6 +177,7 @@ UIImagePickerControllerDelegate>
 }
 
 - (void)refreshDate:(UIRefreshControl *)con{
+    // 如果是由下拉刷新触发的刷新则需要结束刷新动画
     if (con){
         [con endRefreshing];
     }
@@ -621,16 +622,19 @@ UIImagePickerControllerDelegate>
     
     if(model.fileType == fileTypeImageName){
         NSMutableArray *imgArr = [NSMutableArray array];
-        NSMutableArray *cellSizeArr = [NSMutableArray array];
-        for (XMWifiTransModel *ele in self.dataArr){
+        NSInteger currentImgIndex = 0;   // 记录当前的选择图片
+        for (XMWifiTransModel *ele in self.dataArr) {
             if (ele.fileType == fileTypeImageName){
                 [imgArr addObject:ele];
-                [cellSizeArr addObject:[NSValue valueWithCGSize:CGSizeMake(XMScreenW, XMScreenH)]];
+            }
+            if([ele.fullPath isEqualToString:model.fullPath]){
+                currentImgIndex = imgArr.count - 1;
             }
         }
         UICollectionViewFlowLayout * layout = [[UICollectionViewFlowLayout alloc]init];
         layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
         XMPhotoCollectionViewController *photoVC = [[XMPhotoCollectionViewController alloc] initWithCollectionViewLayout:layout];
+        photoVC.selectImgIndex = currentImgIndex;
         photoVC.photoModelArr = imgArr;
         photoVC.cellSize = CGSizeMake(XMScreenW, XMScreenH);
         photoVC.cellInset = UIEdgeInsetsMake(0, 0, 0, 0);

@@ -476,6 +476,7 @@
 		200770242059775100551C00 /* hiweb */ = {
 			isa = PBXGroup;
 			children = (
+				205CECF11F48151700821E38 /* Category */,
 				200770252059775100551C00 /* XMHiwebViewController.h */,
 				200770262059775100551C00 /* XMHiwebViewController.m */,
 				200770272059775100551C00 /* XMPersonDataUnit.h */,
@@ -781,7 +782,8 @@
 				205CECFA1F489A0000821E38 /* UIView+Extension.h */,
 				205CECFB1F489A0000821E38 /* UIView+Extension.m */,
 			);
-			path = Category;
+			name = Category;
+			path = ../../Classes/Category;
 			sourceTree = "<group>";
 		};
 		205CED031F489F2B00821E38 /* Main */ = {
@@ -960,7 +962,6 @@
 				842970FE1E654644002BDBC0 /* View */,
 				842970FB1E654644002BDBC0 /* Other */,
 				20C85E5420541BD50057F483 /* Toolbox */,
-				205CECF11F48151700821E38 /* Category */,
 				20F112221E86BF1800E64A70 /* Tool */,
 			);
 			path = Classes;
