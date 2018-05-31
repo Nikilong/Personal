@@ -18,6 +18,7 @@
 
 /** 显示消息 */
 + (void)showMessage:(NSString *)text toView:(UIView *)view;
++ (void)showMessage:(NSString *)text;
 + (void)showResult:(BOOL)result message:(NSString *)message;
 + (void)showSuccess;
 + (void)showFailed;

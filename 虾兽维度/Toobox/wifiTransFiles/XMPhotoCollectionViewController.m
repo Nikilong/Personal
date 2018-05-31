@@ -9,12 +9,14 @@
 #import "XMPhotoCollectionViewController.h"
 #import "XMWifiTransModel.h"
 #import "XMPhotoCollectionViewCell.h"
+#import "MBProgressHUD+NK.h"
 
 @interface XMPhotoCollectionViewController ()<UIScrollViewDelegate,UICollectionViewDelegateFlowLayout>
 
 @property (weak, nonatomic)  UILabel *titLab;
 @property (weak, nonatomic)  NSTimer *timer;
 @property (nonatomic, assign)  double timeInterval;
+@property (weak, nonatomic)  UIButton *timerBtn;
 
 
 @end
@@ -50,7 +52,7 @@ static NSString * const reuseIdentifier = @"XMPhotoCell";
     self.collectionView.contentOffset = CGPointMake(XMScreenW * self.selectImgIndex, self.collectionView.contentOffset.y);
     
     // 初始化参数
-    self.timeInterval = 2.0f;
+    self.timeInterval = 1.0f;
 
     // 添加点击手势(单点隐藏/显示导航栏)
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapCollectionView:)];
@@ -63,10 +65,7 @@ static NSString * const reuseIdentifier = @"XMPhotoCell";
     [tap requireGestureRecognizerToFail:doubleTap];
     
     // 设置导航栏按钮
-    UIBarButtonItem *beginBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemPlay target:self action:@selector(beginTimer)];
-    UIBarButtonItem *stopBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemPause target:self action:@selector(stopTimer)];
-    UIBarButtonItem *timeSettingBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(setTimeInterval)];
-    self.navigationItem.rightBarButtonItems = @[stopBtn,beginBtn,timeSettingBtn];
+    [self setNavBarItem];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -80,6 +79,9 @@ static NSString * const reuseIdentifier = @"XMPhotoCell";
     // 恢复左侧返回手势,显示导航栏
     self.navigationController.navigationBar.hidden = NO;
     self.navigationController.interactivePopGestureRecognizer.enabled = YES;
+    
+    // 移除定时器
+    [self stopTimer];
 }
 
 
@@ -88,31 +90,72 @@ static NSString * const reuseIdentifier = @"XMPhotoCell";
     // Dispose of any resources that can be recreated.
 }
 
+- (void)dealloc{
+    NSLog(@"XMPhotoCollectionViewController----%s",__func__);
+
+}
+
+- (void)setNavBarItem{
+    UIButton *timerBtn = [UIButton buttonWithType:UIButtonTypeSystem];
+    self.timerBtn = timerBtn;
+    timerBtn.frame = CGRectMake(0, 0, 44, 44);
+    [timerBtn addTarget:self action:@selector(toggleTimer:) forControlEvents:UIControlEventTouchUpInside];
+#warning undo 以后设置两张图片的颜色,然后选为UIButtonTypeCustom
+    [timerBtn setImage:[UIImage imageNamed:@"btn_play"] forState:UIControlStateNormal];
+//    [timerBtn setImage:[UIImage imageNamed:@"btn_pause"] forState:UIControlStateSelected];
+    UIBarButtonItem *beginBtn = [[UIBarButtonItem alloc] initWithCustomView:timerBtn];
+    UIBarButtonItem *timeSettingBtn = [[UIBarButtonItem alloc] initWithTitle:@"1.0s" style:UIBarButtonItemStylePlain target:self action:@selector(changeTimeInterval:)];
+    self.navigationItem.rightBarButtonItems = @[beginBtn,timeSettingBtn];
+
+}
+
 #pragma mark - 定时器与幻灯片播放
+
+/// 开启/关闭定时
+- (void)toggleTimer:(UIButton *)btn{
+    // 只有一张图片不用播放
+    if(self.photoModelArr.count == 1){
+        [MBProgressHUD showMessage:@"只有一张图片"];
+        return;
+    }
+    if (self.timer){
+        [self stopTimer];
+    }else{
+        [self beginTimer];
+    }
+}
 /// 开启定时器
 - (void)beginTimer{
-    NSTimer *timer = [NSTimer timerWithTimeInterval:(self.timeInterval)?self.timeInterval:2.0f target:self selector:@selector(displayImages) userInfo:nil repeats:YES];
-    self.timer = timer;
-    [[NSRunLoop mainRunLoop] addTimer:timer forMode:NSDefaultRunLoopMode];
-    
+    if (!self.timer){
+        [self.timerBtn setImage:[UIImage imageNamed:@"btn_pause"] forState:UIControlStateNormal];
+        NSTimer *timer = [NSTimer timerWithTimeInterval:self.timeInterval target:self selector:@selector(displayImages) userInfo:nil repeats:YES];
+        [[NSRunLoop mainRunLoop] addTimer:timer forMode:NSDefaultRunLoopMode];
+        self.timer = timer;
+    }
 }
 
 /// 关闭定时器
 - (void)stopTimer{
-    [self.timer invalidate];
+    if(self.timer){
+        [self.timerBtn setImage:[UIImage imageNamed:@"btn_play"] forState:UIControlStateNormal];
+        [self.timer invalidate];
+        self.timer = nil;
+    }
 }
 
 /// 设置幻灯片播放时间间隔
-- (void)setTimeInterval{
+- (void)changeTimeInterval:(UIBarButtonItem *)btn{
+    [self stopTimer];
     UIAlertController *tips = [UIAlertController alertControllerWithTitle:@"提示" message:@"输入幻灯片播放时间间隔(单位:秒)" preferredStyle:UIAlertControllerStyleAlert];
     __weak typeof(self) weakSelf = self;
     [tips addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
     [tips addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         UITextField *textF = tips.textFields[0];
-        weakSelf.timeInterval = textF.text.doubleValue;
+        weakSelf.timeInterval = (textF.text.doubleValue && textF.text.doubleValue >= 0.5 ) ? textF.text.doubleValue : 2.0;
+        btn.title = [NSString stringWithFormat:@"%.1fs",weakSelf.timeInterval];
     }]];
     [tips addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField){
-        textField.placeholder = @"2";
+        textField.placeholder = @"最少0.5s,建议1s以上";
     }];
     
     [self presentViewController:tips animated:YES completion:nil];

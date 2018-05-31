@@ -67,8 +67,13 @@ NSString * const fileTypeZipName = @"zip";
         model.prePath = [model.fileName stringByReplacingOccurrencesOfString:model.pureFileName withString:@""];
         model.rootPath = groupFullPath;
         model.fullPath = [NSString stringWithFormat:@"%@/%@",groupFullPath,ele];
-#warning todo 将size转为字符串,并添加单位判断
-        model.size = dict.fileSize/1024.0/1024.0;
+        if(dict.fileSize < 1024){
+            model.size = [NSString stringWithFormat:@"%.2llu Byte",dict.fileSize];
+        }else if (dict.fileSize < 1024 * 1024){
+            model.size = [NSString stringWithFormat:@"%.2fK",dict.fileSize / 1024.0];
+        }else{
+            model.size = [NSString stringWithFormat:@"%.2fM",dict.fileSize / 1024.0 / 1024.0];
+        }
 
         if (model.isDir){
             model.fileType = @"folder";

@@ -121,5 +121,9 @@
     [self show:text icon:nil view:view];
 }
 
++ (void)showMessage:(NSString *)text{
+    [self show:text icon:nil view:nil];
+}
+
 
 @end

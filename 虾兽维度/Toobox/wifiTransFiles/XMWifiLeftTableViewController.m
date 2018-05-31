@@ -47,7 +47,13 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return (indexPath.section == 0) ? 100 : 40;
+    if (indexPath.section == 0){
+        return 100;
+    }else if (indexPath.section == 1){
+        return 44;
+    }else{
+        return 30;
+    }
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
@@ -55,10 +61,8 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (section == 0){
+    if (section == 0 || section == 1){
         return 1;
-    }else if(section == 1){
-        return [XMWifiGroupTool nonDeleteGroupNames].count;
     }else{
         return self.groupNameArr.count;
     }
@@ -67,48 +71,65 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *ID = @"wifiCell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ID];
-    if (!cell)
-    {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:ID];
-        cell.textLabel.textAlignment = NSTextAlignmentCenter;
-    }
-    
-    if (indexPath.section == 0){
-        // 该组的cell不可点击
-        [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
-        [cell.contentView addSubview:[self setSectionOneCustomView]];
-    }else if (indexPath.section == 1){
-        cell.textLabel.text = [XMWifiGroupTool nonDeleteGroupNames][indexPath.row];
-    }else{
+    UITableViewCell *cell;
+    NSString *nonReuseID;
+    if (indexPath.section == 2){
+        
+        cell = [tableView dequeueReusableCellWithIdentifier:nonReuseID];
+        if (!cell)
+        {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:ID];
+            cell.textLabel.textAlignment = NSTextAlignmentCenter;
+            
+            // 添加长按操作手势
+            UILongPressGestureRecognizer *longPre = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(editCell:)];
+            [cell addGestureRecognizer:longPre];
+
+        }
+
         XMWifiTransModel *model = self.groupNameArr[indexPath.row];
         cell.textLabel.text = model.groupName;
         cell.textLabel.textColor = model.isBackup ? [UIColor orangeColor] : [UIColor blackColor];
-        // 添加长按操作手势
-        UILongPressGestureRecognizer *longPre = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(editCell:)];
-        [cell addGestureRecognizer:longPre];
+
+    }else{
+        if (indexPath.section == 0){
+            nonReuseID = @"wifiSectionOneCell";
+        }else if (indexPath.section == 1){
+            nonReuseID = @"wifiSectionTwoCell";
+        }
+        
+        cell = [tableView dequeueReusableCellWithIdentifier:nonReuseID];
+        if (!cell)
+        {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nonReuseID];
+            cell.textLabel.textAlignment = NSTextAlignmentCenter;
+            
+            [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+            if (indexPath.section == 0){
+                [cell.contentView addSubview:[self setSectionOneCustomView]];
+            }else if (indexPath.section == 1){
+                [cell.contentView addSubview:[self setSectionTwoCustomView]];
+            }
+        }
     }
     return cell;
     
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    // 取消选中状态
-    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
-
-    NSString *groupName;
-    if (indexPath.section == 1){
-        groupName = [XMWifiGroupTool nonDeleteGroupNames][indexPath.row];
-    }else if (indexPath.section == 2){
+    if (indexPath.section == 2){
+        // 取消选中状态
+        [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
         XMWifiTransModel *model = self.groupNameArr[indexPath.row];
-        groupName = model.groupName;
-    }
-    if ([self.delegate respondsToSelector:@selector(leftWifiTableViewControllerDidSelectGroupName:)]){
-        [self.delegate leftWifiTableViewControllerDidSelectGroupName:groupName];
+        NSString *groupName = model.groupName;
+        if ([self.delegate respondsToSelector:@selector(leftWifiTableViewControllerDidSelectGroupName:)]){
+            [self.delegate leftWifiTableViewControllerDidSelectGroupName:groupName];
+        }
     }
 }
 
-#pragma mark 第一组的按钮创建以及点击方法
+#pragma mark 第一组和第二组的按钮创建以及点击方法
 /// 左侧栏第一组自定义按钮
 - (UIView *)setSectionOneCustomView{
     UIView *contentV = [[UIView alloc] init];
@@ -130,6 +151,39 @@
     // 最后根据按钮的个数和行数计算contentV的高度
     contentV.frame = CGRectMake(0, 0, XMWifiLeftViewTotalW, CGRectGetMaxY(backDirBtn.frame) + 3 * XMLeftViewPadding);
     return contentV;
+}
+
+/// 左侧栏第二组自定义按钮
+- (UIView *)setSectionTwoCustomView{
+    UIView *contentV = [[UIView alloc] init];
+    // 每一行排3个按钮,加上2条分割线
+    NSUInteger colMax = 3;
+    CGFloat btnWH = ( XMWifiLeftViewTotalW - 2 * XMLeftViewPadding ) / colMax - 2;
+    
+    NSArray *groupNames = [XMWifiGroupTool nonDeleteGroupNames];
+    for (NSUInteger i = 0; i< groupNames.count; i++) {
+        UIButton *btn = [self addButtonWithTitle:groupNames[i] selector:@selector(sectionTwoBtnDidClick:) parentView:contentV];
+        btn.tag = i;
+        btn.frame = CGRectMake(i * btnWH + i, 0, btnWH, btnWH);
+        // 添加分割线
+        if(i < groupNames.count - 1){
+            UIView *lineV = [[UIView alloc] initWithFrame:CGRectMake(CGRectGetMaxX(btn.frame), 0, 1, btnWH)];
+            lineV.backgroundColor = [UIColor grayColor];
+            [contentV addSubview:lineV];
+        }
+    }
+    contentV.frame = CGRectMake(0, 0, XMWifiLeftViewTotalW, btnWH + 2 * XMLeftViewPadding);
+    return contentV;
+}
+
+/// 第二组按钮点击事件
+- (void)sectionTwoBtnDidClick:(UIButton *)btn{
+    NSArray *groupNames = [XMWifiGroupTool nonDeleteGroupNames];
+    NSString *groupName = groupNames[btn.tag];
+    if ([self.delegate respondsToSelector:@selector(leftWifiTableViewControllerDidSelectGroupName:)]){
+        [self.delegate leftWifiTableViewControllerDidSelectGroupName:groupName];
+    }
+    
 }
 
 /// 创建分组

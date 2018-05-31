@@ -39,13 +39,8 @@
     _number.hidden = YES;
     
     // 显示大小标签
-    if(wifiModel.size < 0.001){
-        _publishTime.text = [NSString stringWithFormat:@"%.2f Byte",wifiModel.size * 1024.0 * 1024.0];
-    }else if (wifiModel.size < 1){
-        _publishTime.text = [NSString stringWithFormat:@"%.2fK",wifiModel.size  * 1024.0];
-    }else{
-        _publishTime.text = [NSString stringWithFormat:@"%.2fM",wifiModel.size];
-    }
+    _publishTime.text = wifiModel.size;
+    
     // 设置标题
     if (wifiModel.prePath.length > 0){
         _title.text = [NSString stringWithFormat:@"%@--(%@)",wifiModel.pureFileName,[wifiModel.prePath substringToIndex:(wifiModel.prePath.length - 1)]];

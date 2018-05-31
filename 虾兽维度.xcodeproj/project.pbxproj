@@ -134,6 +134,8 @@
 		20F1121B1E866F9C00E64A70 /* XMLeftViewUserCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 20F112191E866F9C00E64A70 /* XMLeftViewUserCell.m */; };
 		20F1121C1E866F9C00E64A70 /* XMLeftViewUserCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 20F1121A1E866F9C00E64A70 /* XMLeftViewUserCell.xib */; };
 		20F112251E86BF4600E64A70 /* XMWebModelTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 20F112241E86BF4600E64A70 /* XMWebModelTool.m */; };
+		20FB7DDC20C00F0A00011B5C /* btn_pause.png in Resources */ = {isa = PBXBuildFile; fileRef = 20FB7DDA20C00F0A00011B5C /* btn_pause.png */; };
+		20FB7DDD20C00F0A00011B5C /* btn_play.png in Resources */ = {isa = PBXBuildFile; fileRef = 20FB7DDB20C00F0A00011B5C /* btn_play.png */; };
 		842971041E654644002BDBC0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 842970FD1E654644002BDBC0 /* AppDelegate.m */; };
 		849D26F31E640E3200F0CA5D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 849D26F21E640E3200F0CA5D /* main.m */; };
 		849D26FE1E640E3200F0CA5D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 849D26FD1E640E3200F0CA5D /* Assets.xcassets */; };
@@ -412,6 +414,8 @@
 		20F1121A1E866F9C00E64A70 /* XMLeftViewUserCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = XMLeftViewUserCell.xib; sourceTree = "<group>"; };
 		20F112231E86BF4600E64A70 /* XMWebModelTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMWebModelTool.h; sourceTree = "<group>"; };
 		20F112241E86BF4600E64A70 /* XMWebModelTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMWebModelTool.m; sourceTree = "<group>"; };
+		20FB7DDA20C00F0A00011B5C /* btn_pause.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_pause.png; sourceTree = "<group>"; };
+		20FB7DDB20C00F0A00011B5C /* btn_play.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_play.png; sourceTree = "<group>"; };
 		842970FC1E654644002BDBC0 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		842970FD1E654644002BDBC0 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		849D26EE1E640E3200F0CA5D /* 虾兽维度.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "虾兽维度.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1092,6 +1096,8 @@
 			children = (
 				20E895B220ADB58C0090AD15 /* MISFileType.bundle */,
 				FD3332E620A178690017655F /* wificlose.png */,
+				20FB7DDA20C00F0A00011B5C /* btn_pause.png */,
+				20FB7DDB20C00F0A00011B5C /* btn_play.png */,
 				FD3332E720A1786A0017655F /* wifiopen.png */,
 				2086643B20AC87DE00D51CCB /* dir_add.png */,
 				2086643C20AC87DE00D51CCB /* dir_backup.png */,
@@ -1229,7 +1235,9 @@
 				2086642620AB403D00D51CCB /* Info.plist in Resources */,
 				2066C30C209F643600799A1E /* upload.html in Resources */,
 				20F1121C1E866F9C00E64A70 /* XMLeftViewUserCell.xib in Resources */,
+				20FB7DDC20C00F0A00011B5C /* btn_pause.png in Resources */,
 				2086644020AC87DE00D51CCB /* dir_fresh.png in Resources */,
+				20FB7DDD20C00F0A00011B5C /* btn_play.png in Resources */,
 				20F112141E864FC000E64A70 /* web.plist in Resources */,
 				20E895B920AEFB120090AD15 /* setting_backup.png in Resources */,
 				84BA255A1E65C7A800C8B204 /* XMWebTableViewCell.xib in Resources */,

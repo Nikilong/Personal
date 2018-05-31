@@ -207,7 +207,7 @@ UIImagePickerControllerDelegate>
     self.navigationItem.leftBarButtonItems = @[backBtn,editBtn];
     
     // 右边为打开wifi的按钮 wifiopen
-    UIButton *wifiBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, btnWH, btnWH)];
+    UIButton *wifiBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 25, 25)];
     [wifiBtn setImage:[UIImage imageNamed:@"wifiopen"] forState:UIControlStateSelected];
     [wifiBtn setImage:[UIImage imageNamed:@"wificlose"] forState:UIControlStateNormal];
     [wifiBtn addTarget:self action:@selector(switchHttpServerConnect:) forControlEvents:UIControlEventTouchUpInside];
@@ -452,6 +452,9 @@ UIImagePickerControllerDelegate>
 
 /// 退出编辑模式
 - (void)cancelEdit:(UIButton *)btn{
+    self.toolBarSeleAllBtn.selected = NO;
+    self.toolBarDeleBtn.enabled = NO;
+    self.toolBarMoveBtn.enabled = NO;
     [self.tableView setEditing:NO animated:YES];
     self.toolBar.hidden = YES;
 }
@@ -468,7 +471,7 @@ UIImagePickerControllerDelegate>
     // 创建左侧边栏
     self.leftVC = [[XMWifiLeftTableViewController alloc] initWithStyle:UITableViewStyleGrouped];
     self.leftVC.delegate = self;
-    self.leftVC.view.frame = CGRectMake(XMLeftViewPadding, 40, XMWifiLeftViewTotalW - 2 *XMLeftViewPadding, XMScreenH - XMLeftViewPadding - 20);
+    self.leftVC.view.frame = CGRectMake(XMLeftViewPadding, 40, XMWifiLeftViewTotalW - 2 *XMLeftViewPadding, XMScreenH - XMLeftViewPadding - 54);
     [self.leftContentView addSubview:self.leftVC.view];
     
     // 添加到导航条之上
@@ -546,9 +549,10 @@ UIImagePickerControllerDelegate>
     
     [self hideLeftView];
     // 不论何种模式,点击了选择组别,取消全选状态和设置删除和移动按钮不可用
-    self.toolBarSeleAllBtn.selected = NO;
-    self.toolBarDeleBtn.enabled = NO;
-    self.toolBarMoveBtn.enabled = NO;
+//    self.toolBarSeleAllBtn.selected = NO;
+//    self.toolBarDeleBtn.enabled = NO;
+//    self.toolBarMoveBtn.enabled = NO;
+    [self cancelEdit:nil];
 }
 
 - (void)leftWifiTableViewControllerDidDeleteGroupName:(NSString *)groupName{
@@ -619,7 +623,10 @@ UIImagePickerControllerDelegate>
         [MBProgressHUD showMessage:@"尚未支持该格式" toView:self.view];
         return;
     }
-    
+    if (model.isDir){
+        [MBProgressHUD showMessage:@"不支持文件夹" toView:nil];
+        return;
+    }
     if(model.fileType == fileTypeImageName){
         NSMutableArray *imgArr = [NSMutableArray array];
         NSInteger currentImgIndex = 0;   // 记录当前的选择图片
@@ -699,22 +706,17 @@ UIImagePickerControllerDelegate>
         NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:point];
         __weak typeof(self) weakSelf = self;
         UIAlertController *tips = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-        
-        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
-        UIAlertAction *deleAction = [UIAlertAction actionWithTitle:@"删除" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action){
+
+        [tips addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+        [tips addAction:[UIAlertAction actionWithTitle:@"删除" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action){
             [weakSelf deleteOneCellAtIndexPath:indexPath];
-        }];
-        UIAlertAction *renameAction = [UIAlertAction actionWithTitle:@"重命名" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
+        }]];
+        [tips addAction:[UIAlertAction actionWithTitle:@"重命名" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
             [weakSelf renameFileAtIndexPath:indexPath];
-        }];
-        UIAlertAction *shareAction = [UIAlertAction actionWithTitle:@"分享" style: UIAlertActionStyleDefault  handler:^(UIAlertAction * _Nonnull action){
+        }]];
+        [tips addAction:[UIAlertAction actionWithTitle:@"分享" style: UIAlertActionStyleDefault  handler:^(UIAlertAction * _Nonnull action){
             [weakSelf shareFileAtIndexPath:indexPath];
-        }];
-        
-        [tips addAction:cancelAction];
-        [tips addAction:deleAction];
-        [tips addAction:renameAction];
-        [tips addAction:shareAction];
+        }]];
         
         // 根据文件类型是否增加"解压"按钮
         XMWifiTransModel *model = self.dataArr[indexPath.row];
