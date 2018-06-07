@@ -206,9 +206,11 @@
     [tips addAction:cancelAction];
     [tips addAction:okAction];
     [tips addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+        textField.clearButtonMode = UITextFieldViewModeAlways;
         textField.placeholder = @"新文件夹名称";
     }];
     [tips addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+        textField.clearButtonMode = UITextFieldViewModeAlways;
         textField.placeholder = @"随便输入要备份,不输入不备份";
     }];
     [self presentViewController:tips animated:YES completion:nil];
@@ -286,6 +288,10 @@
     }else{
         return NO;
     }
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return @"删除";
 }
 
 #pragma mark 长按cell操作
@@ -377,6 +383,7 @@
     [tips addAction:cancelAction];
     [tips addAction:okAction];
     [tips addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+        textField.clearButtonMode = UITextFieldViewModeAlways;
         textField.text = model.groupName;
     }];
     [self presentViewController:tips animated:YES completion:nil];

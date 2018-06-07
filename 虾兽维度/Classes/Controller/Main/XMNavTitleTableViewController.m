@@ -54,7 +54,7 @@
 /** 自定义行高 */
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 44;
+    return 35;
 }
 
 #pragma mark - 代理方法

@@ -9,8 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "XMOpenWebmoduleProtocol.h"
 
+typedef void(^XMQRcodeScanCallBack)(NSString *result);
+
 @interface XMQRCodeViewController : UIViewController
 
 @property (weak, nonatomic)  id<XMOpenWebmoduleProtocol> delegate;
+
+@property (nonatomic, copy) XMQRcodeScanCallBack scanCallBack;
 
 @end

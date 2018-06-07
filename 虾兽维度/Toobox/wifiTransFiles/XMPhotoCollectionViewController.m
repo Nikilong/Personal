@@ -155,6 +155,7 @@ static NSString * const reuseIdentifier = @"XMPhotoCell";
         btn.title = [NSString stringWithFormat:@"%.1fs",weakSelf.timeInterval];
     }]];
     [tips addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField){
+        textField.clearButtonMode = UITextFieldViewModeAlways;
         textField.placeholder = @"最少0.5s,建议1s以上";
     }];
     

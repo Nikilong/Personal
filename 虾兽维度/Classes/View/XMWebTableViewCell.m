@@ -15,7 +15,6 @@
 
 @property (weak, nonatomic) IBOutlet UILabel *title;
 @property (weak, nonatomic) IBOutlet UILabel *publishTime;
-@property (weak, nonatomic) IBOutlet UILabel *number;
 @property (weak, nonatomic) IBOutlet UILabel *pureTitle;
 @property (weak, nonatomic) IBOutlet UILabel *commitCount;
 @property (weak, nonatomic) IBOutlet UILabel *sourceLabel;
@@ -32,14 +31,23 @@
     
     _imageV.hidden = NO;
     _title.hidden = NO;
+    _commitCount.hidden = NO;
     // 隐藏不必要的标签
     _pureTitle.hidden = YES;
-    _commitCount.hidden = YES;
-    _sourceLabel.hidden = YES;
-    _number.hidden = YES;
     
+    // 显示创建时间
+    _commitCount.text = wifiModel.createDateStr;
     // 显示大小标签
-    _publishTime.text = wifiModel.size;
+    _publishTime.text = wifiModel.sizeStr;
+    
+    // 视频音频显示时长
+    if(wifiModel.fileType == fileTypeAudioName || wifiModel.fileType == fileTypeVideoName){
+        _sourceLabel.hidden = NO;
+        _sourceLabel.text = [NSString stringWithFormat:@"时长:%@",wifiModel.mediaLengthStr];
+    }else{
+        _sourceLabel.text = @"";
+        _sourceLabel.hidden = YES;
+    }
     
     // 设置标题
     if (wifiModel.prePath.length > 0){
@@ -65,7 +73,6 @@
 - (void)setModel:(XMWebModel *)model
 {
     _model = model;
-    _number.text = [NSString stringWithFormat:@"赞:%ld",model.index + 1];
     _publishTime.text = model.publishTime;
     _commitCount.text = [NSString stringWithFormat:@"评论：%zd",model.cmt_cnt];
     _sourceLabel.text = [NSString stringWithFormat:@"来自：%@", model.source];
@@ -79,8 +86,7 @@
         
         [_imageV sd_setImageWithURL:model.imageURL placeholderImage:[UIImage imageNamed:@"placehoder"]];
         
-    }else
-    {
+    }else{
         _title.hidden = YES;
         _imageV.hidden = YES;
         _pureTitle.hidden = NO;

@@ -71,7 +71,8 @@
 - (void)showFrom:(UIView *)view
 {
     // 1，获得当前的窗口
-    UIWindow *window = [[UIApplication sharedApplication].windows lastObject];
+//    UIWindow *window = [[UIApplication sharedApplication].windows lastObject];
+    UIWindow *window = [UIApplication sharedApplication].keyWindow;
 
     // 2，设置XMDropView对象的尺寸，消除背景颜色
     self.backgroundColor = [UIColor clearColor];

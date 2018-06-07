@@ -82,6 +82,30 @@
 		205CED0C1F489F2B00821E38 /* XMNavTitleTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 205CED091F489F2B00821E38 /* XMNavTitleTableViewController.m */; };
 		205CED0F1F48AA5600821E38 /* XMTextTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 205CED0E1F48AA5600821E38 /* XMTextTableViewCell.m */; };
 		205CED131F49623200821E38 /* NSArray+Log.m in Sources */ = {isa = PBXBuildFile; fileRef = 205CED121F49623200821E38 /* NSArray+Log.m */; };
+		2061C1DC20C3C534008C7424 /* code.html in Resources */ = {isa = PBXBuildFile; fileRef = 2061C1D920C3C534008C7424 /* code.html */; };
+		2061C1DD20C3C534008C7424 /* highlight.css in Resources */ = {isa = PBXBuildFile; fileRef = 2061C1DA20C3C534008C7424 /* highlight.css */; };
+		2061C1DE20C3C534008C7424 /* highlight.js in Resources */ = {isa = PBXBuildFile; fileRef = 2061C1DB20C3C534008C7424 /* highlight.js */; };
+		2061C20F20C56F5F008C7424 /* HJVideoAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2061C1E020C56F5F008C7424 /* HJVideoAssets.xcassets */; };
+		2061C21020C56F5F008C7424 /* HJVideoConfigModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2061C1E420C56F5F008C7424 /* HJVideoConfigModel.m */; };
+		2061C21120C56F5F008C7424 /* HJVideoPlayTimeRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 2061C1E620C56F5F008C7424 /* HJVideoPlayTimeRecord.m */; };
+		2061C21220C56F5F008C7424 /* AppDelegate+HJVideoRotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2061C1E920C56F5F008C7424 /* AppDelegate+HJVideoRotation.m */; };
+		2061C21320C56F5F008C7424 /* HJVideoPlayerUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 2061C1ED20C56F5F008C7424 /* HJVideoPlayerUtil.m */; };
+		2061C21420C56F5F008C7424 /* HJVideoPlayManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2061C1EF20C56F5F008C7424 /* HJVideoPlayManager.m */; };
+		2061C21520C56F5F008C7424 /* HJVideoTimeUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 2061C1F120C56F5F008C7424 /* HJVideoTimeUtil.m */; };
+		2061C21620C56F5F008C7424 /* HJVideoUIManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2061C1F320C56F5F008C7424 /* HJVideoUIManager.m */; };
+		2061C21720C56F5F008C7424 /* HJViewFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 2061C1F520C56F5F008C7424 /* HJViewFactory.m */; };
+		2061C21820C56F5F008C7424 /* UIDevice+HJVideoRotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2061C1F720C56F5F008C7424 /* UIDevice+HJVideoRotation.m */; };
+		2061C21920C56F5F008C7424 /* UIImage+getImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2061C1F920C56F5F008C7424 /* UIImage+getImage.m */; };
+		2061C21A20C56F5F008C7424 /* videoImages.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2061C1FB20C56F5F008C7424 /* videoImages.bundle */; };
+		2061C21B20C56F5F008C7424 /* HJBufferSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 2061C1FE20C56F5F008C7424 /* HJBufferSlider.m */; };
+		2061C21C20C56F5F008C7424 /* HJCircleLoading.m in Sources */ = {isa = PBXBuildFile; fileRef = 2061C20020C56F5F008C7424 /* HJCircleLoading.m */; };
+		2061C21D20C56F5F008C7424 /* HJFastForwardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2061C20220C56F5F008C7424 /* HJFastForwardView.m */; };
+		2061C21E20C56F5F008C7424 /* HJPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2061C20420C56F5F008C7424 /* HJPlayerView.m */; };
+		2061C21F20C56F5F008C7424 /* HJVideoBottomView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2061C20620C56F5F008C7424 /* HJVideoBottomView.m */; };
+		2061C22020C56F5F008C7424 /* HJVideoMaskView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2061C20820C56F5F008C7424 /* HJVideoMaskView.m */; };
+		2061C22120C56F5F008C7424 /* HJVideoPlayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2061C20A20C56F5F008C7424 /* HJVideoPlayerController.m */; };
+		2061C22220C56F5F008C7424 /* HJVideoSettingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2061C20C20C56F5F008C7424 /* HJVideoSettingView.m */; };
+		2061C22320C56F5F008C7424 /* HJVideoTopView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2061C20E20C56F5F008C7424 /* HJVideoTopView.m */; };
 		2066C307209F558600799A1E /* MyHTTPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 2066C305209F558600799A1E /* MyHTTPConnection.m */; };
 		2066C30B209F643600799A1E /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = 2066C309209F643600799A1E /* index.html */; };
 		2066C30C209F643600799A1E /* upload.html in Resources */ = {isa = PBXBuildFile; fileRef = 2066C30A209F643600799A1E /* upload.html */; };
@@ -323,6 +347,52 @@
 		205CED0E1F48AA5600821E38 /* XMTextTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMTextTableViewCell.m; sourceTree = "<group>"; };
 		205CED111F49623200821E38 /* NSArray+Log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+Log.h"; sourceTree = "<group>"; };
 		205CED121F49623200821E38 /* NSArray+Log.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+Log.m"; sourceTree = "<group>"; };
+		2061C1D920C3C534008C7424 /* code.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = code.html; sourceTree = "<group>"; };
+		2061C1DA20C3C534008C7424 /* highlight.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = highlight.css; sourceTree = "<group>"; };
+		2061C1DB20C3C534008C7424 /* highlight.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = highlight.js; sourceTree = "<group>"; };
+		2061C1E020C56F5F008C7424 /* HJVideoAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = HJVideoAssets.xcassets; sourceTree = "<group>"; };
+		2061C1E120C56F5F008C7424 /* HJVideoPlayerHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HJVideoPlayerHeader.h; sourceTree = "<group>"; };
+		2061C1E320C56F5F008C7424 /* HJVideoConfigModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HJVideoConfigModel.h; sourceTree = "<group>"; };
+		2061C1E420C56F5F008C7424 /* HJVideoConfigModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HJVideoConfigModel.m; sourceTree = "<group>"; };
+		2061C1E520C56F5F008C7424 /* HJVideoPlayTimeRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HJVideoPlayTimeRecord.h; sourceTree = "<group>"; };
+		2061C1E620C56F5F008C7424 /* HJVideoPlayTimeRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HJVideoPlayTimeRecord.m; sourceTree = "<group>"; };
+		2061C1E820C56F5F008C7424 /* AppDelegate+HJVideoRotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AppDelegate+HJVideoRotation.h"; sourceTree = "<group>"; };
+		2061C1E920C56F5F008C7424 /* AppDelegate+HJVideoRotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AppDelegate+HJVideoRotation.m"; sourceTree = "<group>"; };
+		2061C1EA20C56F5F008C7424 /* HJSingletonService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HJSingletonService.h; sourceTree = "<group>"; };
+		2061C1EB20C56F5F008C7424 /* HJVideoConst.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HJVideoConst.h; sourceTree = "<group>"; };
+		2061C1EC20C56F5F008C7424 /* HJVideoPlayerUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HJVideoPlayerUtil.h; sourceTree = "<group>"; };
+		2061C1ED20C56F5F008C7424 /* HJVideoPlayerUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HJVideoPlayerUtil.m; sourceTree = "<group>"; };
+		2061C1EE20C56F5F008C7424 /* HJVideoPlayManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HJVideoPlayManager.h; sourceTree = "<group>"; };
+		2061C1EF20C56F5F008C7424 /* HJVideoPlayManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HJVideoPlayManager.m; sourceTree = "<group>"; };
+		2061C1F020C56F5F008C7424 /* HJVideoTimeUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HJVideoTimeUtil.h; sourceTree = "<group>"; };
+		2061C1F120C56F5F008C7424 /* HJVideoTimeUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HJVideoTimeUtil.m; sourceTree = "<group>"; };
+		2061C1F220C56F5F008C7424 /* HJVideoUIManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HJVideoUIManager.h; sourceTree = "<group>"; };
+		2061C1F320C56F5F008C7424 /* HJVideoUIManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HJVideoUIManager.m; sourceTree = "<group>"; };
+		2061C1F420C56F5F008C7424 /* HJViewFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HJViewFactory.h; sourceTree = "<group>"; };
+		2061C1F520C56F5F008C7424 /* HJViewFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HJViewFactory.m; sourceTree = "<group>"; };
+		2061C1F620C56F5F008C7424 /* UIDevice+HJVideoRotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIDevice+HJVideoRotation.h"; sourceTree = "<group>"; };
+		2061C1F720C56F5F008C7424 /* UIDevice+HJVideoRotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIDevice+HJVideoRotation.m"; sourceTree = "<group>"; };
+		2061C1F820C56F5F008C7424 /* UIImage+getImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+getImage.h"; sourceTree = "<group>"; };
+		2061C1F920C56F5F008C7424 /* UIImage+getImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+getImage.m"; sourceTree = "<group>"; };
+		2061C1FB20C56F5F008C7424 /* videoImages.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = videoImages.bundle; sourceTree = "<group>"; };
+		2061C1FD20C56F5F008C7424 /* HJBufferSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HJBufferSlider.h; sourceTree = "<group>"; };
+		2061C1FE20C56F5F008C7424 /* HJBufferSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HJBufferSlider.m; sourceTree = "<group>"; };
+		2061C1FF20C56F5F008C7424 /* HJCircleLoading.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HJCircleLoading.h; sourceTree = "<group>"; };
+		2061C20020C56F5F008C7424 /* HJCircleLoading.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HJCircleLoading.m; sourceTree = "<group>"; };
+		2061C20120C56F5F008C7424 /* HJFastForwardView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HJFastForwardView.h; sourceTree = "<group>"; };
+		2061C20220C56F5F008C7424 /* HJFastForwardView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HJFastForwardView.m; sourceTree = "<group>"; };
+		2061C20320C56F5F008C7424 /* HJPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HJPlayerView.h; sourceTree = "<group>"; };
+		2061C20420C56F5F008C7424 /* HJPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HJPlayerView.m; sourceTree = "<group>"; };
+		2061C20520C56F5F008C7424 /* HJVideoBottomView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HJVideoBottomView.h; sourceTree = "<group>"; };
+		2061C20620C56F5F008C7424 /* HJVideoBottomView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HJVideoBottomView.m; sourceTree = "<group>"; };
+		2061C20720C56F5F008C7424 /* HJVideoMaskView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HJVideoMaskView.h; sourceTree = "<group>"; };
+		2061C20820C56F5F008C7424 /* HJVideoMaskView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HJVideoMaskView.m; sourceTree = "<group>"; };
+		2061C20920C56F5F008C7424 /* HJVideoPlayerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HJVideoPlayerController.h; sourceTree = "<group>"; };
+		2061C20A20C56F5F008C7424 /* HJVideoPlayerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HJVideoPlayerController.m; sourceTree = "<group>"; };
+		2061C20B20C56F5F008C7424 /* HJVideoSettingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HJVideoSettingView.h; sourceTree = "<group>"; };
+		2061C20C20C56F5F008C7424 /* HJVideoSettingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HJVideoSettingView.m; sourceTree = "<group>"; };
+		2061C20D20C56F5F008C7424 /* HJVideoTopView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HJVideoTopView.h; sourceTree = "<group>"; };
+		2061C20E20C56F5F008C7424 /* HJVideoTopView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HJVideoTopView.m; sourceTree = "<group>"; };
 		2066C305209F558600799A1E /* MyHTTPConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyHTTPConnection.m; sourceTree = "<group>"; };
 		2066C306209F558600799A1E /* MyHTTPConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyHTTPConnection.h; sourceTree = "<group>"; };
 		2066C309209F643600799A1E /* index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
@@ -586,6 +656,7 @@
 		204D23DD209ED88200F17E2E /* Third */ = {
 			isa = PBXGroup;
 			children = (
+				2061C1DF20C56F5F008C7424 /* VideoClass */,
 				204D2417209ED91A00F17E2E /* Vendor */,
 				204D23DE209ED8E800F17E2E /* Core */,
 			);
@@ -812,9 +883,94 @@
 			path = Log;
 			sourceTree = "<group>";
 		};
+		2061C1DF20C56F5F008C7424 /* VideoClass */ = {
+			isa = PBXGroup;
+			children = (
+				2061C1E020C56F5F008C7424 /* HJVideoAssets.xcassets */,
+				2061C1E120C56F5F008C7424 /* HJVideoPlayerHeader.h */,
+				2061C1E220C56F5F008C7424 /* Models */,
+				2061C1E720C56F5F008C7424 /* Others */,
+				2061C1FA20C56F5F008C7424 /* Resources */,
+				2061C1FC20C56F5F008C7424 /* Views */,
+			);
+			path = VideoClass;
+			sourceTree = "<group>";
+		};
+		2061C1E220C56F5F008C7424 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				2061C1E320C56F5F008C7424 /* HJVideoConfigModel.h */,
+				2061C1E420C56F5F008C7424 /* HJVideoConfigModel.m */,
+				2061C1E520C56F5F008C7424 /* HJVideoPlayTimeRecord.h */,
+				2061C1E620C56F5F008C7424 /* HJVideoPlayTimeRecord.m */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		2061C1E720C56F5F008C7424 /* Others */ = {
+			isa = PBXGroup;
+			children = (
+				2061C1E820C56F5F008C7424 /* AppDelegate+HJVideoRotation.h */,
+				2061C1E920C56F5F008C7424 /* AppDelegate+HJVideoRotation.m */,
+				2061C1EA20C56F5F008C7424 /* HJSingletonService.h */,
+				2061C1EB20C56F5F008C7424 /* HJVideoConst.h */,
+				2061C1EC20C56F5F008C7424 /* HJVideoPlayerUtil.h */,
+				2061C1ED20C56F5F008C7424 /* HJVideoPlayerUtil.m */,
+				2061C1EE20C56F5F008C7424 /* HJVideoPlayManager.h */,
+				2061C1EF20C56F5F008C7424 /* HJVideoPlayManager.m */,
+				2061C1F020C56F5F008C7424 /* HJVideoTimeUtil.h */,
+				2061C1F120C56F5F008C7424 /* HJVideoTimeUtil.m */,
+				2061C1F220C56F5F008C7424 /* HJVideoUIManager.h */,
+				2061C1F320C56F5F008C7424 /* HJVideoUIManager.m */,
+				2061C1F420C56F5F008C7424 /* HJViewFactory.h */,
+				2061C1F520C56F5F008C7424 /* HJViewFactory.m */,
+				2061C1F620C56F5F008C7424 /* UIDevice+HJVideoRotation.h */,
+				2061C1F720C56F5F008C7424 /* UIDevice+HJVideoRotation.m */,
+				2061C1F820C56F5F008C7424 /* UIImage+getImage.h */,
+				2061C1F920C56F5F008C7424 /* UIImage+getImage.m */,
+			);
+			path = Others;
+			sourceTree = "<group>";
+		};
+		2061C1FA20C56F5F008C7424 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				2061C1FB20C56F5F008C7424 /* videoImages.bundle */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		2061C1FC20C56F5F008C7424 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				2061C1FD20C56F5F008C7424 /* HJBufferSlider.h */,
+				2061C1FE20C56F5F008C7424 /* HJBufferSlider.m */,
+				2061C1FF20C56F5F008C7424 /* HJCircleLoading.h */,
+				2061C20020C56F5F008C7424 /* HJCircleLoading.m */,
+				2061C20120C56F5F008C7424 /* HJFastForwardView.h */,
+				2061C20220C56F5F008C7424 /* HJFastForwardView.m */,
+				2061C20320C56F5F008C7424 /* HJPlayerView.h */,
+				2061C20420C56F5F008C7424 /* HJPlayerView.m */,
+				2061C20520C56F5F008C7424 /* HJVideoBottomView.h */,
+				2061C20620C56F5F008C7424 /* HJVideoBottomView.m */,
+				2061C20720C56F5F008C7424 /* HJVideoMaskView.h */,
+				2061C20820C56F5F008C7424 /* HJVideoMaskView.m */,
+				2061C20920C56F5F008C7424 /* HJVideoPlayerController.h */,
+				2061C20A20C56F5F008C7424 /* HJVideoPlayerController.m */,
+				2061C20B20C56F5F008C7424 /* HJVideoSettingView.h */,
+				2061C20C20C56F5F008C7424 /* HJVideoSettingView.m */,
+				2061C20D20C56F5F008C7424 /* HJVideoTopView.h */,
+				2061C20E20C56F5F008C7424 /* HJVideoTopView.m */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		2066C308209F642000799A1E /* web */ = {
 			isa = PBXGroup;
 			children = (
+				2061C1D920C3C534008C7424 /* code.html */,
+				2061C1DA20C3C534008C7424 /* highlight.css */,
+				2061C1DB20C3C534008C7424 /* highlight.js */,
 				2066C309209F643600799A1E /* index.html */,
 				2066C30A209F643600799A1E /* upload.html */,
 			);
@@ -1228,14 +1384,17 @@
 				FD3332E820A1786A0017655F /* wificlose.png in Resources */,
 				2086643E20AC87DE00D51CCB /* dir_add.png in Resources */,
 				204D2438209ED91A00F17E2E /* README.txt in Resources */,
+				2061C1DE20C3C534008C7424 /* highlight.js in Resources */,
 				20C85E6920541F3B0057F483 /* tool_icon_default.png in Resources */,
 				2066C30B209F643600799A1E /* index.html in Resources */,
 				204D2430209ED91A00F17E2E /* About.txt in Resources */,
 				20C85E6720541F3B0057F483 /* tool_icon_4.png in Resources */,
 				2086642620AB403D00D51CCB /* Info.plist in Resources */,
 				2066C30C209F643600799A1E /* upload.html in Resources */,
+				2061C20F20C56F5F008C7424 /* HJVideoAssets.xcassets in Resources */,
 				20F1121C1E866F9C00E64A70 /* XMLeftViewUserCell.xib in Resources */,
 				20FB7DDC20C00F0A00011B5C /* btn_pause.png in Resources */,
+				2061C21A20C56F5F008C7424 /* videoImages.bundle in Resources */,
 				2086644020AC87DE00D51CCB /* dir_fresh.png in Resources */,
 				20FB7DDD20C00F0A00011B5C /* btn_play.png in Resources */,
 				20F112141E864FC000E64A70 /* web.plist in Resources */,
@@ -1247,11 +1406,13 @@
 				20E895B520ADDAA50090AD15 /* file_move_disable.png in Resources */,
 				FD3332E920A1786A0017655F /* wifiopen.png in Resources */,
 				205CECF61F488EF700821E38 /* webSpecial.plist in Resources */,
+				2061C1DD20C3C534008C7424 /* highlight.css in Resources */,
 				FD1EA0E220AC58C200658F18 /* file_delete_able.png in Resources */,
 				204D242E209ED91A00F17E2E /* About.txt in Resources */,
 				20C85E6320541F3B0057F483 /* tool_icon_2.png in Resources */,
 				2086643F20AC87DE00D51CCB /* dir_backup.png in Resources */,
 				205CECDC1F48150E00821E38 /* MBProgressHUD.bundle in Resources */,
+				2061C1DC20C3C534008C7424 /* code.html in Resources */,
 				20C85E6120541F3B0057F483 /* tool_icon_1.png in Resources */,
 				20C85E6020541F3B0057F483 /* tool_icon_0.png in Resources */,
 				FD1EA0DA20AC52B300658F18 /* phone_documents_icon_update.png in Resources */,
@@ -1282,6 +1443,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FD3332EC20A17DD80017655F /* XMWifiLeftTableViewController.m in Sources */,
+				2061C22320C56F5F008C7424 /* HJVideoTopView.m in Sources */,
 				205CED131F49623200821E38 /* NSArray+Log.m in Sources */,
 				205CECEA1F48150E00821E38 /* UIImage+GIF.m in Sources */,
 				205CECF01F48150E00821E38 /* UIView+WebCacheOperation.m in Sources */,
@@ -1303,6 +1465,7 @@
 				205CECE21F48150E00821E38 /* SDImageCacheConfig.m in Sources */,
 				205CECEB1F48150E00821E38 /* UIImage+MultiFormat.m in Sources */,
 				202C84EF1F2624AD0055FD7D /* XMHomeTableViewController.m in Sources */,
+				2061C21B20C56F5F008C7424 /* HJBufferSlider.m in Sources */,
 				200770322059775100551C00 /* XMPersonFilmCollectionVC.m in Sources */,
 				205CECF91F4898A600821E38 /* XMDropView.m in Sources */,
 				20C85E7020551B800057F483 /* XMTouchIDKeyboardViewController.m in Sources */,
@@ -1322,11 +1485,17 @@
 				205CECE51F48150E00821E38 /* SDWebImageDownloader.m in Sources */,
 				204D2406209ED8E800F17E2E /* DDData.m in Sources */,
 				204D240A209ED8E800F17E2E /* HTTPConnection.m in Sources */,
+				2061C21220C56F5F008C7424 /* AppDelegate+HJVideoRotation.m in Sources */,
 				20F112171E86697400E64A70 /* XMChannelModel.m in Sources */,
+				2061C21720C56F5F008C7424 /* HJViewFactory.m in Sources */,
 				205CECE01F48150E00821E38 /* NSImage+WebCache.m in Sources */,
+				2061C21320C56F5F008C7424 /* HJVideoPlayerUtil.m in Sources */,
 				20707E9F209F446F00572604 /* XMFileDisplayWebViewViewController.m in Sources */,
 				2086642C20AB403D00D51CCB /* hmac.c in Sources */,
+				2061C22220C56F5F008C7424 /* HJVideoSettingView.m in Sources */,
 				20707EA3209F551200572604 /* ZBTool.m in Sources */,
+				2061C21420C56F5F008C7424 /* HJVideoPlayManager.m in Sources */,
+				2061C21E20C56F5F008C7424 /* HJPlayerView.m in Sources */,
 				205CECED1F48150E00821E38 /* UIImageView+HighlightedWebCache.m in Sources */,
 				2066C307209F558600799A1E /* MyHTTPConnection.m in Sources */,
 				205CECDF1F48150E00821E38 /* NSData+ImageContentType.m in Sources */,
@@ -1341,16 +1510,19 @@
 				205CECDE1F48150E00821E38 /* MKAnnotationView+WebCache.m in Sources */,
 				20C85E2F204EE8850057F483 /* EXQRCodeImageDetectorUtil.m in Sources */,
 				202C84F61F2624FC0055FD7D /* XMNavWebViewController.m in Sources */,
+				2061C22020C56F5F008C7424 /* HJVideoMaskView.m in Sources */,
 				204D2407209ED8E800F17E2E /* DDNumber.m in Sources */,
 				2086642A20AB403D00D51CCB /* aestab.c in Sources */,
 				204D2433209ED91A00F17E2E /* DDFileLogger.m in Sources */,
 				200770332059775100551C00 /* XMShowCollectionViewCell.m in Sources */,
 				205CECE31F48150E00821E38 /* SDWebImageCompat.m in Sources */,
+				2061C21020C56F5F008C7424 /* HJVideoConfigModel.m in Sources */,
 				2086643420AB403D00D51CCB /* minishared.c in Sources */,
 				205BCF9720AB174900FF9652 /* XMSavePathUnit.m in Sources */,
 				2086643520AB403D00D51CCB /* unzip.c in Sources */,
 				205CED0C1F489F2B00821E38 /* XMNavTitleTableViewController.m in Sources */,
 				2086643120AB403D00D51CCB /* ioapi.c in Sources */,
+				2061C21520C56F5F008C7424 /* HJVideoTimeUtil.m in Sources */,
 				20F1121B1E866F9C00E64A70 /* XMLeftViewUserCell.m in Sources */,
 				2086643320AB403D00D51CCB /* ioapi_mem.c in Sources */,
 				FD7407E820B4306D00A83979 /* XMPhotoCollectionViewController.m in Sources */,
@@ -1359,8 +1531,10 @@
 				204D240B209ED8E800F17E2E /* HTTPMessage.m in Sources */,
 				204D2415209ED8E800F17E2E /* HTTPRedirectResponse.m in Sources */,
 				207BBE8120B7078F00C86EAD /* XMPhotoCollectionViewCell.m in Sources */,
+				2061C21920C56F5F008C7424 /* UIImage+getImage.m in Sources */,
 				204D2437209ED91A00F17E2E /* DispatchQueueLogFormatter.m in Sources */,
 				202C84F21F2624AD0055FD7D /* XMSearchTableViewController.m in Sources */,
+				2061C21C20C56F5F008C7424 /* HJCircleLoading.m in Sources */,
 				205CECF41F48151700821E38 /* UIView+getPointColor.m in Sources */,
 				2086643220AB403D00D51CCB /* ioapi_buf.c in Sources */,
 				205CED0B1F489F2B00821E38 /* XMMainViewController.m in Sources */,
@@ -1370,10 +1544,13 @@
 				204D2434209ED91A00F17E2E /* DDLog.m in Sources */,
 				205CECE81F48150E00821E38 /* SDWebImagePrefetcher.m in Sources */,
 				204D2413209ED8E800F17E2E /* HTTPErrorResponse.m in Sources */,
+				2061C21820C56F5F008C7424 /* UIDevice+HJVideoRotation.m in Sources */,
 				2086642F20AB403D00D51CCB /* sha1.c in Sources */,
+				2061C21D20C56F5F008C7424 /* HJFastForwardView.m in Sources */,
 				204D2412209ED8E800F17E2E /* HTTPDynamicFileResponse.m in Sources */,
 				204D2432209ED91A00F17E2E /* DDASLLogger.m in Sources */,
 				20F112251E86BF4600E64A70 /* XMWebModelTool.m in Sources */,
+				2061C21620C56F5F008C7424 /* HJVideoUIManager.m in Sources */,
 				2086642D20AB403D00D51CCB /* prng.c in Sources */,
 				2086643720AB403D00D51CCB /* SSZipArchive.m in Sources */,
 				200770352059775100551C00 /* XMSingleFilmModle.m in Sources */,
@@ -1386,11 +1563,14 @@
 				204D2408209ED8E800F17E2E /* DDRange.m in Sources */,
 				205CECEC1F48150E00821E38 /* UIImage+WebP.m in Sources */,
 				FD3332EF20A181D40017655F /* XMWifiGroupTool.m in Sources */,
+				2061C21F20C56F5F008C7424 /* HJVideoBottomView.m in Sources */,
 				204D240F209ED8E800F17E2E /* MultipartMessageHeaderField.m in Sources */,
 				20C85E53205419C80057F483 /* XMToolBoxConfig.m in Sources */,
 				202C84F01F2624AD0055FD7D /* XMQRCodeViewController.m in Sources */,
 				204D2411209ED8E800F17E2E /* HTTPDataResponse.m in Sources */,
 				849D26F31E640E3200F0CA5D /* main.m in Sources */,
+				2061C22120C56F5F008C7424 /* HJVideoPlayerController.m in Sources */,
+				2061C21120C56F5F008C7424 /* HJVideoPlayTimeRecord.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

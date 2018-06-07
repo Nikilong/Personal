@@ -16,7 +16,7 @@
 #import "MBProgressHUD+NK.h"
 
 
-@interface XMPersonFilmCollectionVC ()<UIGestureRecognizerDelegate>
+@interface XMPersonFilmCollectionVC ()<UIGestureRecognizerDelegate,XMPersonFilmCollectionVCDelegate>
 
 // 标记右划开始的位置
 @property (nonatomic, assign)  CGFloat starX;
@@ -352,7 +352,8 @@ static NSString * const reuseIdentifier = @"Cell";
     XMPersonFilmCollectionVC *vc = [[XMPersonFilmCollectionVC alloc] initWithCollectionViewLayout:[[UICollectionViewFlowLayout alloc] init]];
     vc.currentModel = detatilModel;
     vc.detailMode = YES;
-    vc.delegate = self.parentViewController;
+    vc.delegate = self;
+//    vc.delegate = self.parentViewController;
     vc.view.frame = CGRectMake(0, 64, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
     vc.cellSize = CGSizeMake([UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
     vc.cellInset = UIEdgeInsetsMake(0, 0, 0, 0);

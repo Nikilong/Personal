@@ -11,13 +11,10 @@
 #import "DDLog.h"
 #import "DDTTYLogger.h"
 
-
 #import "MyHTTPConnection.h"
 #import "ZBTool.h"
 
-
 #import "XMWifiTransModel.h"
-//#import <AVFoundation/AVFoundation.h>
 #import "XMFileDisplayWebViewViewController.h"
 #import "XMWifiLeftTableViewController.h"
 #import "XMWifiGroupTool.h"
@@ -27,18 +24,30 @@
 
 #import "SSZipArchive.h"
 #import "XMPhotoCollectionViewController.h"
+#import "HJVideoPlayerController.h"
+#import "XMQRCodeViewController.h"
+
+typedef enum : NSUInteger {
+    XMFileSortTypeBigFirst,     //
+    XMFileSortTypeSmallFirst,
+    XMFileSortTypeNewFirst,
+    XMFileSortTypeOldFirst,
+    XMFileSortTypeFileType,
+} XMFileSortType;
 
 
 @interface XMWifiTransFileViewController ()
 <XMWifiLeftTableViewControllerDelegate,
 UINavigationControllerDelegate,
-UIImagePickerControllerDelegate>
+UIImagePickerControllerDelegate,
+UITextFieldDelegate>
 
 
 @property (nonatomic, strong) HTTPServer *httpServer;
-@property (nonatomic, assign)  BOOL connectFlag;
+@property (nonatomic, assign)  BOOL openHttpServerFlag;   // 是否开启本地http服务
+@property (nonatomic, assign)  BOOL connectServerFlag;      // 是否与电脑端服务器连接
+@property (nonatomic, copy)  NSString *serverURL;      // 电脑端服务器地址
 
-@property (nonatomic, strong) NSMutableArray *dataArr;
 
 @property (weak, nonatomic)  UIView *toolBar;                // 批量编辑下的工具条
 @property (weak, nonatomic)  UIButton *toolBarDeleBtn;       // 工具条删除按钮
@@ -56,6 +65,16 @@ UIImagePickerControllerDelegate>
 
 /// 是否是移动文件模式,yes下点击cell不会展示文件夹内容
 @property (nonatomic, assign)  BOOL isMoveFilesMode;
+
+/// 搜索框
+@property (weak, nonatomic)  UITextField *searchF;
+
+/// 搜索结果数据源
+@property (nonatomic, strong) NSMutableArray *searchArr;
+/// 当前数据源
+@property (nonatomic, strong) NSMutableArray *currentDataArr;
+/// 文件夹遍历的数据源
+@property (nonatomic, strong) NSMutableArray *realDataArr;
 
 
 @end
@@ -112,13 +131,31 @@ UIImagePickerControllerDelegate>
     return _toolBar;
 }
 
-- (NSMutableArray *)dataArr
+- (NSMutableArray *)searchArr
 {
-    if (!_dataArr)
+    if (!_searchArr)
     {
-        _dataArr = [XMWifiGroupTool getCurrentGroupFiles];
+        _searchArr = [NSMutableArray array];
     }
-    return _dataArr;
+    return _searchArr;
+}
+
+- (NSMutableArray *)realDataArr
+{
+    if (!_realDataArr)
+    {
+        _realDataArr = [XMWifiGroupTool getCurrentGroupFiles];
+    }
+    return _realDataArr;
+}
+
+- (NSMutableArray *)currentDataArr
+{
+    if (!_currentDataArr)
+    {
+        _currentDataArr = [NSMutableArray arrayWithArray:self.realDataArr];
+    }
+    return _currentDataArr;
 }
 
 - (UIView *)cover
@@ -145,7 +182,8 @@ UIImagePickerControllerDelegate>
     
     // 初始化参数
     self.view.backgroundColor = [UIColor whiteColor];
-    self.connectFlag = NO;
+    self.openHttpServerFlag = NO;
+    self.connectServerFlag = NO;
     self.tableView.allowsMultipleSelectionDuringEditing = YES;
     self.isMoveFilesMode = NO;
     // 更新本地数据
@@ -173,6 +211,8 @@ UIImagePickerControllerDelegate>
 
 - (void)viewDidDisappear:(BOOL)animated{
     [super viewDidDisappear:animated];
+    [self cancelSearch];
+    [self.searchF removeFromSuperview];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"XMWifiTransfronFilesComplete" object:nil];
 }
 
@@ -181,11 +221,13 @@ UIImagePickerControllerDelegate>
     if (con){
         [con endRefreshing];
     }
-     [self.dataArr removeAllObjects];
-     self.dataArr = [XMWifiGroupTool getCurrentGroupFiles];
-     dispatch_async(dispatch_get_main_queue(), ^{
-         [self.tableView reloadData];
-     });
+    [self.realDataArr removeAllObjects];
+    [self.currentDataArr removeAllObjects];
+    self.realDataArr = [XMWifiGroupTool getCurrentGroupFiles];
+    [self.currentDataArr addObjectsFromArray:self.realDataArr];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.tableView reloadData];
+    });
 }
 
 /// 添加系统原生下拉刷新
@@ -204,17 +246,36 @@ UIImagePickerControllerDelegate>
     UIBarButtonItem *backBtn = [[UIBarButtonItem alloc] initWithTitle:@"返回" style:UIBarButtonItemStylePlain target:self action:@selector(dismissCurrentViewController)];
     // 编辑模式
     UIBarButtonItem *editBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(setEditMode)];
-    self.navigationItem.leftBarButtonItems = @[backBtn,editBtn];
+    // 搜索模式
+    UIBarButtonItem *searchBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:@selector(searchFile)];
+    self.navigationItem.leftBarButtonItems = @[backBtn,editBtn,searchBtn];
     
     // 右边为打开wifi的按钮 wifiopen
+//    UIView *rightContentV = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 30 * 3, 30)];
     UIButton *wifiBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 25, 25)];
     [wifiBtn setImage:[UIImage imageNamed:@"wifiopen"] forState:UIControlStateSelected];
     [wifiBtn setImage:[UIImage imageNamed:@"wificlose"] forState:UIControlStateNormal];
     [wifiBtn addTarget:self action:@selector(switchHttpServerConnect:) forControlEvents:UIControlEventTouchUpInside];
+//    [rightContentV addSubview:wifiBtn];
+//    // 从相册添加图片
+//    UIButton *addBtn = [UIButton buttonWithType:UIButtonTypeSystem];
+//    addBtn.frame =CGRectMake(30, 0, 30, 30);
+//    [addBtn setTitle:@"+" forState:UIControlStateNormal];
+//    [addBtn addTarget:self action:@selector(addImageFromAlbum) forControlEvents:UIControlEventTouchUpInside];
+//    [rightContentV addSubview:addBtn];
+//    // 排序
+//    UIButton *sortBtn = [UIButton buttonWithType:UIButtonTypeSystem];
+//    sortBtn.frame =CGRectMake(60, 0, 30, 30);
+//    [sortBtn setTitle:@"+" forState:UIControlStateNormal];
+//    [sortBtn addTarget:self action:@selector(sortFiles) forControlEvents:UIControlEventTouchUpInside];
+//    [rightContentV addSubview:sortBtn];
+//    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightContentV];
     UIBarButtonItem *wifiBarBtn = [[UIBarButtonItem alloc] initWithCustomView:wifiBtn];
     // 从相册添加图片
     UIBarButtonItem *addBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addImageFromAlbum)];
-    self.navigationItem.rightBarButtonItems = @[wifiBarBtn,addBtn];
+    // 排序
+    UIBarButtonItem *sortBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(sortFiles)];
+    self.navigationItem.rightBarButtonItems = @[wifiBarBtn,addBtn,sortBtn];
     
     // 设置标题
     UILabel *titleLab = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 44)];
@@ -240,14 +301,30 @@ UIImagePickerControllerDelegate>
 }
 #pragma mark - 导航栏/toolbar及点击事件
 #pragma mark 导航栏
+    
+#pragma mark 手机服务器和电脑服务器连接情况
 /// 打开/关闭一个http服务
 - (void)switchHttpServerConnect:(UIButton *)wifiBtn{
-    wifiBtn.selected = !wifiBtn.selected;
-    if (self.connectFlag){
-        // 关闭http服务
-        [self.httpServer stop];
-        self.connectFlag = NO;
-        [MBProgressHUD showMessage:@"Wifi传输已关闭" toView:self.view];
+    if (self.openHttpServerFlag){
+        UIAlertController *tips = [UIAlertController alertControllerWithTitle:@"下一步" message:nil preferredStyle:UIAlertControllerStyleAlert];
+        __weak typeof(self) weakSelf = self;
+        [tips addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+        [tips addAction:[UIAlertAction actionWithTitle:@"显示本机ip" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action){
+            [weakSelf showIP];
+        }]];
+        [tips addAction:[UIAlertAction actionWithTitle:@"传输文件" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action){
+            [weakSelf connnectToServer];
+        }]];
+        [tips addAction:[UIAlertAction actionWithTitle:@"关闭传输" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action){
+            wifiBtn.selected = NO;
+            // 关闭http服务
+            [weakSelf.httpServer stop];
+            weakSelf.openHttpServerFlag = NO;
+            [MBProgressHUD showMessage:@"Wifi传输已关闭" toView:nil];
+        }]];
+        
+        [self presentViewController:tips animated:YES completion:nil];
+        
         return;
     }
     // Configure our logging framework.
@@ -261,7 +338,7 @@ UIImagePickerControllerDelegate>
     [self.httpServer setType:@"_http._tcp."];
     
     // 指定端口号(用于测试),实际由系统随机分配即可
-//    [self.httpServer setPort:50914];
+    [self.httpServer setPort:60285];
     
     // 设置index.html的路径
     NSString *webPath = [[NSBundle mainBundle] resourcePath];
@@ -277,17 +354,72 @@ UIImagePickerControllerDelegate>
         [MBProgressHUD showMessage:@"打开HTTP服务失败" toView:self.view];
     }else{
         NSLog(@"打开HTTP服务成功");
-        self.connectFlag = YES;
-        // 获得本机IP和端口号
-        [self showIP];
+        self.openHttpServerFlag = YES;
+        wifiBtn.selected = YES;
+        [self connnectToServer];
     }
+    
+    
+}
 
-
+/// 与电脑端服务器连接并且开始发送文件
+- (void)connnectToServer{
+    // 判断目前与电脑连接是否良好
+    if(self.connectServerFlag){
+        [self sendMessageToServer:self.serverURL];
+    }else{
+        XMQRCodeViewController *qrVC = [[XMQRCodeViewController alloc] init];
+        __weak typeof(self) weakSelf = self;
+        qrVC.scanCallBack = ^(NSString *scanResult){
+            // 发送请求给服务器,要求链接
+            NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/connect?",scanResult]];
+            NSURLSession *section = [NSURLSession sharedSession];
+            NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+            NSURLSessionDataTask *task = [section dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+                NSString *result = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+                /// connect success是与服务器约定的链接成功的标志
+                if ([result containsString:@"connect success"]){
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        // 保存服务器地址
+                        weakSelf.serverURL = scanResult;
+                        weakSelf.connectServerFlag = YES;
+                        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                            
+                            [weakSelf sendMessageToServer:scanResult];
+                        });
+                    });
+                }else{
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        weakSelf.connectServerFlag = NO;
+                        [MBProgressHUD showMessage:@"无法连接到服务器"];
+                    });
+                }
+            } ];
+            
+            [task resume];
+        };
+        [self.navigationController pushViewController:qrVC animated:YES];
+    }
+    
+}
+    
+/// 发送消息让电脑端服务器准备接受文件
+- (void)sendMessageToServer:(NSString *)serverURL{
+    // 获得本机IP和端口号
+    unsigned short port = [self.httpServer listeningPort];
+    NSString *ip = [NSString stringWithFormat:@"http://%@:%hu",[ZBTool getIPAddress:YES],port];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/sendFiles?url=%@",serverURL,ip]];
+    NSURLSession *section = [NSURLSession sharedSession];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    NSURLSessionDataTask *task = [section dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+    } ];
+    
+    [task resume];
 }
 
 /// 弹出ip信息
 - (void)showIP{
-    if(self.connectFlag){
+    if(self.openHttpServerFlag){
         // 获得本机IP和端口号
         unsigned short port = [self.httpServer listeningPort];
         NSString *ip = [NSString stringWithFormat:@"http://%@:%hu",[ZBTool getIPAddress:YES],port];
@@ -312,6 +444,40 @@ UIImagePickerControllerDelegate>
     [self refreshDate:nil];
 }
 
+/// 搜索文件
+- (void)searchFile{
+    if (!self.searchF){
+        UITextField *searchF = [[UITextField alloc] init];
+        searchF.frame = CGRectMake(0, 64, [UIScreen mainScreen].bounds.size.width, 32);
+        searchF.delegate = self;
+        searchF.placeholder = @"请输入要搜索的条件";
+        searchF.background = [UIImage imageNamed:@"searchbar_textfield_background"];
+        // 添加右边全部清除按钮
+        searchF.clearButtonMode = UITextFieldViewModeWhileEditing;
+        // 添加左边搜索框图片
+        UIImageView *leftView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"searchbar_textfield_search_icon"]];
+        // 设置图片居中
+        leftView.contentMode = UIViewContentModeCenter;
+        leftView.frame = CGRectMake(0, 0, 30, 30);
+        searchF.leftView = leftView;
+        searchF.leftViewMode = UITextFieldViewModeAlways;
+        self.searchF = searchF;
+        
+        UIWindow *window = [UIApplication sharedApplication].keyWindow;
+        [window addSubview:searchF];
+    }
+    self.searchF.text = @"";
+    self.searchF.hidden = NO;
+    [self.searchF becomeFirstResponder];
+}
+
+/// 取消搜索
+- (void)cancelSearch{
+    if (self.searchF.hidden == NO){
+        [self.searchF resignFirstResponder];
+        self.searchF.hidden = YES;
+    }
+}
 
 /// 批量编辑模式
 - (void)setEditMode{
@@ -370,8 +536,8 @@ UIImagePickerControllerDelegate>
     btn.selected = !btn.selected;
     if (btn.selected){
         // 全选状态
-        if (self.dataArr.count == 0) return;
-        for (NSInteger i = 0; i < self.dataArr.count; i++) {
+        if (self.currentDataArr.count == 0) return;
+        for (NSInteger i = 0; i < self.currentDataArr.count; i++) {
             [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0] animated:YES scrollPosition:UITableViewScrollPositionNone];
         }
         self.toolBarDeleBtn.enabled = YES;
@@ -385,20 +551,6 @@ UIImagePickerControllerDelegate>
         self.toolBarDeleBtn.enabled = NO;
         self.toolBarMoveBtn.enabled = NO;
     }
-}
-
-/// 数组降序,即arr[0]的数值最大
-- (NSArray *)sortArray:(NSArray *)arr{
-    NSComparator comp = ^(NSIndexPath *obj1,NSIndexPath *obj2){
-        if (obj1.row > obj2.row){
-            return (NSComparisonResult)NSOrderedAscending;
-        }
-        if (obj1.row < obj2.row){
-            return (NSComparisonResult)NSOrderedDescending;
-        }
-        return (NSComparisonResult)NSOrderedSame;
-    };
-    return [arr sortedArrayUsingComparator:comp];
 }
 
 /// 移动所选的cell
@@ -426,10 +578,10 @@ UIImagePickerControllerDelegate>
 
 /// 根据indexPath删除单个cell
 - (void)deleteOneCellAtIndexPath:(NSIndexPath *)indexPath{
-    if (self.dataArr.count - 1 < indexPath.row){
+    if (self.currentDataArr.count - 1 < indexPath.row){
         return;
     }
-    XMWifiTransModel *model = self.dataArr[indexPath.row];
+    XMWifiTransModel *model = self.currentDataArr[indexPath.row];
     // 先判断文件能够进行操作
     if (![XMWifiGroupTool canDeleteFileAtPath:model.fullPath]){
         [MBProgressHUD showMessage:@"系统文件,不可操作!" toView:self.view];
@@ -438,7 +590,7 @@ UIImagePickerControllerDelegate>
     NSError *error;
     BOOL succesFlag = [[NSFileManager defaultManager] removeItemAtPath:model.fullPath error:&error];
     if(succesFlag){
-        [self.dataArr removeObjectAtIndex:indexPath.row];
+        [self.currentDataArr removeObjectAtIndex:indexPath.row];
         [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
         // 当删除了一个文件夹,还会把里面的文件也删除,需要刷新数据
         if (model.isDir){
@@ -517,6 +669,28 @@ UIImagePickerControllerDelegate>
     }];
 }
 
+#pragma mark UITextfieldDelegate
+- (BOOL)textFieldShouldReturn:(UITextField *)textField{
+    [self cancelSearch];
+    [self.searchArr removeAllObjects];
+    // 此处应该从最原始的数据去搜索
+    for (XMWifiTransModel *model in self.realDataArr){
+        if([model.fileName.lowercaseString containsString:textField.text.lowercaseString]){
+            [self.searchArr addObject:model];
+        }
+    }
+    if(self.searchArr.count > 0){
+        [self.currentDataArr removeAllObjects];
+        [self.currentDataArr addObjectsFromArray:self.searchArr];
+        [self.tableView reloadData];
+    }else{
+        [MBProgressHUD showMessage:@"没有找到相关的结果"];
+    }
+    
+    return YES;
+}
+
+
 #pragma mark XMWifiLeftTableViewControllerDelegate
 - (void)leftWifiTableViewControllerDidSelectGroupName:(NSString *)groupName{
     if (self.isMoveFilesMode){
@@ -528,17 +702,17 @@ UIImagePickerControllerDelegate>
         // 先对数组进行降序处理,将indexPath.row最大(即最底下的数据先删除),防止序号紊乱
         NSArray *sortArr = [self sortArray:seleArr];
         for (NSIndexPath *indexPath in sortArr){
-            XMWifiTransModel *model = self.dataArr[indexPath.row];
+            XMWifiTransModel *model = self.currentDataArr[indexPath.row];
             NSString *newFullPath = [NSString stringWithFormat:@"%@/%@/%@",[XMSavePathUnit getWifiUploadDirPath],groupName,model.pureFileName];
             NSLog(@"%@",newFullPath);
             // 重命名,自己覆盖自己
-            NSError *error;
-            if ([[NSFileManager defaultManager] moveItemAtPath:model.fullPath toPath:newFullPath error:&error]){
-                [self refreshDate:nil];
-            }else{
+            NSError *error= nil;
+            if (![[NSFileManager defaultManager] moveItemAtPath:model.fullPath toPath:newFullPath error:&error]){
                 [MBProgressHUD showMessage:@"名称已存在" toView:self.view];
             }
         }
+        [self refreshDate:nil];
+        
     }else{
         // 一系列设置标题
         self.navTitleLab.text = groupName;
@@ -563,6 +737,130 @@ UIImagePickerControllerDelegate>
     }
 }
 
+#pragma mark - UIScrollerViewDelegate
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
+    [self cancelSearch];
+}
+
+#pragma mark - 排序方法
+/// 排序按钮点击事件
+- (void)sortFiles{
+    UIAlertController *tips = [UIAlertController alertControllerWithTitle:@"排序方式" message:@"选择排序方式" preferredStyle:UIAlertControllerStyleAlert];
+    __weak typeof(self) weakSelf = self;
+    [tips addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    [tips addAction:[UIAlertAction actionWithTitle:@"时间(降序)" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
+        [weakSelf sortFilesByType:XMFileSortTypeNewFirst];
+    }]];
+    [tips addAction:[UIAlertAction actionWithTitle:@"时间(升序)" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
+        [weakSelf sortFilesByType:XMFileSortTypeOldFirst];
+    }]];
+    [tips addAction:[UIAlertAction actionWithTitle:@"大小(降序)" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
+        [weakSelf sortFilesByType:XMFileSortTypeBigFirst];
+    }]];
+    [tips addAction:[UIAlertAction actionWithTitle:@"大小(升序)" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
+        [weakSelf sortFilesByType:XMFileSortTypeSmallFirst];
+    }]];
+    [tips addAction:[UIAlertAction actionWithTitle:@"类型" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
+        [weakSelf sortFilesByType:XMFileSortTypeFileType];
+    }]];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self presentViewController:tips animated:YES completion:nil];
+    });
+
+
+}
+
+/// 个性化排序
+- (void)sortFilesByType:(XMFileSortType)type{
+
+//    NSArray *sortArr = [NSArray array];
+    switch (type) {
+        case XMFileSortTypeBigFirst:{   // 文件大小降序
+            [self.currentDataArr sortUsingComparator:^(XMWifiTransModel * obj1, XMWifiTransModel * obj2){
+                if (obj1.size > obj2.size) {
+                    return (NSComparisonResult)NSOrderedAscending;
+                }
+                if (obj1.size < obj2.size) {
+                    return (NSComparisonResult)NSOrderedDescending;
+                }
+                return (NSComparisonResult)NSOrderedSame;
+            }];
+            break;
+        }
+        case XMFileSortTypeSmallFirst:{ // 文件大小升序
+            [self.currentDataArr sortUsingComparator:^(XMWifiTransModel * obj1, XMWifiTransModel * obj2){
+                if (obj1.size < obj2.size) {
+                    return (NSComparisonResult)NSOrderedAscending;
+                }
+                if (obj1.size > obj2.size) {
+                    return (NSComparisonResult)NSOrderedDescending;
+                }
+                return (NSComparisonResult)NSOrderedSame;
+            }];
+            break;
+        }
+        case XMFileSortTypeNewFirst:{   // 文件时间降序
+            [self.currentDataArr sortUsingComparator:^(XMWifiTransModel * obj1, XMWifiTransModel * obj2){
+                if (obj1.createDateCount > obj2.createDateCount) {
+                    return (NSComparisonResult)NSOrderedAscending;
+                }
+                if (obj1.createDateCount < obj2.createDateCount) {
+                    return (NSComparisonResult)NSOrderedDescending;
+                }
+                return (NSComparisonResult)NSOrderedSame;
+            }];
+
+            break;
+        }
+        case XMFileSortTypeOldFirst:{   // 文件时间升序
+            [self.currentDataArr sortUsingComparator:^(XMWifiTransModel * obj1, XMWifiTransModel * obj2){
+                if (obj1.createDateCount < obj2.createDateCount) {
+                    return (NSComparisonResult)NSOrderedAscending;
+                }
+                if (obj1.createDateCount > obj2.createDateCount) {
+                    return (NSComparisonResult)NSOrderedDescending;
+                }
+                return (NSComparisonResult)NSOrderedSame;
+            }];
+            break;
+        }
+        case XMFileSortTypeFileType:{   // 文件类型
+            [self.currentDataArr sortUsingComparator:^(XMWifiTransModel * obj1, XMWifiTransModel * obj2){
+                if (obj1.fileType > obj2.fileType) {
+                    return (NSComparisonResult)NSOrderedAscending;
+                }
+                if (obj1.fileType < obj2.fileType) {
+                    return (NSComparisonResult)NSOrderedDescending;
+                }
+                return (NSComparisonResult)NSOrderedSame;
+            }];
+            break;
+        }
+        default:{
+            break;
+        }
+    }
+//    [self.currentDataArr removeAllObjects];
+//    [self.currentDataArr addObjectsFromArray:sortArr];
+    [self.tableView reloadData];
+}
+
+/// 数组降序,即arr[0]的数值最大
+- (NSArray *)sortArray:(NSArray *)arr{
+    NSComparator comp = ^(NSIndexPath *obj1,NSIndexPath *obj2){
+        if (obj1.row > obj2.row){
+            return (NSComparisonResult)NSOrderedAscending;
+        }
+        if (obj1.row < obj2.row){
+            return (NSComparisonResult)NSOrderedDescending;
+        }
+        return (NSComparisonResult)NSOrderedSame;
+    };
+    return [arr sortedArrayUsingComparator:comp];
+}
+
+
 #pragma mark - 监听上传的结果
 - (void)uploadFinish:(NSNotification *)noti{
     NSLog(@"%@",noti.userInfo);
@@ -576,7 +874,7 @@ UIImagePickerControllerDelegate>
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return self.dataArr.count;
+    return self.currentDataArr.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -586,8 +884,8 @@ UIImagePickerControllerDelegate>
     // 添加重命名手势
     UILongPressGestureRecognizer *longGest = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressToEditCell:)];
     [cell.contentView addGestureRecognizer:longGest];
-    
-    XMWifiTransModel *model = self.dataArr[indexPath.row];
+
+    XMWifiTransModel *model = self.currentDataArr[indexPath.row];
     cell.wifiModel = model;
     return cell;
 }
@@ -606,17 +904,19 @@ UIImagePickerControllerDelegate>
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    // 隐藏搜索
+    [self cancelSearch];
     if(tableView.isEditing){
         // 编辑模式下,启用删除,移动按钮
         self.toolBarDeleBtn.enabled = YES;
         self.toolBarMoveBtn.enabled = YES;
-        if ([tableView indexPathsForSelectedRows].count == self.dataArr.count){
+        if ([tableView indexPathsForSelectedRows].count == self.currentDataArr.count){
             self.toolBarSeleAllBtn.selected = YES;
         }
         return;
     }
     
-    XMWifiTransModel *model = self.dataArr[indexPath.row];
+    XMWifiTransModel *model = self.currentDataArr[indexPath.row];
     NSString *extesionStr = [[model.fileName lowercaseString] pathExtension];
     // 不支持的格式
     if ([@"zip|rar" containsString:extesionStr]){
@@ -628,9 +928,10 @@ UIImagePickerControllerDelegate>
         return;
     }
     if(model.fileType == fileTypeImageName){
+        // 图片浏览器
         NSMutableArray *imgArr = [NSMutableArray array];
         NSInteger currentImgIndex = 0;   // 记录当前的选择图片
-        for (XMWifiTransModel *ele in self.dataArr) {
+        for (XMWifiTransModel *ele in self.currentDataArr) {
             if (ele.fileType == fileTypeImageName){
                 [imgArr addObject:ele];
             }
@@ -647,6 +948,26 @@ UIImagePickerControllerDelegate>
         photoVC.cellInset = UIEdgeInsetsMake(0, 0, 0, 0);
         photoVC.collectionView.contentSize = CGSizeMake(XMScreenW * imgArr.count, XMScreenH);
         [self.navigationController pushViewController:photoVC animated:YES];
+    
+    }else if (model.fileType == fileTypeVideoName){
+        // 视频播放
+        // 筛选视频列表
+        NSMutableArray *videoArr = [NSMutableArray array];
+        NSInteger currentVideoIndex = 0;   // 记录当前的视频索引
+        for (XMWifiTransModel *ele in self.currentDataArr) {
+            if (ele.fileType == fileTypeVideoName){
+                [videoArr addObject:ele];
+            }
+            if([ele.fullPath isEqualToString:model.fullPath]){
+                currentVideoIndex = videoArr.count - 1;
+            }
+        }
+        HJVideoPlayerController *videoVC = [[HJVideoPlayerController alloc] init];
+        videoVC.videoList = videoArr;
+        [videoVC setUrl:model.fullPath];
+        [videoVC.configModel setOnlyFullScreen:YES];
+//        [videoVC.configModel setAutoPlay:YES];  // 默认自动播放
+        [self.navigationController pushViewController:videoVC animated:YES];
         
     }else{
         // 用webview去预览
@@ -663,6 +984,13 @@ UIImagePickerControllerDelegate>
 }
 
 #pragma mark 编辑
+
+/// 修改左划文字
+- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return @"删除";
+}
+
+
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath{
     return YES;
 }
@@ -673,7 +1001,7 @@ UIImagePickerControllerDelegate>
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
     if (editingStyle == UITableViewCellEditingStyleDelete){
-        XMWifiTransModel *model = self.dataArr[indexPath.row];
+        XMWifiTransModel *model = self.currentDataArr[indexPath.row];
         // 如果是文件夹着弹出警告
         if (model.isDir){
             UIAlertController *tips = [UIAlertController alertControllerWithTitle:@"警告" message:@"你即将删除一个文件夹及里面的所有文件" preferredStyle:UIAlertControllerStyleActionSheet];
@@ -719,7 +1047,7 @@ UIImagePickerControllerDelegate>
         }]];
         
         // 根据文件类型是否增加"解压"按钮
-        XMWifiTransModel *model = self.dataArr[indexPath.row];
+        XMWifiTransModel *model = self.currentDataArr[indexPath.row];
         if ([model.fileType isEqualToString:fileTypeZipName]){
             [tips addAction:[UIAlertAction actionWithTitle:@"解压" style: UIAlertActionStyleDefault  handler:^(UIAlertAction * _Nonnull action){
                 BOOL success = [XMWifiGroupTool unzipFileAtPath:model.fullPath];
@@ -750,15 +1078,15 @@ UIImagePickerControllerDelegate>
 /// 重命名文件
 - (void)renameFileAtIndexPath:(NSIndexPath *)indexPath{
     // 提取模型,获得文件名称,后缀,然后把不带后缀的名称提取出来当做输入框的文字以便修改
-    XMWifiTransModel *model = self.dataArr[indexPath.row];
+    XMWifiTransModel *model = self.currentDataArr[indexPath.row];
     NSString *extesionStr = [[model.fileName lowercaseString] pathExtension];
     NSString *fileName = [[model.fileName lastPathComponent] stringByDeletingPathExtension];;
     //弹出
     UIAlertController *tips = [UIAlertController alertControllerWithTitle:@"重命名" message:@"输入新的名称(不带后缀)" preferredStyle:UIAlertControllerStyleAlert];
     
-    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
     __weak typeof(self) weakSelf = self;
-    UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action){
+    [tips addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    [tips addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action){
         
         // 获得输入内容
         UITextField *textF = tips.textFields[0];
@@ -773,20 +1101,20 @@ UIImagePickerControllerDelegate>
             [MBProgressHUD showMessage:@"名称已存在" toView:weakSelf.view];
         }
         
-    }];
-    
-    [tips addAction:cancelAction];
-    [tips addAction:okAction];
+    }]];
     [tips addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+        textField.clearButtonMode = UITextFieldViewModeAlways;
         textField.text = fileName;
     }];
-    [self presentViewController:tips animated:YES completion:nil];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self presentViewController:tips animated:YES completion:nil];
+    });
     
 }
 
 /// 分享文件
 - (void)shareFileAtIndexPath:(NSIndexPath *)indexPath{
-    XMWifiTransModel *model = self.dataArr[indexPath.row];
+    XMWifiTransModel *model = self.currentDataArr[indexPath.row];
     NSString *title = model.pureFileName;
     NSURL *url = [NSURL fileURLWithPath:model.fullPath];
     NSArray *params = @[title, url];

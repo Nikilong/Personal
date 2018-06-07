@@ -271,7 +271,32 @@ UIGestureRecognizerDelegate>
 - (void)scanQRCode
 {
     XMQRCodeViewController *qrVC = [[XMQRCodeViewController alloc] init];
-    qrVC.delegate = self;
+//    qrVC.delegate = self;
+    __weak typeof(self) weakSelf = self;
+    qrVC.scanCallBack = ^(NSString *result){
+            
+        UIAlertController *tips = [UIAlertController alertControllerWithTitle:@"扫描结果" message:result preferredStyle:UIAlertControllerStyleAlert];
+        
+        [tips addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+        [tips addAction:[UIAlertAction actionWithTitle:@"复制内容" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
+            // 将textview的text添加到系统的剪切板
+            UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+            [pasteboard setString:result];
+        }]];
+        [tips addAction:[UIAlertAction actionWithTitle:@"用Safari打开" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
+            // 用Safari打开
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:result]];
+        }]];
+        [tips addAction:[UIAlertAction actionWithTitle:@"前往" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
+            // 当点击确定执行的块代码
+            XMWebModel *model = [[XMWebModel alloc] init];
+            model.webURL = [NSURL URLWithString:result];
+            [weakSelf openWebmoduleRequest:model];
+        }]];
+        
+        [weakSelf presentViewController:tips animated:YES completion:nil];
+
+    };
     UILabel *titleLab = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 60, 44)];
     titleLab.text = @"扫描二维码";
     qrVC.navigationItem.titleView = titleLab;
@@ -301,7 +326,7 @@ UIGestureRecognizerDelegate>
 {
     // 创建频道tableview
     self.navTitleVC = [[XMNavTitleTableViewController alloc] initWithStyle:UITableViewStylePlain];
-    CGFloat height = [XMChannelModel channels].count * 44;
+    CGFloat height = [XMChannelModel channels].count * 35;
     if (height + 64 > XMScreenH){
         height = XMScreenH - 64;
     }

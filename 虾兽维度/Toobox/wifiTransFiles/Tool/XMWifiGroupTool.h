@@ -56,4 +56,9 @@ extern NSString * const settingZipFilePre;
 + (BOOL)unzipFileAtPath:(NSString *)path;
 /// 解压并同步本地配置文件
 + (BOOL)unzipSettingFilesAtPath:(NSString *)path;
+
+
+
+/// 获取字符串的时间戳
++ (NSString *)dateChangeToString:(NSDate *)date;
 @end

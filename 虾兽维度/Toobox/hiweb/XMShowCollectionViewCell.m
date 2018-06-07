@@ -33,6 +33,22 @@ double const CellH = 200.0;
     return self;
 }
 
+- (void)setModle:(XMSingleFilmModle *)modle
+{
+    _modle = modle;
+    if (modle.title)
+    {
+        self.lab.hidden = NO;
+        self.lab.text = modle.title;
+    }else
+    {
+        self.lab.hidden = YES;
+    }
+    self.imagV.contentMode = UIViewContentModeScaleAspectFit;
+    [self.imagV sd_setImageWithURL:[NSURL URLWithString:modle.imgUrl] placeholderImage:[UIImage imageNamed:@"iconTaskUnAttention"]];
+}
+
+
 + (XMShowCollectionViewCell *)cellWithContentView:(UICollectionView *)collectionView ide:(NSString *)ide indexPath:(NSIndexPath *)indexP
 {
     XMShowCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:ide forIndexPath:indexP];
