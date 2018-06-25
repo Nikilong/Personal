@@ -293,7 +293,7 @@ static NSString *currentGroupName = @"默认";
     
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     //设置你想要的格式,hh与HH的区别:分别表示12小时制,24小时制
-    [formatter setDateFormat:@"YYYY-MM-dd_HH:mm:ss"];
+    [formatter setDateFormat:@"YYYYMMdd_HH时mm分ss秒"];
 //    NSDate *datenow = [NSDate date];
     //将nsdate按formatter格式转成nsstring
     NSString *currentTimeString = [formatter stringFromDate:date];

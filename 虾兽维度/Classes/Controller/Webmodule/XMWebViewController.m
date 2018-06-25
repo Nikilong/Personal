@@ -403,8 +403,8 @@
 - (void)showShareVC
 {
     // 取出分享参数
-    NSURL *url = self.model.webURL;
-    NSString *title = self.model.title;
+    NSURL *url = self.model.webURL ? self.model.webURL : [NSURL URLWithString:@""];
+    NSString *title = self.model.title ? self.model.title : @"";
     NSArray *params = @[url,title];
     
     // 创建分享菜单,这里分享为全部平台,可通过设置excludedActivityTypes属性排除不要的平台

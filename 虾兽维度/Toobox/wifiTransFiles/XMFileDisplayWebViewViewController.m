@@ -15,9 +15,7 @@
 #import "AppDelegate+HJVideoRotation.h"
 
 
-//#import <MediaPlayer/MediaPlayer.h>
-
-@interface XMFileDisplayWebViewViewController ()<UIGestureRecognizerDelegate,UIWebViewDelegate>
+@interface XMFileDisplayWebViewViewController ()<UIGestureRecognizerDelegate,UIWebViewDelegate,UIScrollViewDelegate>
 
 @property (nonatomic, strong) UIWebView *displayWebview;
 //@property (nonatomic, strong) WKWebView *wkdisplayWebview;
@@ -42,6 +40,7 @@
     
     self.displayWebview = [[UIWebView alloc] initWithFrame:self.view.bounds];
     self.displayWebview.delegate = self;
+    self.displayWebview.scrollView.delegate = self;
     // 实现缩放
     self.displayWebview.scalesPageToFit = YES;
     self.displayWebview.autoresizingMask = UIViewAutoresizingFlexibleWidth| UIViewAutoresizingFlexibleHeight;
@@ -172,6 +171,11 @@
 - (void)webViewDidFinishLoad:(UIWebView *)webView{
 }
 
-
+#pragma mark - UIScrollViewDelegate
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
+    if (!self.navigationController.navigationBar.hidden){
+        self.navigationController.navigationBar.hidden = YES;
+    }
+}
 
 @end

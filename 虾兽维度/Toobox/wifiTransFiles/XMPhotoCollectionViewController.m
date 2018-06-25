@@ -11,12 +11,26 @@
 #import "XMPhotoCollectionViewCell.h"
 #import "MBProgressHUD+NK.h"
 
-@interface XMPhotoCollectionViewController ()<UIScrollViewDelegate,UICollectionViewDelegateFlowLayout>
+@interface XMPhotoCollectionViewController ()<UIScrollViewDelegate,UICollectionViewDelegateFlowLayout,UIGestureRecognizerDelegate>
 
 @property (weak, nonatomic)  UILabel *titLab;
 @property (weak, nonatomic)  NSTimer *timer;
 @property (nonatomic, assign)  double timeInterval;
+@property (nonatomic, assign)  double gifTimeInterval;
 @property (weak, nonatomic)  UIButton *timerBtn;
+
+//@property (nonatomic, assign)  int imageIndex;
+    
+/**拖拽图片退出浏览的相关变量**/
+@property (strong, nonatomic)  UIImageView *panBgImgV;    // 背景截图相框
+@property (weak, nonatomic)  XMPhotoCollectionViewCell *currentCell;  // 当前拖拽的cell
+@property (nonatomic, assign)  CGFloat starY;  // 拖拽图片开始的y坐标
+@property (nonatomic, assign)  CGSize startSize;  // 拖拽开始图片的尺寸
+@property (nonatomic, assign)  CGFloat currentY; // 拖拽图片的实时y坐标
+@property (nonatomic, assign)  CGPoint panPoint;  // 拖拽移动的距离
+/**拖拽图片退出浏览的相关变量**/
+
+
 
 
 @end
@@ -39,6 +53,20 @@ static NSString * const reuseIdentifier = @"XMPhotoCell";
     }
     return _titLab;
 }
+- (UIImageView *)panBgImgV
+{
+    if (!_panBgImgV)
+    {
+        _panBgImgV = [[UIImageView alloc] initWithFrame:CGRectMake(0, -32, XMScreenW, XMScreenH)];
+        _panBgImgV.backgroundColor = [UIColor orangeColor];
+        
+//        UIPanGestureRecognizer *cancelPan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panToDismiss:)];
+//        [_panBgImgV addGestureRecognizer:cancelPan];
+
+//        _panBgImgV = bgV;
+    }
+    return _panBgImgV;
+}
 
 
 - (void)viewDidLoad {
@@ -48,11 +76,12 @@ static NSString * const reuseIdentifier = @"XMPhotoCell";
             forCellWithReuseIdentifier:reuseIdentifier];
     //设置collectionview的初始化属性,惯性,偏移
     self.collectionView.delegate = self;
-    self.collectionView.decelerationRate = 0;
+    self.collectionView.decelerationRate = 0.1;
     self.collectionView.contentOffset = CGPointMake(XMScreenW * self.selectImgIndex, self.collectionView.contentOffset.y);
     
     // 初始化参数
     self.timeInterval = 1.0f;
+    self.gifTimeInterval = 1 / 12.5f;
 
     // 添加点击手势(单点隐藏/显示导航栏)
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapCollectionView:)];
@@ -64,14 +93,86 @@ static NSString * const reuseIdentifier = @"XMPhotoCell";
     
     [tap requireGestureRecognizerToFail:doubleTap];
     
+    UIPanGestureRecognizer *cancelPan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panToDismiss:)];
+    [self.collectionView addGestureRecognizer:cancelPan];
+    
+#warning todo  添加轻扫手势
+//    UISwipeGestureRecognizer *swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(changeImage:)];
+//    swipe.delegate = self;
+//    swipe.direction = UISwipeGestureRecognizerDirectionRight;
+//    [self.collectionView addGestureRecognizer:swipe];
+//    
+//    UISwipeGestureRecognizer *swipe2 = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(changeImage2:)];
+//    swipe2.delegate = self;
+//    swipe2.direction = UISwipeGestureRecognizerDirectionLeft;
+//    [self.collectionView addGestureRecognizer:swipe2];
+    
     // 设置导航栏按钮
     [self setNavBarItem];
 }
+    
+    
+//- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+//    if([gestureRecognizer isKindOfClass:[UISwipeGestureRecognizer class]] && [otherGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]){
+//        return NO;
+//    }
+//    return YES;
+//}
 
+
+//- (void)changeImage:(UISwipeGestureRecognizer *)gest{
+////    self.collectionView.scrollEnabled = NO;
+////    self.collectionView.panGestureRecognizer.enabled = NO;
+//    if (gest.state == UIGestureRecognizerStateEnded){
+////        if(gest.direction == UISwipeGestureRecognizerDirectionLeft){
+////            NSLog(@"left");
+////            [self.collectionView setContentOffset:CGPointMake(self.collectionView.contentOffset.x + XMScreenW, self.collectionView.contentOffset.y) animated:YES];
+////        }else if (gest.direction == UISwipeGestureRecognizerDirectionRight){
+//            NSLog(@"right");
+//        if (self.imageIndex > 0){
+//            [self.collectionView setContentOffset:CGPointMake((self.imageIndex - 1) * XMScreenW, self.collectionView.contentOffset.y) animated:YES];
+//        }
+////        dispatch_async(dispatch_get_main_queue(), ^{
+//        
+//        self.collectionView.scrollEnabled = YES;
+//        self.collectionView.panGestureRecognizer.enabled = YES;
+////        });
+////        }
+//    }
+//    
+//}
+//- (void)changeImage2:(UISwipeGestureRecognizer *)gest{
+////    self.collectionView.scrollEnabled = NO;
+////    self.collectionView.panGestureRecognizer.enabled = NO;
+//    if (gest.state == UIGestureRecognizerStateEnded){
+////        if(gest.direction == UISwipeGestureRecognizerDirectionLeft){
+//            NSLog(@"left");
+////        dispatch_async(dispatch_get_main_queue(), ^{
+//        if (self.imageIndex < self.photoModelArr.count - 1){
+//            [self.collectionView setContentOffset:CGPointMake((self.imageIndex + 1) * XMScreenW, self.collectionView.contentOffset.y) animated:YES];
+//        }
+//        self.collectionView.scrollEnabled = YES;
+//        self.collectionView.panGestureRecognizer.enabled = YES;
+////        });
+////        }else if (gest.direction == UISwipeGestureRecognizerDirectionRight){
+////            NSLog(@"right");
+////            [self.collectionView setContentOffset:CGPointMake(self.collectionView.contentOffset.x - XMScreenW, self.collectionView.contentOffset.y) animated:YES];
+////        }
+//    }
+//    
+//}
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     // 禁用左侧返回手势
     self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+    
+    // 截图
+    UIGraphicsBeginImageContextWithOptions([UIScreen mainScreen].bounds.size, YES, [UIScreen mainScreen].scale);
+    [[UIApplication sharedApplication].keyWindow.layer renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage *img = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    [self.panBgImgV setImage:img];
+
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
@@ -96,6 +197,10 @@ static NSString * const reuseIdentifier = @"XMPhotoCell";
 }
 
 - (void)setNavBarItem{
+    UIBarButtonItem *backBtn = [[UIBarButtonItem alloc] initWithTitle:@"返回" style:UIBarButtonItemStylePlain target:self action:@selector(dismiss:)];
+    UIBarButtonItem *gifTimeBtn = [[UIBarButtonItem alloc] initWithTitle:@"12.5帧" style:UIBarButtonItemStylePlain target:self action:@selector(changeGifTimeInterval:)];
+    self.navigationItem.leftBarButtonItems = @[backBtn,gifTimeBtn];
+    
     UIButton *timerBtn = [UIButton buttonWithType:UIButtonTypeSystem];
     self.timerBtn = timerBtn;
     timerBtn.frame = CGRectMake(0, 0, 44, 44);
@@ -105,11 +210,13 @@ static NSString * const reuseIdentifier = @"XMPhotoCell";
 //    [timerBtn setImage:[UIImage imageNamed:@"btn_pause"] forState:UIControlStateSelected];
     UIBarButtonItem *beginBtn = [[UIBarButtonItem alloc] initWithCustomView:timerBtn];
     UIBarButtonItem *timeSettingBtn = [[UIBarButtonItem alloc] initWithTitle:@"1.0s" style:UIBarButtonItemStylePlain target:self action:@selector(changeTimeInterval:)];
+    
     self.navigationItem.rightBarButtonItems = @[beginBtn,timeSettingBtn];
 
 }
 
-#pragma mark - 定时器与幻灯片播放
+#pragma mark - 导航栏店家时间
+#pragma mark 定时器与幻灯片播放
 
 /// 开启/关闭定时
 - (void)toggleTimer:(UIButton *)btn{
@@ -142,7 +249,7 @@ static NSString * const reuseIdentifier = @"XMPhotoCell";
         self.timer = nil;
     }
 }
-
+    
 /// 设置幻灯片播放时间间隔
 - (void)changeTimeInterval:(UIBarButtonItem *)btn{
     [self stopTimer];
@@ -174,7 +281,91 @@ static NSString * const reuseIdentifier = @"XMPhotoCell";
     
 }
 
+#pragma mark 其他
+/// 设置gif每秒播放的帧数
+- (void)changeGifTimeInterval:(UIBarButtonItem *)btn{
+    [self stopTimer];
+    UIAlertController *tips = [UIAlertController alertControllerWithTitle:@"提示" message:@"每秒播放的帧数" preferredStyle:UIAlertControllerStyleAlert];
+    __weak typeof(self) weakSelf = self;
+    [tips addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    [tips addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        UITextField *textF = tips.textFields[0];
+        if(textF.text.integerValue > 0 ){
+
+            weakSelf.gifTimeInterval = 1.0 / textF.text.integerValue;
+            btn.title = [NSString stringWithFormat:@"%ld帧",textF.text.integerValue];
+            
+            [weakSelf.collectionView reloadData];
+        }
+    }]];
+    [tips addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField){
+        textField.clearButtonMode = UITextFieldViewModeAlways;
+        textField.placeholder = @"默认每秒12.5帧";
+    }];
+    
+    [self presentViewController:tips animated:YES completion:nil];
+}
+
+/// 退出
+- (void)dismiss:(UIBarButtonItem *)btn{
+    if(self.navigationController){
+        [self.navigationController popViewControllerAnimated:YES];
+    }else{
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
+}
+
 #pragma mark - 手势
+
+/// 拖拽图片退出浏览
+-(void)panToDismiss:(UIPanGestureRecognizer *)pan{
+    if(pan.state == UIGestureRecognizerStateChanged){
+        self.currentY = [pan locationInView:self.collectionView].y;
+        self.panPoint = [pan translationInView:pan.view];
+        
+        // 拖到一开始往上的位置时
+        if(self.currentY > self.starY){
+            self.panBgImgV.hidden = NO;
+            self.panBgImgV.alpha = (ABS((self.currentY - self.starY) / 150.0) > 1) ? 1 : ABS((self.currentY - self.starY) / 150.0);
+        }else{
+            self.panBgImgV.hidden = YES;
+            self.panBgImgV.alpha = 1;
+        }
+        
+        // 改变图片位置
+        self.currentCell.imgV.transform = CGAffineTransformTranslate(self.currentCell.imgV.transform, self.panPoint.x, self.panPoint.y);
+#warning todo 移动很慢的情况下缩放过多,缩放比例应该随着y的实际唯一作调整,最终最多只能缩小到1/4
+        // 避免过分放大图片
+        if(self.currentCell.imgV.frame.size.width <= XMScreenW || (self.currentY > self.starY)){
+            self.currentCell.imgV.transform = CGAffineTransformScale(self.currentCell.imgV.transform, (self.panPoint.y > 0) ? 0.99 : 1.01, (self.panPoint.y > 0) ? 0.99 : 1.01);
+        }
+        // 重设滑动距离
+        [pan setTranslation:CGPointZero inView:pan.view];
+    }
+    
+    if(pan.state == UIGestureRecognizerStateBegan){
+        self.starY = [pan locationInView:self.collectionView].y;
+        NSIndexPath *index = [self.collectionView indexPathForItemAtPoint:[pan locationInView:self.collectionView]];
+        XMPhotoCollectionViewCell *cell = (XMPhotoCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:index];
+        self.currentCell = cell;
+        [cell.imgScroV insertSubview:self.panBgImgV belowSubview:cell.imgV];
+        self.startSize = cell.imgV.frame.size;
+    }
+    
+    if(pan.state == UIGestureRecognizerStateEnded){
+        CGFloat endY = [pan locationInView:self.collectionView].y;
+        NSLog(@"%f",(endY - self.starY));
+        if(endY - self.starY > 150){
+            NSLog(@"%s",__func__);
+            //            [self dismiss:nil];
+            [self.navigationController popViewControllerAnimated:NO];
+        }else{
+            self.panBgImgV.hidden = YES;
+            self.currentCell.imgV.transform = CGAffineTransformIdentity;
+        }
+    }
+}
+    
 /// 双击事件
 - (void)didDoubleTapCollectionView:(UITapGestureRecognizer *)tap{
     if (tap.state == UIGestureRecognizerStateEnded){
@@ -243,9 +434,12 @@ static NSString * const reuseIdentifier = @"XMPhotoCell";
     if(!cell){
         cell = [[XMPhotoCollectionViewCell alloc] init];
     }
+    cell.gifPerTime = self.gifTimeInterval;
     cell.wifiModle = self.photoModelArr[indexPath.row];
     return cell;
 }
+    
+
 
 
 #pragma mark <UICollectionViewDelegate>
@@ -300,21 +494,29 @@ static NSString * const reuseIdentifier = @"XMPhotoCell";
 // 正在滚动
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
     NSUInteger currentP = scrollView.contentOffset.x / XMScreenW + 1.5;
+//    self.imageIndex = (int)currentP - 1;
     self.navigationItem.title = [NSString stringWithFormat:@"%zd/%zd",currentP,self.photoModelArr.count];
     self.titLab.text = [NSString stringWithFormat:@"%zd/%zd",currentP,self.photoModelArr.count];
 //    NSLog(@"%@",NSStringFromCGPoint(scrollView.contentOffset));
 }
 
-/// 拖拽滚动结束
+ //拖拽滚动结束
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
+    
     NSUInteger currentP = scrollView.contentOffset.x / XMScreenW + 0.5;
-    [self.collectionView setContentOffset:CGPointMake(currentP * XMScreenW, self.collectionView.contentOffset.y) animated:YES];
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.collectionView setContentOffset:CGPointMake(currentP * XMScreenW, self.collectionView.contentOffset.y) animated:YES];
+    });
+
 }
 
 /// 惯性滚动结束
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-    NSUInteger currentP = scrollView.contentOffset.x / XMScreenW + 0.5;
-    [self.collectionView setContentOffset:CGPointMake(currentP * XMScreenW, self.collectionView.contentOffset.y) animated:YES];
-}
+//- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+//    
+//    NSUInteger currentP = scrollView.contentOffset.x / XMScreenW + 0.5;
+//    [self.collectionView setContentOffset:CGPointMake(currentP * XMScreenW, self.collectionView.contentOffset.y) animated:NO];
+//}
+
 
 @end

@@ -30,6 +30,7 @@ extern NSString * const fileTypeZipName;        // 压缩文件
 @property (nonatomic, copy) NSString *createDateStr;   // 创建时间
 @property (nonatomic, assign) unsigned long long createDateCount;   // 创建时间
 @property (nonatomic, copy) NSString *mediaLengthStr;   // 时长(音频,视频类)
+@property (nonatomic, strong) NSArray *gifImageArr;     // gif图片组
 
 
 //// 文件夹的属性

@@ -17,11 +17,11 @@
 @interface MyHTTPConnection()
 
 @property (nonatomic, strong)   MBProgressHUD *hud;             // 进度条
-@property (nonatomic, strong)   NSString *uploadFileName;       // 当前上传的文件名称
-@property (nonatomic, strong)   NSString *haveUploadFiles;      // 已经上传的文件名称
-@property (nonatomic, assign)   double uploadFileTotalLength;   // 所有上传文件的总大小
-@property (nonatomic, assign)   double uploadFileLength;        // 当前文件已经上传的大小
-@property (nonatomic, assign)   double starTime;                // 上传开始时间
+@property (nonatomic, strong)   NSString *receiveFileName;       // 当前接收的文件名称
+@property (nonatomic, strong)   NSString *haveReceiveFiles;      // 已经接收的文件名称
+@property (nonatomic, assign)   double receiveFileTotalLength;   // 所有接收文件的总大小
+@property (nonatomic, assign)   double receiveFileLength;        // 当前文件已经接收的大小
+@property (nonatomic, assign)   double starTime;                // 接收开始时间
 @property (nonatomic, assign)   double percent;                 // 进度(百分比)
 @property (nonatomic, assign)   BOOL isTimer;                   // 标记是否在计时
 @property (nonatomic, assign)   BOOL isTransportSuccess;                   // 标记是否在计时
@@ -42,11 +42,11 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_VERBOSE; // | HTTP_LOG_FLAG_TRACE
 
 - (instancetype)init{
     if (self = [super init]){
-        self.uploadFileName = @"";
-        self.haveUploadFiles = @"";
+        self.receiveFileName = @"";
+        self.haveReceiveFiles = @"";
         self.starTime = 0;
-        self.uploadFileTotalLength = 0;
-        self.uploadFileLength = 0;
+        self.receiveFileTotalLength = 0;
+        self.receiveFileLength = 0;
         self.isTimer = NO;
         self.isTransportSuccess = NO;
     }
@@ -95,7 +95,7 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_VERBOSE; // | HTTP_LOG_FLAG_TRACE
         // 获得请求头的信息,文件大小
         NSString* contentType = [request headerField:@"Content-Type"];
         NSString *contentLength = [request headerField:@"Content-Length"];
-        self.uploadFileTotalLength = [contentLength doubleValue];
+        self.receiveFileTotalLength = [contentLength doubleValue];
         NSUInteger paramsSeparator = [contentType rangeOfString:@";"].location;
         if( NSNotFound == paramsSeparator ) {
             return NO;
@@ -211,7 +211,7 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_VERBOSE; // | HTTP_LOG_FLAG_TRACE
     if( [[NSFileManager defaultManager] fileExistsAtPath:filePath] ) {
         storeFile = nil;
         double fileSize = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil].fileSize;
-        self.uploadFileTotalLength -= fileSize;
+        self.receiveFileTotalLength -= fileSize;
         HTTPLogWarn(@"File has exist at %@",filePath);
     }
     else {
@@ -222,22 +222,22 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_VERBOSE; // | HTTP_LOG_FLAG_TRACE
 		if(![[NSFileManager defaultManager] createFileAtPath:filePath contents:nil attributes:nil]) {
 			HTTPLogError(@"Could not create file at path: %@", filePath);
 		}
-        // 初始化上传参数
-        self.uploadFileLength = 0;
+        // 初始化接收参数
+        self.receiveFileLength = 0;
         self.starTime = [NSDate date].timeIntervalSince1970;
-        self.uploadFileName = filename;
+        self.receiveFileName = filename;
 		storeFile = [NSFileHandle fileHandleForWritingAtPath:filePath];
 		[uploadedFiles addObject: [NSString stringWithFormat:@"/upload/%@", filename]];
         
         HTTPLogInfo(@"star upload file:%@",filename);
         dispatch_async(dispatch_get_main_queue(), ^{
-            if (self.haveUploadFiles.length > 0){
-                // 上传非第一个文件
-                self.hud.detailsLabel.text = [NSString stringWithFormat:@"%@ 上传中.. 总大小:%.3fM \n%@",self.uploadFileName,self.uploadFileTotalLength /1024.0/ 1024.0,self.haveUploadFiles];
+            if (self.haveReceiveFiles.length > 0){
+                // 接收非第一个文件
+                self.hud.detailsLabel.text = [NSString stringWithFormat:@"%@ 接收中.. 总大小:%.3fM \n%@",self.receiveFileName ? self.receiveFileName:@"",self.receiveFileTotalLength /1024.0/ 1024.0,self.haveReceiveFiles? self.haveReceiveFiles:@""];
             
             }else{
-                // 上传第一个文件
-                self.hud.detailsLabel.text = [NSString stringWithFormat:@"%@ 上传中.. 总大小:%.3fM",self.uploadFileName,self.uploadFileTotalLength /1024.0/ 1024.0];
+                // 接收第一个文件
+                self.hud.detailsLabel.text = [NSString stringWithFormat:@"%@ 接收中.. 总大小:%.3fM",self.receiveFileName ? self.receiveFileName:@"",self.receiveFileTotalLength /1024.0/ 1024.0];
             }
         });
         // 开个异步计时,如果进度条太久没更新就强制隐藏hud
@@ -264,24 +264,24 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_VERBOSE; // | HTTP_LOG_FLAG_TRACE
 }
 
 
-/// 上传中
+/// 接收中
 - (void) processContent:(NSData*) data WithHeader:(MultipartMessageHeader*) header 
 {
 	// here we just write the output from parser to the file.
 	if( storeFile ) {
 		[storeFile writeData:data];
-        self.uploadFileLength += data.length;
-//        HTTPLogInfo(@"upload progress: %.2f%%",self.uploadFileLength/self.uploadFileTotalLength * 100);
+        self.receiveFileLength += data.length;
+//        HTTPLogInfo(@"upload progress: %.2f%%",self.receiveFileLength/self.receiveFileTotalLength * 100);
         // 进度条显示
         dispatch_async(dispatch_get_main_queue(), ^{
-            self.hud.progress = self.uploadFileLength/self.uploadFileTotalLength;
+            self.hud.progress = self.receiveFileLength/self.receiveFileTotalLength;
             self.percent = self.hud.progress;
-            self.hud.label.text = [NSString stringWithFormat:@"传输进度:%.2f%%",self.uploadFileLength/self.uploadFileTotalLength * 100];
+            self.hud.label.text = [NSString stringWithFormat:@"传输进度:%.2f%%",self.receiveFileLength/self.receiveFileTotalLength * 100];
         });
 	}
 }
 
-/// 上传完成
+/// 接收完成
 - (void) processEndOfPartWithHeader:(MultipartMessageHeader*) header
 {
     if (storeFile == nil) return;
@@ -289,33 +289,33 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_VERBOSE; // | HTTP_LOG_FLAG_TRACE
 	[storeFile closeFile];
 	storeFile = nil;
     double useTime = [[NSDate date] timeIntervalSince1970] - self.starTime;
-    if(self.uploadFileLength < 1024.0){
+    if(self.receiveFileLength < 1024.0){
         // < 1k
-        HTTPLogInfo(@"upload end---file size:%.1f Byte --- time:%.1f 秒",self.uploadFileLength,useTime);
-    }else if(self.uploadFileLength < 1024.0 * 1024.0){
+        HTTPLogInfo(@"receive end---file size:%.1f Byte --- time:%.1f 秒",self.receiveFileLength,useTime);
+    }else if(self.receiveFileLength < 1024.0 * 1024.0){
         // < 1M
-        HTTPLogInfo(@"upload end---file size:%.3fK --- time:%.1f 秒",self.uploadFileLength / 1024.0,useTime);
+        HTTPLogInfo(@"receive end---file size:%.3fK --- time:%.1f 秒",self.receiveFileLength / 1024.0,useTime);
     }else{
-        HTTPLogInfo(@"upload end---file size:%.3fM --- time:%.1f 秒",self.uploadFileLength / 1024.0 /1024.0,useTime);
+        HTTPLogInfo(@"receive end---file size:%.3fM --- time:%.1f 秒",self.receiveFileLength / 1024.0 /1024.0,useTime);
     }
-    // 减去已经上传的文件大小
-    self.uploadFileTotalLength -= self.uploadFileLength;
-    self.haveUploadFiles = [NSString stringWithFormat:@"%@\n文件:%@ 上传成功",self.haveUploadFiles,self.uploadFileName];
-    // 结束进度条,每次上传的大小最大为262144
+    // 减去已经接收的文件大小
+    self.receiveFileTotalLength -= self.receiveFileLength;
+    self.haveReceiveFiles = [NSString stringWithFormat:@"%@\n文件:%@ 接收成功",self.haveReceiveFiles? self.haveReceiveFiles : @"",self.receiveFileName ? self.receiveFileName:@""];
+    // 结束进度条,每次接收的大小最大为262144
     dispatch_async(dispatch_get_main_queue(), ^{
-        // 所有文件已经上传完毕或者最后一次的262144没有被计算进去也算完成
-        if (0 == self.uploadFileTotalLength || 262144 >= self.uploadFileTotalLength){
+        // 所有文件已经接收完毕或者最后一次的262144没有被计算进去也算完成
+        if (0 == self.receiveFileTotalLength || 262144 >= self.receiveFileTotalLength){
             UIWindow *window = [UIApplication sharedApplication].keyWindow;
             [MBProgressHUD show:@"完成" icon:@"Checkmark.png" view:window];
             
             [self.hud hideAnimated:YES];
             self.hud = nil;
             // 通知外界传输完成
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"XMWifiTransfronFilesComplete" object:self.haveUploadFiles];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"XMWifiTransfronFilesComplete" object:self.haveReceiveFiles];
             self.isTransportSuccess = YES;
         }else{
-            // 来到这里表示上传多个文件
-            self.hud.detailsLabel.text = self.haveUploadFiles;
+            // 来到这里表示接收多个文件
+            self.hud.detailsLabel.text = self.haveReceiveFiles;
         }
     });
     

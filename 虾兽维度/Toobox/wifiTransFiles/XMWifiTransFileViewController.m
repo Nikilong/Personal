@@ -26,6 +26,7 @@
 #import "XMPhotoCollectionViewController.h"
 #import "HJVideoPlayerController.h"
 #import "XMQRCodeViewController.h"
+#import "ZLPhotoPickerViewController.h"
 
 typedef enum : NSUInteger {
     XMFileSortTypeBigFirst,     //
@@ -38,20 +39,23 @@ typedef enum : NSUInteger {
 
 @interface XMWifiTransFileViewController ()
 <XMWifiLeftTableViewControllerDelegate,
+ZLPhotoPickerViewControllerDelegate,
 UINavigationControllerDelegate,
 UIImagePickerControllerDelegate,
 UITextFieldDelegate>
 
 
 @property (nonatomic, strong) HTTPServer *httpServer;
+@property (nonatomic, assign)  BOOL isScanConectQrcode;   // 是否正在扫码
 @property (nonatomic, assign)  BOOL openHttpServerFlag;   // 是否开启本地http服务
 @property (nonatomic, assign)  BOOL connectServerFlag;      // 是否与电脑端服务器连接
 @property (nonatomic, copy)  NSString *serverURL;      // 电脑端服务器地址
-
+@property (weak, nonatomic)  UIButton *navWifiBtn;     // 导航栏wifi按钮
 
 @property (weak, nonatomic)  UIView *toolBar;                // 批量编辑下的工具条
 @property (weak, nonatomic)  UIButton *toolBarDeleBtn;       // 工具条删除按钮
 @property (weak, nonatomic)  UIButton *toolBarMoveBtn;       // 工具条移动按钮
+@property (weak, nonatomic)  UIButton *toolBarUploadBtn;     // 工具条上传按钮
 @property (weak, nonatomic)  UIButton *toolBarSeleAllBtn;    // 工具条全选按钮
 @property (weak, nonatomic)  UILabel *navTitleLab;           // 自定义导航栏标题
 
@@ -127,6 +131,15 @@ UITextFieldDelegate>
         [moveBtn setImage:[UIImage imageNamed:@"file_move_disable"] forState:UIControlStateDisabled];
         [moveBtn setImage:[UIImage imageNamed:@"file_move_able"] forState:UIControlStateNormal];
         moveBtn.enabled = NO;
+        
+        // 上传按钮
+        UIButton *uploadBtn = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetMaxX(moveBtn.frame) + 40, btnY, btnWH, btnWH)];
+        self.toolBarUploadBtn = uploadBtn;
+        [toolBar addSubview:uploadBtn];
+        [uploadBtn addTarget:self action:@selector(uploadFiles:) forControlEvents:UIControlEventTouchUpInside];
+        [uploadBtn setImage:[UIImage imageNamed:@"file_upload_disable"] forState:UIControlStateDisabled];
+        [uploadBtn setImage:[UIImage imageNamed:@"file_upload_able"] forState:UIControlStateNormal];
+        uploadBtn.enabled = NO;
     }
     return _toolBar;
 }
@@ -184,6 +197,7 @@ UITextFieldDelegate>
     self.view.backgroundColor = [UIColor whiteColor];
     self.openHttpServerFlag = NO;
     self.connectServerFlag = NO;
+    self.isScanConectQrcode = NO;
     self.tableView.allowsMultipleSelectionDuringEditing = YES;
     self.isMoveFilesMode = NO;
     // 更新本地数据
@@ -214,6 +228,11 @@ UITextFieldDelegate>
     [self cancelSearch];
     [self.searchF removeFromSuperview];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"XMWifiTransfronFilesComplete" object:nil];
+}
+
+- (void)dealloc{
+    self.httpServer = nil;
+    NSLog(@"XMWifiTransFileViewController----%s",__func__);
 }
 
 - (void)refreshDate:(UIRefreshControl *)con{
@@ -253,6 +272,7 @@ UITextFieldDelegate>
     // 右边为打开wifi的按钮 wifiopen
 //    UIView *rightContentV = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 30 * 3, 30)];
     UIButton *wifiBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 25, 25)];
+    self.navWifiBtn = wifiBtn;
     [wifiBtn setImage:[UIImage imageNamed:@"wifiopen"] forState:UIControlStateSelected];
     [wifiBtn setImage:[UIImage imageNamed:@"wificlose"] forState:UIControlStateNormal];
     [wifiBtn addTarget:self action:@selector(switchHttpServerConnect:) forControlEvents:UIControlEventTouchUpInside];
@@ -302,7 +322,7 @@ UITextFieldDelegate>
 #pragma mark - 导航栏/toolbar及点击事件
 #pragma mark 导航栏
     
-#pragma mark 手机服务器和电脑服务器连接情况
+#pragma mark 手机服务器和电脑服务器连接情况---end
 /// 打开/关闭一个http服务
 - (void)switchHttpServerConnect:(UIButton *)wifiBtn{
     if (self.openHttpServerFlag){
@@ -312,11 +332,11 @@ UITextFieldDelegate>
         [tips addAction:[UIAlertAction actionWithTitle:@"显示本机ip" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action){
             [weakSelf showIP];
         }]];
-        [tips addAction:[UIAlertAction actionWithTitle:@"传输文件" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action){
-            [weakSelf connnectToServer];
+        [tips addAction:[UIAlertAction actionWithTitle:@"接收文件" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action){
+            [weakSelf sendMessageToServer:weakSelf.serverURL];
         }]];
         [tips addAction:[UIAlertAction actionWithTitle:@"关闭传输" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action){
-            wifiBtn.selected = NO;
+            weakSelf.navWifiBtn.selected = NO;
             // 关闭http服务
             [weakSelf.httpServer stop];
             weakSelf.openHttpServerFlag = NO;
@@ -338,7 +358,7 @@ UITextFieldDelegate>
     [self.httpServer setType:@"_http._tcp."];
     
     // 指定端口号(用于测试),实际由系统随机分配即可
-    [self.httpServer setPort:60285];
+//    [self.httpServer setPort:60285];
     
     // 设置index.html的路径
     NSString *webPath = [[NSBundle mainBundle] resourcePath];
@@ -355,19 +375,20 @@ UITextFieldDelegate>
     }else{
         NSLog(@"打开HTTP服务成功");
         self.openHttpServerFlag = YES;
-        wifiBtn.selected = YES;
+        self.navWifiBtn.selected = YES;
         [self connnectToServer];
     }
     
     
 }
+    
 
 /// 与电脑端服务器连接并且开始发送文件
 - (void)connnectToServer{
     // 判断目前与电脑连接是否良好
-    if(self.connectServerFlag){
-        [self sendMessageToServer:self.serverURL];
-    }else{
+    if(!self.connectServerFlag && !self.isScanConectQrcode){
+        // 标记正在扫码
+        self.isScanConectQrcode = YES;
         XMQRCodeViewController *qrVC = [[XMQRCodeViewController alloc] init];
         __weak typeof(self) weakSelf = self;
         qrVC.scanCallBack = ^(NSString *scanResult){
@@ -376,6 +397,9 @@ UITextFieldDelegate>
             NSURLSession *section = [NSURLSession sharedSession];
             NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
             NSURLSessionDataTask *task = [section dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+                // 标记扫码结束
+                weakSelf.isScanConectQrcode = NO;
+                
                 NSString *result = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
                 /// connect success是与服务器约定的链接成功的标志
                 if ([result containsString:@"connect success"]){
@@ -383,10 +407,10 @@ UITextFieldDelegate>
                         // 保存服务器地址
                         weakSelf.serverURL = scanResult;
                         weakSelf.connectServerFlag = YES;
-                        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                            
-                            [weakSelf sendMessageToServer:scanResult];
-                        });
+                        [MBProgressHUD showMessage:@"连接成功"];
+//                        dispatch_after(3.0f, dispatch_get_main_queue(), ^{
+//                            [weakSelf sendMessageToServer:scanResult];
+//                        });
                     });
                 }else{
                     dispatch_async(dispatch_get_main_queue(), ^{
@@ -400,10 +424,9 @@ UITextFieldDelegate>
         };
         [self.navigationController pushViewController:qrVC animated:YES];
     }
-    
 }
     
-/// 发送消息让电脑端服务器准备接受文件
+/// 发送消息给电脑端服务器,表示手机端准备接受文件
 - (void)sendMessageToServer:(NSString *)serverURL{
     // 获得本机IP和端口号
     unsigned short port = [self.httpServer listeningPort];
@@ -430,6 +453,26 @@ UITextFieldDelegate>
     }
     
 }
+    
+/// 上传动画开始
+- (void)startUploadAnimate{
+    [self.navWifiBtn setImage:[UIImage imageNamed:@"wifiopen_upload"] forState:UIControlStateSelected];
+    CABasicAnimation* rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
+    rotationAnimation.toValue = [NSNumber numberWithFloat: M_PI * 2.0];
+    rotationAnimation.duration = 2.0;;
+    rotationAnimation.cumulative = YES;
+    rotationAnimation.repeatCount=MAXFLOAT;
+    [self.navWifiBtn.imageView.layer addAnimation:rotationAnimation forKey:@"rotationAnimation"];
+}
+    
+/// 停止上传动画
+- (void)stopUploadAnimate{
+    [self.navWifiBtn.imageView.layer removeAllAnimations];
+    [self.navWifiBtn setImage:[UIImage imageNamed:@"wifiopen"] forState:UIControlStateSelected];
+}
+    
+#pragma mark 手机服务器和电脑服务器连接情况---end
+    
 /// 弹框
 - (void)showAlertWithTitle:(NSString *)title message:(NSString *)message{
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -438,6 +481,7 @@ UITextFieldDelegate>
     });
     
 }
+    
 
 /// 导航栏双击刷新
 - (void)navTitleViewDidDoubleTap{
@@ -502,32 +546,35 @@ UITextFieldDelegate>
 
 /// 从相册添加照片
 - (void)addImageFromAlbum{
-    UIImagePickerController *pickVC  = [[UIImagePickerController alloc] init];
-    pickVC.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-    pickVC.delegate = self;
-    [self presentViewController:pickVC animated:YES completion:nil];
+    ZLPhotoPickerViewController *photoVC = [[ZLPhotoPickerViewController alloc] init];
+    photoVC.delegate = self;
+    photoVC.minCount = 9;  // 最多选择9张
+    photoVC.status = PickerViewShowStatusCameraRoll;
+    [photoVC show];
     
 }
-
-#pragma mark UIImagePickerControllerDelegate
-- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker{
-    [picker dismissViewControllerAnimated:YES completion:nil];
-}
-
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info{
     
-    // 获得原始的照片,转为NSData格式保存为jpg格式,如果是PNG格式尺寸太大
-    UIImage *seleImg =info[UIImagePickerControllerOriginalImage];
-    // 拼接文件全路径,文件名是日期(排除空格和后面的时区)
-    NSString *fileName = [NSDate date].description;
-    fileName = [[fileName substringToIndex:(fileName.length - 5)] stringByReplacingOccurrencesOfString:@" " withString:@""];
-    NSString *savePath = [NSString stringWithFormat:@"%@/%@.jpg",[XMWifiGroupTool getCurrentGroupPath],fileName];
-
-    BOOL isSave = [UIImageJPEGRepresentation(seleImg,0.5) writeToFile:savePath atomically:YES];
-    if (isSave){
-        [MBProgressHUD show:[NSString stringWithFormat:@"成功添加:/n%@.jpg",fileName] image:seleImg view:picker.view];
-        [self refreshDate:nil];
+#pragma mark - ZLPhotoPickerViewControllerDelegate
+- (void) pickerViewControllerDoneAsstes : (NSArray *) assets{
+    for (NSUInteger i = 0; i < assets.count; i++) {
+        ZLPhotoAssets *asset = assets[i];
+        UIImage *seleImg = [asset originImage];
+        // 拼接文件全路径,文件名是日期(排除空格和后面的时区)
+//        NSString *fileName = [XMWifiGroupTool dateChangeToString:[NSDate date]];
+        //        NSString *savePath = [NSString stringWithFormat:@"%@/%@_%lu.jpg",[XMWifiGroupTool getCurrentGroupPath],fileName,i+1];
+        // 采用相册文件本身的源名字作为文件名
+        NSString *originName = [asset imageName];
+        NSString *savePath = [NSString stringWithFormat:@"%@/%@",[XMWifiGroupTool getCurrentGroupPath],originName];
+        
+        // 区别gif和图片
+        if(asset.isGif){
+            NSData *gifData = [asset changeGifToData];
+            [gifData writeToFile:savePath atomically:YES];
+        }else{
+            [UIImageJPEGRepresentation(seleImg,0.7) writeToFile:savePath atomically:YES];
+        }
     }
+    [self refreshDate:nil];
 }
 
 #pragma mark toolbar
@@ -540,6 +587,7 @@ UITextFieldDelegate>
         for (NSInteger i = 0; i < self.currentDataArr.count; i++) {
             [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0] animated:YES scrollPosition:UITableViewScrollPositionNone];
         }
+        self.toolBarUploadBtn.enabled = (self.serverURL) ? YES : NO;
         self.toolBarDeleBtn.enabled = YES;
         self.toolBarMoveBtn.enabled = YES;
     }else{
@@ -548,6 +596,7 @@ UITextFieldDelegate>
         for (NSIndexPath *indexPath in seleArr){
             [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
         }
+        self.toolBarUploadBtn.enabled = NO;
         self.toolBarDeleBtn.enabled = NO;
         self.toolBarMoveBtn.enabled = NO;
     }
@@ -559,6 +608,22 @@ UITextFieldDelegate>
     self.toolBar.userInteractionEnabled = NO;
     self.isMoveFilesMode = YES;
     [self showLeftView];
+}
+
+/// 上传所选的文件
+- (void)uploadFiles:(UIButton *)btn{
+    btn.enabled = NO;
+    self.toolBar.userInteractionEnabled = NO;
+    NSArray *seleArr = [self.tableView indexPathsForSelectedRows];
+    // 先对数组进行降序处理,将indexPath.row最大(即最底下的数据先删除),防止序号紊乱
+    NSArray *sortArr = [self sortArray:seleArr];
+    if (seleArr.count > 0){
+        for (NSIndexPath *indexPath in sortArr){
+            [self sendFileToServer:indexPath];
+            sleep(2);
+        }
+    }
+    [self cancelEdit:nil];
 }
 
 /// 删除所选的cell
@@ -741,7 +806,7 @@ UITextFieldDelegate>
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
     [self cancelSearch];
 }
-
+    
 #pragma mark - 排序方法
 /// 排序按钮点击事件
 - (void)sortFiles{
@@ -897,6 +962,7 @@ UITextFieldDelegate>
         if([tableView indexPathsForSelectedRows].count ==  0){
             self.toolBarDeleBtn.enabled = NO;
             self.toolBarMoveBtn.enabled = NO;
+            self.toolBarUploadBtn.enabled = NO;
             self.toolBarSeleAllBtn.selected = NO;
         }
     }
@@ -904,12 +970,15 @@ UITextFieldDelegate>
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    // 取消选中状态
+    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
     // 隐藏搜索
     [self cancelSearch];
     if(tableView.isEditing){
         // 编辑模式下,启用删除,移动按钮
         self.toolBarDeleBtn.enabled = YES;
         self.toolBarMoveBtn.enabled = YES;
+        self.toolBarUploadBtn.enabled = (self.serverURL) ? YES : NO;
         if ([tableView indexPathsForSelectedRows].count == self.currentDataArr.count){
             self.toolBarSeleAllBtn.selected = YES;
         }
@@ -1045,6 +1114,9 @@ UITextFieldDelegate>
         [tips addAction:[UIAlertAction actionWithTitle:@"分享" style: UIAlertActionStyleDefault  handler:^(UIAlertAction * _Nonnull action){
             [weakSelf shareFileAtIndexPath:indexPath];
         }]];
+        [tips addAction:[UIAlertAction actionWithTitle:@"上传" style: UIAlertActionStyleDefault  handler:^(UIAlertAction * _Nonnull action){
+            [weakSelf sendFileToServer:indexPath];
+        }]];
         
         // 根据文件类型是否增加"解压"按钮
         XMWifiTransModel *model = self.currentDataArr[indexPath.row];
@@ -1122,5 +1194,69 @@ UITextFieldDelegate>
     [self presentViewController:actVC animated:YES completion:nil];
     
 }
+    
+- (void)sendFileToServer:(NSIndexPath *)indexPath{
+    // 保持移动端和电脑端两边同时打开服务器才能传输文件
+    if (!self.openHttpServerFlag){
+        [self switchHttpServerConnect:nil];
+    }
+    if(self.connectServerFlag){
+        // 取出模型
+        XMWifiTransModel *model = self.currentDataArr[indexPath.row];
+        
+        NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+        NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration];
+        
+        // 指定上传服务器的地址
+        NSURL *url;
+        if (TARGET_OS_SIMULATOR == 1 && TARGET_OS_IPHONE == 1) {
+            // 模拟器
+            url = [NSURL URLWithString:[@"http://192.168.1.100:8000" stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        }else{
+            url = [NSURL URLWithString:[self.serverURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        }
+        NSMutableURLRequest *mutableRequest = [NSMutableURLRequest requestWithURL:url];
+        mutableRequest.HTTPMethod = @"POST";
+        
+        NSString * kHttpRequestHeadBoundaryValue =@"forjoritest";
+        NSString * kHttpRequestContentDisposition =@"Content-Disposition: form-data";
+        [mutableRequest addValue:@"multipart/form-data; boundary=forjoritest" forHTTPHeaderField:@"Content-Type"];
+        
+        // 边界头尾,用于隔开文件
+        NSString *body = [NSString stringWithFormat:@"\r\n--%@\r\n%@; filename=\"%@\" \r\n\r\n", kHttpRequestHeadBoundaryValue, kHttpRequestContentDisposition,model.pureFileName];
+        
+        // 拼接要上传的文件,转为data
+        NSMutableData *data = [NSMutableData data];
+        [data appendData:[body dataUsingEncoding:NSUTF8StringEncoding]];
+        [data appendData:[NSData dataWithContentsOfURL:[NSURL fileURLWithPath:model.fullPath]]];
+        // 添加结束标志
+        [data appendData:[[NSString stringWithFormat:@"\r\n--%@--\r\n", kHttpRequestHeadBoundaryValue] dataUsingEncoding:NSUTF8StringEncoding]];
+        mutableRequest.HTTPBody = data;
+        
+        // 添加文件长度
+        [mutableRequest setValue:[NSString stringWithFormat:@"%lu", (unsigned long)data.length] forHTTPHeaderField:@"Content-Length"];
+        
+        // 开始任务
+        __weak typeof(self) weakSelf = self;
+        NSURLSessionUploadTask *task = [session uploadTaskWithRequest:mutableRequest fromData:nil completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakSelf stopUploadAnimate];
+                if(error){
+                    [MBProgressHUD showFailed];
+                }else{
+                    [MBProgressHUD showSuccess];
+                }
+            });
+        }];
+        [task resume];
+        // 开始上传动画
+        [self startUploadAnimate];
+    }else{
+        [self connnectToServer];
+    }
+    
+}
+    
+
 
 @end

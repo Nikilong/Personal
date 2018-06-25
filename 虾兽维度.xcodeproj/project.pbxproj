@@ -113,6 +113,24 @@
 		20707E9F209F446F00572604 /* XMFileDisplayWebViewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20707E9E209F446F00572604 /* XMFileDisplayWebViewViewController.m */; };
 		20707EA3209F551200572604 /* ZBTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 20707EA2209F551200572604 /* ZBTool.m */; };
 		207BBE8120B7078F00C86EAD /* XMPhotoCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 207BBE8020B7078F00C86EAD /* XMPhotoCollectionViewCell.m */; };
+		20863C8E20CCF50C00A0812C /* file_upload_disable.png in Resources */ = {isa = PBXBuildFile; fileRef = 20863C8C20CCF50C00A0812C /* file_upload_disable.png */; };
+		20863C8F20CCF50C00A0812C /* file_upload_able.png in Resources */ = {isa = PBXBuildFile; fileRef = 20863C8D20CCF50C00A0812C /* file_upload_able.png */; };
+		20863C9120CD0E3300A0812C /* wifiopen_upload.png in Resources */ = {isa = PBXBuildFile; fileRef = 20863C9020CD0E3300A0812C /* wifiopen_upload.png */; };
+		20863CB720CD422F00A0812C /* ZLPhotoAssets.m in Sources */ = {isa = PBXBuildFile; fileRef = 20863C9F20CD422F00A0812C /* ZLPhotoAssets.m */; };
+		20863CB820CD422F00A0812C /* ZLPhotoPickerDatas.m in Sources */ = {isa = PBXBuildFile; fileRef = 20863CA120CD422F00A0812C /* ZLPhotoPickerDatas.m */; };
+		20863CBA20CD422F00A0812C /* ZLPhotoPickerAssetsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20863CA620CD422F00A0812C /* ZLPhotoPickerAssetsViewController.m */; };
+		20863CBB20CD422F00A0812C /* ZLPhotoPickerGroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20863CA820CD422F00A0812C /* ZLPhotoPickerGroupViewController.m */; };
+		20863CBC20CD422F00A0812C /* ZLPhotoPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20863CAA20CD422F00A0812C /* ZLPhotoPickerViewController.m */; };
+		20863CBD20CD422F00A0812C /* ZLPhotoPickerCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 20863CAD20CD422F00A0812C /* ZLPhotoPickerCollectionView.m */; };
+		20863CBE20CD422F00A0812C /* ZLPhotoPickerCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 20863CAF20CD422F00A0812C /* ZLPhotoPickerCollectionViewCell.m */; };
+		20863CBF20CD422F00A0812C /* ZLPhotoPickerFooterCollectionReusableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 20863CB120CD422F00A0812C /* ZLPhotoPickerFooterCollectionReusableView.m */; };
+		20863CC020CD422F00A0812C /* ZLPhotoPickerGroupTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 20863CB320CD422F00A0812C /* ZLPhotoPickerGroupTableViewCell.m */; };
+		20863CC120CD422F00A0812C /* ZLPhotoPickerGroupTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 20863CB420CD422F00A0812C /* ZLPhotoPickerGroupTableViewCell.xib */; };
+		20863CC220CD422F00A0812C /* ZLPhotoPickerImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 20863CB620CD422F00A0812C /* ZLPhotoPickerImageView.m */; };
+		20863D1B20CD432200A0812C /* AssetsPickerChecked.png in Resources */ = {isa = PBXBuildFile; fileRef = 20863CF220CD432200A0812C /* AssetsPickerChecked.png */; };
+		20863D1C20CD432200A0812C /* AssetsPickerChecked@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 20863CF320CD432200A0812C /* AssetsPickerChecked@2x.png */; };
+		20863D1D20CD432200A0812C /* AssetsPickerChecked@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 20863CF420CD432200A0812C /* AssetsPickerChecked@3x.png */; };
+		20863D2B20CD4E9400A0812C /* ZLPhotoPickerGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 20863D2A20CD4E9400A0812C /* ZLPhotoPickerGroup.m */; };
 		2086642620AB403D00D51CCB /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 208663FD20AB403D00D51CCB /* Info.plist */; };
 		2086642720AB403D00D51CCB /* aes_ni.c in Sources */ = {isa = PBXBuildFile; fileRef = 2086640120AB403D00D51CCB /* aes_ni.c */; };
 		2086642820AB403D00D51CCB /* aescrypt.c in Sources */ = {isa = PBXBuildFile; fileRef = 2086640320AB403D00D51CCB /* aescrypt.c */; };
@@ -405,6 +423,36 @@
 		20707EA2209F551200572604 /* ZBTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZBTool.m; sourceTree = "<group>"; };
 		207BBE7F20B7078F00C86EAD /* XMPhotoCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPhotoCollectionViewCell.h; sourceTree = "<group>"; };
 		207BBE8020B7078F00C86EAD /* XMPhotoCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPhotoCollectionViewCell.m; sourceTree = "<group>"; };
+		20863C8C20CCF50C00A0812C /* file_upload_disable.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = file_upload_disable.png; sourceTree = "<group>"; };
+		20863C8D20CCF50C00A0812C /* file_upload_able.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = file_upload_able.png; sourceTree = "<group>"; };
+		20863C9020CD0E3300A0812C /* wifiopen_upload.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wifiopen_upload.png; sourceTree = "<group>"; };
+		20863C9E20CD422F00A0812C /* ZLPhotoAssets.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZLPhotoAssets.h; sourceTree = "<group>"; };
+		20863C9F20CD422F00A0812C /* ZLPhotoAssets.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZLPhotoAssets.m; sourceTree = "<group>"; };
+		20863CA020CD422F00A0812C /* ZLPhotoPickerDatas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZLPhotoPickerDatas.h; sourceTree = "<group>"; };
+		20863CA120CD422F00A0812C /* ZLPhotoPickerDatas.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZLPhotoPickerDatas.m; sourceTree = "<group>"; };
+		20863CA520CD422F00A0812C /* ZLPhotoPickerAssetsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZLPhotoPickerAssetsViewController.h; sourceTree = "<group>"; };
+		20863CA620CD422F00A0812C /* ZLPhotoPickerAssetsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZLPhotoPickerAssetsViewController.m; sourceTree = "<group>"; };
+		20863CA720CD422F00A0812C /* ZLPhotoPickerGroupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZLPhotoPickerGroupViewController.h; sourceTree = "<group>"; };
+		20863CA820CD422F00A0812C /* ZLPhotoPickerGroupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZLPhotoPickerGroupViewController.m; sourceTree = "<group>"; };
+		20863CA920CD422F00A0812C /* ZLPhotoPickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZLPhotoPickerViewController.h; sourceTree = "<group>"; };
+		20863CAA20CD422F00A0812C /* ZLPhotoPickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZLPhotoPickerViewController.m; sourceTree = "<group>"; };
+		20863CAC20CD422F00A0812C /* ZLPhotoPickerCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZLPhotoPickerCollectionView.h; sourceTree = "<group>"; };
+		20863CAD20CD422F00A0812C /* ZLPhotoPickerCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZLPhotoPickerCollectionView.m; sourceTree = "<group>"; };
+		20863CAE20CD422F00A0812C /* ZLPhotoPickerCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZLPhotoPickerCollectionViewCell.h; sourceTree = "<group>"; };
+		20863CAF20CD422F00A0812C /* ZLPhotoPickerCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZLPhotoPickerCollectionViewCell.m; sourceTree = "<group>"; };
+		20863CB020CD422F00A0812C /* ZLPhotoPickerFooterCollectionReusableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZLPhotoPickerFooterCollectionReusableView.h; sourceTree = "<group>"; };
+		20863CB120CD422F00A0812C /* ZLPhotoPickerFooterCollectionReusableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZLPhotoPickerFooterCollectionReusableView.m; sourceTree = "<group>"; };
+		20863CB220CD422F00A0812C /* ZLPhotoPickerGroupTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZLPhotoPickerGroupTableViewCell.h; sourceTree = "<group>"; };
+		20863CB320CD422F00A0812C /* ZLPhotoPickerGroupTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZLPhotoPickerGroupTableViewCell.m; sourceTree = "<group>"; };
+		20863CB420CD422F00A0812C /* ZLPhotoPickerGroupTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ZLPhotoPickerGroupTableViewCell.xib; sourceTree = "<group>"; };
+		20863CB520CD422F00A0812C /* ZLPhotoPickerImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZLPhotoPickerImageView.h; sourceTree = "<group>"; };
+		20863CB620CD422F00A0812C /* ZLPhotoPickerImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZLPhotoPickerImageView.m; sourceTree = "<group>"; };
+		20863CC320CD426000A0812C /* ZLPhotoPickerCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZLPhotoPickerCommon.h; sourceTree = "<group>"; };
+		20863CF220CD432200A0812C /* AssetsPickerChecked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AssetsPickerChecked.png; sourceTree = "<group>"; };
+		20863CF320CD432200A0812C /* AssetsPickerChecked@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AssetsPickerChecked@2x.png"; sourceTree = "<group>"; };
+		20863CF420CD432200A0812C /* AssetsPickerChecked@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AssetsPickerChecked@3x.png"; sourceTree = "<group>"; };
+		20863D2920CD4E9400A0812C /* ZLPhotoPickerGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZLPhotoPickerGroup.h; sourceTree = "<group>"; };
+		20863D2A20CD4E9400A0812C /* ZLPhotoPickerGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZLPhotoPickerGroup.m; sourceTree = "<group>"; };
 		208663FD20AB403D00D51CCB /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2086640020AB403D00D51CCB /* aes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = aes.h; sourceTree = "<group>"; };
 		2086640120AB403D00D51CCB /* aes_ni.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = aes_ni.c; sourceTree = "<group>"; };
@@ -656,6 +704,7 @@
 		204D23DD209ED88200F17E2E /* Third */ = {
 			isa = PBXGroup;
 			children = (
+				20863C9220CD40AB00A0812C /* AlbumMuitiSelect */,
 				2061C1DF20C56F5F008C7424 /* VideoClass */,
 				204D2417209ED91A00F17E2E /* Vendor */,
 				204D23DE209ED8E800F17E2E /* Core */,
@@ -997,6 +1046,96 @@
 			path = Tool;
 			sourceTree = "<group>";
 		};
+		20863C9220CD40AB00A0812C /* AlbumMuitiSelect */ = {
+			isa = PBXGroup;
+			children = (
+				20863C9C20CD422F00A0812C /* ZLPhotoPicker */,
+			);
+			path = AlbumMuitiSelect;
+			sourceTree = "<group>";
+		};
+		20863C9C20CD422F00A0812C /* ZLPhotoPicker */ = {
+			isa = PBXGroup;
+			children = (
+				20863CC420CD432200A0812C /* Utils */,
+				20863C9D20CD422F00A0812C /* Models */,
+				20863CA420CD422F00A0812C /* ViewControllers */,
+				20863CAB20CD422F00A0812C /* Views */,
+				20863CC320CD426000A0812C /* ZLPhotoPickerCommon.h */,
+			);
+			path = ZLPhotoPicker;
+			sourceTree = "<group>";
+		};
+		20863C9D20CD422F00A0812C /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				20863C9E20CD422F00A0812C /* ZLPhotoAssets.h */,
+				20863C9F20CD422F00A0812C /* ZLPhotoAssets.m */,
+				20863CA020CD422F00A0812C /* ZLPhotoPickerDatas.h */,
+				20863CA120CD422F00A0812C /* ZLPhotoPickerDatas.m */,
+				20863D2920CD4E9400A0812C /* ZLPhotoPickerGroup.h */,
+				20863D2A20CD4E9400A0812C /* ZLPhotoPickerGroup.m */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		20863CA420CD422F00A0812C /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				20863CA520CD422F00A0812C /* ZLPhotoPickerAssetsViewController.h */,
+				20863CA620CD422F00A0812C /* ZLPhotoPickerAssetsViewController.m */,
+				20863CA720CD422F00A0812C /* ZLPhotoPickerGroupViewController.h */,
+				20863CA820CD422F00A0812C /* ZLPhotoPickerGroupViewController.m */,
+				20863CA920CD422F00A0812C /* ZLPhotoPickerViewController.h */,
+				20863CAA20CD422F00A0812C /* ZLPhotoPickerViewController.m */,
+			);
+			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		20863CAB20CD422F00A0812C /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				20863CAC20CD422F00A0812C /* ZLPhotoPickerCollectionView.h */,
+				20863CAD20CD422F00A0812C /* ZLPhotoPickerCollectionView.m */,
+				20863CAE20CD422F00A0812C /* ZLPhotoPickerCollectionViewCell.h */,
+				20863CAF20CD422F00A0812C /* ZLPhotoPickerCollectionViewCell.m */,
+				20863CB020CD422F00A0812C /* ZLPhotoPickerFooterCollectionReusableView.h */,
+				20863CB120CD422F00A0812C /* ZLPhotoPickerFooterCollectionReusableView.m */,
+				20863CB220CD422F00A0812C /* ZLPhotoPickerGroupTableViewCell.h */,
+				20863CB320CD422F00A0812C /* ZLPhotoPickerGroupTableViewCell.m */,
+				20863CB420CD422F00A0812C /* ZLPhotoPickerGroupTableViewCell.xib */,
+				20863CB520CD422F00A0812C /* ZLPhotoPickerImageView.h */,
+				20863CB620CD422F00A0812C /* ZLPhotoPickerImageView.m */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		20863CC420CD432200A0812C /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				20863CF020CD432200A0812C /* Resource */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		20863CF020CD432200A0812C /* Resource */ = {
+			isa = PBXGroup;
+			children = (
+				20863CF120CD432200A0812C /* AssetsPickerChecked.imageset */,
+			);
+			path = Resource;
+			sourceTree = "<group>";
+		};
+		20863CF120CD432200A0812C /* AssetsPickerChecked.imageset */ = {
+			isa = PBXGroup;
+			children = (
+				20863CF220CD432200A0812C /* AssetsPickerChecked.png */,
+				20863CF320CD432200A0812C /* AssetsPickerChecked@2x.png */,
+				20863CF420CD432200A0812C /* AssetsPickerChecked@3x.png */,
+			);
+			path = AssetsPickerChecked.imageset;
+			sourceTree = "<group>";
+		};
 		208663FC20AB403D00D51CCB /* SSZipArchive */ = {
 			isa = PBXGroup;
 			children = (
@@ -1255,6 +1394,9 @@
 				20FB7DDA20C00F0A00011B5C /* btn_pause.png */,
 				20FB7DDB20C00F0A00011B5C /* btn_play.png */,
 				FD3332E720A1786A0017655F /* wifiopen.png */,
+				20863C8C20CCF50C00A0812C /* file_upload_disable.png */,
+				20863C8D20CCF50C00A0812C /* file_upload_able.png */,
+				20863C9020CD0E3300A0812C /* wifiopen_upload.png */,
 				2086643B20AC87DE00D51CCB /* dir_add.png */,
 				2086643C20AC87DE00D51CCB /* dir_backup.png */,
 				20E895B820AEFB120090AD15 /* setting_backup.png */,
@@ -1385,12 +1527,17 @@
 				2086643E20AC87DE00D51CCB /* dir_add.png in Resources */,
 				204D2438209ED91A00F17E2E /* README.txt in Resources */,
 				2061C1DE20C3C534008C7424 /* highlight.js in Resources */,
+				20863D1B20CD432200A0812C /* AssetsPickerChecked.png in Resources */,
 				20C85E6920541F3B0057F483 /* tool_icon_default.png in Resources */,
+				20863C8E20CCF50C00A0812C /* file_upload_disable.png in Resources */,
 				2066C30B209F643600799A1E /* index.html in Resources */,
 				204D2430209ED91A00F17E2E /* About.txt in Resources */,
 				20C85E6720541F3B0057F483 /* tool_icon_4.png in Resources */,
 				2086642620AB403D00D51CCB /* Info.plist in Resources */,
 				2066C30C209F643600799A1E /* upload.html in Resources */,
+				20863D1D20CD432200A0812C /* AssetsPickerChecked@3x.png in Resources */,
+				20863CC120CD422F00A0812C /* ZLPhotoPickerGroupTableViewCell.xib in Resources */,
+				20863C9120CD0E3300A0812C /* wifiopen_upload.png in Resources */,
 				2061C20F20C56F5F008C7424 /* HJVideoAssets.xcassets in Resources */,
 				20F1121C1E866F9C00E64A70 /* XMLeftViewUserCell.xib in Resources */,
 				20FB7DDC20C00F0A00011B5C /* btn_pause.png in Resources */,
@@ -1408,7 +1555,9 @@
 				205CECF61F488EF700821E38 /* webSpecial.plist in Resources */,
 				2061C1DD20C3C534008C7424 /* highlight.css in Resources */,
 				FD1EA0E220AC58C200658F18 /* file_delete_able.png in Resources */,
+				20863C8F20CCF50C00A0812C /* file_upload_able.png in Resources */,
 				204D242E209ED91A00F17E2E /* About.txt in Resources */,
+				20863D1C20CD432200A0812C /* AssetsPickerChecked@2x.png in Resources */,
 				20C85E6320541F3B0057F483 /* tool_icon_2.png in Resources */,
 				2086643F20AC87DE00D51CCB /* dir_backup.png in Resources */,
 				205CECDC1F48150E00821E38 /* MBProgressHUD.bundle in Resources */,
@@ -1453,15 +1602,18 @@
 				20E9E373204C4BEC007D442E /* XMClipImageViewController.m in Sources */,
 				20707E9C209F3E8400572604 /* XMWifiTransModel.m in Sources */,
 				20C85E6D2054313F0057F483 /* XMButton.m in Sources */,
+				20863CC220CD422F00A0812C /* ZLPhotoPickerImageView.m in Sources */,
 				204D23DC209ED86800F17E2E /* XMWifiTransFileViewController.m in Sources */,
 				84D9ED061E656BC30046840E /* XMWebModel.m in Sources */,
 				204D2436209ED91A00F17E2E /* ContextFilterLogFormatter.m in Sources */,
 				204D2414209ED8E800F17E2E /* HTTPFileResponse.m in Sources */,
 				FD1EA08920A9A96A00658F18 /* XMGlobalConst.m in Sources */,
 				202C84F11F2624AD0055FD7D /* XMSaveWebsTableViewController.m in Sources */,
+				20863CBA20CD422F00A0812C /* ZLPhotoPickerAssetsViewController.m in Sources */,
 				205CECE91F48150E00821E38 /* UIButton+WebCache.m in Sources */,
 				2086642920AB403D00D51CCB /* aeskey.c in Sources */,
 				205CED0A1F489F2B00821E38 /* XMLeftTableViewController.m in Sources */,
+				20863CBC20CD422F00A0812C /* ZLPhotoPickerViewController.m in Sources */,
 				205CECE21F48150E00821E38 /* SDImageCacheConfig.m in Sources */,
 				205CECEB1F48150E00821E38 /* UIImage+MultiFormat.m in Sources */,
 				202C84EF1F2624AD0055FD7D /* XMHomeTableViewController.m in Sources */,
@@ -1477,6 +1629,7 @@
 				200770302059775100551C00 /* XMHiwebViewController.m in Sources */,
 				204D2431209ED91A00F17E2E /* DDAbstractDatabaseLogger.m in Sources */,
 				2086643020AB403D00D51CCB /* crypt.c in Sources */,
+				20863D2B20CD4E9400A0812C /* ZLPhotoPickerGroup.m in Sources */,
 				2086643620AB403D00D51CCB /* zip.c in Sources */,
 				205CECDD1F48150E00821E38 /* MBProgressHUD.m in Sources */,
 				204D2416209ED8E800F17E2E /* WebSocket.m in Sources */,
@@ -1488,7 +1641,9 @@
 				2061C21220C56F5F008C7424 /* AppDelegate+HJVideoRotation.m in Sources */,
 				20F112171E86697400E64A70 /* XMChannelModel.m in Sources */,
 				2061C21720C56F5F008C7424 /* HJViewFactory.m in Sources */,
+				20863CB820CD422F00A0812C /* ZLPhotoPickerDatas.m in Sources */,
 				205CECE01F48150E00821E38 /* NSImage+WebCache.m in Sources */,
+				20863CB720CD422F00A0812C /* ZLPhotoAssets.m in Sources */,
 				2061C21320C56F5F008C7424 /* HJVideoPlayerUtil.m in Sources */,
 				20707E9F209F446F00572604 /* XMFileDisplayWebViewViewController.m in Sources */,
 				2086642C20AB403D00D51CCB /* hmac.c in Sources */,
@@ -1496,6 +1651,7 @@
 				20707EA3209F551200572604 /* ZBTool.m in Sources */,
 				2061C21420C56F5F008C7424 /* HJVideoPlayManager.m in Sources */,
 				2061C21E20C56F5F008C7424 /* HJPlayerView.m in Sources */,
+				20863CBB20CD422F00A0812C /* ZLPhotoPickerGroupViewController.m in Sources */,
 				205CECED1F48150E00821E38 /* UIImageView+HighlightedWebCache.m in Sources */,
 				2066C307209F558600799A1E /* MyHTTPConnection.m in Sources */,
 				205CECDF1F48150E00821E38 /* NSData+ImageContentType.m in Sources */,
@@ -1506,6 +1662,7 @@
 				204D2435209ED91A00F17E2E /* DDTTYLogger.m in Sources */,
 				204D240C209ED8E800F17E2E /* HTTPServer.m in Sources */,
 				84BA25591E65C7A800C8B204 /* XMWebTableViewCell.m in Sources */,
+				20863CBD20CD422F00A0812C /* ZLPhotoPickerCollectionView.m in Sources */,
 				200A823420837B1300825E6E /* XMMetorMapViewController.swift in Sources */,
 				205CECDE1F48150E00821E38 /* MKAnnotationView+WebCache.m in Sources */,
 				20C85E2F204EE8850057F483 /* EXQRCodeImageDetectorUtil.m in Sources */,
@@ -1526,6 +1683,7 @@
 				20F1121B1E866F9C00E64A70 /* XMLeftViewUserCell.m in Sources */,
 				2086643320AB403D00D51CCB /* ioapi_mem.c in Sources */,
 				FD7407E820B4306D00A83979 /* XMPhotoCollectionViewController.m in Sources */,
+				20863CC020CD422F00A0812C /* ZLPhotoPickerGroupTableViewCell.m in Sources */,
 				200770312059775100551C00 /* XMPersonDataUnit.m in Sources */,
 				204D2410209ED8E800F17E2E /* HTTPAsyncFileResponse.m in Sources */,
 				204D240B209ED8E800F17E2E /* HTTPMessage.m in Sources */,
@@ -1545,6 +1703,7 @@
 				205CECE81F48150E00821E38 /* SDWebImagePrefetcher.m in Sources */,
 				204D2413209ED8E800F17E2E /* HTTPErrorResponse.m in Sources */,
 				2061C21820C56F5F008C7424 /* UIDevice+HJVideoRotation.m in Sources */,
+				20863CBF20CD422F00A0812C /* ZLPhotoPickerFooterCollectionReusableView.m in Sources */,
 				2086642F20AB403D00D51CCB /* sha1.c in Sources */,
 				2061C21D20C56F5F008C7424 /* HJFastForwardView.m in Sources */,
 				204D2412209ED8E800F17E2E /* HTTPDynamicFileResponse.m in Sources */,
@@ -1569,6 +1728,7 @@
 				202C84F01F2624AD0055FD7D /* XMQRCodeViewController.m in Sources */,
 				204D2411209ED8E800F17E2E /* HTTPDataResponse.m in Sources */,
 				849D26F31E640E3200F0CA5D /* main.m in Sources */,
+				20863CBE20CD422F00A0812C /* ZLPhotoPickerCollectionViewCell.m in Sources */,
 				2061C22120C56F5F008C7424 /* HJVideoPlayerController.m in Sources */,
 				2061C21120C56F5F008C7424 /* HJVideoPlayTimeRecord.m in Sources */,
 			);

@@ -38,7 +38,9 @@ static NSString *homUrl;
     // 在提取终极哪有用的信息,第一项为演员信息
     NSMutableArray *arr = [NSMutableArray arrayWithArray:[dataStr componentsSeparatedByString:@"<div class=\"item\">"]];
     [arr removeObjectAtIndex:0];
-    [arr removeObjectAtIndex:0];
+    if (arr.count > 1){
+        [arr removeObjectAtIndex:0];
+    }
     
     NSString *url;
     NSString *title;

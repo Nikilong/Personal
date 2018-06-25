@@ -8,7 +8,6 @@
 
 #import "XMPhotoCollectionViewCell.h"
 #import "XMWifiTransModel.h"
-#import <ImageIO/ImageIO.h>
 
 
 @interface XMPhotoCollectionViewCell()<UIScrollViewDelegate>
@@ -32,6 +31,8 @@
         self.imgScroV.minimumZoomScale = 0.5;
         self.imgScroV.maximumZoomScale = 3.0;
         [self.contentView addSubview:self.imgScroV];
+        
+        self.gifPerTime = 0.08;
     }
     return self;
 }
@@ -52,12 +53,11 @@
     [self.imgScroV addSubview:self.imgV];
     
     // 区分gif和静态图片
-    if ([wifiModle.fullPath.pathExtension isEqualToString:@"gif"]){
-        NSArray *imagArrs = [self seprateGifAtPath:wifiModle.fullPath];
-        self.imgV.animationImages = imagArrs;
+    if ([wifiModle.fullPath.pathExtension.lowercaseString isEqualToString:@"gif"]){
+        self.imgV.animationImages = wifiModle.gifImageArr;
 
-        //动画的总时长(一组动画坐下来的时间 6张图片显示一遍的总时间)
-         self.imgV.animationDuration = 2;
+        //动画的总时长(1s播放12.5帧)
+         self.imgV.animationDuration = self.gifPerTime * wifiModle.gifImageArr.count;
          self.imgV.animationRepeatCount = 0;//动画进行几次结束
         [self.imgV startAnimating];//开始动画
         // [imageView stopAnimating];//停止动画
@@ -67,27 +67,6 @@
     //设置scroll的contentsize的frame
     self.imgScroV.contentSize = self.imgV.frame.size;
     
-}
-
-/// 将gif分解为图片组
-- (NSArray *)seprateGifAtPath:(NSString *)path{
-    
-    NSURL *gifImageUrl = [NSURL fileURLWithPath:path];
-    //获取Gif图的原数据
-    CGImageSourceRef gifSource = CGImageSourceCreateWithURL((CFURLRef)gifImageUrl, NULL);
-    
-    //获取Gif图有多少帧
-    size_t gifcount = CGImageSourceGetCount(gifSource);
-    NSMutableArray *imageS = [[NSMutableArray alloc] init];
-    for (NSInteger i = 0; i < gifcount; i++) {
-        //由数据源gifSource生成一张CGImageRef类型的图片
-        CGImageRef imageRef = CGImageSourceCreateImageAtIndex(gifSource, i, NULL);
-        UIImage *image = [UIImage imageWithCGImage:imageRef];
-        [imageS addObject:image];
-        CGImageRelease(imageRef);
-    }
-    //得到图片数组
-    return imageS;
 }
 
 //根据不同的比例设置尺寸
