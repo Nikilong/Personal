@@ -36,6 +36,11 @@ NSString * const XMWifiGroupMarkZipFileName = @"XMWifiGroupZipMark.wifign";  // 
     return [[self getDocumentsPath] stringByAppendingPathComponent:@"hiweb.homeurl"];
 }
 
+/// wifi传输的图片缓存保存沙盒路径
++ (NSString *)getWifiImageTempDirPath{
+    return [[self getWifiUploadDirPath] stringByAppendingPathComponent:@"ImgTemp"];
+}
+
 /// wifi传输的保存沙盒路径
 + (NSString *)getWifiUploadDirPath{
     return [NSString stringWithFormat:@"%@/%@",[self getDocumentsPath],XMWifiMainDirName];

@@ -11,6 +11,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import <ImageIO/ImageIO.h>
 #import <UIKit/UIKit.h>
+#import "XMImageUtil.h"
 
 NSString * const fileTypeCodeName = @"code";
 NSString * const fileTypeImageName = @"image";
@@ -94,7 +95,7 @@ NSString * const fileTypeZipName = @"zip";
             }else if ([@"png|jpg|jpeg|gif|bmp|tiff|pcx|tga|exif|fpx|svg|psd|cdr|pcd|dxf|ufo|eps|ai|raw|wmf|webp|heic" containsString:exten]){
                 model.fileType = fileTypeImageName;
                 if ([exten isEqualToString:@"gif"]){
-                    model.gifImageArr = [self seprateGifAtPath:model.fullPath];
+                    model.gifImageArr = [XMImageUtil seprateGifAtPath:model.fullPath];
                 }
                 
             }else if ([@"avi|wmv|mpeg|mp4|mov|mkv|flv|f4v|m4v|rmvb|rm|3gp|dat|ts|mts|vob" containsString:exten]){
@@ -119,28 +120,6 @@ NSString * const fileTypeZipName = @"zip";
     return fileFilterArr;
 }
     
-/// 将gif分解为图片组
-+ (NSArray *)seprateGifAtPath:(NSString *)path{
-    
-    NSURL *gifImageUrl = [NSURL fileURLWithPath:path];
-    //获取Gif图的原数据
-    CGImageSourceRef gifSource = CGImageSourceCreateWithURL((CFURLRef)gifImageUrl, NULL);
-    
-    //获取Gif图有多少帧
-    size_t gifcount = CGImageSourceGetCount(gifSource);
-    NSMutableArray *imageS = [[NSMutableArray alloc] init];
-    for (NSInteger i = 0; i < gifcount; i++) {
-        //由数据源gifSource生成一张CGImageRef类型的图片
-        CGImageRef imageRef = CGImageSourceCreateImageAtIndex(gifSource, i, NULL);
-        UIImage *image = [UIImage imageWithCGImage:imageRef];
-        [imageS addObject:image];
-        CGImageRelease(imageRef);
-    }
-    //得到图片数组
-    return imageS;
-}
-
-
 
 /// 获取音频视频类时长
 + (NSString *)getMediaLengthString:(NSString *)path{

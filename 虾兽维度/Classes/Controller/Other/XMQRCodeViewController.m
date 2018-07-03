@@ -8,7 +8,7 @@
 
 #import "XMQRCodeViewController.h"
 #import <AVFoundation/AVFoundation.h>
-#import "EXQRCodeImageDetectorUtil.h"
+#import "XMImageUtil.h"
 //#import <Photos/Photos.h>
 #import "MBProgressHUD+NK.h"
 
@@ -159,7 +159,7 @@
     [self.session stopRunning];
     
     // 解析选中的图片的二维码信息
-    NSString *scanResult = [EXQRCodeImageDetectorUtil detectorQRCodeImage:info[UIImagePickerControllerOriginalImage]];
+    NSString *scanResult = [XMImageUtil detectorQRCodeImage:info[UIImagePickerControllerOriginalImage]];
     if(scanResult.length > 0){
 //        [self dealResult:scanResult];
         if (self.scanCallBack){

@@ -24,6 +24,8 @@ extern NSString * const XMWifiGroupMarkZipFileName;
 /// hiweb主页路径
 + (NSString *)getHiwebHomeUrlPath;
 
+/// wifi传输的图片缓存保存沙盒路径
++ (NSString *)getWifiImageTempDirPath;
 /// wifi传输的保存沙盒路径
 + (NSString *)getWifiUploadDirPath;
 /// wifi传输组名列表保存路径

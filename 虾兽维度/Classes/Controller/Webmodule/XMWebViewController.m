@@ -9,8 +9,10 @@
 #import "XMWebViewController.h"
 #import "XMWebModelTool.h"
 #import "UIView+getPointColor.h"
-#import "EXQRCodeImageDetectorUtil.h"
+#import "XMImageUtil.h"
 #import "MBProgressHUD+NK.h"
+#import "XMImageUtil.h"
+#import "XMSavePathUnit.h"
 
 @interface XMWebViewController ()<UIWebViewDelegate,NSURLSessionDelegate,UIGestureRecognizerDelegate>
 
@@ -418,33 +420,34 @@
 /**
  长按网页上的图片触发弹框
  */
-- (void)showActionSheet:(NSString *)imageUrl
-{
+- (void)showActionSheet:(NSString *)imageUrl{
+    __weak typeof(self) weakSelf= self;
     UIAlertController *tips = [[UIAlertController alloc] init];
-    
-    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
-    //    UIAlertActionStyleDestructive：红色的按钮
-    UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"保存图片到本地相册" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
+    [tips addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    [tips addAction:[UIAlertAction actionWithTitle:@"保存图片到本地相册" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
         // 当点击确定执行的块代码
-        [self savePictrue:imageUrl];
-    }];
-    
-    [tips addAction:cancelAction];
-    [tips addAction:okAction];
+        [XMImageUtil savePictrue:imageUrl path:nil callBackViewController:weakSelf];
+    }]];
+    [tips addAction:[UIAlertAction actionWithTitle:@"保存图片到本地缓存" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
+        NSString *path = [XMSavePathUnit getWifiImageTempDirPath];
+        if (![[NSFileManager defaultManager] fileExistsAtPath:path]){
+            [[NSFileManager defaultManager] createDirectoryAtPath:path withIntermediateDirectories:NO attributes:nil error:nil];
+        }
+        [XMImageUtil savePictrue:imageUrl path:path callBackViewController:weakSelf];
+    }]];
     
     // 判断是否含有二维码
-    NSString *qrMsg = [EXQRCodeImageDetectorUtil detectorQRCodeImage:[UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:imageUrl]]]];
+    NSString *qrMsg = [XMImageUtil detectorQRCodeImage:[UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:imageUrl]]]];
     if(qrMsg){
         UIAlertAction *qrAction = [UIAlertAction actionWithTitle:@"识别图中二维码" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
             // 当点击确定执行的块代码
             XMWebModel *model = [[XMWebModel alloc] init];
             model.webURL = [NSURL URLWithString:qrMsg];
-            
-            // 因为webmodule是push出来的,必须先pop掉当前控制器
-//            [self.navigationController popViewControllerAnimated:YES];
-            
-
-            [XMWebViewController openWebmoduleWithModel:model viewController:self];
+            if(self.navigationController){
+                [self.navigationController popViewControllerAnimated:YES];
+            }else{
+                [XMWebViewController openWebmoduleWithModel:model viewController:self];
+            }
 
         }];
         
@@ -456,38 +459,6 @@
     });
 }
 
-/**
- 点击了保存图片的按钮
- */
-- (void)savePictrue:(NSString *)imageUrl
-{
-    // 对于网页上的图片,需要发起一个网络请求
-    NSURL *url = [NSURL URLWithString:imageUrl];
-    
-    NSURLSessionConfiguration * configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    
-    NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:[NSOperationQueue new]];
-    
-    NSURLRequest *imgRequest = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestReturnCacheDataElseLoad timeoutInterval:30.0];
-    
-    NSURLSessionDownloadTask  *task = [session downloadTaskWithRequest:imgRequest completionHandler:^(NSURL * _Nullable location, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        if (error) {
-            return ;
-        }
-        
-        NSData * imageData = [NSData dataWithContentsOfURL:location];
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            
-            UIImage * image = [UIImage imageWithData:imageData];
-            
-#warning note 保存相片到本地的方法,头文件写着必须实现一个@selector(image:didFinishSavingWithError:contextInfo:),此外,还需要设置info.plist的一个key
-            UIImageWriteToSavedPhotosAlbum(image, self, @selector(image:didFinishSavingWithError:contextInfo:), NULL);
-        });   
-    }];
-    
-    [task resume];
-}
 
 /** 提示用户保存图片成功与否(系统必须实现的方法) */
 - (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo

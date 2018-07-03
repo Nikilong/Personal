@@ -27,6 +27,7 @@
 #import "HJVideoPlayerController.h"
 #import "XMQRCodeViewController.h"
 #import "ZLPhotoPickerViewController.h"
+#import "XMImageUtil.h"
 
 typedef enum : NSUInteger {
     XMFileSortTypeBigFirst,     //
@@ -568,11 +569,12 @@ UITextFieldDelegate>
         
         // 区别gif和图片
         if(asset.isGif){
-            NSData *gifData = [asset changeGifToData];
+            NSData *gifData = [XMImageUtil changeGifToDataWithAsset:asset.asset];
             [gifData writeToFile:savePath atomically:YES];
         }else{
-            [UIImageJPEGRepresentation(seleImg,0.7) writeToFile:savePath atomically:YES];
+            [UIImageJPEGRepresentation(seleImg,0.9) writeToFile:savePath atomically:YES];
         }
+
     }
     [self refreshDate:nil];
 }
@@ -970,8 +972,6 @@ UITextFieldDelegate>
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    // 取消选中状态
-    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
     // 隐藏搜索
     [self cancelSearch];
     if(tableView.isEditing){
@@ -983,6 +983,9 @@ UITextFieldDelegate>
             self.toolBarSeleAllBtn.selected = YES;
         }
         return;
+    }else{
+        // 取消选中状态
+        [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
     }
     
     XMWifiTransModel *model = self.currentDataArr[indexPath.row];

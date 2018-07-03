@@ -113,8 +113,6 @@
 		20707E9F209F446F00572604 /* XMFileDisplayWebViewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20707E9E209F446F00572604 /* XMFileDisplayWebViewViewController.m */; };
 		20707EA3209F551200572604 /* ZBTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 20707EA2209F551200572604 /* ZBTool.m */; };
 		207BBE8120B7078F00C86EAD /* XMPhotoCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 207BBE8020B7078F00C86EAD /* XMPhotoCollectionViewCell.m */; };
-		20863C8E20CCF50C00A0812C /* file_upload_disable.png in Resources */ = {isa = PBXBuildFile; fileRef = 20863C8C20CCF50C00A0812C /* file_upload_disable.png */; };
-		20863C8F20CCF50C00A0812C /* file_upload_able.png in Resources */ = {isa = PBXBuildFile; fileRef = 20863C8D20CCF50C00A0812C /* file_upload_able.png */; };
 		20863C9120CD0E3300A0812C /* wifiopen_upload.png in Resources */ = {isa = PBXBuildFile; fileRef = 20863C9020CD0E3300A0812C /* wifiopen_upload.png */; };
 		20863CB720CD422F00A0812C /* ZLPhotoAssets.m in Sources */ = {isa = PBXBuildFile; fileRef = 20863C9F20CD422F00A0812C /* ZLPhotoAssets.m */; };
 		20863CB820CD422F00A0812C /* ZLPhotoPickerDatas.m in Sources */ = {isa = PBXBuildFile; fileRef = 20863CA120CD422F00A0812C /* ZLPhotoPickerDatas.m */; };
@@ -153,9 +151,11 @@
 		2086643E20AC87DE00D51CCB /* dir_add.png in Resources */ = {isa = PBXBuildFile; fileRef = 2086643B20AC87DE00D51CCB /* dir_add.png */; };
 		2086643F20AC87DE00D51CCB /* dir_backup.png in Resources */ = {isa = PBXBuildFile; fileRef = 2086643C20AC87DE00D51CCB /* dir_backup.png */; };
 		2086644020AC87DE00D51CCB /* dir_fresh.png in Resources */ = {isa = PBXBuildFile; fileRef = 2086643D20AC87DE00D51CCB /* dir_fresh.png */; };
+		2086FCE120EBC61400957207 /* XMImageUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 2086FCE020EBC61400957207 /* XMImageUtil.m */; };
+		2086FCE420EBC75F00957207 /* file_upload_able.png in Resources */ = {isa = PBXBuildFile; fileRef = 2086FCE220EBC75F00957207 /* file_upload_able.png */; };
+		2086FCE520EBC75F00957207 /* file_upload_disable.png in Resources */ = {isa = PBXBuildFile; fileRef = 2086FCE320EBC75F00957207 /* file_upload_disable.png */; };
 		20A3BCFF1F2E2D7400ED1699 /* XMAdvance.m in Sources */ = {isa = PBXBuildFile; fileRef = 20A3BCFE1F2E2D7400ED1699 /* XMAdvance.m */; };
 		20BA35661E89597D00477BCB /* XMFloatWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 20BA35651E89597D00477BCB /* XMFloatWindow.m */; };
-		20C85E2F204EE8850057F483 /* EXQRCodeImageDetectorUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 20C85E2E204EE8850057F483 /* EXQRCodeImageDetectorUtil.m */; };
 		20C85E382053E1F40057F483 /* XMToolboxViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20C85E372053E1F40057F483 /* XMToolboxViewController.m */; };
 		20C85E53205419C80057F483 /* XMToolBoxConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 20C85E52205419C80057F483 /* XMToolBoxConfig.m */; };
 		20C85E6020541F3B0057F483 /* tool_icon_0.png in Resources */ = {isa = PBXBuildFile; fileRef = 20C85E5620541F3B0057F483 /* tool_icon_0.png */; };
@@ -423,8 +423,6 @@
 		20707EA2209F551200572604 /* ZBTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZBTool.m; sourceTree = "<group>"; };
 		207BBE7F20B7078F00C86EAD /* XMPhotoCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPhotoCollectionViewCell.h; sourceTree = "<group>"; };
 		207BBE8020B7078F00C86EAD /* XMPhotoCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPhotoCollectionViewCell.m; sourceTree = "<group>"; };
-		20863C8C20CCF50C00A0812C /* file_upload_disable.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = file_upload_disable.png; sourceTree = "<group>"; };
-		20863C8D20CCF50C00A0812C /* file_upload_able.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = file_upload_able.png; sourceTree = "<group>"; };
 		20863C9020CD0E3300A0812C /* wifiopen_upload.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wifiopen_upload.png; sourceTree = "<group>"; };
 		20863C9E20CD422F00A0812C /* ZLPhotoAssets.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZLPhotoAssets.h; sourceTree = "<group>"; };
 		20863C9F20CD422F00A0812C /* ZLPhotoAssets.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZLPhotoAssets.m; sourceTree = "<group>"; };
@@ -496,14 +494,16 @@
 		2086643B20AC87DE00D51CCB /* dir_add.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dir_add.png; sourceTree = "<group>"; };
 		2086643C20AC87DE00D51CCB /* dir_backup.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dir_backup.png; sourceTree = "<group>"; };
 		2086643D20AC87DE00D51CCB /* dir_fresh.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dir_fresh.png; sourceTree = "<group>"; };
+		2086FCDF20EBC61400957207 /* XMImageUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMImageUtil.h; sourceTree = "<group>"; };
+		2086FCE020EBC61400957207 /* XMImageUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMImageUtil.m; sourceTree = "<group>"; };
+		2086FCE220EBC75F00957207 /* file_upload_able.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = file_upload_able.png; sourceTree = "<group>"; };
+		2086FCE320EBC75F00957207 /* file_upload_disable.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = file_upload_disable.png; sourceTree = "<group>"; };
 		2096B0E620A49C8D00BA249C /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PrefixHeader.pch; path = "虾兽维度/PrefixHeader.pch"; sourceTree = SOURCE_ROOT; };
 		2099EB7C1F19DCD500F8BD42 /* XMOpenWebmoduleProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMOpenWebmoduleProtocol.h; sourceTree = "<group>"; };
 		20A3BCFD1F2E2D7400ED1699 /* XMAdvance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMAdvance.h; sourceTree = "<group>"; };
 		20A3BCFE1F2E2D7400ED1699 /* XMAdvance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMAdvance.m; sourceTree = "<group>"; };
 		20BA35641E89597D00477BCB /* XMFloatWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMFloatWindow.h; sourceTree = "<group>"; };
 		20BA35651E89597D00477BCB /* XMFloatWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMFloatWindow.m; sourceTree = "<group>"; };
-		20C85E2D204EE8850057F483 /* EXQRCodeImageDetectorUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EXQRCodeImageDetectorUtil.h; sourceTree = "<group>"; };
-		20C85E2E204EE8850057F483 /* EXQRCodeImageDetectorUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EXQRCodeImageDetectorUtil.m; sourceTree = "<group>"; };
 		20C85E362053E1F40057F483 /* XMToolboxViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMToolboxViewController.h; sourceTree = "<group>"; };
 		20C85E372053E1F40057F483 /* XMToolboxViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMToolboxViewController.m; sourceTree = "<group>"; };
 		20C85E51205419C80057F483 /* XMToolBoxConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMToolBoxConfig.h; path = ../Config/XMToolBoxConfig.h; sourceTree = "<group>"; };
@@ -1245,8 +1245,8 @@
 			children = (
 				20F112231E86BF4600E64A70 /* XMWebModelTool.h */,
 				20F112241E86BF4600E64A70 /* XMWebModelTool.m */,
-				20C85E2D204EE8850057F483 /* EXQRCodeImageDetectorUtil.h */,
-				20C85E2E204EE8850057F483 /* EXQRCodeImageDetectorUtil.m */,
+				2086FCDF20EBC61400957207 /* XMImageUtil.h */,
+				2086FCE020EBC61400957207 /* XMImageUtil.m */,
 			);
 			name = Tool;
 			path = Other/Tool;
@@ -1394,13 +1394,13 @@
 				20FB7DDA20C00F0A00011B5C /* btn_pause.png */,
 				20FB7DDB20C00F0A00011B5C /* btn_play.png */,
 				FD3332E720A1786A0017655F /* wifiopen.png */,
-				20863C8C20CCF50C00A0812C /* file_upload_disable.png */,
-				20863C8D20CCF50C00A0812C /* file_upload_able.png */,
 				20863C9020CD0E3300A0812C /* wifiopen_upload.png */,
 				2086643B20AC87DE00D51CCB /* dir_add.png */,
 				2086643C20AC87DE00D51CCB /* dir_backup.png */,
 				20E895B820AEFB120090AD15 /* setting_backup.png */,
 				2086643D20AC87DE00D51CCB /* dir_fresh.png */,
+				2086FCE220EBC75F00957207 /* file_upload_able.png */,
+				2086FCE320EBC75F00957207 /* file_upload_disable.png */,
 				20E895B420ADDAA40090AD15 /* file_move_disable.png */,
 				20E895B620ADDB730090AD15 /* file_move_able.png */,
 				FD1EA0E020AC58C200658F18 /* file_delete_able.png */,
@@ -1526,10 +1526,10 @@
 				FD3332E820A1786A0017655F /* wificlose.png in Resources */,
 				2086643E20AC87DE00D51CCB /* dir_add.png in Resources */,
 				204D2438209ED91A00F17E2E /* README.txt in Resources */,
+				2086FCE420EBC75F00957207 /* file_upload_able.png in Resources */,
 				2061C1DE20C3C534008C7424 /* highlight.js in Resources */,
 				20863D1B20CD432200A0812C /* AssetsPickerChecked.png in Resources */,
 				20C85E6920541F3B0057F483 /* tool_icon_default.png in Resources */,
-				20863C8E20CCF50C00A0812C /* file_upload_disable.png in Resources */,
 				2066C30B209F643600799A1E /* index.html in Resources */,
 				204D2430209ED91A00F17E2E /* About.txt in Resources */,
 				20C85E6720541F3B0057F483 /* tool_icon_4.png in Resources */,
@@ -1552,10 +1552,10 @@
 				200770342059775100551C00 /* XMShowCollectionViewCell.xib in Resources */,
 				20E895B520ADDAA50090AD15 /* file_move_disable.png in Resources */,
 				FD3332E920A1786A0017655F /* wifiopen.png in Resources */,
+				2086FCE520EBC75F00957207 /* file_upload_disable.png in Resources */,
 				205CECF61F488EF700821E38 /* webSpecial.plist in Resources */,
 				2061C1DD20C3C534008C7424 /* highlight.css in Resources */,
 				FD1EA0E220AC58C200658F18 /* file_delete_able.png in Resources */,
-				20863C8F20CCF50C00A0812C /* file_upload_able.png in Resources */,
 				204D242E209ED91A00F17E2E /* About.txt in Resources */,
 				20863D1C20CD432200A0812C /* AssetsPickerChecked@2x.png in Resources */,
 				20C85E6320541F3B0057F483 /* tool_icon_2.png in Resources */,
@@ -1662,10 +1662,10 @@
 				204D2435209ED91A00F17E2E /* DDTTYLogger.m in Sources */,
 				204D240C209ED8E800F17E2E /* HTTPServer.m in Sources */,
 				84BA25591E65C7A800C8B204 /* XMWebTableViewCell.m in Sources */,
+				2086FCE120EBC61400957207 /* XMImageUtil.m in Sources */,
 				20863CBD20CD422F00A0812C /* ZLPhotoPickerCollectionView.m in Sources */,
 				200A823420837B1300825E6E /* XMMetorMapViewController.swift in Sources */,
 				205CECDE1F48150E00821E38 /* MKAnnotationView+WebCache.m in Sources */,
-				20C85E2F204EE8850057F483 /* EXQRCodeImageDetectorUtil.m in Sources */,
 				202C84F61F2624FC0055FD7D /* XMNavWebViewController.m in Sources */,
 				2061C22020C56F5F008C7424 /* HJVideoMaskView.m in Sources */,
 				204D2407209ED8E800F17E2E /* DDNumber.m in Sources */,
