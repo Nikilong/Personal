@@ -182,8 +182,6 @@
 		849D26F31E640E3200F0CA5D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 849D26F21E640E3200F0CA5D /* main.m */; };
 		849D26FE1E640E3200F0CA5D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 849D26FD1E640E3200F0CA5D /* Assets.xcassets */; };
 		849D27011E640E3200F0CA5D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 849D26FF1E640E3200F0CA5D /* LaunchScreen.storyboard */; };
-		849D270C1E640E3300F0CA5D /* _3________Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 849D270B1E640E3300F0CA5D /* _3________Tests.m */; };
-		849D27171E640E3300F0CA5D /* _3________UITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 849D27161E640E3300F0CA5D /* _3________UITests.m */; };
 		84BA25591E65C7A800C8B204 /* XMWebTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BA25571E65C7A800C8B204 /* XMWebTableViewCell.m */; };
 		84BA255A1E65C7A800C8B204 /* XMWebTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84BA25581E65C7A800C8B204 /* XMWebTableViewCell.xib */; };
 		84D9ED061E656BC30046840E /* XMWebModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 84D9ED051E656BC30046840E /* XMWebModel.m */; };
@@ -199,23 +197,6 @@
 		FD3332EF20A181D40017655F /* XMWifiGroupTool.m in Sources */ = {isa = PBXBuildFile; fileRef = FD3332EE20A181D40017655F /* XMWifiGroupTool.m */; };
 		FD7407E820B4306D00A83979 /* XMPhotoCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FD7407E720B4306D00A83979 /* XMPhotoCollectionViewController.m */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		849D27081E640E3300F0CA5D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 849D26E61E640E3200F0CA5D /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 849D26ED1E640E3200F0CA5D;
-			remoteInfo = "03 虾兽新闻客户端";
-		};
-		849D27131E640E3300F0CA5D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 849D26E61E640E3200F0CA5D /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 849D26ED1E640E3200F0CA5D;
-			remoteInfo = "03 虾兽新闻客户端";
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		200770252059775100551C00 /* XMHiwebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMHiwebViewController.h; sourceTree = "<group>"; };
@@ -541,12 +522,6 @@
 		849D26FD1E640E3200F0CA5D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		849D27001E640E3200F0CA5D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		849D27021E640E3200F0CA5D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		849D27071E640E3300F0CA5D /* 虾兽维度Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "虾兽维度Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		849D270B1E640E3300F0CA5D /* _3________Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "_3________Tests.m"; sourceTree = "<group>"; };
-		849D270D1E640E3300F0CA5D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		849D27121E640E3300F0CA5D /* 虾兽维度UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "虾兽维度UITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		849D27161E640E3300F0CA5D /* _3________UITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "_3________UITests.m"; sourceTree = "<group>"; };
-		849D27181E640E3300F0CA5D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		84BA25561E65C7A800C8B204 /* XMWebTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMWebTableViewCell.h; sourceTree = "<group>"; };
 		84BA25571E65C7A800C8B204 /* XMWebTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMWebTableViewCell.m; sourceTree = "<group>"; };
 		84BA25581E65C7A800C8B204 /* XMWebTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = XMWebTableViewCell.xib; sourceTree = "<group>"; };
@@ -575,20 +550,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				2086643A20AB404B00D51CCB /* libz.tbd in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		849D27041E640E3300F0CA5D /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		849D270F1E640E3300F0CA5D /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1327,8 +1288,6 @@
 				FD3332E320A154D80017655F /* transportFile.py */,
 				FD1EA08A20A9B59A00658F18 /* clipIcon.py */,
 				849D26F01E640E3200F0CA5D /* 虾兽维度 */,
-				849D270A1E640E3300F0CA5D /* 虾兽维度Tests */,
-				849D27151E640E3300F0CA5D /* 虾兽维度UITests */,
 				849D26EF1E640E3200F0CA5D /* Products */,
 				2086643820AB404A00D51CCB /* Frameworks */,
 			);
@@ -1338,8 +1297,6 @@
 			isa = PBXGroup;
 			children = (
 				849D26EE1E640E3200F0CA5D /* 虾兽维度.app */,
-				849D27071E640E3300F0CA5D /* 虾兽维度Tests.xctest */,
-				849D27121E640E3300F0CA5D /* 虾兽维度UITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1366,24 +1323,6 @@
 				849D26F21E640E3200F0CA5D /* main.m */,
 			);
 			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		849D270A1E640E3300F0CA5D /* 虾兽维度Tests */ = {
-			isa = PBXGroup;
-			children = (
-				849D270B1E640E3300F0CA5D /* _3________Tests.m */,
-				849D270D1E640E3300F0CA5D /* Info.plist */,
-			);
-			path = "虾兽维度Tests";
-			sourceTree = "<group>";
-		};
-		849D27151E640E3300F0CA5D /* 虾兽维度UITests */ = {
-			isa = PBXGroup;
-			children = (
-				849D27161E640E3300F0CA5D /* _3________UITests.m */,
-				849D27181E640E3300F0CA5D /* Info.plist */,
-			);
-			path = "虾兽维度UITests";
 			sourceTree = "<group>";
 		};
 		FD3332E520A178690017655F /* wifiIcon */ = {
@@ -1430,42 +1369,6 @@
 			productReference = 849D26EE1E640E3200F0CA5D /* 虾兽维度.app */;
 			productType = "com.apple.product-type.application";
 		};
-		849D27061E640E3300F0CA5D /* 虾兽维度Tests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 849D271E1E640E3300F0CA5D /* Build configuration list for PBXNativeTarget "虾兽维度Tests" */;
-			buildPhases = (
-				849D27031E640E3300F0CA5D /* Sources */,
-				849D27041E640E3300F0CA5D /* Frameworks */,
-				849D27051E640E3300F0CA5D /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				849D27091E640E3300F0CA5D /* PBXTargetDependency */,
-			);
-			name = "虾兽维度Tests";
-			productName = "03 虾兽新闻客户端Tests";
-			productReference = 849D27071E640E3300F0CA5D /* 虾兽维度Tests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		849D27111E640E3300F0CA5D /* 虾兽维度UITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 849D27211E640E3300F0CA5D /* Build configuration list for PBXNativeTarget "虾兽维度UITests" */;
-			buildPhases = (
-				849D270E1E640E3300F0CA5D /* Sources */,
-				849D270F1E640E3300F0CA5D /* Frameworks */,
-				849D27101E640E3300F0CA5D /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				849D27141E640E3300F0CA5D /* PBXTargetDependency */,
-			);
-			name = "虾兽维度UITests";
-			productName = "03 虾兽新闻客户端UITests";
-			productReference = 849D27121E640E3300F0CA5D /* 虾兽维度UITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -1481,16 +1384,6 @@
 						DevelopmentTeam = S3RSD3BB8U;
 						LastSwiftMigration = 0810;
 						ProvisioningStyle = Automatic;
-					};
-					849D27061E640E3300F0CA5D = {
-						CreatedOnToolsVersion = 8.1;
-						ProvisioningStyle = Automatic;
-						TestTargetID = 849D26ED1E640E3200F0CA5D;
-					};
-					849D27111E640E3300F0CA5D = {
-						CreatedOnToolsVersion = 8.1;
-						ProvisioningStyle = Automatic;
-						TestTargetID = 849D26ED1E640E3200F0CA5D;
 					};
 				};
 			};
@@ -1508,8 +1401,6 @@
 			projectRoot = "";
 			targets = (
 				849D26ED1E640E3200F0CA5D /* 虾兽维度 */,
-				849D27061E640E3300F0CA5D /* 虾兽维度Tests */,
-				849D27111E640E3300F0CA5D /* 虾兽维度UITests */,
 			);
 		};
 /* End PBXProject section */
@@ -1567,20 +1458,6 @@
 				FD1EA0DA20AC52B300658F18 /* phone_documents_icon_update.png in Resources */,
 				20C85E6520541F3B0057F483 /* tool_icon_3.png in Resources */,
 				FD1EA08B20A9B59B00658F18 /* clipIcon.py in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		849D27051E640E3300F0CA5D /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		849D27101E640E3300F0CA5D /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1734,36 +1611,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		849D27031E640E3300F0CA5D /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				849D270C1E640E3300F0CA5D /* _3________Tests.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		849D270E1E640E3300F0CA5D /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				849D27171E640E3300F0CA5D /* _3________UITests.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		849D27091E640E3300F0CA5D /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 849D26ED1E640E3200F0CA5D /* 虾兽维度 */;
-			targetProxy = 849D27081E640E3300F0CA5D /* PBXContainerItemProxy */;
-		};
-		849D27141E640E3300F0CA5D /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 849D26ED1E640E3200F0CA5D /* 虾兽维度 */;
-			targetProxy = 849D27131E640E3300F0CA5D /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		849D26FF1E640E3200F0CA5D /* LaunchScreen.storyboard */ = {
@@ -1914,56 +1762,6 @@
 			};
 			name = Release;
 		};
-		849D271F1E640E3300F0CA5D /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				INFOPLIST_FILE = "虾兽维度Tests/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "Apple.-3--------Tests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/虾兽维度.app/虾兽维度";
-			};
-			name = Debug;
-		};
-		849D27201E640E3300F0CA5D /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				INFOPLIST_FILE = "虾兽维度Tests/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "Apple.-3--------Tests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/虾兽维度.app/虾兽维度";
-			};
-			name = Release;
-		};
-		849D27221E640E3300F0CA5D /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				INFOPLIST_FILE = "虾兽维度UITests/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "Apple.-3--------UITests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_TARGET_NAME = "虾兽维度";
-			};
-			name = Debug;
-		};
-		849D27231E640E3300F0CA5D /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				INFOPLIST_FILE = "虾兽维度UITests/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "Apple.-3--------UITests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_TARGET_NAME = "虾兽维度";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1981,24 +1779,6 @@
 			buildConfigurations = (
 				849D271C1E640E3300F0CA5D /* Debug */,
 				849D271D1E640E3300F0CA5D /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		849D271E1E640E3300F0CA5D /* Build configuration list for PBXNativeTarget "虾兽维度Tests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				849D271F1E640E3300F0CA5D /* Debug */,
-				849D27201E640E3300F0CA5D /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		849D27211E640E3300F0CA5D /* Build configuration list for PBXNativeTarget "虾兽维度UITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				849D27221E640E3300F0CA5D /* Debug */,
-				849D27231E640E3300F0CA5D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

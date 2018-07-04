@@ -13,6 +13,7 @@
 #import "XMButton.h"
 
 #import "XMTouchIDKeyboardViewController.h"
+#import "MBProgressHUD+NK.h"
 
 static NSString * const kAuthenCallBackNotificaiton = @"kAuthenCallBackNotificaiton";
 double const XMToolBoxViewAnimationTime = 0.2;
@@ -278,29 +279,44 @@ typedef enum : NSUInteger {
         case AuthenResultTypeUnsupport:{ // 不支持指纹验证或者未设置指纹或者5次错误touchID被锁
             NSError *error = noti.userInfo[@"error"];
             NSLog(@"~~~unsupp---code:%zd  text:%@",error.code,error.localizedDescription);
+            // 是否应该显示指纹登录按钮
+            BOOL showTouchIDBtn = NO;
             //不支持指纹识别，LOG出错误详情
             switch (error.code) {
                 case LAErrorTouchIDNotEnrolled: {
-    
+                    // 没有指纹登录功能
                     NSLog(@"TouchID is not enrolled");
-    
                     break;
                 }
                 case LAErrorPasscodeNotSet:{
-    
+                    // 有指纹登录,但是没有设置
                     NSLog(@"A passcode has not been set");
-    
                     break;
-    
                 }
                 default:{
                     // 达到5次将会被锁touch ID,需要锁屏输入开机密码才能解锁
                     NSLog(@"TouchID not available");
                     msg = @"达到了5次的错误限制,已经被系统锁定,请锁屏再输入密码激活Touch ID";
+                    // 这种情况下应该显示指纹按钮
+                    showTouchIDBtn = YES;
                     break;
                 }
                     
             }
+            // 打开键盘输入验证
+            touchIDKeyboardFlag = YES;
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                [MBProgressHUD showMessage:@"指纹验证不可用"];
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    //用户选择其他验证方式，切换主线程处理
+                    XMTouchIDKeyboardViewController *keyVC = [[XMTouchIDKeyboardViewController alloc] init];
+                    keyVC.showTouchIdBtn = showTouchIDBtn;
+                    keyVC.delegate = self;
+                    [self presentViewController:keyVC animated:YES completion:nil];
+                });
+                
+            }];
+            
             
             break;
         }

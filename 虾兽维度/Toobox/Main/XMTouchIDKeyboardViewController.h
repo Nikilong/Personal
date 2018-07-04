@@ -21,5 +21,7 @@
 @interface XMTouchIDKeyboardViewController : UIViewController
 
 @property (weak, nonatomic)  id<XMTouchIDKeyboardViewControllerDelegate> delegate;
+@property (nonatomic, assign)  BOOL showTouchIdBtn;
+
 
 @end

@@ -7,6 +7,7 @@
 //
 
 #import "XMTouchIDKeyboardViewController.h"
+#import "XMToolBoxConfig.h"
 
 @interface XMTouchIDKeyboardViewController ()
 
@@ -158,7 +159,11 @@
         }else if (i == 11){  // 删除/指纹按钮
             self.deleBtn = btn;
             [btn setImage:[UIImage imageNamed:@"Passcode_icon_delete"] forState:UIControlStateNormal];
-            [btn setImage:[UIImage imageNamed:@"Passcode_icon_TouchID"] forState:UIControlStateSelected];
+            if(self.showTouchIdBtn){
+                [btn setImage:[UIImage imageNamed:@"Passcode_icon_TouchID"] forState:UIControlStateSelected];
+            }else{
+                [btn setImage:[UIImage imageNamed:@"Passcode_icon_delete"] forState:UIControlStateSelected];
+            }
             [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
             [btn addTarget:self action:@selector(deleteInput:) forControlEvents:UIControlEventTouchDown];
             btn.selected = YES;
@@ -198,15 +203,19 @@
         UIButton *btn = self.inputBtnArr[self.inputIndex];
         self.inputIndex += 1;
         btn.backgroundColor = [UIColor orangeColor];
+        if (self.inputIndex == 1){
+            // 点击了第一个按钮,清除"密码错误"的信息
+            [self setResultLabel:NO];
+        }
         if (self.inputIndex == 4){
             NSString *password = @"";
             for (UIButton *clickBtn in self.clickBtnArr) {
                 password = [password stringByAppendingString:[NSString stringWithFormat:@"%zd",clickBtn.tag]];
             }
-            NSLog(@"-----%@",password);
+//            NSLog(@"-----%@",password);
             //此时需要验证密码,延迟执行
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                if ([password isEqualToString:@"2236"]){
+                if ([password isEqualToString:touchIDKeyboardAuthenPassward]){
                     if ([self.delegate respondsToSelector:@selector(touchIDKeyboardViewAuthenSuccess)]){
                         
                         [self.delegate touchIDKeyboardViewAuthenSuccess];
@@ -250,7 +259,9 @@
             btn.backgroundColor = [UIColor clearColor];
             
             // 当全部输入清除时,显示删除按钮为指纹登录团
-            if (self.inputIndex == 0) self.deleBtn.selected = YES;
+            if (self.inputIndex == 0){
+                self.deleBtn.selected = YES;
+            };
         }
     
     }

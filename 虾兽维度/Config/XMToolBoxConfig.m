@@ -11,6 +11,7 @@
 NSString *const ToolBox_kName = @"ToolBox_kName";
 NSString *const ToolBox_kType = @"ToolBox_kType";
 NSString *const ToolBox_kAuth = @"ToolBox_kAuth";
+NSString *const touchIDKeyboardAuthenPassward = @"2236";    // 键盘验证的密码
 
 @implementation XMToolBoxConfig
 

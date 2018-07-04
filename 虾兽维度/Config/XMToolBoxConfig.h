@@ -17,11 +17,12 @@
 extern NSString *const ToolBox_kName;
 extern NSString *const ToolBox_kType;
 extern NSString *const ToolBox_kAuth;
+extern NSString *const touchIDKeyboardAuthenPassward;
 
 typedef enum : NSUInteger {
     XMToolBoxTypeClipImg,           // 裁剪图片
-    XMToolBoxTypeHiweb,             // hiweb
     XMToolBoxTypeTaiji,             // 易数
+    XMToolBoxTypeHiweb,             // hiweb
     XMToolBoxTypeWifiTransFiles,    // wifi传输文件
     XMToolBoxTypeDDD,
     XMToolBoxTypeEEE,
