@@ -73,8 +73,7 @@
 
 
 #pragma mark - 初始化
-- (UIWebView *)web
-{
+- (UIWebView *)web{
     if (_web == nil)
     {
         _web = [[UIWebView alloc] init];
@@ -123,10 +122,8 @@
     return _web; 
 }
 
--(UIView *)toolBar
-{
-    if (!_toolBar)
-    {
+-(UIView *)toolBar{
+    if (!_toolBar){
         // 初始化数组
         self.toolBarArr = [NSMutableArray array];
         
@@ -405,8 +402,16 @@
 - (void)showShareVC
 {
     // 取出分享参数
-    NSURL *url = self.model.webURL ? self.model.webURL : [NSURL URLWithString:@""];
-    NSString *title = self.model.title ? self.model.title : @"";
+//    NSURL *url = self.model.webURL ? self.model.webURL : [NSURL URLWithString:@""];
+//    NSString *title = self.model.title ? self.model.title : @"";
+    NSURL *url = [NSURL URLWithString:self.web.request.URL.absoluteString];
+    NSString *title =  [self.web stringByEvaluatingJavaScriptFromString:@"document.title"];
+    if(!url){
+        url = [NSURL URLWithString:@""];
+    }
+    if(!title){
+        title = @"";
+    }
     NSArray *params = @[url,title];
     
     // 创建分享菜单,这里分享为全部平台,可通过设置excludedActivityTypes属性排除不要的平台
@@ -424,8 +429,7 @@
     __weak typeof(self) weakSelf= self;
     UIAlertController *tips = [[UIAlertController alloc] init];
     [tips addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
-    [tips addAction:[UIAlertAction actionWithTitle:@"保存图片到本地相册" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
-        // 当点击确定执行的块代码
+    [tips addAction:[UIAlertAction actionWithTitle:@"保存图片到系统相册" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
         [XMImageUtil savePictrue:imageUrl path:nil callBackViewController:weakSelf];
     }]];
     [tips addAction:[UIAlertAction actionWithTitle:@"保存图片到本地缓存" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
@@ -439,7 +443,7 @@
     // 判断是否含有二维码
     NSString *qrMsg = [XMImageUtil detectorQRCodeImage:[UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:imageUrl]]]];
     if(qrMsg){
-        UIAlertAction *qrAction = [UIAlertAction actionWithTitle:@"识别图中二维码" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
+        [tips addAction:[UIAlertAction actionWithTitle:@"识别图中二维码" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
             // 当点击确定执行的块代码
             XMWebModel *model = [[XMWebModel alloc] init];
             model.webURL = [NSURL URLWithString:qrMsg];
@@ -448,10 +452,8 @@
             }else{
                 [XMWebViewController openWebmoduleWithModel:model viewController:self];
             }
-
-        }];
-        
-        [tips addAction:qrAction];
+            
+        }]];
     }
     dispatch_async(dispatch_get_main_queue(), ^{
         
