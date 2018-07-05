@@ -100,6 +100,8 @@
     CGFloat inputBtnMargin = (XMScreenW - 4 * inputBtnWH - 3 * inputBtnPadding) * 0.5;
     for (NSUInteger i = 0; i < 4; i++) {
         UIButton *resultBtn = [[UIButton alloc] init];
+        resultBtn.layer.cornerRadius = inputBtnWH * 0.5;
+        resultBtn.layer.masksToBounds = YES;
         [self.inputBtnArr addObject:resultBtn];
         resultBtn.frame = CGRectMake(inputBtnMargin + (inputBtnWH + inputBtnPadding) * i, CGRectGetMaxY(labT.frame), inputBtnWH, inputBtnWH);
         [inputContentV addSubview:resultBtn];

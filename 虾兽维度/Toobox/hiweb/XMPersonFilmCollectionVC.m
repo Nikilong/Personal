@@ -583,7 +583,16 @@ static NSString * const reuseIdentifier = @"Cell";
                 if (panShift > 100)
                 {
                     self.backImgV.transform = CGAffineTransformIdentity;
-                    [self.navigationController popViewControllerAnimated:YES];
+                    // 如果是最后一一个XMHiwebViewController,那么向左滑不能退出模块
+                    NSUInteger count = 0;
+                    for (UIViewController *vc in self.navigationController.childViewControllers){
+                        if([vc isKindOfClass:[XMHiwebViewController class]]){
+                            count++;
+                        }
+                    }
+                    if(count > 1){
+                        [self.navigationController popViewControllerAnimated:YES];
+                    }
                     NSLog(@"back");
                     
                 }else if(panShift < -100)

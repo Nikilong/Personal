@@ -19,7 +19,7 @@
 @property (nonatomic, assign)  double gifTimeInterval;
 @property (weak, nonatomic)  UIButton *timerBtn;
 
-//@property (nonatomic, assign)  int imageIndex;
+@property (nonatomic, assign)  int imageIndex;
     
 /**拖拽图片退出浏览的相关变量**/
 @property (strong, nonatomic)  UIImageView *panBgImgV;    // 背景截图相框
@@ -83,84 +83,13 @@ static NSString * const reuseIdentifier = @"XMPhotoCell";
     self.timeInterval = 1.0f;
     self.gifTimeInterval = 1 / 12.5f;
 
-    // 添加点击手势(单点隐藏/显示导航栏)
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapCollectionView:)];
-    [self.collectionView addGestureRecognizer:tap];
-    // 添加点击手势(双击放大/复原)
-    UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didDoubleTapCollectionView:)];
-    doubleTap.numberOfTapsRequired = 2;
-    [self.collectionView addGestureRecognizer:doubleTap];
-    
-    [tap requireGestureRecognizerToFail:doubleTap];
-    
-    UIPanGestureRecognizer *cancelPan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panToDismiss:)];
-    [self.collectionView addGestureRecognizer:cancelPan];
-    
-#warning todo  添加轻扫手势
-//    UISwipeGestureRecognizer *swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(changeImage:)];
-//    swipe.delegate = self;
-//    swipe.direction = UISwipeGestureRecognizerDirectionRight;
-//    [self.collectionView addGestureRecognizer:swipe];
-//    
-//    UISwipeGestureRecognizer *swipe2 = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(changeImage2:)];
-//    swipe2.delegate = self;
-//    swipe2.direction = UISwipeGestureRecognizerDirectionLeft;
-//    [self.collectionView addGestureRecognizer:swipe2];
+    // 添加图片手势
+    [self addImageGesture];
     
     // 设置导航栏按钮
     [self setNavBarItem];
 }
     
-    
-//- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
-//    if([gestureRecognizer isKindOfClass:[UISwipeGestureRecognizer class]] && [otherGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]){
-//        return NO;
-//    }
-//    return YES;
-//}
-
-
-//- (void)changeImage:(UISwipeGestureRecognizer *)gest{
-////    self.collectionView.scrollEnabled = NO;
-////    self.collectionView.panGestureRecognizer.enabled = NO;
-//    if (gest.state == UIGestureRecognizerStateEnded){
-////        if(gest.direction == UISwipeGestureRecognizerDirectionLeft){
-////            NSLog(@"left");
-////            [self.collectionView setContentOffset:CGPointMake(self.collectionView.contentOffset.x + XMScreenW, self.collectionView.contentOffset.y) animated:YES];
-////        }else if (gest.direction == UISwipeGestureRecognizerDirectionRight){
-//            NSLog(@"right");
-//        if (self.imageIndex > 0){
-//            [self.collectionView setContentOffset:CGPointMake((self.imageIndex - 1) * XMScreenW, self.collectionView.contentOffset.y) animated:YES];
-//        }
-////        dispatch_async(dispatch_get_main_queue(), ^{
-//        
-//        self.collectionView.scrollEnabled = YES;
-//        self.collectionView.panGestureRecognizer.enabled = YES;
-////        });
-////        }
-//    }
-//    
-//}
-//- (void)changeImage2:(UISwipeGestureRecognizer *)gest{
-////    self.collectionView.scrollEnabled = NO;
-////    self.collectionView.panGestureRecognizer.enabled = NO;
-//    if (gest.state == UIGestureRecognizerStateEnded){
-////        if(gest.direction == UISwipeGestureRecognizerDirectionLeft){
-//            NSLog(@"left");
-////        dispatch_async(dispatch_get_main_queue(), ^{
-//        if (self.imageIndex < self.photoModelArr.count - 1){
-//            [self.collectionView setContentOffset:CGPointMake((self.imageIndex + 1) * XMScreenW, self.collectionView.contentOffset.y) animated:YES];
-//        }
-//        self.collectionView.scrollEnabled = YES;
-//        self.collectionView.panGestureRecognizer.enabled = YES;
-////        });
-////        }else if (gest.direction == UISwipeGestureRecognizerDirectionRight){
-////            NSLog(@"right");
-////            [self.collectionView setContentOffset:CGPointMake(self.collectionView.contentOffset.x - XMScreenW, self.collectionView.contentOffset.y) animated:YES];
-////        }
-//    }
-//    
-//}
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     // 禁用左侧返回手势
@@ -213,6 +142,37 @@ static NSString * const reuseIdentifier = @"XMPhotoCell";
     
     self.navigationItem.rightBarButtonItems = @[beginBtn,timeSettingBtn];
 
+}
+    
+- (void)addImageGesture{
+    // 添加点击手势(单点隐藏/显示导航栏)
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapCollectionView:)];
+    [self.collectionView addGestureRecognizer:tap];
+    // 添加点击手势(双击放大/复原)
+    UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didDoubleTapCollectionView:)];
+    doubleTap.numberOfTapsRequired = 2;
+    [self.collectionView addGestureRecognizer:doubleTap];
+    
+    [tap requireGestureRecognizerToFail:doubleTap];
+    
+    UIPanGestureRecognizer *cancelPan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panToDismiss:)];
+    [self.collectionView addGestureRecognizer:cancelPan];
+    
+    // 向右滑,上一张图片
+    UISwipeGestureRecognizer *swipeR = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(preImage:)];
+    swipeR.delegate = self;
+    swipeR.direction = UISwipeGestureRecognizerDirectionRight;
+    [self.collectionView addGestureRecognizer:swipeR];
+    
+    // 向左滑,下一张图片
+    UISwipeGestureRecognizer *swipeL = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(nextImage:)];
+    swipeL.delegate = self;
+    swipeL.direction = UISwipeGestureRecognizerDirectionLeft;
+    [self.collectionView addGestureRecognizer:swipeL];
+    
+    // 上一张,下一张手势的优先级高
+    [cancelPan requireGestureRecognizerToFail:swipeR];
+    [cancelPan requireGestureRecognizerToFail:swipeL];
 }
 
 #pragma mark - 导航栏店家时间
@@ -316,6 +276,26 @@ static NSString * const reuseIdentifier = @"XMPhotoCell";
 }
 
 #pragma mark - 手势
+    
+/// 上一张图片,右滑
+- (void)preImage:(UISwipeGestureRecognizer *)gest{
+    if (gest.state == UIGestureRecognizerStateEnded){
+        if(self.imageIndex > 0){
+            self.imageIndex--;
+            [self.collectionView setContentOffset:CGPointMake(self.imageIndex * XMScreenW, self.collectionView.contentOffset.y) animated:YES];
+        }
+    }
+}
+    
+/// 下一张图片,左划
+- (void)nextImage:(UISwipeGestureRecognizer *)gest{
+    if (gest.state == UIGestureRecognizerStateEnded){
+        if(self.imageIndex < (self.photoModelArr.count - 1)){
+            self.imageIndex++;
+            [self.collectionView setContentOffset:CGPointMake(self.imageIndex * XMScreenW, self.collectionView.contentOffset.y) animated:YES];
+        }
+    }
+}
 
 /// 拖拽图片退出浏览
 -(void)panToDismiss:(UIPanGestureRecognizer *)pan{
@@ -339,6 +319,7 @@ static NSString * const reuseIdentifier = @"XMPhotoCell";
         if(self.currentCell.imgV.frame.size.width <= XMScreenW || (self.currentY > self.starY)){
             self.currentCell.imgV.transform = CGAffineTransformScale(self.currentCell.imgV.transform, (self.panPoint.y > 0) ? 0.99 : 1.01, (self.panPoint.y > 0) ? 0.99 : 1.01);
         }
+        
         // 重设滑动距离
         [pan setTranslation:CGPointZero inView:pan.view];
     }
@@ -494,7 +475,7 @@ static NSString * const reuseIdentifier = @"XMPhotoCell";
 // 正在滚动
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
     NSUInteger currentP = scrollView.contentOffset.x / XMScreenW + 1.5;
-//    self.imageIndex = (int)currentP - 1;
+    self.imageIndex = (int)currentP - 1;
     self.navigationItem.title = [NSString stringWithFormat:@"%zd/%zd",currentP,self.photoModelArr.count];
     self.titLab.text = [NSString stringWithFormat:@"%zd/%zd",currentP,self.photoModelArr.count];
 //    NSLog(@"%@",NSStringFromCGPoint(scrollView.contentOffset));
