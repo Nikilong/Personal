@@ -333,14 +333,20 @@ UITextFieldDelegate>
         [tips addAction:[UIAlertAction actionWithTitle:@"显示本机ip" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action){
             [weakSelf showIP];
         }]];
-        [tips addAction:[UIAlertAction actionWithTitle:@"接收文件" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action){
-            [weakSelf sendMessageToServer:weakSelf.serverURL];
+//        [tips addAction:[UIAlertAction actionWithTitle:@"接收文件" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action){
+//            [weakSelf sendMessageToServer:weakSelf.serverURL];
+//        }]];
+        [tips addAction:[UIAlertAction actionWithTitle:@"重新配对" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action){
+            weakSelf.connectServerFlag = NO;
+            weakSelf.serverURL = nil;
+            [weakSelf connnectToServer];
         }]];
         [tips addAction:[UIAlertAction actionWithTitle:@"关闭传输" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action){
             weakSelf.navWifiBtn.selected = NO;
             // 关闭http服务
             [weakSelf.httpServer stop];
             weakSelf.openHttpServerFlag = NO;
+            weakSelf.serverURL = nil;
             [MBProgressHUD showMessage:@"Wifi传输已关闭" toView:nil];
         }]];
         
@@ -384,7 +390,7 @@ UITextFieldDelegate>
 }
     
 
-/// 与电脑端服务器连接并且开始发送文件
+/// 与电脑端服务器连接
 - (void)connnectToServer{
     // 判断目前与电脑连接是否良好
     if(!self.connectServerFlag && !self.isScanConectQrcode){
@@ -393,8 +399,11 @@ UITextFieldDelegate>
         XMQRCodeViewController *qrVC = [[XMQRCodeViewController alloc] init];
         __weak typeof(self) weakSelf = self;
         qrVC.scanCallBack = ^(NSString *scanResult){
+            // 获得本机IP和端口号
+            unsigned short port = [weakSelf.httpServer listeningPort];
+            NSString *ip = [NSString stringWithFormat:@"http://%@:%hu",[ZBTool getIPAddress:YES],port];
             // 发送请求给服务器,要求链接
-            NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/connect?",scanResult]];
+            NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/connect?url=%@",scanResult,ip]];
             NSURLSession *section = [NSURLSession sharedSession];
             NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
             NSURLSessionDataTask *task = [section dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
@@ -1011,9 +1020,23 @@ UITextFieldDelegate>
                 currentImgIndex = imgArr.count - 1;
             }
         }
+        
+        // 获得点击的cell的相框的frame
+        XMWebTableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+        UIImageView *imgV;
+        for(UIView *subV in cell.contentView.subviews){
+            if ([subV isKindOfClass:[UIImageView class]]){
+                imgV = (UIImageView *)subV;
+            }
+        }
+        // 转为绝对坐标
+        CGRect imgF = [cell convertRect:imgV.frame toView:[UIApplication sharedApplication].keyWindow];
+        
         UICollectionViewFlowLayout * layout = [[UICollectionViewFlowLayout alloc]init];
         layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
         XMPhotoCollectionViewController *photoVC = [[XMPhotoCollectionViewController alloc] initWithCollectionViewLayout:layout];
+        photoVC.clickImageF = imgF;
+        photoVC.clickCellH = cell.frame.size.height;
         photoVC.selectImgIndex = currentImgIndex;
         photoVC.photoModelArr = imgArr;
         photoVC.cellSize = CGSizeMake(XMScreenW, XMScreenH);

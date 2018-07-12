@@ -38,8 +38,8 @@
 }
 
 
-- (void)setWifiModle:(XMWifiTransModel *)wifiModle
-{
+- (void)setWifiModle:(XMWifiTransModel *)wifiModle{
+    
     _wifiModle = wifiModle;
 
     //移除上一个imgV
@@ -70,8 +70,8 @@
 }
 
 //根据不同的比例设置尺寸
--(CGRect) setImage:(UIImageView *)imageView
-{
+-(CGRect) setImage:(UIImageView *)imageView{
+    
     CGFloat imageX = imageView.frame.size.width;
     CGFloat imageY = imageView.frame.size.height;
     CGRect imgfram;

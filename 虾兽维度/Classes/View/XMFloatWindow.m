@@ -16,16 +16,13 @@
 
 @implementation XMFloatWindow
 
-- (void)setIsShowRefreshButton:(BOOL)isShowRefreshButton
-{
+- (void)setIsShowRefreshButton:(BOOL)isShowRefreshButton{
     _isShowRefreshButton = isShowRefreshButton;
     _refreshBtn.hidden = !isShowRefreshButton;
 }
 
-- (instancetype)initWithFrame:(CGRect)frame
-{
-    if (self = [super initWithFrame:frame])
-    {
+- (instancetype)initWithFrame:(CGRect)frame{
+    if (self = [super initWithFrame:frame]){
         // 创建刷新按钮
         UIButton *btnRefresh = [UIButton buttonWithType:UIButtonTypeCustom];
         [btnRefresh setBackgroundImage:[UIImage imageNamed:@"refresh"] forState:UIControlStateNormal];
@@ -54,8 +51,7 @@
     return self;
 }
 
--(void)layoutSubviews
-{
+-(void)layoutSubviews{
     [super layoutSubviews];
     
     CGFloat btnW = self.bounds.size.width;
@@ -68,32 +64,25 @@
     }
 }
 
-+ (instancetype)floatWindow
-{
++ (instancetype)floatWindow{
     return [[self alloc] init];
 }
 
 #pragma mark - 
-- (void)refresh
-{
-    if ([self.delegate respondsToSelector:@selector(floatWindowDidClickRefreshButton:)])
-    {
+- (void)refresh{
+    if ([self.delegate respondsToSelector:@selector(floatWindowDidClickRefreshButton:)]){
         [_delegate floatWindowDidClickRefreshButton:self];
     }
 }
 
-- (void)upToTop
-{
-    if ([self.delegate respondsToSelector:@selector(floatWindowDidClickUpToTopButton:)])
-    {
+- (void)upToTop{
+    if ([self.delegate respondsToSelector:@selector(floatWindowDidClickUpToTopButton:)]){
         [_delegate floatWindowDidClickUpToTopButton:self];
     }
 }
 
-- (void)downToBottom
-{
-    if ([self.delegate respondsToSelector:@selector(floatWindowDidClickDownToBottomButton:)])
-    {
+- (void)downToBottom{
+    if ([self.delegate respondsToSelector:@selector(floatWindowDidClickDownToBottomButton:)]){
         [_delegate floatWindowDidClickDownToBottomButton:self];
     }
 }

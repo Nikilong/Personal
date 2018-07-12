@@ -38,9 +38,9 @@
 @implementation XMPhotoCollectionViewController
 
 static NSString * const reuseIdentifier = @"XMPhotoCell";
+static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览的距离
 
-- (UILabel *)titLab
-{
+- (UILabel *)titLab{
     if (!_titLab)
     {
         // 添加标题栏
@@ -53,8 +53,7 @@ static NSString * const reuseIdentifier = @"XMPhotoCell";
     }
     return _titLab;
 }
-- (UIImageView *)panBgImgV
-{
+- (UIImageView *)panBgImgV{
     if (!_panBgImgV)
     {
         _panBgImgV = [[UIImageView alloc] initWithFrame:CGRectMake(0, -32, XMScreenW, XMScreenH)];
@@ -155,8 +154,16 @@ static NSString * const reuseIdentifier = @"XMPhotoCell";
     
     [tap requireGestureRecognizerToFail:doubleTap];
     
+    // 向下滑动,退出照片
     UIPanGestureRecognizer *cancelPan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panToDismiss:)];
     [self.collectionView addGestureRecognizer:cancelPan];
+    
+    // 向下轻扫,退出照片
+    UISwipeGestureRecognizer *swipeD = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeToDismiss:)];
+    swipeD.delegate = self;
+    swipeD.direction = UISwipeGestureRecognizerDirectionDown;
+    [self.collectionView addGestureRecognizer:swipeD];
+//    [cancelPan requireGestureRecognizerToFail:swipeD];
     
     // 向右滑,上一张图片
     UISwipeGestureRecognizer *swipeR = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(preImage:)];
@@ -297,6 +304,35 @@ static NSString * const reuseIdentifier = @"XMPhotoCell";
     }
 }
 
+/// 向下轻扫图片退出浏览
+- (void)swipeToDismiss:(UIGestureRecognizer *)gest{
+    // 停止幻灯片
+    [self stopTimer];
+    
+    NSIndexPath *index = [self.collectionView indexPathForItemAtPoint:[gest locationInView:self.collectionView]];
+    if ([gest isKindOfClass:[UISwipeGestureRecognizer class]]){
+        XMPhotoCollectionViewCell *cell = (XMPhotoCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:index];
+        self.currentCell = cell;
+        // 插入背景截图
+        [cell.imgScroV insertSubview:self.panBgImgV belowSubview:cell.imgV];
+    }
+        
+    // 缩放一半
+    [UIView animateWithDuration:0.5f animations:^{
+        // 缩放到原来的cell的图片位置,x坐标就是原来图片cell的x,y坐标是原来的坐标减去图片切换造成的位置差 * cell的高度再加上self.collectionView的y偏移高度32,最后缩放的宽固定是cell的相框的高度,最后缩放的高度根据比例缩放
+        CGFloat finalX = self.clickImageF.origin.x;
+        CGFloat finalY = self.clickImageF.origin.y + self.currentCell.frame.origin.y  - (self.selectImgIndex - index.row) * self.clickCellH;
+        CGFloat finalW = self.clickImageF.size.width;
+        CGFloat finalH = self.currentCell.imgV.frame.size.height * self.clickImageF.size.width / self.currentCell.imgV.frame.size.width;
+        self.currentCell.imgV.frame = CGRectMake( finalX, finalY, finalW , finalH);
+        
+    }completion:^(BOOL finished) {
+        if(finished){
+            [self.navigationController popViewControllerAnimated:NO];
+        }
+    }];
+}
+
 /// 拖拽图片退出浏览
 -(void)panToDismiss:(UIPanGestureRecognizer *)pan{
     if(pan.state == UIGestureRecognizerStateChanged){
@@ -306,7 +342,8 @@ static NSString * const reuseIdentifier = @"XMPhotoCell";
         // 拖到一开始往上的位置时
         if(self.currentY > self.starY){
             self.panBgImgV.hidden = NO;
-            self.panBgImgV.alpha = (ABS((self.currentY - self.starY) / 150.0) > 1) ? 1 : ABS((self.currentY - self.starY) / 150.0);
+//            self.panBgImgV.alpha = (ABS((self.currentY - self.starY) / panToDismissDistance) > 1) ? 1 : ABS((self.currentY - self.starY) / panToDismissDistance);
+            self.panBgImgV.alpha = ABS((self.currentY - self.starY) / (XMScreenH - self.starY));
         }else{
             self.panBgImgV.hidden = YES;
             self.panBgImgV.alpha = 1;
@@ -314,10 +351,22 @@ static NSString * const reuseIdentifier = @"XMPhotoCell";
         
         // 改变图片位置
         self.currentCell.imgV.transform = CGAffineTransformTranslate(self.currentCell.imgV.transform, self.panPoint.x, self.panPoint.y);
-#warning todo 移动很慢的情况下缩放过多,缩放比例应该随着y的实际唯一作调整,最终最多只能缩小到1/4
-        // 避免过分放大图片
-        if(self.currentCell.imgV.frame.size.width <= XMScreenW || (self.currentY > self.starY)){
-            self.currentCell.imgV.transform = CGAffineTransformScale(self.currentCell.imgV.transform, (self.panPoint.y > 0) ? 0.99 : 1.01, (self.panPoint.y > 0) ? 0.99 : 1.01);
+        
+        // 图片缩放
+//        CGRect tarF = self.currentCell.imgV.frame;
+//        tarF.size = CGSizeMake(tarF.size.width * (self.currentY - self.starY) / (XMScreenH - self.starY), tarF.size.height * (self.currentY - self.starY) / (XMScreenH - self.starY));
+//        self.currentCell.imgV.frame = tarF;
+        if(self.panPoint.y > 0){  // 缩小
+#warning todo 缩放很慢时不理想
+            // 根据拖拽距离去缩放图片,近似用图片目前的比例和拖拽距离/总距离的比例乘以一个系数这两个比例来比较,系数越大,越早开始缩放;另外设置一个最小的缩放比例为0.33
+//            if (self.currentCell.imgV.frame.size.width / XMScreenW < (self.currentY - self.starY) / panToDismissDistance * 20  && self.currentCell.imgV.frame.size.width / XMScreenW > 0.33){
+            if (self.currentCell.imgV.frame.size.width / XMScreenW > 0.33){
+                self.currentCell.imgV.transform = CGAffineTransformScale(self.currentCell.imgV.transform, 0.99, 0.99);
+            }
+        }else{ // 放大
+            if ( self.currentCell.imgV.frame.size.width <= XMScreenW){
+                self.currentCell.imgV.transform = CGAffineTransformScale(self.currentCell.imgV.transform, 1.01, 1.01);
+            }
         }
         
         // 重设滑动距离
@@ -325,6 +374,8 @@ static NSString * const reuseIdentifier = @"XMPhotoCell";
     }
     
     if(pan.state == UIGestureRecognizerStateBegan){
+        // 停止幻灯片
+        [self stopTimer];
         self.starY = [pan locationInView:self.collectionView].y;
         NSIndexPath *index = [self.collectionView indexPathForItemAtPoint:[pan locationInView:self.collectionView]];
         XMPhotoCollectionViewCell *cell = (XMPhotoCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:index];
@@ -336,13 +387,17 @@ static NSString * const reuseIdentifier = @"XMPhotoCell";
     if(pan.state == UIGestureRecognizerStateEnded){
         CGFloat endY = [pan locationInView:self.collectionView].y;
         NSLog(@"%f",(endY - self.starY));
-        if(endY - self.starY > 150){
+        if(endY - self.starY > panToDismissDistance){
             NSLog(@"%s",__func__);
             //            [self dismiss:nil];
-            [self.navigationController popViewControllerAnimated:NO];
+//            [self.navigationController popViewControllerAnimated:NO];
+            [self swipeToDismiss:pan];
         }else{
             self.panBgImgV.hidden = YES;
-            self.currentCell.imgV.transform = CGAffineTransformIdentity;
+            // 回弹添加动画,防止手势过快造成震动
+            [UIView animateWithDuration:0.5f animations:^{
+                self.currentCell.imgV.transform = CGAffineTransformIdentity;
+            }];
         }
     }
 }

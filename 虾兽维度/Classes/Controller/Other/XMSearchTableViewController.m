@@ -25,10 +25,9 @@ static NSString *const kEngine = @"engine";
 @implementation XMSearchTableViewController
 
 #pragma mark - lazy
-- (NSMutableArray *)engineArr
-{
-    if (!_engineArr)
-    {
+- (NSMutableArray *)engineArr{
+    
+    if (!_engineArr){
         _engineArr = [[NSMutableArray alloc] init];
         /*
          https://www.baidu.com/s?ie=UTF-8&wd=a11a
@@ -70,8 +69,8 @@ static NSString *const kEngine = @"engine";
     
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
+- (void)viewWillAppear:(BOOL)animated{
+    
     [super viewWillAppear:animated];
     // 自动弹出键盘
     [self.navigationItem.titleView becomeFirstResponder];
@@ -84,8 +83,8 @@ static NSString *const kEngine = @"engine";
 }
 
 #pragma mark -
-- (void)setNavItem
-{
+- (void)setNavItem{
+    
     // 导航栏titleview
     UITextField *searchF = [[UITextField alloc] init];
     searchF.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - 120, 32);
@@ -111,8 +110,8 @@ static NSString *const kEngine = @"engine";
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"go" style:UIBarButtonItemStyleDone target:self action:@selector(goWithUrlFlag:)];
 }
 
-- (void)goWithUrlFlag:(BOOL)urlFlag
-{
+- (void)goWithUrlFlag:(BOOL)urlFlag{
+    
     // 收起键盘
     [self.searchF resignFirstResponder];
     
@@ -129,15 +128,14 @@ static NSString *const kEngine = @"engine";
     
     // 先dismiss掉self,然后再通知代理去加载网页
     [self dismissViewControllerAnimated:YES completion:^{
-        if ([self.delegate respondsToSelector:@selector(openWebmoduleRequest:)])
-        {
+        if ([self.delegate respondsToSelector:@selector(openWebmoduleRequest:)]){
             [self.delegate openWebmoduleRequest:model];
         }
     }];
 }
 
-- (void)cancel
-{
+- (void)cancel{
+    
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -148,16 +146,14 @@ static NSString *const kEngine = @"engine";
     return 2;
 }
     
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     return section == 0 ? 1 : self.engineArr.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *ID = @"cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ID];
-    if (!cell)
-    {
+    if (!cell){
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:ID];
     }
     if(indexPath.section == 0){
@@ -171,8 +167,8 @@ static NSString *const kEngine = @"engine";
     return cell;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    
     if(indexPath.section == 0){
         [self goWithUrlFlag:YES];
     }else{
@@ -185,8 +181,7 @@ static NSString *const kEngine = @"engine";
 }
 
 #pragma mark textfield delegate
-- (BOOL)textFieldShouldReturn:(UITextField *)textField
-{
+- (BOOL)textFieldShouldReturn:(UITextField *)textField{
     // 按下键盘的return去搜索
     [self goWithUrlFlag:NO];
     return YES;

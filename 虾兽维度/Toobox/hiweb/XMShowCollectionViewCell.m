@@ -23,8 +23,8 @@ double const CellH = 200.0;
 @implementation XMShowCollectionViewCell
 
 
-- (instancetype)initWithFrame:(CGRect)frame
-{
+- (instancetype)initWithFrame:(CGRect)frame{
+    
     if(self = [super initWithFrame:frame]){
         
         self = [[NSBundle mainBundle] loadNibNamed:@"XMShowCollectionViewCell" owner:self options:nil][0];
@@ -33,15 +33,14 @@ double const CellH = 200.0;
     return self;
 }
 
-- (void)setModle:(XMSingleFilmModle *)modle
-{
+- (void)setModle:(XMSingleFilmModle *)modle{
+    
     _modle = modle;
-    if (modle.title)
-    {
+    if (modle.title){
+        
         self.lab.hidden = NO;
         self.lab.text = modle.title;
-    }else
-    {
+    }else{
         self.lab.hidden = YES;
     }
     self.imagV.contentMode = UIViewContentModeScaleAspectFit;
@@ -49,11 +48,10 @@ double const CellH = 200.0;
 }
 
 
-+ (XMShowCollectionViewCell *)cellWithContentView:(UICollectionView *)collectionView ide:(NSString *)ide indexPath:(NSIndexPath *)indexP
-{
++ (XMShowCollectionViewCell *)cellWithContentView:(UICollectionView *)collectionView ide:(NSString *)ide indexPath:(NSIndexPath *)indexP{
+    
     XMShowCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:ide forIndexPath:indexP];
-    if (!cell)
-    {
+    if (!cell){
         cell = [[NSBundle mainBundle] loadNibNamed:@"XMShowCollectionViewCell" owner:self options:nil][0];
     }
 

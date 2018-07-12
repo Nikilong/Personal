@@ -19,10 +19,8 @@
 
 @implementation XMNavTitleTableViewController
 
-- (NSArray *)channelArr
-{
-    if (!_channelArr)
-    {
+- (NSArray *)channelArr{
+    if (!_channelArr){
         _channelArr = [XMChannelModel channels];
     }
     return _channelArr;
@@ -43,8 +41,8 @@
   
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    
     XMChannelModel *model = self.channelArr[indexPath.row];
     XMTextTableViewCell *cell = [XMTextTableViewCell textCellWithTableView:tableView];
     cell.textLabel.text = model.channel;
@@ -52,17 +50,14 @@
 }
 
 /** 自定义行高 */
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     return 35;
 }
 
 #pragma mark - 代理方法
 /** 通知代理选中了某一个频道 */
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if ([self.delegate respondsToSelector:@selector(navTitleTableViewControllerDidSelectChannel:)])
-    {
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    if ([self.delegate respondsToSelector:@selector(navTitleTableViewControllerDidSelectChannel:)]){
         [self.delegate navTitleTableViewControllerDidSelectChannel:indexPath];
     }
 }

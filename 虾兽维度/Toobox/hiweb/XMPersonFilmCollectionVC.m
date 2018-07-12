@@ -34,6 +34,13 @@
 // 封面containerView
 @property (weak, nonatomic)  UIView *containerView;
 
+// 是否是首个控制器
+@property (nonatomic, assign)  BOOL isFirstVC;
+
+// 是否首次显示
+@property (nonatomic, assign)  BOOL isFirstLoad;
+
+
 
 @end
 
@@ -120,6 +127,7 @@ static NSString * const reuseIdentifier = @"Cell";
     [self.collectionView registerClass:[XMShowCollectionViewCell class] forCellWithReuseIdentifier:reuseIdentifier];
     // 初始化参数
     self.collectionView.backgroundColor = [UIColor grayColor];
+    self.isFirstLoad = YES;
     
     // 初始化箭头
     [self initSearchMode];
@@ -174,11 +182,35 @@ static NSString * const reuseIdentifier = @"Cell";
     // 开启标题栏交互
     self.navigationItem.titleView.userInteractionEnabled = YES;
     
-    // 强制纠正y方向64的偏移,view的y会由0变64,同时collectionView的高度会减少64
-    CGRect tarF = self.view.frame;
-    tarF.origin.y = 0;
-    self.view.frame = tarF;
+
 }
+
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    
+    // 根据目前的控制器栈里面的XMHiwebViewController来判断是否是首个控制器
+    NSUInteger count = 0;
+    for (UIViewController *vc in self.navigationController.childViewControllers){
+        if([vc isKindOfClass:[XMHiwebViewController class]]){
+            count++;
+        }
+    }
+    self.isFirstVC = (count > 1)? NO : YES;
+    
+    // 强制纠正y方向64的偏移,view的y会由0变64,同时collectionView的高度会减少64
+    if (self.isFirstLoad && !self.detailMode){
+        self.isFirstLoad = NO;
+        CGRect tarF = self.view.frame;
+        tarF.origin.y = 64;
+        self.view.frame = tarF;
+    
+    }else{
+        CGRect tarF = self.view.frame;
+        tarF.origin.y = 0;
+        self.view.frame = tarF;
+    }
+}
+
 - (void)dealloc
 {
     // 移除监听横竖屏
@@ -535,8 +567,7 @@ static NSString * const reuseIdentifier = @"Cell";
     [panGest setTranslation:CGPointZero inView:panGest.view];
 }
 /** 双击退出 */
-- (void)doubleTap
-{
+- (void)doubleTap{
     self.navigationController.navigationBarHidden = NO;
     [self statusBar].hidden = NO;
     [self.imageContent removeFromSuperview];
@@ -546,57 +577,45 @@ static NSString * const reuseIdentifier = @"Cell";
 
 #pragma mark collection 手势
 /** 返回手势 */
-- (void)panToBackForward:(UIGestureRecognizer *)gesture
-{
-    if ([gesture isKindOfClass:[UIPanGestureRecognizer class]])
-    {
+- (void)panToBackForward:(UIGestureRecognizer *)gesture{
+    
+    if ([gesture isKindOfClass:[UIPanGestureRecognizer class]]){
         // 如果是pan手势,需要根据左划还是右划决定返回还是向前
         switch (gesture.state) {
-            case UIGestureRecognizerStateBegan:
-            {
+            case UIGestureRecognizerStateBegan:{
                 self.starX = [gesture locationInView:self.view].x;
                 break;
             }
-            case UIGestureRecognizerStateChanged:
-            {
+            case UIGestureRecognizerStateChanged:{
                 if (self.detailMode) return;
                 CGFloat panShift = [gesture locationInView:self.view].x - self.starX;
                 // 超过左右箭头的大小则不再移动箭头
                 if (panShift > self.backImgV.frame.size.width + 10 || -panShift > self.forwardImgV.frame.size.width + 10) return;
                 // 根据左划或者右划移动箭头
-                if (panShift > 0 )
+                if (panShift > 0 && self.isFirstVC == NO)
                 {
                     self.backImgV.hidden = NO;
                     self.backImgV.transform = CGAffineTransformMakeTranslation(panShift, 0);
                 }else if(panShift < 0 )
                 {
-                    self.forwardImgV.hidden = NO;
-                    self.forwardImgV.transform = CGAffineTransformMakeTranslation(panShift, 0);
+//                    self.forwardImgV.hidden = NO;
+//                    self.forwardImgV.transform = CGAffineTransformMakeTranslation(panShift, 0);
                 }
                 break;
             }
-            case UIGestureRecognizerStateEnded:
-            {
+            case UIGestureRecognizerStateEnded:{
                 if (self.detailMode) return;
                 CGFloat panShift = [gesture locationInView:self.view].x - self.starX;
                 // 右划且滑动距离大于50,表示应该返回,反之左划并且距离大于50表示向前,并复位左右两个箭头
-                if (panShift > 100)
-                {
+                if (panShift > 100){
                     self.backImgV.transform = CGAffineTransformIdentity;
                     // 如果是最后一一个XMHiwebViewController,那么向左滑不能退出模块
-                    NSUInteger count = 0;
-                    for (UIViewController *vc in self.navigationController.childViewControllers){
-                        if([vc isKindOfClass:[XMHiwebViewController class]]){
-                            count++;
-                        }
-                    }
-                    if(count > 1){
+                    if(!self.isFirstVC){
                         [self.navigationController popViewControllerAnimated:YES];
                     }
                     NSLog(@"back");
                     
-                }else if(panShift < -100)
-                {
+                }else if(panShift < -100){
                     self.forwardImgV.transform = CGAffineTransformIdentity;
                     NSLog(@"forward");
 

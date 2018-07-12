@@ -19,8 +19,7 @@
 
 @implementation XMWifiLeftTableViewController
 
--(NSMutableArray *)groupNameArr
-{
+-(NSMutableArray *)groupNameArr{
     if (!_groupNameArr){
         
         _groupNameArr = [NSMutableArray arrayWithArray:[XMWifiGroupTool groupNameDirsModels]];
@@ -76,8 +75,7 @@
     if (indexPath.section == 2){
         
         cell = [tableView dequeueReusableCellWithIdentifier:nonReuseID];
-        if (!cell)
-        {
+        if (!cell){
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:ID];
             cell.textLabel.textAlignment = NSTextAlignmentCenter;
             
@@ -99,8 +97,7 @@
         }
         
         cell = [tableView dequeueReusableCellWithIdentifier:nonReuseID];
-        if (!cell)
-        {
+        if (!cell){
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nonReuseID];
             cell.textLabel.textAlignment = NSTextAlignmentCenter;
             

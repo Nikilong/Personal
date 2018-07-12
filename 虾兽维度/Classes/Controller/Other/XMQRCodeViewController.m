@@ -31,8 +31,8 @@
 }
 
 
-- (void)viewWillAppear:(BOOL)animated
-{
+- (void)viewWillAppear:(BOOL)animated{
+    
     [super viewWillAppear:animated];
     
     if ([self canUseCamera]){
@@ -54,14 +54,14 @@
 }
 
 #pragma mark - 判断摄像头是否可用
-- (BOOL)canUseCamera
-{
+- (BOOL)canUseCamera{
+    
     return ([AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo] != nil);
 }
 
 #pragma mark - 调用摄像头扫码
-- (void)starScan
-{
+- (void)starScan{
+    
     // 1. 实例化拍摄设备
     AVCaptureDevice *device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
     
@@ -101,8 +101,7 @@
     [_session startRunning];
 }
 
-- (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputMetadataObjects:(NSArray *)metadataObjects fromConnection:(AVCaptureConnection *)connection
-{
+- (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputMetadataObjects:(NSArray *)metadataObjects fromConnection:(AVCaptureConnection *)connection{
     
     // 会频繁的扫描，调用代理方法
     // 1. 如果扫描完成，停止会话
@@ -150,8 +149,8 @@
 
 #pragma mark -- <UIImagePickerControllerDelegate>
 // 获取相册中的图片并识别图片中的二维码
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
-{
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info{
+    
     // 销毁控制器
     [picker dismissViewControllerAnimated:YES completion:nil];
     

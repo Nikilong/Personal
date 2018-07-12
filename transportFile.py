@@ -7,7 +7,7 @@ import cgi
 import socket   #用于获取ip
 import qrcode
 
-import sys,os,time
+import sys,os,time,threading
 from selenium import webdriver
 
 global elements         # index.html的网页input元素
@@ -15,7 +15,29 @@ global maxInputCount    # 每次最大上传数量
 global uploadURL        # 上传URL
 global sever
 
-class   PostHandler(BaseHTTPRequestHandler):  
+
+# 监听键盘输入
+class KeyboardHookThread(threading.Thread):
+    input_str = ''
+    def __init__(self,callback,args):
+        threading.Thread.__init__(self)
+        self.callback = callback
+        self.args = args
+
+    def run(self):
+        while 1:
+            input_kb = str(sys.stdin.readline()).strip('\n')
+            if input_kb == 'help':
+                print '提示:输入"send"可以向移动端发送文件'
+            elif input_kb == 'send':
+                print '发送文件'
+                self.callback(self.args)
+            else:
+                print '无效指令'
+
+# 重写get和post方法
+class PostHandler(BaseHTTPRequestHandler):
+    userUrl = ''
     def do_POST(self):  
         form = cgi.FieldStorage(  
             fp=self.rfile,  
@@ -57,14 +79,17 @@ class   PostHandler(BaseHTTPRequestHandler):
             if 'connect?' in self.path:
                 #回调链接反馈
                 self.wfile.write('connect success\r\n')
-            if 'sendFiles?url=' in self.path:
-                print self.path
-                startToTransfer(self.path.split('sendFiles?url=')[-1])
+                # 连接成功之后开启键盘监听
+                startHookKeyboard(self.path.split('connect?url=')[-1])
+            # if 'sendFiles?url=' in self.path:
+            #     print self.path
+            #     self.userUrl = self.path.split('sendFiles?url=')[-1]
+            #     startToTransfer(self.path.split('sendFiles?url=')[-1])
         except IOError:
             self.send_error(404, 'file not found: %s'%self.path)
   
 #启动http服务
-def StartServer(port):   
+def StartServer(port):
     sever = HTTPServer(("",port),PostHandler)  
     sever.serve_forever()  
 
@@ -90,6 +115,8 @@ def refreshUploadhtml(url):
     elements = browser.find_elements_by_tag_name('input')
     maxInputCount = len(elements) - 1
 
+
+# 传输文件
 def startToTransfer(url):
     print '连接到: %s'%url
     transFlag = True
@@ -136,15 +163,23 @@ def startToTransfer(url):
         transFlag =  bool(raw_input('是否继续传输?(按下Enter结束传输,输入任意字符继续传输) :'))
     
     print '>>>>传输文件完成'
-    
 
+# 与手机连接成功之后启用键盘监听
+def startHookKeyboard(url):
+    print 'agent ip is >>>>>' + url
+    #开始监听键盘输入
+    kb_hook_t = KeyboardHookThread(callback = startToTransfer,args=(url))
+    kb_hook_t.start()
   
-if __name__=='__main__':  
+if __name__=='__main__':
+#    #开始监听键盘输入
+#    kb_hook_t = KeyboardHookThread(callback = aaa)
+#    kb_hook_t.start()
     #端口号
     port = 8000
     serverUrl = 'http://%s:%s'%(get_host_ip(),port)
     print '本机ip是:' + serverUrl
-    img = qrcode.make(serverUrl)
-    img.get_image().show()
-    img.save('/Users/admin/Desktop/wifiTransQrcode.png')
+    # img = qrcode.make(serverUrl)
+    # img.get_image().show()
+    # img.save('/Users/admin/Desktop/wifiTransQrcode.png')
     StartServer(8000)

@@ -17,10 +17,8 @@
 
 @implementation XMDropView
 
-- (instancetype)initWithFrame:(CGRect)frame
-{
-    if (self = [super initWithFrame:frame])
-    {
+- (instancetype)initWithFrame:(CGRect)frame{
+    if (self = [super initWithFrame:frame]){
     
         // 设置container，根据图片限定宽度为217（没有内容时），并添加到XMDropView对象，必须在这里创建container，否则后面要用到container时可能container还没有被创建
         UIImageView *container = [[UIImageView alloc] init];
@@ -35,24 +33,20 @@
     
 }
 
--(void)setContentController:(UIViewController *)contentController
-{
+-(void)setContentController:(UIViewController *)contentController{
     _contentController = contentController;
     self.content = _contentController.view;
 }
 
-- (void)setContent:(UIView *)content
-{
+- (void)setContent:(UIView *)content{
     _content = content;
     // 设置content内容居中
     CGFloat padding = 10;
     CGFloat maxWidth = self.container.width - 2 * padding;
     
-    if (_content.width <= maxWidth)
-    {
+    if (_content.width <= maxWidth){
         _content.x = (self.container.width - _content.width) * 0.5;
-    }else
-    {
+    }else{
         _content.x = padding;
         _content.width = maxWidth;
     }
@@ -63,13 +57,11 @@
     [self.container addSubview:_content];
 }
 
-+ (instancetype)dropView
-{
++ (instancetype)dropView{
     return [[self alloc] init];
 }
 
-- (void)showFrom:(UIView *)view
-{
+- (void)showFrom:(UIView *)view{
     // 1，获得当前的窗口
 //    UIWindow *window = [[UIApplication sharedApplication].windows lastObject];
     UIWindow *window = [UIApplication sharedApplication].keyWindow;
@@ -86,34 +78,29 @@
     self.container.y = CGRectGetMaxY(frame);
     
     // 4，通知代理，XMDropView对象显示完成
-    if ([self.delegate respondsToSelector:@selector(dropViewDidShow:)])
-    {
+    if ([self.delegate respondsToSelector:@selector(dropViewDidShow:)]){
         [_delegate dropViewDidShow:self];
     }
 
 }
 
-- (void)dismiss
-{
+- (void)dismiss{
     [self removeFromSuperview];
 
     // 通知代理，XMDropView对象已消失
-    if ([self.delegate respondsToSelector:@selector(dropViewDidDismiss:)])
-    {
+    if ([self.delegate respondsToSelector:@selector(dropViewDidDismiss:)]){
         [_delegate dropViewDidDismiss:self];
     }
 }
 
 
 /** 移除XMDropView对象的实现由XMDropView对象自己控制 */
--(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
-{
+-(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
     [self dismiss];
 }
 
 
-- (void)layoutSubviews
-{
+- (void)layoutSubviews{
     [super layoutSubviews];
 }
 

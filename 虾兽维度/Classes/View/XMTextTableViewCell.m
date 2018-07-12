@@ -10,12 +10,10 @@
 
 @implementation XMTextTableViewCell
 
-+ (XMTextTableViewCell *)textCellWithTableView:(UITableView *)tableView
-{
++ (XMTextTableViewCell *)textCellWithTableView:(UITableView *)tableView{
     static NSString *ID = @"navTitleCell";
     XMTextTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ID];
-    if (!cell)
-    {
+    if (!cell){
         cell = [[XMTextTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:ID];
         
         // 修改选中状态的背景颜色

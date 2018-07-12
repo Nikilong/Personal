@@ -68,7 +68,11 @@ typedef enum : NSUInteger {
     // 添加点击取消手势
     UITapGestureRecognizer *tapToCancel = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(cancelTool)];
     [self.view addGestureRecognizer:tapToCancel];
-    
+    UISwipeGestureRecognizer *swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(aaa)];
+    swipe.direction = UISwipeGestureRecognizerDirectionUp;
+    swipe.numberOfTouchesRequired = 3;
+    [self.view addGestureRecognizer:swipe];
+    [tapToCancel requireGestureRecognizerToFail:swipe];
 }
 
 - (void)dealloc{
@@ -147,6 +151,11 @@ typedef enum : NSUInteger {
     
     CGFloat toolViewH = CGRectGetMaxY(toolMenuV.frame) - CGRectGetMinY(toolMenuV.frame);
     toolView.frame = CGRectMake(0, [UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width, toolViewH);
+}
+
+- (void)aaa{
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"test" object:nil];
+    [self cancelTool];
 }
 
 #pragma mark 弹出或隐藏

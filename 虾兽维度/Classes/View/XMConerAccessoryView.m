@@ -23,10 +23,8 @@ static CGFloat _btnWH;
 
 @implementation XMConerAccessoryView
 
-- (UIView *)cover
-{
-    if (!_cover)
-    {
+- (UIView *)cover{
+    if (!_cover){
         UIView *cover = [[UIView alloc] initWithFrame:[UIScreen mainScreen].bounds];
         cover.backgroundColor = [UIColor clearColor];
         [self.superview insertSubview:cover belowSubview:self];
@@ -42,18 +40,15 @@ static CGFloat _btnWH;
     return _cover;
 }
 
-+ (void)initialize
-{
++ (void)initialize{
     [super initialize];
 
-    if (!_btnArr)
-    {
+    if (!_btnArr){
         _btnArr = [NSMutableArray array];
     }
 }
 
-+ (instancetype)conerAccessoryViewWithButtonWH:(CGFloat)btnWH radius:(CGFloat)radius imageArray:(NSArray *)backgroundImages borderWidth:(CGFloat)borderW tintColor:(UIColor *)tintColor
-{
++ (instancetype)conerAccessoryViewWithButtonWH:(CGFloat)btnWH radius:(CGFloat)radius imageArray:(NSArray *)backgroundImages borderWidth:(CGFloat)borderW tintColor:(UIColor *)tintColor{
     // 0,存储传递进来的两个参数方便self的布局
     _radius = radius;
     _btnWH = btnWH;
@@ -116,18 +111,15 @@ static CGFloat _btnWH;
 }
 
 
-- (void)acceoryButtonDidClick:(UIButton *)btn
-{
+- (void)acceoryButtonDidClick:(UIButton *)btn{
     [self hideCover:nil];
     // 通知代理
-    if ([self.delegate respondsToSelector:@selector(conerAccessoryViewDidClickPlantedButton:)])
-    {
+    if ([self.delegate respondsToSelector:@selector(conerAccessoryViewDidClickPlantedButton:)]){
         [_delegate conerAccessoryViewDidClickPlantedButton:btn];
     }
 }
 
-- (void)acceoryCenterButtonDidClick:(UIButton *)centerBtn
-{
+- (void)acceoryCenterButtonDidClick:(UIButton *)centerBtn{
     // 取反中心按钮的选择状态
     centerBtn.selected = !centerBtn.selected;
     
@@ -141,10 +133,9 @@ static CGFloat _btnWH;
     // 将每个行星按钮的角度转为弧度
     CGFloat angle = 90.0 / (_btnArr.count - 1) * M_PI / 180.0;
     
-    if (centerBtn.isSelected) // 此时按钮已经被点击，状态为选中状态，应该将行星按钮旋转上去
-    {
-        for (int i = 0; i < _btnArr.count; i++)
-        {
+    // 此时按钮已经被点击，状态为选中状态，应该将行星按钮旋转上去
+    if (centerBtn.isSelected){
+        for (int i = 0; i < _btnArr.count; i++){
             UIButton *btn = _btnArr[i];
             [UIView animateWithDuration:duration animations:^{
                 btn.layer.transform = CATransform3DMakeRotation(angle * i, 0, 0, 1);
@@ -154,10 +145,9 @@ static CGFloat _btnWH;
         // 在此储存centerBtn以备用
         self.centerBtn = centerBtn;
         
-    }else // 按钮未被选中，星星按钮隐藏在屏幕下方
-    {
-        for (int i = 0; i < _btnArr.count; i++)
-        {
+    }else{
+        // 按钮未被选中，星星按钮隐藏在屏幕下方
+        for (int i = 0; i < _btnArr.count; i++){
             UIButton *btn = _btnArr[i];
             [UIView animateWithDuration:duration animations:^{
                 btn.layer.transform = CATransform3DMakeRotation(XMPlanetStarAngle, 0, 0, 1);
@@ -168,18 +158,15 @@ static CGFloat _btnWH;
     
 }
 
-- (void)hideCover:(UIGestureRecognizer *)gest
-{
+- (void)hideCover:(UIGestureRecognizer *)gest{
     // 防止pan手势多次触发
-    if (gest.state == UIGestureRecognizerStateEnded || gest == nil)
-    {
+    if (gest.state == UIGestureRecognizerStateEnded || gest == nil){
         self.cover.hidden = YES;
         [self acceoryCenterButtonDidClick:self.centerBtn];
     }
 }
 
-- (void)layoutSubviews
-{
+- (void)layoutSubviews{
     [super layoutSubviews];
     
     // 设置self的位置位于左下角

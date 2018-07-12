@@ -11,12 +11,10 @@
 
 @implementation XMLeftViewUserCell
 
-+ (instancetype)cellWithTableView:(UITableView *)tableView
-{
++ (instancetype)cellWithTableView:(UITableView *)tableView{
     static NSString *ID = @"leftUserCell";
     XMLeftViewUserCell *cell = [tableView dequeueReusableCellWithIdentifier:ID];
-    if (!cell)
-    {
+    if (!cell){
         cell = [[[NSBundle mainBundle] loadNibNamed:@"XMLeftViewUserCell" owner:nil options:nil] lastObject];
     }
     return cell;

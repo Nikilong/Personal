@@ -95,7 +95,7 @@
     [inputContentV addSubview:labT];
     self.resultLab = labT;
     //结果显示按钮
-    CGFloat inputBtnWH = 30;
+    CGFloat inputBtnWH = 20;
     CGFloat inputBtnPadding = 5;
     CGFloat inputBtnMargin = (XMScreenW - 4 * inputBtnWH - 3 * inputBtnPadding) * 0.5;
     for (NSUInteger i = 0; i < 4; i++) {
@@ -204,6 +204,7 @@
         // 显示一个按钮
         UIButton *btn = self.inputBtnArr[self.inputIndex];
         self.inputIndex += 1;
+        // 设置键盘输入的的颜色
         btn.backgroundColor = [UIColor orangeColor];
         if (self.inputIndex == 1){
             // 点击了第一个按钮,清除"密码错误"的信息

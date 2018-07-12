@@ -18,15 +18,14 @@
 @property (weak, nonatomic) IBOutlet UILabel *pureTitle;
 @property (weak, nonatomic) IBOutlet UILabel *commitCount;
 @property (weak, nonatomic) IBOutlet UILabel *sourceLabel;
-@property (weak, nonatomic) IBOutlet UIImageView *imageV;
+
 
 @end
 
 @implementation XMWebTableViewCell
 
 
-- (void)setWifiModel:(XMWifiTransModel *)wifiModel
-{
+- (void)setWifiModel:(XMWifiTransModel *)wifiModel{
     _wifiModel = wifiModel;
     
     _imageV.hidden = NO;
@@ -70,15 +69,13 @@
 
 }
 
-- (void)setModel:(XMWebModel *)model
-{
+- (void)setModel:(XMWebModel *)model{
     _model = model;
     _publishTime.text = model.publishTime;
     _commitCount.text = [NSString stringWithFormat:@"评论：%zd",model.cmt_cnt];
     _sourceLabel.text = [NSString stringWithFormat:@"来自：%@", model.source];
     
-    if (model.imageURL.absoluteString)
-    {
+    if (model.imageURL.absoluteString){
         _title.hidden = NO;
         _imageV.hidden = NO;
         _pureTitle.hidden = YES;
@@ -95,8 +92,7 @@
     
 }
 
-+ (instancetype)cellWithTableView:(UITableView *)tableView
-{
++ (instancetype)cellWithTableView:(UITableView *)tableView{
     static NSString *ID = @"webCell";
     
     XMWebTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ID];

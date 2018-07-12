@@ -15,5 +15,10 @@
 @property (nonatomic, assign)  CGSize cellSize;
 @property (nonatomic, assign)  NSInteger selectImgIndex;
 
+// 被点击的cell的相框的位置,用于拖拽图片退出的结束动画
+@property (nonatomic, assign)  CGRect clickImageF;
+// 被点击的cell的高度,用于拖拽图片退出的结束动画
+@property (nonatomic, assign)  CGFloat clickCellH;
+
 
 @end

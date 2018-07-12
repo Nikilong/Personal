@@ -22,7 +22,6 @@ extern NSString *const touchIDKeyboardAuthenPassward;
 typedef enum : NSUInteger {
     XMToolBoxTypeClipImg,           // 裁剪图片
     XMToolBoxTypeTaiji,             // 易数
-    XMToolBoxTypeHiweb,             // hiweb
     XMToolBoxTypeWifiTransFiles,    // wifi传输文件
     XMToolBoxTypeDDD,
     XMToolBoxTypeEEE,

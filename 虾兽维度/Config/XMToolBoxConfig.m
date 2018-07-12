@@ -30,10 +30,6 @@ NSString *const touchIDKeyboardAuthenPassward = @"2236";    // 键盘验证的�
                ToolBox_kType:@(XMToolBoxTypeClipImg),
                ToolBox_kAuth:@(XMToolBoxAuthenTypeNone)
                },
-             @{ToolBox_kName:@"Hiweb",
-               ToolBox_kType:@(XMToolBoxTypeHiweb),
-               ToolBox_kAuth:@(XMToolBoxAuthenTypeNeed)
-               },
              @{ToolBox_kName:@"易",
                ToolBox_kType:@(XMToolBoxTypeTaiji),
                ToolBox_kAuth:@(XMToolBoxAuthenTypeNeed)

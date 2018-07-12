@@ -15,7 +15,7 @@
 #import "XMClipImageViewController.h"
 #import "XMWifiTransFileViewController.h"
 
-@interface AppDelegate ()
+@interface AppDelegate ()<UITraitEnvironment>
 
 @property (nonatomic, strong) XMMainViewController *mainVC;
 
@@ -43,8 +43,14 @@
     
     [self.window makeKeyAndVisible];
     
-    //创建应用图标上的3D touch快捷选项
-    [self creatShortcutItem];
+    //创建应用图标上的3D touch快捷选项,需要遵守UITraitEnvironment协议,才能判断方法
+    if([self respondsToSelector:@selector(traitCollection)]){
+        if ([self.traitCollection respondsToSelector:@selector(forceTouchCapability)]){
+            if(self.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable){
+                [self creatShortcutItem];
+            }
+        }
+    }
     
     return YES;
 }
@@ -60,18 +66,17 @@
     //    //创建自定义图标的icon
     //    UIApplicationShortcutIcon *icon2 = [UIApplicationShortcutIcon iconWithTemplateImageName:@"分享.png"];
     //创建快捷选项
-//    UIApplicationShortcutItem * itemSave = [[UIApplicationShortcutItem alloc]initWithType:@"save" localizedTitle:@"珍藏" localizedSubtitle:nil icon:iconSave userInfo:nil];
+    UIApplicationShortcutItem * itemSave = [[UIApplicationShortcutItem alloc]initWithType:@"save" localizedTitle:@"珍藏" localizedSubtitle:nil icon:iconSave userInfo:nil];
     UIApplicationShortcutItem * itemToolbox = [[UIApplicationShortcutItem alloc]initWithType:@"toolbox" localizedTitle:@"工具箱" localizedSubtitle:nil icon:iconSave userInfo:nil];
     UIApplicationShortcutItem * itemSearch = [[UIApplicationShortcutItem alloc]initWithType:@"search" localizedTitle:@"搜索" localizedSubtitle:nil icon:iconSearch userInfo:nil];
     UIApplicationShortcutItem * itemScan = [[UIApplicationShortcutItem alloc]initWithType:@"scan" localizedTitle:@"扫描二维码" localizedSubtitle:nil icon:iconScan userInfo:nil];
     
     //添加到快捷选项数组
-    [UIApplication sharedApplication].shortcutItems = @[itemToolbox,itemSearch,itemScan];
+    [UIApplication sharedApplication].shortcutItems = @[itemToolbox,itemSearch,itemSave,itemScan];
 }
 
 /** 3D touch快捷选项触发事件 */
-- (void)application:(UIApplication *)application performActionForShortcutItem:(UIApplicationShortcutItem *)shortcutItem completionHandler:(void (^)(BOOL))completionHandler
-{
+- (void)application:(UIApplication *)application performActionForShortcutItem:(UIApplicationShortcutItem *)shortcutItem completionHandler:(void (^)(BOOL))completionHandler{
     if([shortcutItem.type isEqualToString:@"one"]){
         // 这个分享的3D touch快捷选项是从plist里面创建的
         NSArray *arr = @[@"hello 3D Touch--分享"];

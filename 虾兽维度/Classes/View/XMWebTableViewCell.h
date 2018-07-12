@@ -14,6 +14,7 @@
 
 @property (nonatomic, strong) XMWebModel *model;
 @property (nonatomic, strong) XMWifiTransModel *wifiModel;
+@property (weak, nonatomic) IBOutlet UIImageView *imageV;
 
 + (instancetype)cellWithTableView:(UITableView *)tableView;
 

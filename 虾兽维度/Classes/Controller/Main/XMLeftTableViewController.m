@@ -19,10 +19,8 @@
 
 @implementation XMLeftTableViewController
 
--(NSArray *)specialChannelArr
-{
-    if (!_specialChannelArr)
-    {
+-(NSArray *)specialChannelArr{
+    if (!_specialChannelArr){
         _specialChannelArr = [XMChannelModel specialChannels];
     }
     return _specialChannelArr;
@@ -44,22 +42,19 @@
     return 3;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     return section == 1 ? self.specialChannelArr.count : 1;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     switch (indexPath.section) {
-        case 0:
-        {
+        case 0:{
             XMLeftViewUserCell *cell = [XMLeftViewUserCell cellWithTableView:tableView];
             return cell;
             break;
         }
-        case 1:
-        {
+        case 1:{
             UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
             
             // 修改选中状态的背景颜色
@@ -73,8 +68,7 @@
             return cell;
             break;
         }
-        case 2:
-        {
+        case 2:{
             UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
             
             // 修改选中状态的背景颜色
@@ -94,17 +88,15 @@
 }
 
 /** 自定义行高 */
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     return indexPath.section == 0 ? 100 : 44;
 }
 
 #pragma mark - 代理方法
 /** 通知代理选中了某一个频道 */
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if ([self.delegate respondsToSelector:@selector(leftTableViewControllerDidSelectChannel:)])
-    {
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    if ([self.delegate respondsToSelector:@selector(leftTableViewControllerDidSelectChannel:)]){
         [self.delegate leftTableViewControllerDidSelectChannel:indexPath];
     }
 }

@@ -11,6 +11,7 @@
 #import "XMLeftTableViewController.h"
 #import "XMNavTitleTableViewController.h"
 #import "XMWebViewController.h"
+#import "XMHiwebViewController.h"
 #import "XMChannelModel.h"
 #import "XMLeftViewUserCell.h"
 #import "XMConerAccessoryView.h"
@@ -20,6 +21,7 @@
 #import "XMDropView.h"
 
 #import "XMNavWebViewController.h"
+#import "AppDelegate.h"
 
 #import "UIImageView+WebCache.h"
 #import "MBProgressHUD+NK.h"
@@ -28,7 +30,6 @@
 // 工具箱模块
 #import "XMToolboxViewController.h"
 #import "XMClipImageViewController.h"
-#import "XMHiwebViewController.h"
 #import "XMWifiTransFileViewController.h"
 
 // swift
@@ -42,7 +43,8 @@ XMNavTitleTableViewControllerDelegate,
 XMConerAccessoryViewDelegate,
 XMDropViewDelegate,
 XMToolBoxViewControllerDelegate,
-UIGestureRecognizerDelegate>
+UIGestureRecognizerDelegate,
+UITraitEnvironment>
 
 /** 强引用左侧边栏窗口 */
 @property (nonatomic, strong) XMLeftTableViewController *leftVC;
@@ -135,6 +137,14 @@ UIGestureRecognizerDelegate>
     
 }
 
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+//    if (self.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable){
+//        AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
+//        [app creatShortcutItem];
+//    }
+}
+
 //- (void)viewDidAppear:(BOOL)animated{
 //    [super viewDidAppear:animated];
 //    XMMetorMapViewController *maVC  = [[XMMetorMapViewController alloc] init];
@@ -145,6 +155,13 @@ UIGestureRecognizerDelegate>
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)test{
+    
+    XMHiwebViewController *clipVC = [[XMHiwebViewController alloc] init];
+    clipVC.view.backgroundColor = [UIColor whiteColor];
+    [self.navigationController pushViewController:clipVC animated:YES];
 }
 
 - (void)addCornerAccessoryView
@@ -238,6 +255,8 @@ UIGestureRecognizerDelegate>
     // homevc成为self的childviewcontroller
     [self.view addSubview:homeContentView];
     [self addChildViewController:_homeVC];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(test) name:@"test" object:nil];
 }
 
 /**  添加左侧边栏*/
@@ -559,14 +578,6 @@ UIGestureRecognizerDelegate>
             clipVC.view.backgroundColor = [UIColor whiteColor];
             [self.navigationController pushViewController:clipVC animated:YES];
 
-            break;
-        }
-        case XMToolBoxTypeHiweb:{
-            // hiweb模块
-            XMHiwebViewController *clipVC = [[XMHiwebViewController alloc] init];
-            clipVC.view.backgroundColor = [UIColor whiteColor];
-            [self.navigationController pushViewController:clipVC animated:YES];
-            
             break;
         }
         case XMToolBoxTypeWifiTransFiles:{

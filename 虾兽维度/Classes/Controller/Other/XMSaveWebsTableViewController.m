@@ -17,8 +17,7 @@
 
 @implementation XMSaveWebsTableViewController
 
--(NSArray *)saveWebsArr
-{
+-(NSArray *)saveWebsArr{
     if (!_saveWebsArr)
     {
         _saveWebsArr = [XMWebModelTool webModels];
@@ -30,8 +29,7 @@
     [super viewDidLoad];
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
+- (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
     [self.tableView reloadData];
@@ -40,16 +38,15 @@
 
 #pragma mark - Table view data source
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     return self.saveWebsArr.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *ID = @"saveCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ID];
-    if (!cell)
-    {
+    if (!cell){
+        
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:ID];
     }
     XMWebModel *model = _saveWebsArr[indexPath.row];
@@ -58,8 +55,8 @@
     return cell;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    
     // 取出对应的模型
     XMWebModel *model = self.saveWebsArr[indexPath.row];
     
@@ -67,14 +64,13 @@
 //    [self.navigationController popViewControllerAnimated:YES];
 
     // 通知代理发送网络请求
-    if ([self.delegate respondsToSelector:@selector(openWebmoduleRequest:)])
-    {
+    if ([self.delegate respondsToSelector:@selector(openWebmoduleRequest:)]){
         [_delegate openWebmoduleRequest:model];
     }
 }
 
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
+    
     [XMWebModelTool deleteWebModelAtIndex:indexPath.row];
     
     // 重新加载数据
