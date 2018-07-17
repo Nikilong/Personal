@@ -44,4 +44,9 @@
 /** 解析图片中的二维码信息 */
 + (NSString *)detectorQRCodeImage:(UIImage *)selectImage;
 
+/**--------- 截图 ---------*/
+/// 屏幕截图
++ (UIImage *)screenShot;
+
+
 @end

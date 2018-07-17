@@ -15,6 +15,16 @@
 
 @implementation XMImageUtil
 
+/**--------- 截图 ---------*/
+/// 屏幕截图
++ (UIImage *)screenShot{
+    UIGraphicsBeginImageContextWithOptions([UIScreen mainScreen].bounds.size, YES, [UIScreen mainScreen].scale);
+    [[UIApplication sharedApplication].keyWindow.layer renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage *img = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return img;
+}
+
 /**--------- 二维码图片 ---------*/
 // 识别图片二维码
 + (NSString *)detectorQRCodeImage:(UIImage *)selectImage{
@@ -171,7 +181,11 @@
             // 如果path存在,那么保存到本地
             NSString *filePath = [path stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@",[XMWifiGroupTool dateChangeToString:[NSDate date]],extent]];
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                [imageData writeToFile:filePath atomically:YES];
+                BOOL result = [imageData writeToFile:filePath atomically:YES];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [MBProgressHUD showResult:result message:nil];
+                });
+                
             });
             
         }else{

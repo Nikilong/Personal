@@ -15,6 +15,8 @@
 #import "XMGlobalConst.h"
 #import "XMSavePathUnit.h"
 
+#define RGB(R,G,B) [UIColor colorWithRed:R/255.0 green:G/255.0 blue:B/255.0 alpha:1]
+#define RGBA(R,G,B,A) [UIColor colorWithRed:R/255.0 green:G/255.0 blue:B/255.0 alpha:A]
 
 // 屏幕尺寸(iOS7需要区分横竖屏状态)
 #define XMScreenW [UIScreen mainScreen].bounds.size.width

@@ -11,8 +11,10 @@
 #import "UIView+getPointColor.h"
 #import "XMImageUtil.h"
 #import "MBProgressHUD+NK.h"
-#import "XMImageUtil.h"
 #import "XMSavePathUnit.h"
+
+#import "AppDelegate.h"
+#import "XMWXVCFloatWindow.h"
 
 @interface XMWebViewController ()<UIWebViewDelegate,NSURLSessionDelegate,UIGestureRecognizerDelegate>
 
@@ -237,8 +239,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    NSLog(@"()()%@",self.model.webURL);
-    
     [[NSUserDefaults standardUserDefaults] setInteger:2 forKey: @"WebKitCacheModelPreferenceKey"];
     //这里是调用的私有api，
     //把WevView类的cacheModel设置成WebCacheModelPrimaryWebBrowser，
@@ -252,15 +252,13 @@
     
     [super viewWillAppear:animated];
     
-    // 截图
-    UIGraphicsBeginImageContextWithOptions([UIScreen mainScreen].bounds.size, YES, [UIScreen mainScreen].scale);
-    [[UIApplication sharedApplication].keyWindow.layer renderInContext:UIGraphicsGetCurrentContext()];
-    UIImage *img = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    // 将截图放到底部的图片框上,否则会出现黑底
+    // 隐藏悬浮窗口
+    BOOL middleBool = [XMWXVCFloatWindow shareXMWXVCFloatWindow].isHidden;
+    [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = YES;
+    // 截图,并且将截图放到底部的图片框上,否则会出现黑底
     if (!self.backImageV){
         
-        UIImageView *backImageV = [[UIImageView alloc] initWithImage:img];
+        UIImageView *backImageV = [[UIImageView alloc] initWithImage:[XMImageUtil screenShot]];
         backImageV.frame = CGRectMake(-[self getBackImageVStarX], 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
         _backImageV = backImageV;
     
@@ -271,7 +269,13 @@
     // 必须先截图再截屏.否则会没有导航条
     self.navigationController.navigationBarHidden = YES;
     self.statusBar.backgroundColor = self.webNavColor;
+    [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = middleBool;
     
+}
+
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    NSLog(@"%s",__func__);
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
@@ -377,6 +381,31 @@
 #warning note 这两句代码是关键,当点击到图片时,urlToSave即为点击图片的url,当点击文字返回值为空
         NSString *imgURL = [NSString stringWithFormat:@"document.elementFromPoint(%f, %f).src", touchPoint.x, touchPoint.y];
         NSString *urlToSave = [self.web stringByEvaluatingJavaScriptFromString:imgURL];
+        
+        
+        
+        
+        
+        
+        
+        [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = NO;
+        //
+        AppDelegate *dele = (AppDelegate *)[UIApplication sharedApplication].delegate;
+        UIViewController *rootVC = [UIApplication sharedApplication].keyWindow.rootViewController;
+        for (UIViewController *childVC in rootVC.childViewControllers){
+            NSLog(@"--%@",[childVC class]);
+        }
+        dele.floadVC = [rootVC.childViewControllers lastObject];
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self.navigationController popViewControllerAnimated:YES];
+        });
+        return;
+        
+        
+        
+        
+        
         
         if (urlToSave.length){
             // 有地址证明长按了图片区域
@@ -656,6 +685,7 @@
             [self.backImageV removeFromSuperview];
             // 移到最右边结束时pop掉当前vc
 #warning note 这里必须关闭动画效果,不然会有重复的pop效果
+//            self.navigationController.interactivePopGestureRecognizer.enabled = NO;
             [self.navigationController popViewControllerAnimated:NO];
         }];
     }

@@ -195,7 +195,10 @@
 		FD3332E920A1786A0017655F /* wifiopen.png in Resources */ = {isa = PBXBuildFile; fileRef = FD3332E720A1786A0017655F /* wifiopen.png */; };
 		FD3332EC20A17DD80017655F /* XMWifiLeftTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FD3332EB20A17DD80017655F /* XMWifiLeftTableViewController.m */; };
 		FD3332EF20A181D40017655F /* XMWifiGroupTool.m in Sources */ = {isa = PBXBuildFile; fileRef = FD3332EE20A181D40017655F /* XMWifiGroupTool.m */; };
+		FD7066FD20FDE2A900A0BF71 /* XMWXVCFloatWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = FD7066FC20FDE2A900A0BF71 /* XMWXVCFloatWindow.m */; };
 		FD7407E820B4306D00A83979 /* XMPhotoCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FD7407E720B4306D00A83979 /* XMPhotoCollectionViewController.m */; };
+		FDFAEEC520FD900E00BEA442 /* XMNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = FDFAEEC420FD900E00BEA442 /* XMNavigationController.m */; };
+		FDFAEEC920FD9EB300BEA442 /* XMRightBottomFloatView.m in Sources */ = {isa = PBXBuildFile; fileRef = FDFAEEC820FD9EB300BEA442 /* XMRightBottomFloatView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -540,8 +543,14 @@
 		FD3332EB20A17DD80017655F /* XMWifiLeftTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMWifiLeftTableViewController.m; sourceTree = "<group>"; };
 		FD3332ED20A181D40017655F /* XMWifiGroupTool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMWifiGroupTool.h; sourceTree = "<group>"; };
 		FD3332EE20A181D40017655F /* XMWifiGroupTool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMWifiGroupTool.m; sourceTree = "<group>"; };
+		FD7066FB20FDE2A900A0BF71 /* XMWXVCFloatWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMWXVCFloatWindow.h; sourceTree = "<group>"; };
+		FD7066FC20FDE2A900A0BF71 /* XMWXVCFloatWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMWXVCFloatWindow.m; sourceTree = "<group>"; };
 		FD7407E620B4306D00A83979 /* XMPhotoCollectionViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMPhotoCollectionViewController.h; sourceTree = "<group>"; };
 		FD7407E720B4306D00A83979 /* XMPhotoCollectionViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMPhotoCollectionViewController.m; sourceTree = "<group>"; };
+		FDFAEEC320FD900E00BEA442 /* XMNavigationController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMNavigationController.h; sourceTree = "<group>"; };
+		FDFAEEC420FD900E00BEA442 /* XMNavigationController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMNavigationController.m; sourceTree = "<group>"; };
+		FDFAEEC720FD9EB300BEA442 /* XMRightBottomFloatView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMRightBottomFloatView.h; sourceTree = "<group>"; };
+		FDFAEEC820FD9EB300BEA442 /* XMRightBottomFloatView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMRightBottomFloatView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -880,6 +889,8 @@
 				205CED051F489F2B00821E38 /* XMLeftTableViewController.m */,
 				205CED081F489F2B00821E38 /* XMNavTitleTableViewController.h */,
 				205CED091F489F2B00821E38 /* XMNavTitleTableViewController.m */,
+				FDFAEEC320FD900E00BEA442 /* XMNavigationController.h */,
+				FDFAEEC420FD900E00BEA442 /* XMNavigationController.m */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -1277,6 +1288,7 @@
 				205CECF81F4898A600821E38 /* XMDropView.m */,
 				205CED0D1F48AA5600821E38 /* XMTextTableViewCell.h */,
 				205CED0E1F48AA5600821E38 /* XMTextTableViewCell.m */,
+				FDFAEEC620FD9E8900BEA442 /* XMWXFloatView */,
 				20C85E6A2054311B0057F483 /* XMUIKit */,
 			);
 			path = View;
@@ -1347,6 +1359,17 @@
 				FD1EA0D220AC52B200658F18 /* phone_documents_icon_update.png */,
 			);
 			path = wifiIcon;
+			sourceTree = "<group>";
+		};
+		FDFAEEC620FD9E8900BEA442 /* XMWXFloatView */ = {
+			isa = PBXGroup;
+			children = (
+				FDFAEEC720FD9EB300BEA442 /* XMRightBottomFloatView.h */,
+				FDFAEEC820FD9EB300BEA442 /* XMRightBottomFloatView.m */,
+				FD7066FB20FDE2A900A0BF71 /* XMWXVCFloatWindow.h */,
+				FD7066FC20FDE2A900A0BF71 /* XMWXVCFloatWindow.m */,
+			);
+			path = XMWXFloatView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1474,6 +1497,7 @@
 				205CECEA1F48150E00821E38 /* UIImage+GIF.m in Sources */,
 				205CECF01F48150E00821E38 /* UIView+WebCacheOperation.m in Sources */,
 				2086642820AB403D00D51CCB /* aescrypt.c in Sources */,
+				FDFAEEC520FD900E00BEA442 /* XMNavigationController.m in Sources */,
 				20BA35661E89597D00477BCB /* XMFloatWindow.m in Sources */,
 				2056D8731E8D67B200EB4BB5 /* XMConerAccessoryView.m in Sources */,
 				20E9E373204C4BEC007D442E /* XMClipImageViewController.m in Sources */,
@@ -1558,6 +1582,7 @@
 				2086643120AB403D00D51CCB /* ioapi.c in Sources */,
 				2061C21520C56F5F008C7424 /* HJVideoTimeUtil.m in Sources */,
 				20F1121B1E866F9C00E64A70 /* XMLeftViewUserCell.m in Sources */,
+				FD7066FD20FDE2A900A0BF71 /* XMWXVCFloatWindow.m in Sources */,
 				2086643320AB403D00D51CCB /* ioapi_mem.c in Sources */,
 				FD7407E820B4306D00A83979 /* XMPhotoCollectionViewController.m in Sources */,
 				20863CC020CD422F00A0812C /* ZLPhotoPickerGroupTableViewCell.m in Sources */,
@@ -1583,6 +1608,7 @@
 				20863CBF20CD422F00A0812C /* ZLPhotoPickerFooterCollectionReusableView.m in Sources */,
 				2086642F20AB403D00D51CCB /* sha1.c in Sources */,
 				2061C21D20C56F5F008C7424 /* HJFastForwardView.m in Sources */,
+				FDFAEEC920FD9EB300BEA442 /* XMRightBottomFloatView.m in Sources */,
 				204D2412209ED8E800F17E2E /* HTTPDynamicFileResponse.m in Sources */,
 				204D2432209ED91A00F17E2E /* DDASLLogger.m in Sources */,
 				20F112251E86BF4600E64A70 /* XMWebModelTool.m in Sources */,

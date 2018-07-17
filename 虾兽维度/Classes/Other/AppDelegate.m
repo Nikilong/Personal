@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import "XMMainViewController.h"
 #import "XMNavWebViewController.h"
+#import "XMNavigationController.h"
 
 #import "XMTouchIDKeyboardViewController.h"
 #import "XMHiwebViewController.h"
@@ -37,7 +38,7 @@
     }
 
     
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:_mainVC];
+    XMNavigationController *nav = [[XMNavigationController alloc] initWithRootViewController:_mainVC];
     
     self.window.rootViewController = nav;
     

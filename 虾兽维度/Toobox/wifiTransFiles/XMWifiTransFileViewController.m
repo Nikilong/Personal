@@ -1149,11 +1149,12 @@ UITextFieldDelegate>
         if ([model.fileType isEqualToString:fileTypeZipName]){
             [tips addAction:[UIAlertAction actionWithTitle:@"解压" style: UIAlertActionStyleDefault  handler:^(UIAlertAction * _Nonnull action){
                 BOOL success = [XMWifiGroupTool unzipFileAtPath:model.fullPath];
-                [MBProgressHUD showResult:success message:nil];
-                if (success){
-                    [weakSelf refreshDate:nil];
-                   
-                }
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [MBProgressHUD showResult:success message:nil];
+                    if (success){
+                        [weakSelf refreshDate:nil];
+                    }
+                });
             }]];
             // 如果是配置文件的zip文件,还多一个同步到本地的选项
             if ([model.fullPath containsString:[NSString stringWithFormat:@"%@/%@",backupGroupName,settingZipFilePre]]){
