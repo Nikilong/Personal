@@ -157,8 +157,8 @@
 /**
  通过url保存网络的图片或者gif到本地或者相册
   */
-+ (void)savePictrue:(NSString *)imageUrl path:(NSString *)path callBackViewController:(UIViewController *)vc
-{
++ (void)savePictrue:(NSString *)imageUrl path:(NSString *)path callBackViewController:(UIViewController *)vc{
+    
     // 对于网页上的图片,需要发起一个网络请求
     NSURL *url = [NSURL URLWithString:imageUrl];
     

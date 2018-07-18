@@ -106,14 +106,14 @@
     [self show:message icon:((result)? @"Checkmark.png":@"UNCheckmark.png") view:nil];
 }
 
-+ (void)showSuccess
++ (void)showSuccess:(NSString *)msg
 {
-    [self show:@"成功" icon:@"Checkmark.png" view:nil];
+    [self show:msg ? msg : @"成功" icon:@"Checkmark.png" view:nil];
 }
 
-+ (void)showFailed
++ (void)showFailed:(NSString *)msg
 {
-    [self show:@"失败" icon:@"UNCheckmark.png" view:nil];
+    [self show:msg ? msg : @"失败" icon:@"UNCheckmark.png" view:nil];
 }
 
 + (void)showMessage:(NSString *)text toView:(UIView *)view

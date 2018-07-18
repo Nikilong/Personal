@@ -15,6 +15,7 @@
 
 #import "AppDelegate.h"
 #import "XMWXVCFloatWindow.h"
+#import "XMRightBottomFloatView.h"
 
 @interface XMWebViewController ()<UIWebViewDelegate,NSURLSessionDelegate,UIGestureRecognizerDelegate>
 
@@ -85,10 +86,6 @@
         
         // 初始化标记,能够加载
         self.canLoad = YES;
-        
-//        _web.scalesPageToFit = YES;
-////        _web.userInteractionEnabled = YES;
-//        _web.multipleTouchEnabled = YES;
         
         // 添加长按手势
         UILongPressGestureRecognizer *longP = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
@@ -210,7 +207,7 @@
 }
 - (UIView *)statusCover{
     if (!_statusCover){
-        UIView *statusCover = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 20)];
+        UIView *statusCover = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, XMStatusBarHeight)];
         statusCover.backgroundColor = self.webNavColor;
         statusCover.hidden = YES;
         [self.statusBar addSubview:statusCover];
@@ -229,8 +226,7 @@
     // 传递模型
     [self.web loadRequest:[NSURLRequest requestWithURL:model.webURL]];
     // 为searchmode添加左划返回手势
-    if (self.searchMode)
-    {
+    if (self.searchMode){
         [self initSearchMode];
     }
     [self.view addSubview:self.toolBar];
@@ -271,11 +267,14 @@
     self.statusBar.backgroundColor = self.webNavColor;
     [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = middleBool;
     
+    // 从悬浮窗口恢复的界面, web backImageV toolBar 三个需要复位
+    self.web.transform = CGAffineTransformIdentity;
+    self.backImageV.transform = CGAffineTransformIdentity;
+    self.toolBar.transform = CGAffineTransformIdentity;
 }
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-    NSLog(@"%s",__func__);
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
@@ -337,7 +336,11 @@
     // 恢复状态栏颜色,原来的为空
     self.statusBar.backgroundColor = nil;
     [self.statusCover removeFromSuperview];
-    [self.navigationController popViewControllerAnimated:YES];
+    if (![XMRightBottomFloatView shareRightBottomFloatView].isInArea){
+        [self.navigationController popViewControllerAnimated:NO];
+    }
+
+//    [self.navigationController popViewControllerAnimated:YES];
 }
 
 /** 保存网页 */
@@ -356,7 +359,7 @@
         // 保存网站到本地
         [XMWebModelTool saveWebModel:model];
         // 提示用户保存网页成功
-        [MBProgressHUD showSuccess];
+        [MBProgressHUD showSuccess:@"收藏成功"];
     }
 }
 
@@ -377,36 +380,9 @@
     
     if (longP.state == UIGestureRecognizerStateBegan){
         CGPoint touchPoint = [longP locationInView:self.web];
-        
-#warning note 这两句代码是关键,当点击到图片时,urlToSave即为点击图片的url,当点击文字返回值为空
         NSString *imgURL = [NSString stringWithFormat:@"document.elementFromPoint(%f, %f).src", touchPoint.x, touchPoint.y];
         NSString *urlToSave = [self.web stringByEvaluatingJavaScriptFromString:imgURL];
-        
-        
-        
-        
-        
-        
-        
-        [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = NO;
-        //
-        AppDelegate *dele = (AppDelegate *)[UIApplication sharedApplication].delegate;
-        UIViewController *rootVC = [UIApplication sharedApplication].keyWindow.rootViewController;
-        for (UIViewController *childVC in rootVC.childViewControllers){
-            NSLog(@"--%@",[childVC class]);
-        }
-        dele.floadVC = [rootVC.childViewControllers lastObject];
-        
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [self.navigationController popViewControllerAnimated:YES];
-        });
-        return;
-        
-        
-        
-        
-        
-        
+
         if (urlToSave.length){
             // 有地址证明长按了图片区域
             [self showActionSheet:urlToSave];
@@ -543,7 +519,7 @@
     // 关闭网络加载
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     // 设置statusBar随页面的颜色改变
-    self.webNavColor = [webView colorOfPoint:CGPointMake(10, 21)];
+    self.webNavColor = [webView colorOfPoint:CGPointMake(10, XMStatusBarHeight + 1)];
     self.statusBar.backgroundColor = self.webNavColor;
     // 禁止完成加载之后再去加载网页
     self.canLoad = NO;
@@ -684,9 +660,7 @@
             // 移除背景相框
             [self.backImageV removeFromSuperview];
             // 移到最右边结束时pop掉当前vc
-#warning note 这里必须关闭动画效果,不然会有重复的pop效果
-//            self.navigationController.interactivePopGestureRecognizer.enabled = NO;
-            [self.navigationController popViewControllerAnimated:NO];
+            [self closeWebModule];
         }];
     }
 }

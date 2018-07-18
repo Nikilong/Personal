@@ -21,15 +21,14 @@
     return [NSString stringWithFormat:@"http://m.uczzd.cn/webview/news?app=uc-iflow&aid=%@&cid=100&zzd_from=uc-iflow&uc_param_str=dndsfrvesvntnwpfgicp&recoid=3902548323263252739&rd_type=reco&sp_gz=1",name];
 }
 
-+ (NSArray *)websWithDict:(NSDictionary *)dict refreshCount:(NSUInteger)count keyWordArray:(NSArray *)keyWordArr
-{
++ (NSArray *)websWithDict:(NSDictionary *)dict refreshCount:(NSUInteger)count keyWordArray:(NSArray *)keyWordArr{
+    
     NSMutableArray *arrM = [NSMutableArray array];
     NSArray *arrOrigin = dict[@"data"][@"items"];
     NSUInteger originNum = arrOrigin.count;
 
     // 当没有加载够所需数据不结束循环
-    for (int i = 0; arrM.count < count; i++)
-    {
+    for (int i = 0; arrM.count < count; i++){
         // 防止越界,需要重新发送网络请求来获得json数据
         if (i == originNum) break;
         
@@ -50,6 +49,7 @@
             }
         }
         model.webURL = [NSURL URLWithString:[XMWebModel appendWebURLByName:model.ID]];
+        model.author_icon = [NSURL URLWithString:dict[@"data"][@"articles"][model.ID][@"wm_author"][@"author_icon"][@"url"]];
         model.cmt_cnt = [dict[@"data"][@"articles"][model.ID][@"cmt_cnt"] unsignedIntegerValue];
         model.source = dict[@"data"][@"articles"][model.ID][@"source_name"];
 //model.source = model.ID;

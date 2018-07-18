@@ -20,6 +20,16 @@
 		202C84F21F2624AD0055FD7D /* XMSearchTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 202C84E91F2624AD0055FD7D /* XMSearchTableViewController.m */; };
 		202C84F31F2624AD0055FD7D /* XMWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 202C84EC1F2624AD0055FD7D /* XMWebViewController.m */; };
 		202C84F61F2624FC0055FD7D /* XMNavWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 202C84F51F2624FC0055FD7D /* XMNavWebViewController.m */; };
+		203D2FB920FF75AC008788B6 /* XMWXFloatWindowIconConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 203D2FB820FF75AC008788B6 /* XMWXFloatWindowIconConfig.m */; };
+		203D2FC120FF79C8008788B6 /* wxFloatWindowIcon_1.png in Resources */ = {isa = PBXBuildFile; fileRef = 203D2FBB20FF79C8008788B6 /* wxFloatWindowIcon_1.png */; };
+		203D2FC220FF79C8008788B6 /* wxFloatWindowIcon_2.png in Resources */ = {isa = PBXBuildFile; fileRef = 203D2FBC20FF79C8008788B6 /* wxFloatWindowIcon_2.png */; };
+		203D2FC320FF79C8008788B6 /* wxFloatWindowIcon_3.png in Resources */ = {isa = PBXBuildFile; fileRef = 203D2FBD20FF79C8008788B6 /* wxFloatWindowIcon_3.png */; };
+		203D2FC420FF79C8008788B6 /* wxFloatWindowIcon_4.png in Resources */ = {isa = PBXBuildFile; fileRef = 203D2FBE20FF79C8008788B6 /* wxFloatWindowIcon_4.png */; };
+		203D2FC520FF79C8008788B6 /* wxFloatWindowIcon_5.png in Resources */ = {isa = PBXBuildFile; fileRef = 203D2FBF20FF79C8008788B6 /* wxFloatWindowIcon_5.png */; };
+		203D2FC620FF79C8008788B6 /* wxFloatWindowIcon_default.png in Resources */ = {isa = PBXBuildFile; fileRef = 203D2FC020FF79C8008788B6 /* wxFloatWindowIcon_default.png */; };
+		203D2FC820FF90E9008788B6 /* wxFloatWindowIcon_6.png in Resources */ = {isa = PBXBuildFile; fileRef = 203D2FC720FF90E9008788B6 /* wxFloatWindowIcon_6.png */; };
+		203D2FCA20FF9664008788B6 /* wxFloatWindowIcon_7.png in Resources */ = {isa = PBXBuildFile; fileRef = 203D2FC920FF9664008788B6 /* wxFloatWindowIcon_7.png */; };
+		203D2FCC20FF981D008788B6 /* wxFloatWindowIcon_8.png in Resources */ = {isa = PBXBuildFile; fileRef = 203D2FCB20FF981D008788B6 /* wxFloatWindowIcon_8.png */; };
 		204D23DC209ED86800F17E2E /* XMWifiTransFileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 204D23DB209ED86800F17E2E /* XMWifiTransFileViewController.m */; };
 		204D2406209ED8E800F17E2E /* DDData.m in Sources */ = {isa = PBXBuildFile; fileRef = 204D23E1209ED8E800F17E2E /* DDData.m */; };
 		204D2407209ED8E800F17E2E /* DDNumber.m in Sources */ = {isa = PBXBuildFile; fileRef = 204D23E3209ED8E800F17E2E /* DDNumber.m */; };
@@ -227,6 +237,17 @@
 		202C84EC1F2624AD0055FD7D /* XMWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMWebViewController.m; sourceTree = "<group>"; };
 		202C84F41F2624FC0055FD7D /* XMNavWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMNavWebViewController.h; sourceTree = "<group>"; };
 		202C84F51F2624FC0055FD7D /* XMNavWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMNavWebViewController.m; sourceTree = "<group>"; };
+		203D2FB720FF75AC008788B6 /* XMWXFloatWindowIconConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMWXFloatWindowIconConfig.h; path = "虾兽维度/Config/XMWXFloatWindowIconConfig.h"; sourceTree = SOURCE_ROOT; };
+		203D2FB820FF75AC008788B6 /* XMWXFloatWindowIconConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XMWXFloatWindowIconConfig.m; path = "虾兽维度/Config/XMWXFloatWindowIconConfig.m"; sourceTree = SOURCE_ROOT; };
+		203D2FBB20FF79C8008788B6 /* wxFloatWindowIcon_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wxFloatWindowIcon_1.png; sourceTree = "<group>"; };
+		203D2FBC20FF79C8008788B6 /* wxFloatWindowIcon_2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wxFloatWindowIcon_2.png; sourceTree = "<group>"; };
+		203D2FBD20FF79C8008788B6 /* wxFloatWindowIcon_3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wxFloatWindowIcon_3.png; sourceTree = "<group>"; };
+		203D2FBE20FF79C8008788B6 /* wxFloatWindowIcon_4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wxFloatWindowIcon_4.png; sourceTree = "<group>"; };
+		203D2FBF20FF79C8008788B6 /* wxFloatWindowIcon_5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wxFloatWindowIcon_5.png; sourceTree = "<group>"; };
+		203D2FC020FF79C8008788B6 /* wxFloatWindowIcon_default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wxFloatWindowIcon_default.png; sourceTree = "<group>"; };
+		203D2FC720FF90E9008788B6 /* wxFloatWindowIcon_6.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wxFloatWindowIcon_6.png; sourceTree = "<group>"; };
+		203D2FC920FF9664008788B6 /* wxFloatWindowIcon_7.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wxFloatWindowIcon_7.png; sourceTree = "<group>"; };
+		203D2FCB20FF981D008788B6 /* wxFloatWindowIcon_8.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wxFloatWindowIcon_8.png; sourceTree = "<group>"; };
 		204D23DA209ED86800F17E2E /* XMWifiTransFileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMWifiTransFileViewController.h; sourceTree = "<group>"; };
 		204D23DB209ED86800F17E2E /* XMWifiTransFileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMWifiTransFileViewController.m; sourceTree = "<group>"; };
 		204D23E0209ED8E800F17E2E /* DDData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDData.h; sourceTree = "<group>"; };
@@ -589,6 +610,8 @@
 			children = (
 				20F112131E864FC000E64A70 /* web.plist */,
 				205CECF51F488EF700821E38 /* webSpecial.plist */,
+				203D2FB720FF75AC008788B6 /* XMWXFloatWindowIconConfig.h */,
+				203D2FB820FF75AC008788B6 /* XMWXFloatWindowIconConfig.m */,
 				20C85E51205419C80057F483 /* XMToolBoxConfig.h */,
 				20C85E52205419C80057F483 /* XMToolBoxConfig.m */,
 				FD1EA08720A9A96A00658F18 /* XMGlobalConst.h */,
@@ -645,6 +668,22 @@
 				202C84F51F2624FC0055FD7D /* XMNavWebViewController.m */,
 			);
 			path = Webmodule;
+			sourceTree = "<group>";
+		};
+		203D2FBA20FF79C8008788B6 /* wxFloatWindowIcon */ = {
+			isa = PBXGroup;
+			children = (
+				203D2FBB20FF79C8008788B6 /* wxFloatWindowIcon_1.png */,
+				203D2FBC20FF79C8008788B6 /* wxFloatWindowIcon_2.png */,
+				203D2FBD20FF79C8008788B6 /* wxFloatWindowIcon_3.png */,
+				203D2FBE20FF79C8008788B6 /* wxFloatWindowIcon_4.png */,
+				203D2FBF20FF79C8008788B6 /* wxFloatWindowIcon_5.png */,
+				203D2FC720FF90E9008788B6 /* wxFloatWindowIcon_6.png */,
+				203D2FC920FF9664008788B6 /* wxFloatWindowIcon_7.png */,
+				203D2FCB20FF981D008788B6 /* wxFloatWindowIcon_8.png */,
+				203D2FC020FF79C8008788B6 /* wxFloatWindowIcon_default.png */,
+			);
+			path = wxFloatWindowIcon;
 			sourceTree = "<group>";
 		};
 		204D23D9209ED84000F17E2E /* wifiTransFiles */ = {
@@ -1321,6 +1360,7 @@
 				200A823520837BBC00825E6E /* 虾兽维度-Bridging-Header.h */,
 				20077036205AA78F00551C00 /* config */,
 				20C85E5520541F3B0057F483 /* toolBoxIcons */,
+				203D2FBA20FF79C8008788B6 /* wxFloatWindowIcon */,
 				849D26FF1E640E3200F0CA5D /* LaunchScreen.storyboard */,
 				2096B0E620A49C8D00BA249C /* PrefixHeader.pch */,
 				849D27021E640E3200F0CA5D /* Info.plist */,
@@ -1435,10 +1475,13 @@
 			files = (
 				20E895B720ADDB730090AD15 /* file_move_able.png in Resources */,
 				FD1EA0E320AC58C200658F18 /* file_delete_disable.png in Resources */,
+				203D2FC120FF79C8008788B6 /* wxFloatWindowIcon_1.png in Resources */,
 				FD3332E420A154D80017655F /* transportFile.py in Resources */,
 				849D27011E640E3200F0CA5D /* LaunchScreen.storyboard in Resources */,
 				FD3332E820A1786A0017655F /* wificlose.png in Resources */,
+				203D2FCA20FF9664008788B6 /* wxFloatWindowIcon_7.png in Resources */,
 				2086643E20AC87DE00D51CCB /* dir_add.png in Resources */,
+				203D2FC320FF79C8008788B6 /* wxFloatWindowIcon_3.png in Resources */,
 				204D2438209ED91A00F17E2E /* README.txt in Resources */,
 				2086FCE420EBC75F00957207 /* file_upload_able.png in Resources */,
 				2061C1DE20C3C534008C7424 /* highlight.js in Resources */,
@@ -1446,11 +1489,14 @@
 				20C85E6920541F3B0057F483 /* tool_icon_default.png in Resources */,
 				2066C30B209F643600799A1E /* index.html in Resources */,
 				204D2430209ED91A00F17E2E /* About.txt in Resources */,
+				203D2FC420FF79C8008788B6 /* wxFloatWindowIcon_4.png in Resources */,
 				20C85E6720541F3B0057F483 /* tool_icon_4.png in Resources */,
 				2086642620AB403D00D51CCB /* Info.plist in Resources */,
 				2066C30C209F643600799A1E /* upload.html in Resources */,
+				203D2FC220FF79C8008788B6 /* wxFloatWindowIcon_2.png in Resources */,
 				20863D1D20CD432200A0812C /* AssetsPickerChecked@3x.png in Resources */,
 				20863CC120CD422F00A0812C /* ZLPhotoPickerGroupTableViewCell.xib in Resources */,
+				203D2FC620FF79C8008788B6 /* wxFloatWindowIcon_default.png in Resources */,
 				20863C9120CD0E3300A0812C /* wifiopen_upload.png in Resources */,
 				2061C20F20C56F5F008C7424 /* HJVideoAssets.xcassets in Resources */,
 				20F1121C1E866F9C00E64A70 /* XMLeftViewUserCell.xib in Resources */,
@@ -1466,17 +1512,20 @@
 				200770342059775100551C00 /* XMShowCollectionViewCell.xib in Resources */,
 				20E895B520ADDAA50090AD15 /* file_move_disable.png in Resources */,
 				FD3332E920A1786A0017655F /* wifiopen.png in Resources */,
+				203D2FC820FF90E9008788B6 /* wxFloatWindowIcon_6.png in Resources */,
 				2086FCE520EBC75F00957207 /* file_upload_disable.png in Resources */,
 				205CECF61F488EF700821E38 /* webSpecial.plist in Resources */,
 				2061C1DD20C3C534008C7424 /* highlight.css in Resources */,
 				FD1EA0E220AC58C200658F18 /* file_delete_able.png in Resources */,
 				204D242E209ED91A00F17E2E /* About.txt in Resources */,
 				20863D1C20CD432200A0812C /* AssetsPickerChecked@2x.png in Resources */,
+				203D2FC520FF79C8008788B6 /* wxFloatWindowIcon_5.png in Resources */,
 				20C85E6320541F3B0057F483 /* tool_icon_3.png in Resources */,
 				2086643F20AC87DE00D51CCB /* dir_backup.png in Resources */,
 				205CECDC1F48150E00821E38 /* MBProgressHUD.bundle in Resources */,
 				2061C1DC20C3C534008C7424 /* code.html in Resources */,
 				20C85E6120541F3B0057F483 /* tool_icon_1.png in Resources */,
+				203D2FCC20FF981D008788B6 /* wxFloatWindowIcon_8.png in Resources */,
 				20C85E6020541F3B0057F483 /* tool_icon_0.png in Resources */,
 				FD1EA0DA20AC52B300658F18 /* phone_documents_icon_update.png in Resources */,
 				20C85E6520541F3B0057F483 /* tool_icon_2.png in Resources */,
@@ -1626,6 +1675,7 @@
 				205CECEC1F48150E00821E38 /* UIImage+WebP.m in Sources */,
 				FD3332EF20A181D40017655F /* XMWifiGroupTool.m in Sources */,
 				2061C21F20C56F5F008C7424 /* HJVideoBottomView.m in Sources */,
+				203D2FB920FF75AC008788B6 /* XMWXFloatWindowIconConfig.m in Sources */,
 				204D240F209ED8E800F17E2E /* MultipartMessageHeaderField.m in Sources */,
 				20C85E53205419C80057F483 /* XMToolBoxConfig.m in Sources */,
 				202C84F01F2624AD0055FD7D /* XMQRCodeViewController.m in Sources */,

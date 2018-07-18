@@ -14,6 +14,7 @@
 @property (nonatomic, copy) NSString *title;        // 新闻标题
 @property (nonatomic, strong) NSURL *imageURL;      // 首张图片url
 @property (nonatomic, strong) NSURL *webURL;        // 新闻url
+@property (nonatomic, strong) NSURL *author_icon;   // 作者的封面
 @property (nonatomic, assign) NSInteger index;      // 索引
 @property (nonatomic, copy) NSString *publishTime;  // 发布时间
 @property (nonatomic, copy) NSArray *tags;          // 标签(用于过滤)

@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "XMWebModel.h"
 
-@class XMWebModel;
+//@class XMWebModel;
 
 @interface XMWebViewController : UIViewController
 

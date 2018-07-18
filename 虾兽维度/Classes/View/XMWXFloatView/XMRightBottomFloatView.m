@@ -9,8 +9,6 @@
 #import "XMRightBottomFloatView.h"
 #import "XMWXVCFloatWindow.h"
 
-#import "AppDelegate.h"
-
 @interface XMRightBottomFloatView()
 
 // 提示按钮
@@ -27,12 +25,16 @@
     dispatch_once(&rightBottomtoken, ^{
         if (rightBottomFloatView == nil){
             CGFloat viewWH = XMScreenW * 0.8;
+    
             rightBottomFloatView = [[XMRightBottomFloatView alloc] initWithFrame:CGRectMake(XMScreenW, XMScreenH, viewWH, viewWH)];
             rightBottomFloatView.layer.cornerRadius = viewWH * 0.5;
             rightBottomFloatView.layer.masksToBounds = YES;
-            [[UIApplication sharedApplication].windows[0] addSubview:rightBottomFloatView];
             rightBottomFloatView.hidden = YES;
+            [[UIApplication sharedApplication].windows[0] addSubview:rightBottomFloatView];
+            
+            // 初始化实例参数
             rightBottomFloatView.addMode = YES;
+            rightBottomFloatView.isInArea = NO;
             
             // 子控件
             UIButton *tipBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -56,20 +58,9 @@
             rightBottomFloatView.rightBottomEndBlock = ^(){
                 if (!rightBottomFloatView.tipBtn.isHidden){
                     if(rightBottomFloatView.addMode){
-                        NSLog(@"()())()())save !!!!!!");
-//                        [XMWXVCFloatWindow shareXMWXVCFloatWindow].wxFloatWindowDidAddBlock();
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            
-                            [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = NO;
-                            //
-                            AppDelegate *dele = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                            UIViewController *rootVC = [UIApplication sharedApplication].keyWindow.rootViewController;
-                            
-                            dele.floadVC = [rootVC.childViewControllers lastObject];
-                        });
+                        [XMWXVCFloatWindow shareXMWXVCFloatWindow].wxFloatWindowDidAddBlock();
 
                     }else{
-                        NSLog(@"()())()())delete !!!!!!");
                         [XMWXVCFloatWindow shareXMWXVCFloatWindow].wxFloatWindowDidRemoveBlock();
                     }
                 }
@@ -111,6 +102,8 @@
                     // 只有首次显示tipBtn的时候才需要震动+显示,防止重复震动
                     if (rightBottomFloatView.tipBtn.isHidden){
                         rightBottomFloatView.tipBtn.hidden = NO;
+                        // 标记进入扇形区域
+                        rightBottomFloatView.isInArea = YES;
                         // 震动提醒
                         UIImpactFeedbackGenerator *feed = [[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleMedium];
                         [feed impactOccurred];
@@ -120,6 +113,8 @@
                     
                 }else if(pow((XMScreenW - point.x),2) + pow((XMScreenH - point.y),2) > pow((XMScreenW - CGRectGetMaxX(rightBottomFloatView.frame)),2)){
                     rightBottomFloatView.tipBtn.hidden = YES;
+                    rightBottomFloatView.isInArea = NO;
+
                     // 通知浮窗
                     [XMWXVCFloatWindow shareXMWXVCFloatWindow].wxFloatWindowCancelRemoveBlock();
                 }
@@ -137,8 +132,6 @@
     // Drawing code
 }
 */
-
-#pragma mark - XMNavigationControllerEdgePanGestureDelegate
 
 
 @end

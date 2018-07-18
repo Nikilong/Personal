@@ -6,6 +6,10 @@
 //  Copyright © 2018年 admin. All rights reserved.
 //
 
+/**
+ 该文件的作用是提供一个圆形的浮窗,以保存viewcontroller
+ */
+
 #import <UIKit/UIKit.h>
 
 typedef void(^xmWXVCFloatWindowWillRemove)();

@@ -9,7 +9,7 @@
 #import "XMNavigationController.h"
 #import "XMRightBottomFloatView.h"
 
-@interface XMNavigationController()<UINavigationBarDelegate,UINavigationControllerDelegate,UIGestureRecognizerDelegate>
+@interface XMNavigationController()<UIGestureRecognizerDelegate>
 
 @end
 
@@ -17,54 +17,33 @@
 
 -(void)viewDidLoad{
     [super viewDidLoad];
-    
+
+    // 禁用原生的左侧边右滑pop手势
+    self.interactivePopGestureRecognizer.enabled = NO;
     // 添加自定义的右滑pop手势
-//    self.interactivePopGestureRecognizer.enabled = NO;
     UIScreenEdgePanGestureRecognizer *edge = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(edgeDidPan:)];
+    self.customerPopGestureRecognizer = edge;
     edge.edges = UIRectEdgeLeft;
     edge.delegate = self;
     [self.view addGestureRecognizer:edge];
 }
 
-- (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated{
-    
-//    self.interactivePopGestureRecognizer.enabled = YES;
-    [super pushViewController:viewController animated:animated];
-    
-}
-
-- (UIViewController *)popViewControllerAnimated:(BOOL)animated{
-    
-//    self.interactivePopGestureRecognizer.enabled = YES;
-    
-    return [super popViewControllerAnimated:animated];
-    
-}
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
-    return YES;
-}
-
+/// 屏幕左边沿手势方法
 - (void)edgeDidPan:(UIScreenEdgePanGestureRecognizer *)gest{
-//    CGFloat progress = [gest locationInView:self.view].x / XMScreenW;
+    // 禁止手势响应的vc列表
+    if([self.childViewControllers.lastObject isKindOfClass:NSClassFromString(@"XMMainViewController")]){
+        return;
+    }
     CGPoint point = [gest locationInView:[UIApplication sharedApplication].windows[0]];
     if (gest.state == UIGestureRecognizerStateBegan) {
-//        NSLog(@"start");
         if ([XMRightBottomFloatView shareRightBottomFloatView].rightBottomStartBlock) {
             [XMRightBottomFloatView shareRightBottomFloatView].rightBottomStartBlock(YES);
         }
     }else if (gest.state == UIGestureRecognizerStateChanged) {
-//        NSLog(@"change--%.2f",progress);
-//        if (progress > 0.2){
-//            if (self.delegate && [self.delegate respondsToSelector:@selector(didEndPanGesture)]) {
-//                [self.delegate didChangePanGesture:point];
-//            }
-//        }
         if ([XMRightBottomFloatView shareRightBottomFloatView].rightBottomChangeBlock) {
             [XMRightBottomFloatView shareRightBottomFloatView].rightBottomChangeBlock(point);
         }
     }else if (gest.state == UIGestureRecognizerStateEnded) {
-//        NSLog(@"end");
         if ([XMRightBottomFloatView shareRightBottomFloatView].rightBottomEndBlock) {
             [XMRightBottomFloatView shareRightBottomFloatView].rightBottomEndBlock(YES);
         }
@@ -72,8 +51,24 @@
     
 }
 
+#pragma mark - UIGestureRecognizerDelegate
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+    return YES;
+}
 
+//- (void)viewWillAppear:(BOOL)animated{
+//    [super viewWillAppear:animated];
+//}
 
+//- (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated{
+//    [super pushViewController:viewController animated:animated];
+//    
+//}
+//
+//- (UIViewController *)popViewControllerAnimated:(BOOL)animated{
+//    return [super popViewControllerAnimated:animated];
+//    
+//}
 
 //- (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated{
 //    [super willsh];

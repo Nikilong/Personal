@@ -71,30 +71,24 @@ UITraitEnvironment>
 
 #pragma mark - lazy
 
--(XMHomeTableViewController *)homeVC
-{
-    if (!_homeVC)
-    {
+-(XMHomeTableViewController *)homeVC{
+    if (!_homeVC){
         _homeVC = [[XMHomeTableViewController alloc] init];
         _homeVC.delegate = self;
     }
     return _homeVC;
 }
 
-- (XMSaveWebsTableViewController *)saveVC
-{
-    if (!_saveVC)
-    {
+- (XMSaveWebsTableViewController *)saveVC{
+    if (!_saveVC){
         _saveVC = [[XMSaveWebsTableViewController alloc] init];
         _saveVC.delegate = self;
     }
     return _saveVC;
 }
 
-- (UIView *)cover
-{
-    if (!_cover)
-    {
+- (UIView *)cover{
+    if (!_cover){
         UIView *cover = [[UIView alloc] initWithFrame:CGRectMake(XMLeftViewTotalW, 0, XMScreenW - XMLeftViewTotalW, XMScreenH)];
         cover.backgroundColor = [UIColor clearColor];
         [self.view addSubview:cover];
@@ -139,10 +133,6 @@ UITraitEnvironment>
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-//    if (self.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable){
-//        AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
-//        [app creatShortcutItem];
-//    }
 }
 
 //- (void)viewDidAppear:(BOOL)animated{
@@ -152,8 +142,7 @@ UITraitEnvironment>
 //
 //}
 
-- (void)dealloc
-{
+- (void)dealloc{
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -164,8 +153,7 @@ UITraitEnvironment>
     [self.navigationController pushViewController:clipVC animated:YES];
 }
 
-- (void)addCornerAccessoryView
-{
+- (void)addCornerAccessoryView{
     // 设置conerAccessoryView的子按钮
     CGFloat radius = 65;
     CGFloat btnWH = 30;
@@ -179,11 +167,11 @@ UITraitEnvironment>
 }
 
 /** 添加手势*/
-- (void)addGesture
-{
+- (void)addGesture{
     // 左侧抽屉手势
     UISwipeGestureRecognizer *swip = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(showLeftView)];
     [self.view addGestureRecognizer:swip];
+    
     // 2指下滑快捷搜索手势
     UISwipeGestureRecognizer *searchSwip = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(search:)];
     searchSwip.numberOfTouchesRequired = 2;  // 设置需要2个手指向下滑
@@ -209,16 +197,16 @@ UITraitEnvironment>
 }
 
 /** 设置导航栏扫描二维码和搜索按钮 */
-- (void)addNavButton
-{
+- (void)addNavButton{
+    
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:self action:@selector(scanQRCode)];
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:@selector(search:)];
 }
 
 /** 设置导航栏标题 */
-- (void)setNavTitle:(NSString *)channel
-{
+- (void)setNavTitle:(NSString *)channel{
+    
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 44)];
     label.numberOfLines = 0;
     label.textAlignment = NSTextAlignmentCenter;
@@ -247,8 +235,8 @@ UITraitEnvironment>
 }
 
 /** 添加主新闻窗口 */
-- (void)addHomeVC
-{
+- (void)addHomeVC{
+    
     // 创建主新闻窗口
     UIView *homeContentView = self.homeVC.tableView;
     homeContentView.frame = CGRectMake(0, 0, XMScreenW, XMScreenH);
@@ -260,8 +248,8 @@ UITraitEnvironment>
 }
 
 /**  添加左侧边栏*/
--(void)addLeftVC
-{
+-(void)addLeftVC{
+    
     // 创建左侧边栏容器
     UIView *leftContentView = [[UIView alloc] initWithFrame:CGRectMake(-XMLeftViewTotalW, 0, XMLeftViewTotalW, XMScreenH)];
     leftContentView.backgroundColor = [UIColor grayColor];
@@ -271,7 +259,7 @@ UITraitEnvironment>
     // 创建左侧边栏
     self.leftVC = [[XMLeftTableViewController alloc] initWithStyle:UITableViewStyleGrouped];
     self.leftVC.delegate = self;
-    self.leftVC.view.frame = CGRectMake(XMLeftViewPadding, 40, XMLeftViewTotalW - 2 *XMLeftViewPadding, XMScreenH - XMLeftViewPadding - 20);
+    self.leftVC.view.frame = CGRectMake(XMLeftViewPadding, 40, XMLeftViewTotalW - 2 *XMLeftViewPadding, XMScreenH - XMLeftViewPadding - XMStatusBarHeight);
     [self.leftContentView addSubview:self.leftVC.view];
     
     // 添加到导航条之上
@@ -287,8 +275,8 @@ UITraitEnvironment>
 #pragma mark - 点击事件与手势
 #pragma mark 导航栏
 /** QRcode */
-- (void)scanQRCode
-{
+- (void)scanQRCode{
+    
     XMQRCodeViewController *qrVC = [[XMQRCodeViewController alloc] init];
 //    qrVC.delegate = self;
     __weak typeof(self) weakSelf = self;
@@ -323,8 +311,8 @@ UITraitEnvironment>
 }
 
 /** 搜索框 */
-- (void)search:(UISwipeGestureRecognizer *)swip
-{
+- (void)search:(UISwipeGestureRecognizer *)swip{
+    
     XMSearchTableViewController *searchVC = [[XMSearchTableViewController alloc] init];
     searchVC.delegate = self;
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:searchVC];
@@ -341,8 +329,7 @@ UITraitEnvironment>
 }
 
 /** 导航栏titleview的dropview*/
-- (void)callDropView:(UITapGestureRecognizer *)gest
-{
+- (void)callDropView:(UITapGestureRecognizer *)gest{
     // 创建频道tableview
     self.navTitleVC = [[XMNavTitleTableViewController alloc] initWithStyle:UITableViewStylePlain];
     CGFloat height = [XMChannelModel channels].count * 35;
@@ -363,8 +350,7 @@ UITraitEnvironment>
 #pragma mark 左侧栏
 #warning note 1，这里用到navigationController，若这时候leftVC是self的childviewcontroller，则会冲突，系统建议navigationController是leftVC的父控制器。2，在这里插入蒙板最准确，在init里面可能不准确
 /** 显示左侧边栏 */
-- (void)showLeftView
-{
+- (void)showLeftView{
     // 显示蒙板
     self.cover.hidden = NO;
     
@@ -381,8 +367,7 @@ UITraitEnvironment>
 }
 
 /** 隐藏左侧边栏 */
-- (void)hideLeftView
-{
+- (void)hideLeftView{
     // 隐藏蒙板
     self.cover.hidden = YES;
     
@@ -396,8 +381,8 @@ UITraitEnvironment>
 #pragma mark - 代理方法
 #pragma 请求网络申请 delegate
 /**   请求网络申请*/
-- (void)openWebmoduleRequest:(XMWebModel *)webModel
-{
+- (void)openWebmoduleRequest:(XMWebModel *)webModel{
+    
     webModel.searchMode = self.searchMode;
     // 标记第一个webmodule
     webModel.firstRequest = YES;
@@ -407,8 +392,7 @@ UITraitEnvironment>
 
 #pragma mark leftTableViewController delegate
 /** 左侧选择频道的代理方法 */
-- (void)leftTableViewControllerDidSelectChannel:(NSIndexPath *)indexPath
-{
+- (void)leftTableViewControllerDidSelectChannel:(NSIndexPath *)indexPath{
     // 隐藏左侧边栏
     [self hideLeftView];
     
@@ -440,7 +424,7 @@ UITraitEnvironment>
     dispatch_async(dispatch_get_main_queue(), ^{
         
         // webModule添加蒙板
-        UIView *cover = [[UIView alloc] initWithFrame:CGRectMake(0, -20, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)];
+        UIView *cover = [[UIView alloc] initWithFrame:CGRectMake(0, - XMStatusBarHeight, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)];
         // 采用原生导航栏时cover添加到导航条上面,否则直接添加到callerVC.view
         [self.navigationController.navigationBar addSubview:cover];
         
@@ -457,9 +441,7 @@ UITraitEnvironment>
             // 设置父视图透明,否则看不到webmodule
             toolboxVC.view.superview.backgroundColor = [UIColor clearColor];
         }];
-        
     });
-
 }
 
 
@@ -491,8 +473,7 @@ UITraitEnvironment>
 
 #pragma mark navTitleTableViewController delegate
 /** 导航栏titleview中选择uc频道的代理方法 */
-- (void)navTitleTableViewControllerDidSelectChannel:(NSIndexPath *)indexPath
-{
+- (void)navTitleTableViewControllerDidSelectChannel:(NSIndexPath *)indexPath{
     // 将dropview dismiss掉
     [self.dropView dismiss];
     // 切换频道
@@ -505,8 +486,7 @@ UITraitEnvironment>
 
 
 #pragma mark conerAccessoryView - delegate
-- (void)conerAccessoryViewDidClickPlantedButton:(UIButton *)button
-{
+- (void)conerAccessoryViewDidClickPlantedButton:(UIButton *)button{
     switch (button.tag) {
         case 1: // 打开珍藏
             
@@ -520,11 +500,9 @@ UITraitEnvironment>
             
         case 3: // searchmode
             self.searchMode = !self.searchMode;
-            if(self.searchMode)
-            {
+            if(self.searchMode){
                 [MBProgressHUD showMessage:@"已打开searchMode" toView:self.view];
-            }else
-            {
+            }else{
                 [MBProgressHUD showMessage:@"已关闭searchMode" toView:self.view];
             }
             break;
@@ -535,8 +513,7 @@ UITraitEnvironment>
 }
 
 /**  清除缓存*/
-- (void)clearCache
-{
+- (void)clearCache{
     // 清除用sd下载的cell头像（主要）  Library/Caches/default/com.hackemist.SDWebImageCache.default
     [[[SDWebImageManager sharedManager] imageCache] clearDiskOnCompletion:nil];
     
@@ -554,8 +531,8 @@ UITraitEnvironment>
 }
 
 /**  打开珍藏VC*/
-- (void)callSaveViewController
-{
+- (void)callSaveViewController{
+    
     // 隐藏左侧边栏
     [self hideLeftView];
     
@@ -565,8 +542,7 @@ UITraitEnvironment>
 }
 
 #pragma mark UIGestureRecognizer delegate
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
-{
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
     return YES;
 }
 #pragma mark XMToolBoxViewControllerDelegate delegate
@@ -587,12 +563,8 @@ UITraitEnvironment>
             
             break;
         }
-
-        
         default:
             break;
     }
-
-
 }
 @end

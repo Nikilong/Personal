@@ -10,4 +10,8 @@
 
 @interface XMNavigationController : UINavigationController
 
+
+/// 暴露自定义的手势,用于处理手势冲突问题
+@property (weak, nonatomic)  UIScreenEdgePanGestureRecognizer *customerPopGestureRecognizer;
+
 @end

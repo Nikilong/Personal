@@ -10,6 +10,7 @@
 #import "XMWifiTransModel.h"
 #import "XMPhotoCollectionViewCell.h"
 #import "MBProgressHUD+NK.h"
+#import "XMWXVCFloatWindow.h"
 
 @interface XMPhotoCollectionViewController ()<UIScrollViewDelegate,UICollectionViewDelegateFlowLayout,UIGestureRecognizerDelegate>
 
@@ -31,8 +32,6 @@
 /**拖拽图片退出浏览的相关变量**/
 
 
-
-
 @end
 
 @implementation XMPhotoCollectionViewController
@@ -41,10 +40,9 @@ static NSString * const reuseIdentifier = @"XMPhotoCell";
 static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览的距离
 
 - (UILabel *)titLab{
-    if (!_titLab)
-    {
+    if (!_titLab){
         // 添加标题栏
-        UILabel *lab = [[UILabel alloc] initWithFrame:CGRectMake(0, 10, XMScreenW, 30)];
+        UILabel *lab = [[UILabel alloc] initWithFrame:CGRectMake(0, XMStatusBarHeight, XMScreenW, 44)];
         [self.view addSubview:lab];
         _titLab = lab;
         lab.textAlignment = NSTextAlignmentCenter;
@@ -54,15 +52,10 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
     return _titLab;
 }
 - (UIImageView *)panBgImgV{
-    if (!_panBgImgV)
-    {
-        _panBgImgV = [[UIImageView alloc] initWithFrame:CGRectMake(0, -32, XMScreenW, XMScreenH)];
+    if (!_panBgImgV){
+        _panBgImgV = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, XMScreenW, XMScreenH)];
         _panBgImgV.backgroundColor = [UIColor orangeColor];
         
-//        UIPanGestureRecognizer *cancelPan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panToDismiss:)];
-//        [_panBgImgV addGestureRecognizer:cancelPan];
-
-//        _panBgImgV = bgV;
     }
     return _panBgImgV;
 }
@@ -94,23 +87,28 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
     // 禁用左侧返回手势
     self.navigationController.interactivePopGestureRecognizer.enabled = NO;
     
+    // 记录浮窗是否隐藏,隐藏浮窗防止干扰截图
+    [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = YES;
+    
     // 截图
     UIGraphicsBeginImageContextWithOptions([UIScreen mainScreen].bounds.size, YES, [UIScreen mainScreen].scale);
     [[UIApplication sharedApplication].keyWindow.layer renderInContext:UIGraphicsGetCurrentContext()];
     UIImage *img = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     [self.panBgImgV setImage:img];
-
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     // 恢复左侧返回手势,显示导航栏
     self.navigationController.navigationBar.hidden = NO;
-    self.navigationController.interactivePopGestureRecognizer.enabled = YES;
     
     // 移除定时器
     [self stopTimer];
+    
+    // 恢复显示浮窗
+    [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = NO;
+
 }
 
 
@@ -329,6 +327,7 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
     }completion:^(BOOL finished) {
         if(finished){
             [self.navigationController popViewControllerAnimated:NO];
+            [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:NO];
         }
     }];
 }
@@ -386,9 +385,9 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
     
     if(pan.state == UIGestureRecognizerStateEnded){
         CGFloat endY = [pan locationInView:self.collectionView].y;
-        NSLog(@"%f",(endY - self.starY));
+//        NSLog(@"%f",(endY - self.starY));
         if(endY - self.starY > panToDismissDistance){
-            NSLog(@"%s",__func__);
+//            NSLog(@"%s",__func__);
             //            [self dismiss:nil];
 //            [self.navigationController popViewControllerAnimated:NO];
             [self swipeToDismiss:pan];
@@ -439,7 +438,23 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
 /// 单击事件
 - (void)didTapCollectionView:(UITapGestureRecognizer *)tap{
     if (tap.state == UIGestureRecognizerStateEnded){
-        self.navigationController.navigationBar.hidden = !self.navigationController.navigationBar.isHidden;
+//        self.navigationController.navigationBar.hidden = !self.navigationController.navigationBar.isHidden;
+        if (self.navigationController.navigationBar.isHidden){
+            // 导航条已经隐藏,需要回复显示
+            self.navigationController.navigationBar.hidden = NO;
+            
+            // 显示状态栏并且调整cell的偏移
+            [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:NO];
+            self.cellInset = UIEdgeInsetsMake(- (44 + XMStatusBarHeight), 0, 0, 0);
+            [self.collectionView reloadData];
+        }else{
+            self.navigationController.navigationBar.hidden = YES;
+            // 隐藏状态栏并且调整cell的偏移
+            [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:NO];
+            self.cellInset = UIEdgeInsetsMake(0, 0, 0, 0);
+            [self.collectionView reloadData];
+            
+        }
     }
 }
 

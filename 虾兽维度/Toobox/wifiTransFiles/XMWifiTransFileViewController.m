@@ -28,6 +28,7 @@
 #import "XMQRCodeViewController.h"
 #import "ZLPhotoPickerViewController.h"
 #import "XMImageUtil.h"
+#import "XMNavigationController.h"
 
 typedef enum : NSUInteger {
     XMFileSortTypeBigFirst,     //
@@ -86,10 +87,9 @@ UITextFieldDelegate>
 
 @implementation XMWifiTransFileViewController
 
-- (UIView *)toolBar
-{
-    if (!_toolBar)
-    {
+- (UIView *)toolBar{
+    if (!_toolBar){
+        
         CGFloat toolH = 44;
         CGFloat margin = 10;
         CGFloat btnWH = 30;
@@ -145,37 +145,29 @@ UITextFieldDelegate>
     return _toolBar;
 }
 
-- (NSMutableArray *)searchArr
-{
-    if (!_searchArr)
-    {
+- (NSMutableArray *)searchArr{
+    if (!_searchArr){
         _searchArr = [NSMutableArray array];
     }
     return _searchArr;
 }
 
-- (NSMutableArray *)realDataArr
-{
-    if (!_realDataArr)
-    {
+- (NSMutableArray *)realDataArr{
+    if (!_realDataArr){
         _realDataArr = [XMWifiGroupTool getCurrentGroupFiles];
     }
     return _realDataArr;
 }
 
-- (NSMutableArray *)currentDataArr
-{
-    if (!_currentDataArr)
-    {
+- (NSMutableArray *)currentDataArr{
+    if (!_currentDataArr){
         _currentDataArr = [NSMutableArray arrayWithArray:self.realDataArr];
     }
     return _currentDataArr;
 }
 
-- (UIView *)cover
-{
-    if (!_cover)
-    {
+- (UIView *)cover{
+    if (!_cover){
         UIView *cover = [[UIView alloc] initWithFrame:CGRectMake(XMWifiLeftViewTotalW, 0, XMScreenW - XMWifiLeftViewTotalW, XMScreenH)];
         cover.backgroundColor = [UIColor clearColor];
         [self.view addSubview:cover];
@@ -215,6 +207,8 @@ UITextFieldDelegate>
     // 左侧抽屉手势
     UISwipeGestureRecognizer *swip = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(showLeftView)];
     [self.view addGestureRecognizer:swip];
+    XMNavigationController *nav = (XMNavigationController *)self.navigationController;
+    [swip requireGestureRecognizerToFail:nav.customerPopGestureRecognizer];
 }
 
 
@@ -228,6 +222,7 @@ UITextFieldDelegate>
     [super viewDidDisappear:animated];
     [self cancelSearch];
     [self.searchF removeFromSuperview];
+    [self hideLeftView];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"XMWifiTransfronFilesComplete" object:nil];
 }
 
@@ -1040,7 +1035,7 @@ UITextFieldDelegate>
         photoVC.selectImgIndex = currentImgIndex;
         photoVC.photoModelArr = imgArr;
         photoVC.cellSize = CGSizeMake(XMScreenW, XMScreenH);
-        photoVC.cellInset = UIEdgeInsetsMake(0, 0, 0, 0);
+        photoVC.cellInset = UIEdgeInsetsMake(- (44 + XMStatusBarHeight), 0, 0, 0);
         photoVC.collectionView.contentSize = CGSizeMake(XMScreenW * imgArr.count, XMScreenH);
         [self.navigationController pushViewController:photoVC animated:YES];
     
@@ -1269,9 +1264,9 @@ UITextFieldDelegate>
             dispatch_async(dispatch_get_main_queue(), ^{
                 [weakSelf stopUploadAnimate];
                 if(error){
-                    [MBProgressHUD showFailed];
+                    [MBProgressHUD showFailed:nil];
                 }else{
-                    [MBProgressHUD showSuccess];
+                    [MBProgressHUD showSuccess:nil];
                 }
             });
         }];

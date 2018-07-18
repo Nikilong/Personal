@@ -12,11 +12,12 @@
 #import "AppDelegate.h"
 #import "XMNavigationController.h"
 
-#import "XMWifiTransFileViewController.h"
+#import "MBProgressHUD+NK.h"
+#import "XMWXFloatWindowIconConfig.h"
 
 @interface XMWXVCFloatWindow()
 
-
+@property (weak, nonatomic)  UIButton *coverBtn;
 
 @end
 
@@ -32,7 +33,12 @@ static double padding = 10.0f;
     dispatch_once(&wxVCFloatWindowToken, ^{
         CGRect startF = CGRectMake(XMScreenW - viewWH - padding, 200, viewWH, viewWH);
         wxVCFloatWindow = [[XMWXVCFloatWindow alloc] initWithFrame:startF];
-        [[UIApplication sharedApplication].windows[0] addSubview:wxVCFloatWindow];
+        // 浮窗插入到扇形区域的上面
+        if([XMRightBottomFloatView shareRightBottomFloatView]){
+            [[UIApplication sharedApplication].windows[0] insertSubview:wxVCFloatWindow aboveSubview:[XMRightBottomFloatView shareRightBottomFloatView]];
+        }else{
+            [[UIApplication sharedApplication].windows[0] addSubview:wxVCFloatWindow];
+        }
         wxVCFloatWindow.layer.cornerRadius = viewWH * 0.5;
         wxVCFloatWindow.layer.masksToBounds = YES;
         wxVCFloatWindow.hidden = YES;
@@ -44,10 +50,12 @@ static double padding = 10.0f;
         // 子控件
         CGFloat btnWH = viewWH - padding;
         UIButton *btn = [[UIButton alloc] initWithFrame:CGRectMake(padding * 0.5, padding * 0.5,btnWH, btnWH)];
+        wxVCFloatWindow.coverBtn = btn;
         btn.layer.cornerRadius = btnWH * 0.5;
         btn.layer.masksToBounds = YES;
         [wxVCFloatWindow addSubview:btn];
-        btn.backgroundColor = [UIColor orangeColor];
+        btn.backgroundColor = [UIColor whiteColor];
+        [btn setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
         [btn addTarget:wxVCFloatWindow action:@selector(openFloatViewController:) forControlEvents:UIControlEventTouchUpInside];
         
         // 添加手势
@@ -57,16 +65,21 @@ static double padding = 10.0f;
         /**block函数**/
         // 完成添加
         wxVCFloatWindow.wxFloatWindowDidAddBlock = ^(){
-            [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = NO;
-            //
-            AppDelegate *dele = (AppDelegate *)[UIApplication sharedApplication].delegate;
-            UIViewController *rootVC = [UIApplication sharedApplication].keyWindow.rootViewController;
-            for (UIViewController *childVC in rootVC.childViewControllers){
-                NSLog(@"--%@",[childVC class]);
-            }
-            dele.floadVC = [rootVC.childViewControllers lastObject];
-            
-//            UIViewController *topVC = nil;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                // 显示浮窗
+                [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = NO;
+                
+                AppDelegate *dele = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                // 将当前页面保存到appdelegate
+                XMNavigationController *rootVC = (XMNavigationController *)[UIApplication sharedApplication].keyWindow.rootViewController;
+//                UIViewController *rootVC = [UIApplication sharedApplication].keyWindow.rootViewController;
+                dele.floadVC = [rootVC.childViewControllers lastObject];
+                
+                // 设置封面或标题
+                [XMWXFloatWindowIconConfig setIconAndTitleByViewController:dele.floadVC button:[XMWXVCFloatWindow shareXMWXVCFloatWindow].coverBtn];
+                // 将当前页面pop掉
+                [rootVC popViewControllerAnimated:NO];
+            });
         };
         // 完成移除
         wxVCFloatWindow.wxFloatWindowDidRemoveBlock = ^(){
@@ -90,24 +103,16 @@ static double padding = 10.0f;
 
 // 点击事件
 - (void)openFloatViewController:(UIButton *)btn{
-    //
+    // push保存的页面
     AppDelegate *dele = (AppDelegate *)[UIApplication sharedApplication].delegate;
-        NSLog(@"--%@",dele.floadVC);
     if([[UIApplication sharedApplication].keyWindow.rootViewController isKindOfClass:[XMNavigationController class]]){
         dispatch_async(dispatch_get_main_queue(), ^{
-            
             XMNavigationController *nav = (XMNavigationController *)[UIApplication sharedApplication].keyWindow.rootViewController;
-            for (UIViewController *childVC in nav.childViewControllers){
-                NSLog(@"--))%@",[childVC class]);
+            if ([nav.childViewControllers.lastObject isEqual:dele.floadVC]){
+                [MBProgressHUD showFailed:@"当前浮窗已显示"];
+            }else{
+                [nav pushViewController:dele.floadVC animated:YES];
             }
-//                    [nav pushViewController:dele.floadVC animated:YES];
-            UIViewController *vc = dele.floadVC;
-//            dele.floadVC = nil;
-//            vc.view.bounds = [UIScreen mainScreen].bounds;
-//            [nav presentViewController:vc animated:YES completion:nil];
-//            XMWifiTransFileViewController *vc = [[XMWifiTransFileViewController alloc] init];
-//            [nav pushViewController:vc animated:YES];
-//            [nav presentViewController:vc animated:YES completion:nil];
         });
     }
 }
@@ -151,6 +156,5 @@ static double padding = 10.0f;
         }
     }
 }
-
 
 @end

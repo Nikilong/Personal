@@ -20,8 +20,8 @@
 + (void)showMessage:(NSString *)text toView:(UIView *)view;
 + (void)showMessage:(NSString *)text;
 + (void)showResult:(BOOL)result message:(NSString *)message;
-+ (void)showSuccess;
-+ (void)showFailed;
++ (void)showSuccess:(NSString *)msg;
++ (void)showFailed:(NSString *)msg;
 
 /** 显示一张图标*/
 + (void)show:(NSString *)text icon:(NSString *)icon view:(UIView *)view;
