@@ -13,6 +13,8 @@
 #import "XMMainViewController.h"
 #import "MBProgressHUD+NK.h"
 
+#import "XMRefreshHeaderView.h"
+
 CGFloat const XMRowHeight = 100;
 CGFloat const XMRrfreshHeight = 100;
 
@@ -25,6 +27,9 @@ CGFloat const XMRrfreshHeight = 100;
 
 // 下拉刷新条幅
 @property (nonatomic, weak) UIButton *headerRefreshV;
+// 下拉刷新组件
+@property (weak, nonatomic)  XMRefreshHeaderView *refreshHeader;
+
 // 标记拖拽状态
 @property (nonatomic, assign) BOOL isDragging;
 
@@ -33,7 +38,6 @@ CGFloat const XMRrfreshHeight = 100;
 
 // 加载次数,防止多次连续加载
 @property (nonatomic, assign)  NSUInteger loadCount;
-
 
 @end
 
@@ -104,6 +108,8 @@ CGFloat const XMRrfreshHeight = 100;
     // 创建刷新消息横幅
     UILabel *countLabel = [[UILabel alloc] init];
     [self.navigationController.view insertSubview:countLabel belowSubview:self.navigationController.navigationBar];
+    countLabel.textColor = [UIColor whiteColor];
+    countLabel.font = [UIFont systemFontOfSize:13];
     CGFloat countLabelW = [UIScreen mainScreen].bounds.size.width;
     CGFloat countLabelH = 30;
     CGFloat countLabelX = 0;
@@ -112,7 +118,7 @@ CGFloat const XMRrfreshHeight = 100;
     countLabel.frame = CGRectMake(countLabelX, countLabelY, countLabelW, countLabelH);
     countLabel.text = content;
     countLabel.textAlignment = NSTextAlignmentCenter;
-    countLabel.backgroundColor = [UIColor orangeColor];
+    countLabel.backgroundColor = [UIColor grayColor];
     
     // 设置动画
     NSTimeInterval duration = 0.4;
@@ -161,17 +167,27 @@ CGFloat const XMRrfreshHeight = 100;
     
     UIButton *headerRefreshV = [[UIButton alloc] initWithFrame:CGRectMake(0, -44, [UIScreen mainScreen].bounds.size.width, 44)];
     self.headerRefreshV = headerRefreshV;
-    self.headerRefreshV.autoresizingMask =  UIViewAutoresizingFlexibleWidth;
+    self.headerRefreshV.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     headerRefreshV.hidden = YES;
     
     [headerRefreshV setTitle:@"下拉刷新" forState:UIControlStateNormal];
-    [headerRefreshV setTitle:@"刷新...." forState:UIControlStateSelected];
+    [headerRefreshV setTitle:@"加载数据中..." forState:UIControlStateSelected];
     [headerRefreshV setImage:[UIImage imageNamed:@"shuaxin"] forState:UIControlStateSelected];
     [headerRefreshV setTitle:@"松手可刷新" forState:UIControlStateDisabled];
     
-    [headerRefreshV setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [headerRefreshV setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+    headerRefreshV.titleLabel.font = [UIFont systemFontOfSize:13];
     headerRefreshV.backgroundColor = [UIColor clearColor];
+    [headerRefreshV setImageEdgeInsets:UIEdgeInsetsMake(0, -20, 0, 0)];
     [self.view addSubview:headerRefreshV];
+    
+//    XMRefreshHeaderView *refreshHeader = [XMRefreshHeaderView xm_addPullRefreshHeader:self.tableView];
+//    self.refreshHeader = refreshHeader;
+//    __weak typeof(self) weakSelf = self;
+//    refreshHeader.tableViewShouldRefreshBlock = ^(){
+//        [weakSelf refresh];
+//    };
+    
 
     // 设置tableview下拉并且刷新
     self.isRefreshing = NO;
@@ -197,8 +213,9 @@ CGFloat const XMRrfreshHeight = 100;
     
     // 如果下拉到固定值修改标题提示用户
     if (tableViewOffet > XMRrfreshHeight && _isDragging){
-        
         self.headerRefreshV.enabled = NO;
+    }else{
+        self.headerRefreshV.enabled = YES;
     }
 
 }
@@ -243,15 +260,11 @@ CGFloat const XMRrfreshHeight = 100;
 
 // 根据选中哪一行播放相关的新闻
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    
-    // 隐藏刷新按钮
-//    self.btnRefresh.hidden = YES;
     // 取出对应的模型
     XMWebModel *model = self.webs[indexPath.row];
 
     // 通知代理发送网络请求
-    if ([self.delegate respondsToSelector:@selector(openWebmoduleRequest:)])
-    {
+    if ([self.delegate respondsToSelector:@selector(openWebmoduleRequest:)]){
         [self.delegate openWebmoduleRequest:model];
     }
 }
@@ -281,22 +294,35 @@ CGFloat const XMRrfreshHeight = 100;
     
     // 3,创建一个下载任务，类型为NSURLSessionDataTask
     NSURLSessionDataTask *task = [session dataTaskWithURL:idUrl  completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error){
-          // 关闭网络加载
-          [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-          self.isRefreshing = NO;
-
-          if (!error){
-              // 5,创建session网络请求结束后
-              // 解析json数据
-              NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
-              // 根据dict更新数据
-              [self dealJsonDataWithDict:dict];
-          }else{
-              
-              // 6，回到主线程设置cell的信息
-              [self backToMainQueueWithMessage:@"加载失败"];
-          }
-          
+            
+            // 关闭网络加载
+            [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+        
+            // 通知刷新组件结束刷新
+            // self.refreshHeader.tableViewDidRefreshBlock(self.refreshHeader);^{
+        
+            if (!error){
+                // 5,创建session网络请求结束后
+                // 解析json数据
+                NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
+                // 根据dict更新数据
+                [self dealJsonDataWithDict:dict];
+            }else{
+                
+                // 6，回到主线程设置cell的信息
+                [self backToMainQueueWithMessage:@"加载失败"];
+            }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                // 恢复刷新
+                self.isRefreshing = NO;
+                // 移除动画
+                [self.headerRefreshV.imageView.layer removeAllAnimations];
+                // 隐藏刷新
+                self.headerRefreshV.hidden = YES;
+                // 恢复标题
+                self.headerRefreshV.selected = NO;
+            });
+        
       }];
     
     // 4,开始任务（异步）
@@ -313,7 +339,6 @@ CGFloat const XMRrfreshHeight = 100;
     anim.duration = 0.5;
     // 重复动画的次数
     anim.repeatCount = MAXFLOAT;
-//    [self.btnRefresh.layer addAnimation:anim forKey:nil];
     return anim;
 }
 
@@ -339,12 +364,8 @@ CGFloat const XMRrfreshHeight = 100;
         if(self.loadCount < 3){
             [self refresh];
         }else{
-            dispatch_async(dispatch_get_main_queue(), ^{                
-                [MBProgressHUD showMessage:@"没有足够相关数据"];
-                self.loadCount = 0;
-            });
+            self.loadCount = 0;
         }
-        return;
     }
     NSUInteger acturallyCount = self.freshWebsArr.count;
     /* 转码打印json数据,用于分析数据
@@ -380,23 +401,9 @@ CGFloat const XMRrfreshHeight = 100;
         [UIView animateWithDuration:0.25 animations:^{
             self.tableView.contentInset = UIEdgeInsetsMake(64, 0, 0, 0);
         }completion:^(BOOL finished) {
-            // 移除动画
-            [self.headerRefreshV.imageView.layer removeAllAnimations];
-            // 隐藏刷新
-            self.headerRefreshV.hidden = YES;
-            // 恢复标题
-            self.headerRefreshV.selected = NO;
-            
             // 滚到最顶部
             [self upToTop];
         }];
-        
-        
-        // 结束旋转动画
-//        [self.btnRefresh.layer removeAllAnimations];
-        
-        // 恢复按钮的可操作
-//        self.btnRefresh.userInteractionEnabled = YES;
         
         // 提示用户刷新成功
         [self setRefreshCount:message];

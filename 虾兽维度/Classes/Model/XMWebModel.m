@@ -105,24 +105,25 @@
 
 
 /** 归档 */
-- (instancetype)initWithCoder:(NSCoder *)aDecoder
-{
-    if (self = [super init])
-    {
+- (instancetype)initWithCoder:(NSCoder *)aDecoder{
+    if (self = [super init]){
         self.imageURL = [aDecoder decodeObjectForKey:@"imageURL"];
         self.ID = [aDecoder decodeObjectForKey:@"ID"];
         self.title = [aDecoder decodeObjectForKey:@"title"];
         self.webURL = [aDecoder decodeObjectForKey:@"webURL"];
+        self.source = [aDecoder decodeObjectForKey:@"source"];
+        self.author_icon = [aDecoder decodeObjectForKey:@"author_icon"];
     }
     return self;
 }
 
-- (void)encodeWithCoder:(NSCoder *)aCoder
-{
+- (void)encodeWithCoder:(NSCoder *)aCoder{
     [aCoder encodeObject:self.imageURL forKey:@"imageURL"];
     [aCoder encodeObject:self.ID forKey:@"ID"];
     [aCoder encodeObject:self.title forKey:@"title"];
     [aCoder encodeObject:self.webURL forKey:@"webURL"];
+    [aCoder encodeObject:self.source forKey:@"source"];
+    [aCoder encodeObject:self.author_icon forKey:@"author_icon"];
     
 }
 

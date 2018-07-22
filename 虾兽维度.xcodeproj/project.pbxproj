@@ -20,7 +20,6 @@
 		202C84F21F2624AD0055FD7D /* XMSearchTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 202C84E91F2624AD0055FD7D /* XMSearchTableViewController.m */; };
 		202C84F31F2624AD0055FD7D /* XMWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 202C84EC1F2624AD0055FD7D /* XMWebViewController.m */; };
 		202C84F61F2624FC0055FD7D /* XMNavWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 202C84F51F2624FC0055FD7D /* XMNavWebViewController.m */; };
-		203D2FB920FF75AC008788B6 /* XMWXFloatWindowIconConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 203D2FB820FF75AC008788B6 /* XMWXFloatWindowIconConfig.m */; };
 		203D2FC120FF79C8008788B6 /* wxFloatWindowIcon_1.png in Resources */ = {isa = PBXBuildFile; fileRef = 203D2FBB20FF79C8008788B6 /* wxFloatWindowIcon_1.png */; };
 		203D2FC220FF79C8008788B6 /* wxFloatWindowIcon_2.png in Resources */ = {isa = PBXBuildFile; fileRef = 203D2FBC20FF79C8008788B6 /* wxFloatWindowIcon_2.png */; };
 		203D2FC320FF79C8008788B6 /* wxFloatWindowIcon_3.png in Resources */ = {isa = PBXBuildFile; fileRef = 203D2FBD20FF79C8008788B6 /* wxFloatWindowIcon_3.png */; };
@@ -30,6 +29,11 @@
 		203D2FC820FF90E9008788B6 /* wxFloatWindowIcon_6.png in Resources */ = {isa = PBXBuildFile; fileRef = 203D2FC720FF90E9008788B6 /* wxFloatWindowIcon_6.png */; };
 		203D2FCA20FF9664008788B6 /* wxFloatWindowIcon_7.png in Resources */ = {isa = PBXBuildFile; fileRef = 203D2FC920FF9664008788B6 /* wxFloatWindowIcon_7.png */; };
 		203D2FCC20FF981D008788B6 /* wxFloatWindowIcon_8.png in Resources */ = {isa = PBXBuildFile; fileRef = 203D2FCB20FF981D008788B6 /* wxFloatWindowIcon_8.png */; };
+		203D2FF321031F48008788B6 /* XMRefreshHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 203D2FF221031F48008788B6 /* XMRefreshHeaderView.m */; };
+		203D300221036AA7008788B6 /* XMRightBottomFloatView.m in Sources */ = {isa = PBXBuildFile; fileRef = 203D2FFB21036AA7008788B6 /* XMRightBottomFloatView.m */; };
+		203D300321036AA7008788B6 /* XMWXVCFloatWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 203D2FFD21036AA7008788B6 /* XMWXVCFloatWindow.m */; };
+		203D300421036AA7008788B6 /* XMWXFloatWindowIconConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 203D2FFF21036AA7008788B6 /* XMWXFloatWindowIconConfig.m */; };
+		203D300721038B5D008788B6 /* wxFloatWindowIcon_9.png in Resources */ = {isa = PBXBuildFile; fileRef = 203D300621038B5D008788B6 /* wxFloatWindowIcon_9.png */; };
 		204D23DC209ED86800F17E2E /* XMWifiTransFileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 204D23DB209ED86800F17E2E /* XMWifiTransFileViewController.m */; };
 		204D2406209ED8E800F17E2E /* DDData.m in Sources */ = {isa = PBXBuildFile; fileRef = 204D23E1209ED8E800F17E2E /* DDData.m */; };
 		204D2407209ED8E800F17E2E /* DDNumber.m in Sources */ = {isa = PBXBuildFile; fileRef = 204D23E3209ED8E800F17E2E /* DDNumber.m */; };
@@ -164,8 +168,6 @@
 		2086FCE120EBC61400957207 /* XMImageUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 2086FCE020EBC61400957207 /* XMImageUtil.m */; };
 		2086FCE420EBC75F00957207 /* file_upload_able.png in Resources */ = {isa = PBXBuildFile; fileRef = 2086FCE220EBC75F00957207 /* file_upload_able.png */; };
 		2086FCE520EBC75F00957207 /* file_upload_disable.png in Resources */ = {isa = PBXBuildFile; fileRef = 2086FCE320EBC75F00957207 /* file_upload_disable.png */; };
-		20A3BCFF1F2E2D7400ED1699 /* XMAdvance.m in Sources */ = {isa = PBXBuildFile; fileRef = 20A3BCFE1F2E2D7400ED1699 /* XMAdvance.m */; };
-		20BA35661E89597D00477BCB /* XMFloatWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 20BA35651E89597D00477BCB /* XMFloatWindow.m */; };
 		20C85E382053E1F40057F483 /* XMToolboxViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20C85E372053E1F40057F483 /* XMToolboxViewController.m */; };
 		20C85E53205419C80057F483 /* XMToolBoxConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 20C85E52205419C80057F483 /* XMToolBoxConfig.m */; };
 		20C85E6020541F3B0057F483 /* tool_icon_0.png in Resources */ = {isa = PBXBuildFile; fileRef = 20C85E5620541F3B0057F483 /* tool_icon_0.png */; };
@@ -205,10 +207,8 @@
 		FD3332E920A1786A0017655F /* wifiopen.png in Resources */ = {isa = PBXBuildFile; fileRef = FD3332E720A1786A0017655F /* wifiopen.png */; };
 		FD3332EC20A17DD80017655F /* XMWifiLeftTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FD3332EB20A17DD80017655F /* XMWifiLeftTableViewController.m */; };
 		FD3332EF20A181D40017655F /* XMWifiGroupTool.m in Sources */ = {isa = PBXBuildFile; fileRef = FD3332EE20A181D40017655F /* XMWifiGroupTool.m */; };
-		FD7066FD20FDE2A900A0BF71 /* XMWXVCFloatWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = FD7066FC20FDE2A900A0BF71 /* XMWXVCFloatWindow.m */; };
 		FD7407E820B4306D00A83979 /* XMPhotoCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FD7407E720B4306D00A83979 /* XMPhotoCollectionViewController.m */; };
 		FDFAEEC520FD900E00BEA442 /* XMNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = FDFAEEC420FD900E00BEA442 /* XMNavigationController.m */; };
-		FDFAEEC920FD9EB300BEA442 /* XMRightBottomFloatView.m in Sources */ = {isa = PBXBuildFile; fileRef = FDFAEEC820FD9EB300BEA442 /* XMRightBottomFloatView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -237,8 +237,6 @@
 		202C84EC1F2624AD0055FD7D /* XMWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMWebViewController.m; sourceTree = "<group>"; };
 		202C84F41F2624FC0055FD7D /* XMNavWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMNavWebViewController.h; sourceTree = "<group>"; };
 		202C84F51F2624FC0055FD7D /* XMNavWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMNavWebViewController.m; sourceTree = "<group>"; };
-		203D2FB720FF75AC008788B6 /* XMWXFloatWindowIconConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMWXFloatWindowIconConfig.h; path = "虾兽维度/Config/XMWXFloatWindowIconConfig.h"; sourceTree = SOURCE_ROOT; };
-		203D2FB820FF75AC008788B6 /* XMWXFloatWindowIconConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XMWXFloatWindowIconConfig.m; path = "虾兽维度/Config/XMWXFloatWindowIconConfig.m"; sourceTree = SOURCE_ROOT; };
 		203D2FBB20FF79C8008788B6 /* wxFloatWindowIcon_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wxFloatWindowIcon_1.png; sourceTree = "<group>"; };
 		203D2FBC20FF79C8008788B6 /* wxFloatWindowIcon_2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wxFloatWindowIcon_2.png; sourceTree = "<group>"; };
 		203D2FBD20FF79C8008788B6 /* wxFloatWindowIcon_3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wxFloatWindowIcon_3.png; sourceTree = "<group>"; };
@@ -248,6 +246,15 @@
 		203D2FC720FF90E9008788B6 /* wxFloatWindowIcon_6.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wxFloatWindowIcon_6.png; sourceTree = "<group>"; };
 		203D2FC920FF9664008788B6 /* wxFloatWindowIcon_7.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wxFloatWindowIcon_7.png; sourceTree = "<group>"; };
 		203D2FCB20FF981D008788B6 /* wxFloatWindowIcon_8.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wxFloatWindowIcon_8.png; sourceTree = "<group>"; };
+		203D2FF121031F48008788B6 /* XMRefreshHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMRefreshHeaderView.h; sourceTree = "<group>"; };
+		203D2FF221031F48008788B6 /* XMRefreshHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMRefreshHeaderView.m; sourceTree = "<group>"; };
+		203D2FFA21036AA7008788B6 /* XMRightBottomFloatView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMRightBottomFloatView.h; sourceTree = "<group>"; };
+		203D2FFB21036AA7008788B6 /* XMRightBottomFloatView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMRightBottomFloatView.m; sourceTree = "<group>"; };
+		203D2FFC21036AA7008788B6 /* XMWXVCFloatWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMWXVCFloatWindow.h; sourceTree = "<group>"; };
+		203D2FFD21036AA7008788B6 /* XMWXVCFloatWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMWXVCFloatWindow.m; sourceTree = "<group>"; };
+		203D2FFE21036AA7008788B6 /* XMWXFloatWindowIconConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMWXFloatWindowIconConfig.h; sourceTree = "<group>"; };
+		203D2FFF21036AA7008788B6 /* XMWXFloatWindowIconConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMWXFloatWindowIconConfig.m; sourceTree = "<group>"; };
+		203D300621038B5D008788B6 /* wxFloatWindowIcon_9.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wxFloatWindowIcon_9.png; sourceTree = "<group>"; };
 		204D23DA209ED86800F17E2E /* XMWifiTransFileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMWifiTransFileViewController.h; sourceTree = "<group>"; };
 		204D23DB209ED86800F17E2E /* XMWifiTransFileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMWifiTransFileViewController.m; sourceTree = "<group>"; };
 		204D23E0209ED8E800F17E2E /* DDData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDData.h; sourceTree = "<group>"; };
@@ -505,10 +512,6 @@
 		2086FCE320EBC75F00957207 /* file_upload_disable.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = file_upload_disable.png; sourceTree = "<group>"; };
 		2096B0E620A49C8D00BA249C /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PrefixHeader.pch; path = "虾兽维度/PrefixHeader.pch"; sourceTree = SOURCE_ROOT; };
 		2099EB7C1F19DCD500F8BD42 /* XMOpenWebmoduleProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMOpenWebmoduleProtocol.h; sourceTree = "<group>"; };
-		20A3BCFD1F2E2D7400ED1699 /* XMAdvance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMAdvance.h; sourceTree = "<group>"; };
-		20A3BCFE1F2E2D7400ED1699 /* XMAdvance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMAdvance.m; sourceTree = "<group>"; };
-		20BA35641E89597D00477BCB /* XMFloatWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMFloatWindow.h; sourceTree = "<group>"; };
-		20BA35651E89597D00477BCB /* XMFloatWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMFloatWindow.m; sourceTree = "<group>"; };
 		20C85E362053E1F40057F483 /* XMToolboxViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMToolboxViewController.h; sourceTree = "<group>"; };
 		20C85E372053E1F40057F483 /* XMToolboxViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMToolboxViewController.m; sourceTree = "<group>"; };
 		20C85E51205419C80057F483 /* XMToolBoxConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMToolBoxConfig.h; path = ../Config/XMToolBoxConfig.h; sourceTree = "<group>"; };
@@ -564,14 +567,10 @@
 		FD3332EB20A17DD80017655F /* XMWifiLeftTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMWifiLeftTableViewController.m; sourceTree = "<group>"; };
 		FD3332ED20A181D40017655F /* XMWifiGroupTool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMWifiGroupTool.h; sourceTree = "<group>"; };
 		FD3332EE20A181D40017655F /* XMWifiGroupTool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMWifiGroupTool.m; sourceTree = "<group>"; };
-		FD7066FB20FDE2A900A0BF71 /* XMWXVCFloatWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMWXVCFloatWindow.h; sourceTree = "<group>"; };
-		FD7066FC20FDE2A900A0BF71 /* XMWXVCFloatWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMWXVCFloatWindow.m; sourceTree = "<group>"; };
 		FD7407E620B4306D00A83979 /* XMPhotoCollectionViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMPhotoCollectionViewController.h; sourceTree = "<group>"; };
 		FD7407E720B4306D00A83979 /* XMPhotoCollectionViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMPhotoCollectionViewController.m; sourceTree = "<group>"; };
 		FDFAEEC320FD900E00BEA442 /* XMNavigationController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMNavigationController.h; sourceTree = "<group>"; };
 		FDFAEEC420FD900E00BEA442 /* XMNavigationController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMNavigationController.m; sourceTree = "<group>"; };
-		FDFAEEC720FD9EB300BEA442 /* XMRightBottomFloatView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMRightBottomFloatView.h; sourceTree = "<group>"; };
-		FDFAEEC820FD9EB300BEA442 /* XMRightBottomFloatView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMRightBottomFloatView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -610,8 +609,6 @@
 			children = (
 				20F112131E864FC000E64A70 /* web.plist */,
 				205CECF51F488EF700821E38 /* webSpecial.plist */,
-				203D2FB720FF75AC008788B6 /* XMWXFloatWindowIconConfig.h */,
-				203D2FB820FF75AC008788B6 /* XMWXFloatWindowIconConfig.m */,
 				20C85E51205419C80057F483 /* XMToolBoxConfig.h */,
 				20C85E52205419C80057F483 /* XMToolBoxConfig.m */,
 				FD1EA08720A9A96A00658F18 /* XMGlobalConst.h */,
@@ -681,9 +678,40 @@
 				203D2FC720FF90E9008788B6 /* wxFloatWindowIcon_6.png */,
 				203D2FC920FF9664008788B6 /* wxFloatWindowIcon_7.png */,
 				203D2FCB20FF981D008788B6 /* wxFloatWindowIcon_8.png */,
+				203D300621038B5D008788B6 /* wxFloatWindowIcon_9.png */,
 				203D2FC020FF79C8008788B6 /* wxFloatWindowIcon_default.png */,
 			);
 			path = wxFloatWindowIcon;
+			sourceTree = "<group>";
+		};
+		203D2FF021031F26008788B6 /* XMPullRefreshHeader */ = {
+			isa = PBXGroup;
+			children = (
+				203D2FF121031F48008788B6 /* XMRefreshHeaderView.h */,
+				203D2FF221031F48008788B6 /* XMRefreshHeaderView.m */,
+			);
+			path = XMPullRefreshHeader;
+			sourceTree = "<group>";
+		};
+		203D2FF821036AA7008788B6 /* wxFloatUnit */ = {
+			isa = PBXGroup;
+			children = (
+				203D2FF921036AA7008788B6 /* XMWXFloatView */,
+				203D2FFE21036AA7008788B6 /* XMWXFloatWindowIconConfig.h */,
+				203D2FFF21036AA7008788B6 /* XMWXFloatWindowIconConfig.m */,
+			);
+			path = wxFloatUnit;
+			sourceTree = "<group>";
+		};
+		203D2FF921036AA7008788B6 /* XMWXFloatView */ = {
+			isa = PBXGroup;
+			children = (
+				203D2FFA21036AA7008788B6 /* XMRightBottomFloatView.h */,
+				203D2FFB21036AA7008788B6 /* XMRightBottomFloatView.m */,
+				203D2FFC21036AA7008788B6 /* XMWXVCFloatWindow.h */,
+				203D2FFD21036AA7008788B6 /* XMWXVCFloatWindow.m */,
+			);
+			path = XMWXFloatView;
 			sourceTree = "<group>";
 		};
 		204D23D9209ED84000F17E2E /* wifiTransFiles */ = {
@@ -1272,6 +1300,7 @@
 				842970FE1E654644002BDBC0 /* View */,
 				842970FB1E654644002BDBC0 /* Other */,
 				20C85E5420541BD50057F483 /* Toolbox */,
+				203D2FF821036AA7008788B6 /* wxFloatUnit */,
 				20F112221E86BF1800E64A70 /* Tool */,
 			);
 			path = Classes;
@@ -1304,8 +1333,6 @@
 				842970FC1E654644002BDBC0 /* AppDelegate.h */,
 				842970FD1E654644002BDBC0 /* AppDelegate.m */,
 				2099EB7C1F19DCD500F8BD42 /* XMOpenWebmoduleProtocol.h */,
-				20A3BCFD1F2E2D7400ED1699 /* XMAdvance.h */,
-				20A3BCFE1F2E2D7400ED1699 /* XMAdvance.m */,
 			);
 			path = Other;
 			sourceTree = "<group>";
@@ -1321,13 +1348,11 @@
 				20F112181E866F9C00E64A70 /* XMLeftViewUserCell.h */,
 				20F112191E866F9C00E64A70 /* XMLeftViewUserCell.m */,
 				20F1121A1E866F9C00E64A70 /* XMLeftViewUserCell.xib */,
-				20BA35641E89597D00477BCB /* XMFloatWindow.h */,
-				20BA35651E89597D00477BCB /* XMFloatWindow.m */,
 				205CECF71F4898A600821E38 /* XMDropView.h */,
 				205CECF81F4898A600821E38 /* XMDropView.m */,
 				205CED0D1F48AA5600821E38 /* XMTextTableViewCell.h */,
 				205CED0E1F48AA5600821E38 /* XMTextTableViewCell.m */,
-				FDFAEEC620FD9E8900BEA442 /* XMWXFloatView */,
+				203D2FF021031F26008788B6 /* XMPullRefreshHeader */,
 				20C85E6A2054311B0057F483 /* XMUIKit */,
 			);
 			path = View;
@@ -1399,17 +1424,6 @@
 				FD1EA0D220AC52B200658F18 /* phone_documents_icon_update.png */,
 			);
 			path = wifiIcon;
-			sourceTree = "<group>";
-		};
-		FDFAEEC620FD9E8900BEA442 /* XMWXFloatView */ = {
-			isa = PBXGroup;
-			children = (
-				FDFAEEC720FD9EB300BEA442 /* XMRightBottomFloatView.h */,
-				FDFAEEC820FD9EB300BEA442 /* XMRightBottomFloatView.m */,
-				FD7066FB20FDE2A900A0BF71 /* XMWXVCFloatWindow.h */,
-				FD7066FC20FDE2A900A0BF71 /* XMWXVCFloatWindow.m */,
-			);
-			path = XMWXFloatView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1497,6 +1511,7 @@
 				20863D1D20CD432200A0812C /* AssetsPickerChecked@3x.png in Resources */,
 				20863CC120CD422F00A0812C /* ZLPhotoPickerGroupTableViewCell.xib in Resources */,
 				203D2FC620FF79C8008788B6 /* wxFloatWindowIcon_default.png in Resources */,
+				203D300721038B5D008788B6 /* wxFloatWindowIcon_9.png in Resources */,
 				20863C9120CD0E3300A0812C /* wifiopen_upload.png in Resources */,
 				2061C20F20C56F5F008C7424 /* HJVideoAssets.xcassets in Resources */,
 				20F1121C1E866F9C00E64A70 /* XMLeftViewUserCell.xib in Resources */,
@@ -1547,7 +1562,6 @@
 				205CECF01F48150E00821E38 /* UIView+WebCacheOperation.m in Sources */,
 				2086642820AB403D00D51CCB /* aescrypt.c in Sources */,
 				FDFAEEC520FD900E00BEA442 /* XMNavigationController.m in Sources */,
-				20BA35661E89597D00477BCB /* XMFloatWindow.m in Sources */,
 				2056D8731E8D67B200EB4BB5 /* XMConerAccessoryView.m in Sources */,
 				20E9E373204C4BEC007D442E /* XMClipImageViewController.m in Sources */,
 				20707E9C209F3E8400572604 /* XMWifiTransModel.m in Sources */,
@@ -1576,6 +1590,7 @@
 				842971041E654644002BDBC0 /* AppDelegate.m in Sources */,
 				205CECEE1F48150E00821E38 /* UIImageView+WebCache.m in Sources */,
 				205CECE11F48150E00821E38 /* SDImageCache.m in Sources */,
+				203D2FF321031F48008788B6 /* XMRefreshHeaderView.m in Sources */,
 				200770302059775100551C00 /* XMHiwebViewController.m in Sources */,
 				204D2431209ED91A00F17E2E /* DDAbstractDatabaseLogger.m in Sources */,
 				2086643020AB403D00D51CCB /* crypt.c in Sources */,
@@ -1584,7 +1599,6 @@
 				205CECDD1F48150E00821E38 /* MBProgressHUD.m in Sources */,
 				204D2416209ED8E800F17E2E /* WebSocket.m in Sources */,
 				2086642E20AB403D00D51CCB /* pwd2key.c in Sources */,
-				20A3BCFF1F2E2D7400ED1699 /* XMAdvance.m in Sources */,
 				205CECE51F48150E00821E38 /* SDWebImageDownloader.m in Sources */,
 				204D2406209ED8E800F17E2E /* DDData.m in Sources */,
 				204D240A209ED8E800F17E2E /* HTTPConnection.m in Sources */,
@@ -1631,7 +1645,7 @@
 				2086643120AB403D00D51CCB /* ioapi.c in Sources */,
 				2061C21520C56F5F008C7424 /* HJVideoTimeUtil.m in Sources */,
 				20F1121B1E866F9C00E64A70 /* XMLeftViewUserCell.m in Sources */,
-				FD7066FD20FDE2A900A0BF71 /* XMWXVCFloatWindow.m in Sources */,
+				203D300321036AA7008788B6 /* XMWXVCFloatWindow.m in Sources */,
 				2086643320AB403D00D51CCB /* ioapi_mem.c in Sources */,
 				FD7407E820B4306D00A83979 /* XMPhotoCollectionViewController.m in Sources */,
 				20863CC020CD422F00A0812C /* ZLPhotoPickerGroupTableViewCell.m in Sources */,
@@ -1657,7 +1671,7 @@
 				20863CBF20CD422F00A0812C /* ZLPhotoPickerFooterCollectionReusableView.m in Sources */,
 				2086642F20AB403D00D51CCB /* sha1.c in Sources */,
 				2061C21D20C56F5F008C7424 /* HJFastForwardView.m in Sources */,
-				FDFAEEC920FD9EB300BEA442 /* XMRightBottomFloatView.m in Sources */,
+				203D300221036AA7008788B6 /* XMRightBottomFloatView.m in Sources */,
 				204D2412209ED8E800F17E2E /* HTTPDynamicFileResponse.m in Sources */,
 				204D2432209ED91A00F17E2E /* DDASLLogger.m in Sources */,
 				20F112251E86BF4600E64A70 /* XMWebModelTool.m in Sources */,
@@ -1675,7 +1689,7 @@
 				205CECEC1F48150E00821E38 /* UIImage+WebP.m in Sources */,
 				FD3332EF20A181D40017655F /* XMWifiGroupTool.m in Sources */,
 				2061C21F20C56F5F008C7424 /* HJVideoBottomView.m in Sources */,
-				203D2FB920FF75AC008788B6 /* XMWXFloatWindowIconConfig.m in Sources */,
+				203D300421036AA7008788B6 /* XMWXFloatWindowIconConfig.m in Sources */,
 				204D240F209ED8E800F17E2E /* MultipartMessageHeaderField.m in Sources */,
 				20C85E53205419C80057F483 /* XMToolBoxConfig.m in Sources */,
 				202C84F01F2624AD0055FD7D /* XMQRCodeViewController.m in Sources */,

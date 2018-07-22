@@ -339,8 +339,6 @@
     if (![XMRightBottomFloatView shareRightBottomFloatView].isInArea){
         [self.navigationController popViewControllerAnimated:NO];
     }
-
-//    [self.navigationController popViewControllerAnimated:YES];
 }
 
 /** 保存网页 */
@@ -433,6 +431,10 @@
     }]];
     [tips addAction:[UIAlertAction actionWithTitle:@"保存图片到本地缓存" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
         NSString *path = [XMSavePathUnit getWifiImageTempDirPath];
+        // 确保文件文件夹以及上一级文件夹存在
+        if (![[NSFileManager defaultManager] fileExistsAtPath:[XMSavePathUnit getWifiUploadDirPath]]){
+            [[NSFileManager defaultManager] createDirectoryAtPath:[XMSavePathUnit getWifiUploadDirPath] withIntermediateDirectories:NO attributes:nil error:nil];
+        }
         if (![[NSFileManager defaultManager] fileExistsAtPath:path]){
             [[NSFileManager defaultManager] createDirectoryAtPath:path withIntermediateDirectories:NO attributes:nil error:nil];
         }

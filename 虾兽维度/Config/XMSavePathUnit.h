@@ -21,6 +21,9 @@ extern NSString * const XMWifiGroupMarkZipFileName;
 /// web模块收藏网页的文件保存路径
 + (NSString *)getSaveWebModelArchicerPath;
 
+/// 浮窗webModle的归档文件路径
++ (NSString *)getFloatWindowWebmodelArchivePath;
+
 /// hiweb主页路径
 + (NSString *)getHiwebHomeUrlPath;
 

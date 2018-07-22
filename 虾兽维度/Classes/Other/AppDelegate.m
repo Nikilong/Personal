@@ -11,6 +11,12 @@
 #import "XMNavWebViewController.h"
 #import "XMNavigationController.h"
 
+#import "XMWXFloatWindowIconConfig.h"
+#import "XMSavePathUnit.h"
+#import "XMWXVCFloatWindow.h"
+#import "XMWebViewController.h"
+
+/// 试验区头文件,可随时删除
 #import "XMTouchIDKeyboardViewController.h"
 #import "XMHiwebViewController.h"
 #import "XMClipImageViewController.h"
@@ -53,7 +59,34 @@
         }
     }
     
+    // 创建悬浮窗口
+    [self recoverFloatVC];
+    
     return YES;
+}
+
+/// 根据缓存来恢复之前保存的浮窗
+- (void)recoverFloatVC{
+    NSString *saveVCName = [[NSUserDefaults standardUserDefaults] valueForKey:wxfloatVCKey];
+    if (saveVCName.length == 0) return;
+    
+    // 根据类名创建控制器vc
+    Class saveVCClass = NSClassFromString(saveVCName);
+    UIViewController *saveVC = [[[saveVCClass class] alloc] init];
+    self.floadVC = saveVC;
+    
+    // 如果是webview,需要特殊处理
+    if([saveVC isKindOfClass:[XMWebViewController class]]){
+        XMWebModel *model = nil;
+        if ([[NSFileManager defaultManager] fileExistsAtPath:[XMSavePathUnit getFloatWindowWebmodelArchivePath]]) {
+            model = [NSKeyedUnarchiver unarchiveObjectWithFile:[XMSavePathUnit getFloatWindowWebmodelArchivePath]];
+        }
+        XMWebViewController *webVC = (XMWebViewController *)saveVC;
+        webVC.model = model;
+    }
+    
+    // 显示浮窗
+    [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = NO;
 }
 
 /** 用代码创建应用图标上的3D touch快捷选项  */

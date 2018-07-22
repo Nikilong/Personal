@@ -47,6 +47,10 @@
         if ([XMRightBottomFloatView shareRightBottomFloatView].rightBottomEndBlock) {
             [XMRightBottomFloatView shareRightBottomFloatView].rightBottomEndBlock(YES);
         }
+    }else{
+        if ([XMRightBottomFloatView shareRightBottomFloatView].rightBottomCancelOrFailBlock) {
+            [XMRightBottomFloatView shareRightBottomFloatView].rightBottomCancelOrFailBlock();
+        }
     }
     
 }
@@ -58,6 +62,10 @@
 
 //- (void)viewWillAppear:(BOOL)animated{
 //    [super viewWillAppear:animated];
+//    
+//    // 重置状态栏的颜色
+//    UIView *statusBar = [[[UIApplication sharedApplication] valueForKey:@"statusBarWindow"] valueForKey:@"statusBar"];
+//    statusBar.backgroundColor = nil;
 //}
 
 //- (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated{

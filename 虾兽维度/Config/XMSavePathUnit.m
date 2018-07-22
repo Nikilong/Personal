@@ -31,6 +31,16 @@ NSString * const XMWifiGroupMarkZipFileName = @"XMWifiGroupZipMark.wifign";  // 
     return [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"webModel.archiver"];
 }
 
+/// 浮窗webModle的归档文件路径
++ (NSString *)getFloatWindowWebmodelArchivePath{
+    return [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"WXfloatWebModel.archiver"];
+    //    NSString *path = [NSHomeDirectory() stringByAppendingPathComponent:@"WXfloatWebModel.archiver"];
+    //    if (![[NSFileManager defaultManager] fileExistsAtPath:path]){
+    //        [[NSFileManager defaultManager] createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil];
+    //    }
+//    return path;
+}
+
 /// hiweb主页路径
 + (NSString *)getHiwebHomeUrlPath{
     return [[self getDocumentsPath] stringByAppendingPathComponent:@"hiweb.homeurl"];
