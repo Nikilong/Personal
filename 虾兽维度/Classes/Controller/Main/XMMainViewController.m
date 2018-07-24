@@ -10,6 +10,7 @@
 #import "XMHomeTableViewController.h"
 #import "XMLeftTableViewController.h"
 #import "XMNavTitleTableViewController.h"
+#import "XMNewNavTitleViewController.h"
 #import "XMWebViewController.h"
 #import "XMHiwebViewController.h"
 #import "XMChannelModel.h"
@@ -20,7 +21,6 @@
 #import "XMSearchTableViewController.h"
 #import "XMDropView.h"
 
-#import "XMNavWebViewController.h"
 #import "AppDelegate.h"
 
 #import "UIImageView+WebCache.h"
@@ -40,6 +40,7 @@
 @interface XMMainViewController ()<
 XMLeftTableViewControllerDelegate,
 XMNavTitleTableViewControllerDelegate,
+XMNewNavTitleViewControllerDelegate,
 XMConerAccessoryViewDelegate,
 XMDropViewDelegate,
 XMToolBoxViewControllerDelegate,
@@ -57,6 +58,7 @@ UITraitEnvironment>
 
 @property (nonatomic, strong) XMDropView *dropView;
 @property (nonatomic, strong) XMNavTitleTableViewController *navTitleVC;
+//@property (nonatomic, strong) XMNewNavTitleViewController *navTitleVC;
 
 /** 蒙板 */
 @property (weak, nonatomic)  UIView *cover;

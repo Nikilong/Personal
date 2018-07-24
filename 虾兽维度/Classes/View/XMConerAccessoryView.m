@@ -72,6 +72,7 @@ static CGFloat _btnWH;
     for (int i = 0; i < count; i ++) {
         // 创建行星按钮
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+        btn.hidden = YES;
         [contentView addSubview:btn];
         [_btnArr addObject:btn];
         
@@ -137,6 +138,7 @@ static CGFloat _btnWH;
     if (centerBtn.isSelected){
         for (int i = 0; i < _btnArr.count; i++){
             UIButton *btn = _btnArr[i];
+            btn.hidden = NO;
             [UIView animateWithDuration:duration animations:^{
                 btn.layer.transform = CATransform3DMakeRotation(angle * i, 0, 0, 1);
             }];
@@ -151,6 +153,8 @@ static CGFloat _btnWH;
             UIButton *btn = _btnArr[i];
             [UIView animateWithDuration:duration animations:^{
                 btn.layer.transform = CATransform3DMakeRotation(XMPlanetStarAngle, 0, 0, 1);
+            }completion:^(BOOL finished) {
+                btn.hidden = YES;
             }];
         }
         self.cover.hidden = YES;
@@ -172,7 +176,7 @@ static CGFloat _btnWH;
     // 设置self的位置位于左下角
     CGFloat padding = 10;
     CGFloat conWH = _radius + _btnWH;
-    CGFloat conY = [UIScreen mainScreen].bounds.size.height - conWH - padding;
+    CGFloat conY = [UIScreen mainScreen].bounds.size.height - conWH - padding - ((isIphoneX) ? 34 : 0);
     self.frame = CGRectMake(padding, conY, conWH, conWH);
 
 }

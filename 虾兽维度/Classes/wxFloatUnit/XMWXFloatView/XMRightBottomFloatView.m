@@ -95,8 +95,8 @@
                     }
                 }
                 
-                // 根据当前触点的位置判断是否进入了扇形区域
-                if(pow((XMScreenW - point.x),2) + pow((XMScreenH - point.y),2) <= pow((XMScreenW - CGRectGetMaxX(rightBottomFloatView.frame)),2)){
+                // 根据当前触点的位置判断是否进入了扇形区域,露出的半径为viewWH * 0.5 - 根号2 * 扇形中心垂直挥着水平移动距离
+                if(pow((XMScreenW - point.x),2) + pow((XMScreenH - point.y),2) <= pow((viewWH * 0.5 - sqrt(2.0) * (CGRectGetMidX(rightBottomFloatView.frame) - XMScreenW)),2)){
                     // 只有首次显示tipBtn的时候才需要震动+显示,防止重复震动
                     if (rightBottomFloatView.tipBtn.isHidden){
                         rightBottomFloatView.tipBtn.hidden = NO;
@@ -109,7 +109,7 @@
                         [XMWXVCFloatWindow shareXMWXVCFloatWindow].wxFloatWindowWillRemoveBlock();
                     }
                     
-                }else if(pow((XMScreenW - point.x),2) + pow((XMScreenH - point.y),2) > pow((XMScreenW - CGRectGetMaxX(rightBottomFloatView.frame)),2)){
+                }else if(pow((XMScreenW - point.x),2) + pow((XMScreenH - point.y),2) > pow((viewWH * 0.5 - sqrt(2.0) * (CGRectGetMidX(rightBottomFloatView.frame) - XMScreenW)),2)){
                     rightBottomFloatView.tipBtn.hidden = YES;
                     rightBottomFloatView.isInArea = NO;
 

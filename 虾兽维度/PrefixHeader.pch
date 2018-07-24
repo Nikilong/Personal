@@ -29,5 +29,8 @@
 //#define XM_SCREEN_WIDTH (NSFoundationVersionNumber <= NSFoundationVersionNumber_iOS_7_1 ? (UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation) ? [[UIScreen mainScreen] bounds].size.width : [[UIScreen mainScreen] bounds].size.height) : [[UIScreen mainScreen] bounds].size.width)
 //#define XM_SCREEN_HEIGHT (NSFoundationVersionNumber <= NSFoundationVersionNumber_iOS_7_1 ? (UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation) ? [[UIScreen mainScreen] bounds].size.height : [[UIScreen mainScreen] bounds].size.width) : [[UIScreen mainScreen] bounds].size.height)
 
+#define isIphoneX (CGSizeEqualToSize(CGSizeMake(375.f, 812.f), [UIScreen mainScreen].bounds.size) || CGSizeEqualToSize(CGSizeMake(812.f, 375.f), [UIScreen mainScreen].bounds.size))
+//#define kSafeAreaBottomHeight (kWJScreenHeight == 812.0 ? 34 : 0)//底部虚拟home键距离
+
 
 #endif /* PrefixHeader_pch */

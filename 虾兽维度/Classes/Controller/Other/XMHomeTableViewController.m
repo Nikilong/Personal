@@ -114,7 +114,7 @@ CGFloat const XMRrfreshHeight = 100;
     CGFloat countLabelH = 30;
     CGFloat countLabelX = 0;
     // 竖屏状态下,statusBar+navBAr=20+44=64,横屏状态下statusBar+navBAr=0+32=32,因此y的初始坐标需要在这基础上再减去countLabelH
-    CGFloat countLabelY =  ([UIDevice currentDevice].orientation == UIDeviceOrientationLandscapeLeft || [UIDevice currentDevice].orientation == UIDeviceOrientationLandscapeRight ) ? 2 : 34;
+    CGFloat countLabelY =  ([UIDevice currentDevice].orientation == UIDeviceOrientationLandscapeLeft || [UIDevice currentDevice].orientation == UIDeviceOrientationLandscapeRight ) ? 2 : (14 + XMStatusBarHeight);
     countLabel.frame = CGRectMake(countLabelX, countLabelY, countLabelW, countLabelH);
     countLabel.text = content;
     countLabel.textAlignment = NSTextAlignmentCenter;
@@ -157,7 +157,7 @@ CGFloat const XMRrfreshHeight = 100;
 // 悬浮按钮的方法实现(滚到最顶部)
 - (void)upToTop{
     
-    [self.tableView setContentOffset:CGPointMake(0, -64) animated:YES];
+    [self.tableView setContentOffset:CGPointMake(0, -(XMStatusBarHeight + 44)) animated:YES];
 }
 
 
@@ -203,10 +203,10 @@ CGFloat const XMRrfreshHeight = 100;
     
     CGFloat tableViewOffet = -self.tableView.contentOffset.y;
     
-    if (tableViewOffet > 64){
+    if (tableViewOffet > 44 + XMStatusBarHeight){
         // 取消下拉横幅隐藏
         self.headerRefreshV.hidden = NO;
-    }else if (tableViewOffet == 64){
+    }else if (tableViewOffet == 44 + XMStatusBarHeight){
         // 隐藏刷新
         self.headerRefreshV.hidden = YES;
     }
@@ -399,7 +399,7 @@ CGFloat const XMRrfreshHeight = 100;
         
         // 结束刷新
         [UIView animateWithDuration:0.25 animations:^{
-            self.tableView.contentInset = UIEdgeInsetsMake(64, 0, 0, 0);
+            self.tableView.contentInset = UIEdgeInsetsMake(44 + XMStatusBarHeight, 0, 0, 0);
         }completion:^(BOOL finished) {
             // 滚到最顶部
             [self upToTop];

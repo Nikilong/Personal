@@ -8,6 +8,7 @@
 
 #import "XMNavigationController.h"
 #import "XMRightBottomFloatView.h"
+#import "XMWXVCFloatWindow.h"
 
 @interface XMNavigationController()<UIGestureRecognizerDelegate>
 
@@ -15,7 +16,7 @@
 
 @implementation XMNavigationController
 
--(void)viewDidLoad{
+- (void)viewDidLoad{
     [super viewDidLoad];
 
     // 禁用原生的左侧边右滑pop手势
@@ -26,6 +27,27 @@
     edge.edges = UIRectEdgeLeft;
     edge.delegate = self;
     [self.view addGestureRecognizer:edge];
+}
+
+
+#warning todo 以后统一在这里将需要隐藏浮窗的vc列出,例如播放视频,查看文件
+- (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated{
+//    if ([viewController isKindOfClass:NSClassFromString(@"XMWebViewController")]){
+//        [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = YES;
+//    }else{
+//        [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = NO;
+//    }
+    [super pushViewController:viewController animated:animated];
+}
+
+- (UIViewController *)popViewControllerAnimated:(BOOL)animated{
+    UIViewController *viewController = [super popViewControllerAnimated:animated];
+//    if ([viewController isKindOfClass:NSClassFromString(@"XMWebViewController")]){
+//        [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = NO;
+//    }else{
+//        [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = YES;
+//    }
+    return viewController;
 }
 
 /// 屏幕左边沿手势方法

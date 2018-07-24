@@ -8,7 +8,6 @@
 
 #import "AppDelegate.h"
 #import "XMMainViewController.h"
-#import "XMNavWebViewController.h"
 #import "XMNavigationController.h"
 
 #import "XMWXFloatWindowIconConfig.h"
@@ -81,6 +80,8 @@
         if ([[NSFileManager defaultManager] fileExistsAtPath:[XMSavePathUnit getFloatWindowWebmodelArchivePath]]) {
             model = [NSKeyedUnarchiver unarchiveObjectWithFile:[XMSavePathUnit getFloatWindowWebmodelArchivePath]];
         }
+        // 标记为第一个webmodule,以便pan手势设置statusbar的颜色
+        model.firstRequest = YES;
         XMWebViewController *webVC = (XMWebViewController *)saveVC;
         webVC.model = model;
     }

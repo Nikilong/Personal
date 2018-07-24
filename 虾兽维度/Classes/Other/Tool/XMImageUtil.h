@@ -43,6 +43,8 @@
 /**--------- 二维码图片 ---------*/
 /** 解析图片中的二维码信息 */
 + (NSString *)detectorQRCodeImage:(UIImage *)selectImage;
+/** 将字符串转为二维码图片 */
++ (UIImage *)creatQRCodeImageWithString:(NSString *)text size:(CGFloat)imgWH;
 
 /**--------- 截图 ---------*/
 /// 屏幕截图

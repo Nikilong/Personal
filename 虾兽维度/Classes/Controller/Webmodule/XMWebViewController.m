@@ -16,19 +16,38 @@
 #import "AppDelegate.h"
 #import "XMWXVCFloatWindow.h"
 #import "XMRightBottomFloatView.h"
+#import "XMNavigationController.h"
 
-@interface XMWebViewController ()<UIWebViewDelegate,NSURLSessionDelegate,UIGestureRecognizerDelegate>
+@interface XMWebViewController ()<
+UIWebViewDelegate,
+NSURLSessionDelegate,
+UIGestureRecognizerDelegate,
+UIScrollViewDelegate>
 
 /** 网页高度 */
 //@property (nonatomic, assign) NSInteger webHeight;
 
 /** 工具条 */
 @property (nonatomic, strong) UIView *toolBar;
-@property (weak, nonatomic)  UIButton *saveBtn;
-@property (nonatomic, strong) NSMutableArray *toolBarArr;  // 应该隐藏的工具栏按钮
+//@property (weak, nonatomic)  UIButton *saveBtn;
 
 /** 网页view */
 @property (nonatomic, strong) UIWebView *web;
+@property (weak, nonatomic)  UIView *containerV;
+@property (weak, nonatomic)  UIView *navToolV;
+@property (weak, nonatomic)  UILabel *navToolTitleLab;
+@property (weak, nonatomic)  UIView *navToolBtnContentV;
+@property (weak, nonatomic)  UIButton *navToolLeftBtn;
+@property (weak, nonatomic)  UIButton *navToolRightBtn;
+
+/// 记录上一次的位置
+@property (nonatomic, assign)  CGFloat lastContentY;
+/// 记录是否在拖拽
+@property (nonatomic, assign)  BOOL isDrag;
+/// 记录是否显示当前webmodule
+@property (nonatomic, assign)  BOOL isShow;
+/// 记录是否允许跳转到app store
+@property (nonatomic, assign)  BOOL canOpenAppstore;
 
 /** 记录最初的网络请求 */
 @property (nonatomic, strong) NSURL *originURL;
@@ -40,8 +59,7 @@
 // 标记是否是searchMode
 @property (nonatomic, assign, getter=isSearchMode)  BOOL searchMode;
 @property (nonatomic, strong)  UIPanGestureRecognizer *panSearchMode;
-@property (weak, nonatomic)  UIImageView *backImgV;
-@property (weak, nonatomic)  UIImageView *forwardImgV;
+@property (weak, nonatomic)  UIView *backForIconContainV;
 
 
 // 防止多次加载
@@ -52,11 +70,9 @@
 @property (weak, nonatomic)  UIPanGestureRecognizer *panToCloseWebmodule;
 
 // 截图相框
-@property (weak, nonatomic)  UIImageView *backImageV;
+@property (weak, nonatomic)  UIImageView *backScreenshotImageV;
 
 /** statusBar相关*/
-// 网页导航栏颜色
-@property (nonatomic, strong) UIColor *webNavColor;
 // 状态栏
 @property (nonatomic, strong) UIView *statusBar;
 // 状态栏遮罩
@@ -66,134 +82,197 @@
 @implementation XMWebViewController
 
 #pragma mark 常量区
+
+/// 前进后退箭头的宽高
+static double backForwardImagVWH = 50;
+
+/// 截图的初始左偏移距离
 - (double)getBackImageVStarX{
     return  [UIScreen mainScreen].bounds.size.width / 3;
 }
 
-- (double)getSearchModePanDistance{
-    return 150;
+///// 返回前进的滑动距离
+//- (double)getSearchModePanDistance{
+//    return 150;
+//}
+
+/// 底部tabbar高度
+- (double)getBottomToolBarHeight{
+    if(isIphoneX){
+        return 83;
+    }else{
+        return 49;
+    }
+}
+
+/// 导航栏及底部tabbar的背景颜色
+- (UIColor *)getNavColor{
+    return RGB(242, 242, 242);
 }
 
 
 #pragma mark - 初始化
 - (UIWebView *)web{
     if (_web == nil){
+
         _web = [[UIWebView alloc] init];
-        _web.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
+        // y方向距离为导航栏初始高度44+状态栏高度
+        _web.frame = CGRectMake(0, 44 + XMStatusBarHeight, XMScreenW, XMScreenH);
         _web.delegate = self;
+        _web.scrollView.delegate = self;
         _web.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-        [self.view addSubview:_web];
-        
+        [self.containerV addSubview:_web];
+
         // 初始化标记,能够加载
         self.canLoad = YES;
-        
+
         // 添加长按手势
         UILongPressGestureRecognizer *longP = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
 #warning note 这里需要设置长按反应时间<0.5将系统的长按覆盖掉
         longP.minimumPressDuration = 0.25;
         [_web addGestureRecognizer:longP];
-        
+
         // 添加右划关闭当前webmodule手势
         UIPanGestureRecognizer *panToCloseWebmodule = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panToCloseWebmodule:)];
         panToCloseWebmodule.delegate = self;
         self.panToCloseWebmodule = panToCloseWebmodule;
         [_web addGestureRecognizer:panToCloseWebmodule];
-        
-        // 添加五次点击closeWebmodule
-        UITapGestureRecognizer *tapRemove = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(closeWebModule)];
-        tapRemove.numberOfTapsRequired = 5;
-        tapRemove.delegate = self;
-        [self.web addGestureRecognizer:tapRemove];
-        
+
         // 添加双击恢复缩放大小
         UITapGestureRecognizer *tapDouble = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTapToScaleIdentity)];
         tapDouble.numberOfTapsRequired = 2;
         tapDouble.delegate = self;
-        [self.web addGestureRecognizer:tapDouble];
+        [_web addGestureRecognizer:tapDouble];
+
+        // 添加双指滚到最上面或者最下面手势
+        UISwipeGestureRecognizer *swipUp = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(doubleFingerSwipe:)];
+        [_web addGestureRecognizer:swipUp];
+        swipUp.delegate = self;
+        swipUp.direction = UISwipeGestureRecognizerDirectionUp;
+        swipUp.numberOfTouchesRequired = 2;
+        UISwipeGestureRecognizer *swipDown = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(doubleFingerSwipe:)];
+        [_web addGestureRecognizer:swipDown];
+        swipDown.delegate = self;
+        swipDown.direction = UISwipeGestureRecognizerDirectionDown;
+        swipDown.numberOfTouchesRequired = 2;
         
-//        // 添加双指滚到最上面或者最下面手势
-//        UISwipeGestureRecognizer *swip = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(scroll:)];
-//        [_web addGestureRecognizer:swip];
-//        swip.delegate = self;
-//        swip.numberOfTouchesRequired = 2;
+        // 手势优先级设置
+        [panToCloseWebmodule requireGestureRecognizerToFail:swipUp];
+        [panToCloseWebmodule requireGestureRecognizerToFail:swipDown];
+        
     }
-    return _web; 
+    return _web;
 }
 
--(UIView *)toolBar{
+- (UIView *)containerV{
+    if (!_containerV){
+        UIView *containerV = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)];
+        _containerV = containerV;
+        [self.view addSubview:containerV];
+        
+        
+        // 沉浸式导航栏
+        UIView *navToolV = [[UIView alloc] initWithFrame:CGRectMake(0, XMStatusBarHeight, XMScreenW, 44)];
+        self.navToolV = navToolV;
+        [_containerV addSubview:navToolV];
+        navToolV.backgroundColor = [self getNavColor];
+        // 点击事件
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(resetNavFrame)];
+        [navToolV addGestureRecognizer:tap];
+        
+        // 添加顶部的view,防止系统进入后台时隐藏statusbar造成的空隙
+        UIView *topCover = [[UIView alloc] initWithFrame:CGRectMake(0, -XMStatusBarHeight, XMScreenW, XMStatusBarHeight)];
+        [navToolV addSubview:topCover];
+        topCover.backgroundColor = [self getNavColor];
+        topCover.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+
+        // 标题栏
+        UILabel *titleLab = [[UILabel alloc] init];
+        [navToolV addSubview:titleLab];
+        self.navToolTitleLab = titleLab;
+        titleLab.textAlignment = NSTextAlignmentCenter;
+        titleLab.textColor = [UIColor blackColor];
+        // 要想用autolayout这个属性必须设置为NO
+        titleLab.translatesAutoresizingMaskIntoConstraints = NO;
+        // 垂直方向约束
+        [_containerV addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[titleLab(>=0)]-0-|" options:0 metrics:nil views:@{@"titleLab":titleLab}]];
+        // 水平方向约束
+        [_containerV addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-44-[titleLab(>=0)]-44-|" options:0 metrics:nil views:@{@"titleLab":titleLab}]];
+        
+        UIView *btnContentV = [[UIView alloc] init];
+        self.navToolBtnContentV = btnContentV;
+        [navToolV addSubview:btnContentV];
+        btnContentV.translatesAutoresizingMaskIntoConstraints = NO;
+        // 垂直方向约束
+        [navToolV addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[btnContentV(>=0)]-0-|" options:0 metrics:nil views:@{@"btnContentV":btnContentV}]];
+        // 水平方向约束
+        [navToolV addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-0-[btnContentV(>=0)]-0-|" options:0 metrics:nil views:@{@"btnContentV":btnContentV}]];
+        
+        // 左边按钮
+        UIButton *leftBtn = [[UIButton alloc] init];
+        [btnContentV addSubview:leftBtn];
+        self.navToolLeftBtn = leftBtn;
+        [leftBtn setImage:[UIImage imageNamed:@"navTool_close"] forState:UIControlStateNormal];
+        [leftBtn addTarget:self action:@selector(closeWebModule) forControlEvents:UIControlEventTouchUpInside];
+        leftBtn.translatesAutoresizingMaskIntoConstraints = NO;
+        // 垂直方向约束
+        [btnContentV addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[leftBtn(>=0)]-0-|" options:0 metrics:nil views:@{@"leftBtn":leftBtn}]];
+        // 水平方向约束
+        [btnContentV addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-10-[leftBtn(>=0)]" options:0 metrics:nil views:@{@"leftBtn":leftBtn}]];
+        
+        // 右边按钮
+        UIButton *rightBtn = [[UIButton alloc] init];
+        [btnContentV addSubview:rightBtn];
+        self.navToolRightBtn = rightBtn;
+        [rightBtn setImage:[UIImage imageNamed:@"navTool_more"] forState:UIControlStateNormal];
+        [rightBtn addTarget:self action:@selector(showMoreItem) forControlEvents:UIControlEventTouchUpInside];
+        rightBtn.translatesAutoresizingMaskIntoConstraints = NO;
+        // 垂直方向约束
+        [btnContentV addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[rightBtn(>=0)]-0-|" options:0 metrics:nil views:@{@"rightBtn":rightBtn}]];
+        // 水平方向约束
+        [btnContentV addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"[rightBtn(>=0)]-10-|" options:0 metrics:nil views:@{@"rightBtn":rightBtn}]];
+        
+    }
+    return _containerV;
+}
+
+- (UIView *)toolBar{
     if (!_toolBar){
-        // 初始化数组
-        self.toolBarArr = [NSMutableArray array];
-        
-        CGFloat toolbarW = 35;
-        UIView *toolBar = [[UIView alloc] init];
-        toolBar.backgroundColor = [UIColor clearColor];
-        toolBar.alpha = 0.7;
+
+        NSArray *tabbarBtnData = @[
+       @{@"image": @"webview_goback",@"selectImage": @"",@"selector":@"webViewDidGoBack"},
+       @{@"image": @"webview_goforward",@"selectImage": 
+             @"",@"selector":@"webViewDidGoForward"},
+       @{@"image": @"shuaxin",@"selectImage": @"",@"selector":@"webViewDidFresh"},
+       @{@"image": @"save_normal",@"selectImage": @"save_selected",@"selector":@"saveWeb:"},
+       @{@"image": @"webview_share",@"selectImage": @"",@"selector":@"showShareVC"},
+                                   ];
+        CGFloat toolbarW = [self getBottomToolBarHeight];
+        CGFloat btnWH = (isIphoneX) ? (toolbarW - 34) : toolbarW;
+        NSUInteger btnNumber = tabbarBtnData.count;
+        CGFloat margin = (XMScreenW - btnNumber * btnWH) / ( btnNumber + 1);
+
+
+        UIView *toolBar = [[UIView alloc] initWithFrame: CGRectMake(0, XMScreenH - toolbarW, XMScreenW, toolbarW)];
+        toolBar.backgroundColor = [self getNavColor];
         _toolBar = toolBar;
-        
-        // 添加滚到最顶部
-        UIButton *upBtn = [[UIButton alloc] init];
-        upBtn.hidden = YES;
-        [upBtn setImage:[UIImage imageNamed:@"up"] forState:UIControlStateNormal];
-        [upBtn addTarget:self action:@selector(webViewDidScrollToTop) forControlEvents:UIControlEventTouchUpInside];
-        [toolBar addSubview:upBtn];
-        CGRect upBtnF = CGRectMake(0, 0, toolbarW, toolbarW);
-        upBtn.frame = upBtnF;
-        [self.toolBarArr addObject:upBtn];
-        // 添加滚到最底部
-        UIButton *downBtn = [[UIButton alloc] init];
-        downBtn.hidden = YES;
-        [downBtn setImage:[UIImage imageNamed:@"down"] forState:UIControlStateNormal];
-        [downBtn addTarget:self action:@selector(webViewDidScrollToBottom) forControlEvents:UIControlEventTouchUpInside];
-        [toolBar addSubview:downBtn];
-        CGRect downBtnF = CGRectMake(0, CGRectGetMaxY(upBtnF) + 10, toolbarW, toolbarW);
-        downBtn.frame = downBtnF;
-        [self.toolBarArr addObject:downBtn];
-        // 添加滚到最顶部
-        UIButton *freshBtn = [[UIButton alloc] init];
-        freshBtn.hidden = YES;
-        [freshBtn setImage:[UIImage imageNamed:@"shuaxin"] forState:UIControlStateNormal];
-        [freshBtn addTarget:self action:@selector(webViewDidFresh) forControlEvents:UIControlEventTouchUpInside];
-        [toolBar addSubview:freshBtn];
-        CGRect freshBtnF = CGRectMake(0, CGRectGetMaxY(downBtnF) + 10, toolbarW, toolbarW);
-        freshBtn.frame = freshBtnF;
-        [self.toolBarArr addObject:freshBtn];
-        // 添加收藏按钮
-        UIButton *addBtn = [[UIButton alloc] init];
-        addBtn.hidden = YES;
-        self.saveBtn = addBtn;
-        [addBtn addTarget:self action:@selector(saveWeb:) forControlEvents:UIControlEventTouchUpInside];
-        [addBtn setImage:[UIImage imageNamed:@"save_normal"] forState:UIControlStateNormal];
-        [addBtn setImage:[UIImage imageNamed:@"save_selected"] forState:UIControlStateSelected];
-        [toolBar addSubview:addBtn];
-        CGRect addBtnF = CGRectMake(0, CGRectGetMaxY(freshBtnF) + 10, toolbarW, toolbarW);
-        addBtn.frame = addBtnF;
-        [self.toolBarArr addObject:addBtn];
-        // 添加强制关闭webmodule按钮
-        UIButton *backBtn = [[UIButton alloc] init];
-        backBtn.hidden = YES;
-        [backBtn setImage:[UIImage imageNamed:@"clear"] forState:UIControlStateNormal];
-        [backBtn addTarget:self action:@selector(closeWebModule) forControlEvents:UIControlEventTouchUpInside];
-        [toolBar addSubview:backBtn];
-        CGRect backBtnF = CGRectMake(0, CGRectGetMaxY(addBtnF) + 10, toolbarW, toolbarW);
-        backBtn.frame = backBtnF;
-        [self.toolBarArr addObject:backBtn];
-        
-        
-        // 隐藏/显示toolbar的其他按钮
-        UIButton *showHideBtn = [UIButton buttonWithType:UIButtonTypeContactAdd];
-        showHideBtn.selected = YES;
-        [showHideBtn addTarget:self action:@selector(showHideToolBarButton:) forControlEvents:UIControlEventTouchUpInside];
-        [toolBar addSubview:showHideBtn];
-        CGRect showHideBtnF = CGRectMake(0, CGRectGetMaxY(backBtnF) + 10, toolbarW, toolbarW);
-        showHideBtn.frame = showHideBtnF;
-        
-        // 计算toolbar居中
-        CGFloat toolbarH = CGRectGetMaxY(showHideBtnF);
-        CGFloat toolBarY = [UIScreen mainScreen].bounds.size.height - toolbarH - 50;
-        _toolBar.frame = CGRectMake(20, toolBarY, toolbarW, toolbarH);
-        
         _toolBar.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
+//        [self.containerV addSubview:toolBar];
+//        [self.containerV bringSubviewToFront:toolBar];
+//        [self.containerV  insertSubview:toolBar belowSubview:self.web];
+//        [self.containerV  insertSubview:toolBar aboveSubview:self.web ];
+
+        for (NSUInteger i = 0; i < btnNumber; i++) {
+            UIButton *btn = [[UIButton alloc] init];
+            [btn addTarget:self action:NSSelectorFromString(tabbarBtnData[i][@"selector"]) forControlEvents:UIControlEventTouchUpInside];
+            [btn setImage:[UIImage imageNamed:tabbarBtnData[i][@"image"]] forState:UIControlStateNormal];
+            if (![tabbarBtnData[i][@"selectImage"] isEqualToString:@""]){
+                [btn setImage:[UIImage imageNamed:tabbarBtnData[i][@"selectImage"]] forState:UIControlStateSelected];
+            }
+            [toolBar addSubview:btn];
+            btn.frame = CGRectMake(margin + i * ( margin + btnWH ), 0, btnWH, btnWH);
+        }
+
     }
     return _toolBar;
 }
@@ -205,13 +284,20 @@
     }
     return _statusBar;
 }
+
 - (UIView *)statusCover{
     if (!_statusCover){
         UIView *statusCover = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, XMStatusBarHeight)];
-        statusCover.backgroundColor = self.webNavColor;
+        statusCover.backgroundColor = nil;
+#warning todo  以后测试稳定后将保持statusCover的背景颜色为nil,到时候见已经注释掉的设置颜色的代码删除
+//        statusCover.backgroundColor = [self getNavColor];
         statusCover.hidden = YES;
         [self.statusBar addSubview:statusCover];
         _statusCover = statusCover;
+        
+        // 点击事件
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(resetNavFrame)];
+        [statusCover addGestureRecognizer:tap];
     }
     return _statusCover;
 }
@@ -229,11 +315,18 @@
     if (self.searchMode){
         [self initSearchMode];
     }
-    [self.view addSubview:self.toolBar];
+    
+    // 在此处添加底部工具条
+    [self.containerV addSubview:self.toolBar];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    // 初始化参数
+    self.lastContentY = 0;
+    self.isShow = NO;
+//    [self initlizeContainerView];
     
     [[NSUserDefaults standardUserDefaults] setInteger:2 forKey: @"WebKitCacheModelPreferenceKey"];
     //这里是调用的私有api，
@@ -251,26 +344,29 @@
     // 隐藏悬浮窗口
     BOOL middleBool = [XMWXVCFloatWindow shareXMWXVCFloatWindow].isHidden;
     [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = YES;
+    
     // 截图,并且将截图放到底部的图片框上,否则会出现黑底
-    if (!self.backImageV){
+    if (!self.backScreenshotImageV){
         
         UIImageView *backImageV = [[UIImageView alloc] initWithImage:[XMImageUtil screenShot]];
         backImageV.frame = CGRectMake(-[self getBackImageVStarX], 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
-        _backImageV = backImageV;
+        self.backScreenshotImageV = backImageV;
     
 #warning 核心代码,需要把图片加到这上面,如果加到self.view上面会在pop之后闪一下黑色
-        [self.navigationController.view.superview insertSubview:self.backImageV belowSubview:self.navigationController.view];
+        [self.navigationController.view.superview insertSubview:self.backScreenshotImageV belowSubview:self.navigationController.view];
     }
     
     // 必须先截图再截屏.否则会没有导航条
     self.navigationController.navigationBarHidden = YES;
-    self.statusBar.backgroundColor = self.webNavColor;
+    self.statusBar.backgroundColor = [self getNavColor];
     [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = middleBool;
     
     // 从悬浮窗口恢复的界面, web backImageV toolBar 三个需要复位
-    self.web.transform = CGAffineTransformIdentity;
-    self.backImageV.transform = CGAffineTransformIdentity;
-    self.toolBar.transform = CGAffineTransformIdentity;
+//    self.backImageV.transform = CGAffineTransformIdentity;
+    self.containerV.transform = CGAffineTransformIdentity;
+    
+    // 记录即将显示
+    self.isShow = YES;
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -287,12 +383,19 @@
         self.statusBar.backgroundColor = nil;
         [self.statusCover removeFromSuperview];
     }
+    
+    // 记录即将隐藏
+    self.isShow = NO;
 }
 
 
 - (void)dealloc{
     NSLog(@"XMWebViewController-----------dealloc");
 }
+
+//- (void)initlizeContainerView{
+//
+//}
 
 #pragma mark - 提供一个类方法让外界打开webmodule
 + (void)openWebmoduleWithModel:(XMWebModel *)model viewController:(UIViewController *)vc{
@@ -305,7 +408,7 @@
     [vc.navigationController pushViewController:webVC animated:YES];
 }
 
-#pragma mark - toolbar 点击事件
+#pragma mark - toolbar和导航栏 点击事件
 
 /** web滚到最底部*/
 - (void)webViewDidScrollToBottom{
@@ -320,24 +423,33 @@
 /** web滚到顶部 */
 - (void)webViewDidScrollToTop{
     
-    [self.web stringByEvaluatingJavaScriptFromString:@"window.scrollTo(0,0);"];
+    // 滚动到顶部并且回复导航栏原来的样式,发生frame改变的自动加入到animate中,有动画效果
+    [UIView animateWithDuration:0.25f animations:^{
+        [self.web stringByEvaluatingJavaScriptFromString:@"window.scrollTo(0,0);"];
+        self.navToolV.frame = CGRectMake(0, XMStatusBarHeight, XMScreenW, 44);
+        self.web.frame = CGRectMake(0, 44 + XMStatusBarHeight, XMScreenW, XMScreenH);
+        self.navToolTitleLab.font = [UIFont systemFontOfSize:17];
+    }completion:^(BOOL finished) {
+        self.navToolBtnContentV.hidden = NO;
+    }];
 }
 
 /** web重新加载 */
 - (void)webViewDidFresh{
-    
     [self.web reload];
 }
 
-/** 临时方法,将webmodule关闭掉 */
-- (void)closeWebModule{
-    
-    self.navigationController.navigationBarHidden = NO;
-    // 恢复状态栏颜色,原来的为空
-    self.statusBar.backgroundColor = nil;
-    [self.statusCover removeFromSuperview];
-    if (![XMRightBottomFloatView shareRightBottomFloatView].isInArea){
-        [self.navigationController popViewControllerAnimated:NO];
+/** web后退 */
+- (void)webViewDidGoBack{
+    if([self.web canGoBack]){
+        [self.web goBack];
+    }
+}
+
+/** web前进 */
+- (void)webViewDidGoForward{
+    if([self.web canGoForward]){
+        [self.web goForward];
     }
 }
 
@@ -361,46 +473,10 @@
     }
 }
 
-
-/**
- 显示/隐藏toolbar的其他按钮
- */
-- (void)showHideToolBarButton:(UIButton *)btn{
-    // 按钮状态取反,然后设置toolbar其他按钮的隐藏与否
-    btn.selected = !btn.selected;
-    for (UIButton *toolBtn in self.toolBarArr) {
-        toolBtn.hidden = btn.selected;
-    }
-}
-
-#pragma mark - 长按保存网页图片/弹出分享
-- (void)longPress:(UILongPressGestureRecognizer *)longP{
-    
-    if (longP.state == UIGestureRecognizerStateBegan){
-        CGPoint touchPoint = [longP locationInView:self.web];
-        NSString *imgURL = [NSString stringWithFormat:@"document.elementFromPoint(%f, %f).src", touchPoint.x, touchPoint.y];
-        NSString *urlToSave = [self.web stringByEvaluatingJavaScriptFromString:imgURL];
-
-        if (urlToSave.length){
-            // 有地址证明长按了图片区域
-            [self showActionSheet:urlToSave];
-        }else{
-            // 没有返回地址就是长按了文字区域
-            [self showShareVC];
-        }
-    
-    };
-    
-}
-
-/**
- 长按网页上的文字触发分享
- */
+/**  弹出分享菜单  */
 - (void)showShareVC{
     
     // 取出分享参数
-//    NSURL *url = self.model.webURL ? self.model.webURL : [NSURL URLWithString:@""];
-//    NSString *title = self.model.title ? self.model.title : @"";
     NSURL *url = [NSURL URLWithString:self.web.request.URL.absoluteString];
     NSString *title =  [self.web stringByEvaluatingJavaScriptFromString:@"document.title"];
     if(!url){
@@ -416,7 +492,89 @@
     
     // 弹出分享菜单
     [self presentViewController:actVC animated:YES completion:nil];
+    
+}
 
+#pragma mark 导航栏的点击事件
+/**
+ 重设沉浸式导航栏原来的尺寸
+ */
+- (void)resetNavFrame{
+    [UIView animateWithDuration:0.25f animations:^{
+        self.navToolV.frame = CGRectMake(0, XMStatusBarHeight, XMScreenW, 44);
+        self.web.frame = CGRectMake(0, 44 + XMStatusBarHeight, XMScreenW, XMScreenH);
+        self.navToolTitleLab.font = [UIFont systemFontOfSize:17];
+        self.toolBar.frame = CGRectMake(0, XMScreenH - [self getBottomToolBarHeight], XMScreenW, [self getBottomToolBarHeight]);
+    }completion:^(BOOL finished) {
+        self.navToolBtnContentV.hidden = NO;
+        // 恢复导航栏盖罩
+        self.statusCover.hidden = YES;
+//        self.statusCover.backgroundColor = [self getNavColor];
+    }];
+}
+
+/** 将webmodule关闭掉 */
+- (void)closeWebModule{
+    
+    self.navigationController.navigationBarHidden = NO;
+    // 恢复状态栏颜色,原来的为空
+    self.statusBar.backgroundColor = nil;
+    [self.statusCover removeFromSuperview];
+    if (![XMRightBottomFloatView shareRightBottomFloatView].isInArea){
+        [self.navigationController popViewControllerAnimated:NO];
+    }
+}
+
+/**  导航栏右边显示更多选项 */
+- (void)showMoreItem{
+    UIAlertController *tips = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    __weak typeof(self) weakSelf = self;
+    [tips addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    [tips addAction:[UIAlertAction actionWithTitle:@"生成二维码" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action){
+        // 将当前的url的字符串转为二维码图片
+        [weakSelf showQrImage:[XMImageUtil creatQRCodeImageWithString:weakSelf.web.request.URL.absoluteString size:XMScreenW * 0.7]];
+        
+    }]];
+    
+    [self presentViewController:tips animated:YES completion:nil];
+    
+}
+
+
+/// 展示二维码图片
+- (void)showQrImage:(UIImage *)image{
+    UIView *contentV = [[UIView alloc] initWithFrame:CGRectMake(0, 0, XMScreenW, XMScreenH)];
+    contentV.backgroundColor = RGBA(0, 0, 0, 0.7);
+    [self.view addSubview:contentV];
+    UIImageView *imageV = [[UIImageView alloc] initWithFrame:CGRectMake(XMScreenW * 0.15, (XMScreenH - XMScreenW) * 0.5, XMScreenW * 0.7, XMScreenW * 0.7)];
+    imageV.image = image;
+    [contentV addSubview:imageV];
+    
+    // 添加点击移除手势
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(removeQriamge:)];
+    [contentV addGestureRecognizer:tap];
+}
+
+
+/// 移除二维码图片
+- (void)removeQriamge:(UITapGestureRecognizer *)gest{
+    [gest.view removeFromSuperview];
+}
+
+#pragma mark - 长按保存网页图片
+- (void)longPress:(UILongPressGestureRecognizer *)longP{
+    
+    if (longP.state == UIGestureRecognizerStateBegan){
+        CGPoint touchPoint = [longP locationInView:self.web];
+        NSString *imgURL = [NSString stringWithFormat:@"document.elementFromPoint(%f, %f).src", touchPoint.x, touchPoint.y];
+        NSString *urlToSave = [self.web stringByEvaluatingJavaScriptFromString:imgURL];
+
+        if (urlToSave.length){
+            // 有地址证明长按了图片区域
+            [self showActionSheet:urlToSave];
+        }
+    };
+    
 }
 
 /**
@@ -465,17 +623,13 @@
 
 /** 提示用户保存图片成功与否(系统必须实现的方法) */
 - (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo{
-    if (error) {
-        [MBProgressHUD showMessage:@"保存失败" toView:self.view];
-    }else{
-        [MBProgressHUD showMessage:@"保存成功" toView:self.view];
-    }
+    [MBProgressHUD showResult:error ? NO :YES message:error ? @"保存失败" : @"保存成功"];
 }
 
 #pragma mark - UIWebViewDelegate
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType{
     
-    NSLog(@"=======%@",request.URL.absoluteString);
+    NSLog(@"%ld=======%@",navigationType,request.URL.absoluteString);
     // 开启网络加载
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     // 过滤名单
@@ -484,6 +638,23 @@
         // 关闭网络加载
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
         return NO;
+    }
+    
+    // 防止拉起appstore
+    if([request.URL.absoluteString containsString:@"https://itunes.apple.com/cn/app"]){
+        UIAlertController *tips = [UIAlertController alertControllerWithTitle:@"提示" message:@"是否允许跳转到App Store" preferredStyle:UIAlertControllerStyleAlert];
+        __weak typeof(self) weakSelf = self;
+        [tips addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+            weakSelf.canOpenAppstore = NO;
+            [weakSelf.web goBack];
+        }]];
+        [tips addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action){
+            weakSelf.canOpenAppstore = YES;
+            [weakSelf.web loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:request.URL.absoluteString]]];
+        }]];
+        
+        [self presentViewController:tips animated:YES completion:nil];
+        return self.canOpenAppstore;
     }
     // 当处于searchMode模式或者还没有加载完成网页的时候允许加载网页
     if (self.searchMode){
@@ -514,15 +685,26 @@
 - (void)webViewDidStartLoad:(UIWebView *)webView{
     NSURL *url = [self.web.request mainDocumentURL];
     NSLog(@"The Redirected URL is %@",url);
+    // 为searchmode添加左划返回手势
+    if (self.panSearchMode){
+        // 防止与右下角的扇形区域手势冲突
+        if(self.navigationController){
+            XMNavigationController *nav = (XMNavigationController *)self.navigationController;
+            [self.panSearchMode requireGestureRecognizerToFail:nav.customerPopGestureRecognizer];
+        }
+    }
     
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView{
     // 关闭网络加载
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-    // 设置statusBar随页面的颜色改变
-    self.webNavColor = [webView colorOfPoint:CGPointMake(10, XMStatusBarHeight + 1)];
-    self.statusBar.backgroundColor = self.webNavColor;
+    // 如果在加载完的时候,已经右划发生移动,则不要设置状态栏颜色
+    if (self.containerV.frame.origin.x == 0 && self.isShow){
+        // 设置statusBar随页面的颜色改变
+//        self.webNavColor = [webView colorOfPoint:CGPointMake(10, XMStatusBarHeight + 1)];
+        self.statusBar.backgroundColor = [self getNavColor];
+    }
     // 禁止完成加载之后再去加载网页
     self.canLoad = NO;
     // 加载完成之后判断是否需要添加searchMode的pan手势
@@ -532,9 +714,18 @@
             [self.web addGestureRecognizer:self.panSearchMode];
         }
     }
-    if (self.isSearchMode){
-        self.saveBtn.selected = NO;
+//    if (self.isSearchMode){
+//        self.saveBtn.selected = NO;
+//    }
+    
+    // 设置网页标题
+    NSString *title = [self.web stringByEvaluatingJavaScriptFromString:@"document.title"];
+    if(title.length > 0 && ![title isEqualToString:self.navToolTitleLab.text]){
+        self.navToolTitleLab.text = title;
     }
+    
+    // 记录网页高度
+//    self.webHeight = [[self.web stringByEvaluatingJavaScriptFromString:@"document.body.offsetHeight"] doubleValue];
     
     // 设置网页自动缩放,user-scalable为NO即可禁止缩放
     NSString *injectionJSString =@"var script = document.createElement('meta');"
@@ -545,6 +736,88 @@
     [self.web stringByEvaluatingJavaScriptFromString:injectionJSString];
      
 }
+
+#pragma mark - UIScrollViewDelegate
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+//    NSLog(@"%.2f",scrollView.contentOffset.y);
+    if (scrollView.contentOffset.y < 0 || self.isDrag == NO){
+        // 到达最顶部和最底部,触发弹簧效果时,需要实时更新最后的y偏移,但是不能改变view的frame
+        self.lastContentY = scrollView.contentOffset.y;
+        return;
+    }
+    
+    // 向上滚动contentOffset.y为正数且增大
+    CGRect tarF = self.navToolV.frame;
+    tarF.size.height -= scrollView.contentOffset.y - self.lastContentY;
+    // 控制导航栏的最大高度和最小高度,20和44修改要慎重,因为多处地方耦合,需要修改其他地方
+    if (tarF.size.height < 20){
+        tarF.size.height = 20;
+    }
+    if (tarF.size.height > 44){
+        tarF.size.height = 44;
+        
+        // 导航栏最大化的时候移除导航栏盖罩
+        if(self.statusCover.hidden == NO){
+            self.statusCover.hidden = YES;
+//            self.statusCover.backgroundColor = [self getNavColor];
+        }
+    }else{
+        // 导航栏非最大化的时候添加状态栏盖罩
+        if(self.statusCover.hidden){
+//            self.statusCover.backgroundColor = nil;
+            self.statusCover.hidden = NO;
+        }
+    }
+    // 根据导航栏高度决定是否显示两侧按钮
+    if (tarF.size.height > 30){
+        self.navToolBtnContentV.hidden = NO;
+    }else{
+        self.navToolBtnContentV.hidden = YES;
+    }
+
+    // 调整导航条高度
+    self.navToolV.frame = tarF;
+    /**
+     //toobar移动方案一
+     // 底部toobar联动,根据导航条的变化范围(20 ~ 44)去等比例调整伸出的高度([self getBottomToolBarHeight])
+     CGFloat toolBarY = XMScreenH - [self getBottomToolBarHeight] * ( tarF.size.height - 20) / 24;
+     self.toolBar.frame = CGRectMake(0, toolBarY, XMScreenW, [self getBottomToolBarHeight]);
+     
+     */
+    //toobar移动方案二,避免一直修改toolbar的frame,减少性能损耗
+    if(scrollView.contentOffset.y > self.lastContentY && CGRectGetMaxY(self.toolBar.frame) == XMScreenH){
+        // 上滑隐藏toolbar
+        [UIView animateWithDuration:0.25f animations:^{
+            self.toolBar.frame = CGRectMake(0, XMScreenH, XMScreenW, [self getBottomToolBarHeight]);
+        }];
+    }else if(scrollView.contentOffset.y < self.lastContentY && CGRectGetMaxY(self.toolBar.frame) == XMScreenH + [self getBottomToolBarHeight]){
+        // 下滑显示toolbar
+        [UIView animateWithDuration:0.25f animations:^{
+            self.toolBar.frame = CGRectMake(0, XMScreenH - [self getBottomToolBarHeight], XMScreenW, [self getBottomToolBarHeight]);
+        }];
+    }
+    
+    // 调整web的y
+    CGRect webF = self.web.frame;
+    webF.origin.y = CGRectGetMaxY(tarF);
+    self.web.frame = webF;
+    
+    // 调整字体大小
+    CGFloat fontSize = (17.0 * tarF.size.height / 44.0 > 10 ) ? 17.0 * tarF.size.height / 44.0 : 10;
+    self.navToolTitleLab.font = [UIFont systemFontOfSize:fontSize];
+
+    // 更新lastContentY
+    self.lastContentY = scrollView.contentOffset.y;
+}
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
+    self.isDrag = YES;
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
+    self.isDrag = NO;
+}
+
 
 #pragma mark - uigestureDelegate
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
@@ -566,6 +839,7 @@
             return NO;
         }
     }
+    
     return YES;
     
 }
@@ -581,47 +855,61 @@
             self.starX = [self.web convertPoint:[pan locationInView:self.web] toView:self.view].x;
             if (self.isFirstWebmodule){
                 // 修改状态栏颜色
-                self.statusBar.backgroundColor = [UIColor colorWithRed:249/255.0 green:249/255.0 blue:249/255.0 alpha:1.0];
+                self.statusBar.backgroundColor = nil;
+//                self.statusCover.backgroundColor = [self getNavColor];
                 self.statusCover.hidden = NO;
             }
+            
+            // 复位前进后退箭头以及隐藏
+            self.backForIconContainV.hidden = YES;
+            self.backForIconContainV.transform = CGAffineTransformIdentity;
             break;
             
         case UIGestureRecognizerStateChanged:{
             // 拖拽改变
             if (currentX < self.starX){
-                if (self.searchMode && self.web.canGoForward){
-                    
-                    self.forwardImgV.hidden = NO;
+                // 只有在containerV没有发生移动的情况下才可以出现前进后退箭头
+                if (self.searchMode && self.web.canGoForward && self.containerV.frame.origin.x == 0){
+                    self.backForIconContainV.hidden = NO;
                     // 防止过多移动右箭头
-                    if (self.starX - currentX > self.forwardImgV.frame.size.width + 10) return;
-                    self.forwardImgV.transform = CGAffineTransformMakeTranslation(currentX - self.starX, 0);
+                    if (self.starX - currentX > backForwardImagVWH){
+                        self.backForIconContainV.transform = CGAffineTransformMakeTranslation(-backForwardImagVWH, 0);
+                    }else{
+                        self.backForIconContainV.transform = CGAffineTransformMakeTranslation(currentX - self.starX, 0);
+                    }
                 }
                 break;
                 
             }
+            
+            // 来到了这里,表示要移动webmodule,必须将左右箭头隐藏及复位
+            self.backForIconContainV.hidden = YES;
+            self.backForIconContainV.transform = CGAffineTransformIdentity;
+            
             // 一开始web在最左边,因此直接加上滑动距离即可
-            self.web.transform = CGAffineTransformMakeTranslation(currentX - self.starX, 0);
-            // 同时让toolbar  backImageV  statusCover跟着移动
-            self.toolBar.transform = CGAffineTransformMakeTranslation(currentX - self.starX, 0);;
-            self.backImageV.transform = CGAffineTransformMakeTranslation((currentX - self.starX) * [self getBackImageVStarX] / [UIScreen mainScreen].bounds.size.width, 0);
+            self.containerV.transform = CGAffineTransformMakeTranslation(currentX -self.starX, 0);
+            // 同时让backScreenshotImageV  statusCover跟着移动
+            self.backScreenshotImageV.transform = CGAffineTransformMakeTranslation((currentX - self.starX) * [self getBackImageVStarX] / [UIScreen mainScreen].bounds.size.width, 0);
             if (self.isFirstWebmodule){
                 self.statusCover.transform = CGAffineTransformMakeTranslation(currentX - self.starX, 0);;
             }
             // 同时将透明度随着距离改变(效果不好,多开webmodule会由于上层变透明会看到上上层)
-            //self.backImageV.alpha = (currentX / [UIScreen mainScreen].bounds.size.width)* 2/3 + 0.33;
+            //self.backScreenshotImageV.alpha = (currentX / [UIScreen mainScreen].bounds.size.width)* 2/3 + 0.33;
             break;
         }
         case UIGestureRecognizerStateEnded:{
             // 拖拽结束
             if(self.searchMode){
-                if(![self.web canGoBack] && self.starX - currentX > [self getSearchModePanDistance]){
-                    self.forwardImgV.transform = CGAffineTransformIdentity;
-                    self.forwardImgV.hidden = YES;
+                // 防止先左pan触发了containerV移动再右滑导致forward
+                if(![self.web canGoBack] && self.starX - currentX > backForwardImagVWH && self.backForIconContainV.hidden == NO){
+                    
                     [self.web goForward];
                 }
+                self.backForIconContainV.transform = CGAffineTransformIdentity;
+                self.backForIconContainV.hidden = YES;
             }
-            // 拖拽距离超过rightContentView的相对位置0.3时决定弹回还是隐藏
-            [self showRightContentView:self.web.frame.origin.x < [UIScreen mainScreen].bounds.size.width * 0.3];
+            // 拖拽距离超过rightContentView的相对位置时决定弹回还是隐藏
+            [self showRightContentView:self.containerV.frame.origin.x < 128];
             break;
         }
         default:
@@ -634,24 +922,32 @@
     if (canShow){  // 显示
         // 恢复成一开始最左边的位置
         [UIView animateWithDuration:duration animations:^{
-            // web backImageV toolBar 三个要联动
-            self.web.transform = CGAffineTransformIdentity;
-            self.backImageV.transform = CGAffineTransformIdentity;
-            self.toolBar.transform = CGAffineTransformIdentity;
+            // containerV backScreenshotImageV要联动
+            self.containerV.transform = CGAffineTransformIdentity;
+            self.backScreenshotImageV.transform = CGAffineTransformIdentity;
             if (self.isFirstWebmodule){
                 // 修改状态栏颜色
-                self.statusBar.backgroundColor = self.webNavColor;
                 self.statusCover.transform = CGAffineTransformIdentity;
-                self.statusCover.hidden = YES;
+            }
+        }completion:^(BOOL finished) {
+            if (self.isFirstWebmodule){
+                // 这时候隐藏不会闪一下,根据导航栏是否最大化显示或隐藏statusCover
+                if(self.navToolV.frame.size.height < 44){
+//                    self.statusCover.backgroundColor = nil;
+                    self.statusCover.hidden = NO;
+                }else{
+                    self.statusCover.hidden = YES;
+//                    self.statusCover.backgroundColor = [self getNavColor];
+                }
+                self.statusBar.backgroundColor = [self getNavColor];
             }
         }];
     }else{
         // 将webmodule关闭掉
         [UIView animateWithDuration:duration animations:^{
-            // web backImageV toolBar 三个要联动
-            self.web.transform = CGAffineTransformMakeTranslation([UIScreen mainScreen].bounds.size.width, 0);
-            self.toolBar.transform = CGAffineTransformMakeTranslation([UIScreen mainScreen].bounds.size.width, 0);
-            self.backImageV.transform = CGAffineTransformMakeTranslation([self getBackImageVStarX], 0);
+            // containerV backScreenshotImageV要联动
+            self.backScreenshotImageV.transform = CGAffineTransformMakeTranslation([self getBackImageVStarX], 0);
+            self.containerV.transform = CGAffineTransformMakeTranslation(XMScreenW, 0);
             if (self.isFirstWebmodule){
                 self.statusCover.transform = CGAffineTransformMakeTranslation([UIScreen mainScreen].bounds.size.width, 0);
             }
@@ -659,8 +955,8 @@
             if (self.isFirstWebmodule){
                 self.statusCover.hidden = YES;
             }
-            // 移除背景相框
-            [self.backImageV removeFromSuperview];
+            // 移除背景棘突相框
+            [self.backScreenshotImageV removeFromSuperview];
             // 移到最右边结束时pop掉当前vc
             [self closeWebModule];
         }];
@@ -674,105 +970,106 @@
     self.web.transform = CGAffineTransformIdentity;
 }
 
+
+/**
+ 双指向上或向下轻扫触发滚动到最底部和最底部
+ */
+- (void)doubleFingerSwipe:(UISwipeGestureRecognizer *)gest{
+    // 延时执行滚动,防止触发swipe手势时,scrollerview同时在滚动造成滚动冲突
+        if (gest.direction == UISwipeGestureRecognizerDirectionUp){
+            [MBProgressHUD showMessage:@"下滚到底部"];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self webViewDidScrollToBottom];
+            });
+        }else if (gest.direction == UISwipeGestureRecognizerDirectionDown){
+            [MBProgressHUD showMessage:@"上滚到顶部"];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self webViewDidScrollToTop];
+            });
+        }
+}
+
 #pragma mark - searchMode的返回处理
 /** searchMode下手势触发的方法 */
 - (void)panToBackForward:(UIGestureRecognizer *)gesture{
-    if ([gesture isKindOfClass:[UIPanGestureRecognizer class]]){
-        // 如果是pan手势,需要根据左划还是右划决定返回还是向前
-        switch (gesture.state) {
-            case UIGestureRecognizerStateBegan:{
-                
-                self.starX = [gesture locationInView:self.web].x;
-                break;
-            }
-            case UIGestureRecognizerStateChanged:{
-                
-                CGFloat panShift = [gesture locationInView:self.web].x - self.starX;
-                // 超过左右箭头的大小则不再移动箭头
-                if (panShift > self.backImgV.frame.size.width + 10 || -panShift > self.forwardImgV.frame.size.width + 10) return;
-                // 根据左划或者右划移动箭头
-                if (panShift > 0 && self.web.canGoBack){
-                    
-                    self.backImgV.hidden = NO;
-                    self.backImgV.transform = CGAffineTransformMakeTranslation(panShift, 0);
-                }else if(panShift < 0 && self.web.canGoForward){
-                    
-                    self.forwardImgV.hidden = NO;
-                    self.forwardImgV.transform = CGAffineTransformMakeTranslation(panShift, 0);
-                }
-                break;
-            }
-            case UIGestureRecognizerStateEnded:{
-                
-                CGFloat panShift = [gesture locationInView:self.web].x - self.starX;
-                // 右划且滑动距离大于50,表示应该返回,反之左划并且距离大于50表示向前,并复位左右两个箭头
-                if (panShift > [self getSearchModePanDistance]){
-                    self.backImgV.transform = CGAffineTransformIdentity;
-                    [self.web goBack];
-//                  // todo:检测是否最后一页,防止重定向,暂时延时判断,移除searchMode下的pan手势
-                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                        if (!self.web.canGoBack || [self.model.webURL.absoluteString isEqualToString:self.web.request.mainDocumentURL.absoluteString]){
-                            [self.web removeGestureRecognizer:self.panSearchMode];
-                        }
-                    });
-                    
-                }else if(panShift < -[self getSearchModePanDistance]){
-                    
-                    self.forwardImgV.transform = CGAffineTransformIdentity;
-                    [self.web goForward];
-                }
-                
-                // 手势结束之后隐藏两边箭头
-                self.backImgV.hidden = YES;
-                self.forwardImgV.hidden = YES;
-                break;
-            }
-            default:{
-                self.forwardImgV.transform = CGAffineTransformIdentity;
-                self.backImageV.transform = CGAffineTransformIdentity;
-                self.forwardImgV.hidden = YES;
-                self.backImageV.hidden = YES;
-                
-            }
-                break;
+    switch (gesture.state) {
+        case UIGestureRecognizerStateBegan:{
+            
+            self.starX = [gesture locationInView:self.web].x;
+            break;
         }
-    }else{
-        // 双击返回手势
-        if(gesture.state == UIGestureRecognizerStateEnded){
-            [self.web goBack];
+        case UIGestureRecognizerStateChanged:{
+            
+            CGFloat panShift = [gesture locationInView:self.web].x - self.starX;
+            // 根据左划或者右划移动箭头
+            if (panShift > 0 && self.web.canGoBack){
+                // 向右滑
+                self.backForIconContainV.hidden = NO;
+                self.backForIconContainV.transform = CGAffineTransformMakeTranslation(panShift > backForwardImagVWH ? backForwardImagVWH : panShift, 0);
+                
+            }else if(panShift < 0 && self.web.canGoForward){
+                // 向左滑
+                self.backForIconContainV.hidden = NO;
+                self.backForIconContainV.transform = CGAffineTransformMakeTranslation(-panShift > backForwardImagVWH ? -backForwardImagVWH : panShift, 0);
+            }
+            break;
+        }
+        case UIGestureRecognizerStateEnded:{
+            
+            CGFloat panShift = [gesture locationInView:self.web].x - self.starX;
+            // 右划且滑动距离大于50,表示应该返回,反之左划并且距离大于50表示向前,并复位左右两个箭头
+            if (panShift > backForwardImagVWH){
+                [self.web goBack];
+//                  // todo:检测是否最后一页,防止重定向,暂时延时判断,移除searchMode下的pan手势
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    if (!self.web.canGoBack || [self.model.webURL.absoluteString isEqualToString:self.web.request.mainDocumentURL.absoluteString]){
+                        [self.web removeGestureRecognizer:self.panSearchMode];
+                    }
+                });
+                
+            }else if(panShift < -backForwardImagVWH){
+                
+                [self.web goForward];
+            }
+            
+            // 手势结束之后隐藏两边箭头
+            self.backForIconContainV.transform = CGAffineTransformIdentity;
+            self.backForIconContainV.hidden = YES;
+            
+            
+            break;
+        }
+        default:{
+            // cancel或者failed则复位两边箭头
+            self.backForIconContainV.transform = CGAffineTransformIdentity;
+            self.backForIconContainV.hidden = YES;
+            
+            break;
         }
     }
 }
 
 /**  searchMode下初始化 */
 - (void)initSearchMode{
-    
     // 添加左右两个箭头
-    CGFloat imgVWH = 50;
+    UIView *backForIconContainV = [[UIView alloc] initWithFrame:CGRectMake(-backForwardImagVWH, CGRectGetMidY([UIScreen mainScreen].bounds), backForwardImagVWH * 2 + XMScreenW, backForwardImagVWH)];
+    self.backForIconContainV = backForIconContainV;
+    [self.containerV addSubview:backForIconContainV];
+    backForIconContainV.backgroundColor = [UIColor clearColor];
+    backForIconContainV.hidden = YES;
+    //    self.backImgV.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
+    
     UIImageView *backImgV = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"searchMode_back"]];
-    backImgV.frame = CGRectMake(-imgVWH, CGRectGetMidY([UIScreen mainScreen].bounds), imgVWH, imgVWH);
-    backImgV.hidden = YES;
-    self.backImgV = backImgV;
-    self.backImgV.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
-    [self.web addSubview:backImgV];
+    backImgV.frame = CGRectMake(0, 0, backForwardImagVWH, backForwardImagVWH);
+    [backForIconContainV addSubview:backImgV];
     UIImageView *forwardImgV = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"searchMode_forward"]];
-    forwardImgV.frame = CGRectMake(CGRectGetMaxX([UIScreen mainScreen].bounds), CGRectGetMidY([UIScreen mainScreen].bounds), imgVWH, imgVWH);
-    forwardImgV.hidden = YES;
-    self.forwardImgV = forwardImgV;
-    self.forwardImgV.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin;
-    [self.web addSubview:forwardImgV];
+    forwardImgV.frame = CGRectMake(XMScreenW + backForwardImagVWH, 0, backForwardImagVWH, backForwardImagVWH);
+    [backForIconContainV addSubview:forwardImgV];
     
     // 为searchmode添加前进后退手势
     UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panToBackForward:)];
     pan.delegate = self;
     self.panSearchMode = pan;
-    
-    // 添加3击页面返回手势
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(panToBackForward:)];
-    tap.numberOfTapsRequired = 3;
-    tap.delegate = self;
-    [self.web addGestureRecognizer:tap];
-
 }
 
 @end
