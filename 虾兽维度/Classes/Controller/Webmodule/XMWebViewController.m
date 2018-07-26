@@ -30,6 +30,9 @@ UIScrollViewDelegate>
 /** 工具条 */
 @property (nonatomic, strong) UIView *toolBar;
 //@property (weak, nonatomic)  UIButton *saveBtn;
+@property (weak, nonatomic)  UIButton *toolBarBackBtn;
+@property (weak, nonatomic)  UIButton *toolBarForwardBtn;
+
 
 /** 网页view */
 @property (nonatomic, strong) UIWebView *web;
@@ -240,11 +243,11 @@ static double backForwardImagVWH = 50;
     if (!_toolBar){
 
         NSArray *tabbarBtnData = @[
-       @{@"image": @"webview_goback",@"selectImage": @"",@"selector":@"webViewDidGoBack"},
+       @{@"image": @"webview_goback",@"selectImage": @"webview_goback_disable",@"selector":@"webViewDidGoBack"},
        @{@"image": @"webview_goforward",@"selectImage": 
-             @"",@"selector":@"webViewDidGoForward"},
+             @"webview_goforward_disable",@"selector":@"webViewDidGoForward"},
        @{@"image": @"shuaxin",@"selectImage": @"",@"selector":@"webViewDidFresh"},
-       @{@"image": @"save_normal",@"selectImage": @"save_selected",@"selector":@"saveWeb:"},
+       @{@"image": @"save_normal",@"selectImage": @"save_selected",@"disableImage": @"",@"selector":@"saveWeb:"},
        @{@"image": @"webview_share",@"selectImage": @"",@"selector":@"showShareVC"},
                                    ];
         CGFloat toolbarW = [self getBottomToolBarHeight];
@@ -271,6 +274,13 @@ static double backForwardImagVWH = 50;
             }
             [toolBar addSubview:btn];
             btn.frame = CGRectMake(margin + i * ( margin + btnWH ), 0, btnWH, btnWH);
+            if(i == 0){
+                self.toolBarBackBtn = btn;
+                self.toolBarBackBtn.selected = NO;
+            }else if (i == 1){
+                self.toolBarForwardBtn = btn;
+                self.toolBarForwardBtn.selected = NO;
+            }
         }
 
     }
@@ -443,6 +453,10 @@ static double backForwardImagVWH = 50;
 - (void)webViewDidGoBack{
     if([self.web canGoBack]){
         [self.web goBack];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            self.toolBarForwardBtn.selected = !self.web.canGoForward;
+            self.toolBarBackBtn.selected = !self.web.canGoBack;
+        });
     }
 }
 
@@ -450,6 +464,10 @@ static double backForwardImagVWH = 50;
 - (void)webViewDidGoForward{
     if([self.web canGoForward]){
         [self.web goForward];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            self.toolBarForwardBtn.selected = !self.web.canGoForward;
+            self.toolBarBackBtn.selected = !self.web.canGoBack;
+        });
     }
 }
 
@@ -628,7 +646,7 @@ static double backForwardImagVWH = 50;
 
 #pragma mark - UIWebViewDelegate
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType{
-    
+//    NSString *ss =[NSString stringWithContentsOfURL:<#(nonnull NSURL *)#> encoding:NSUTF8StringEncoding error:<#(NSError * _Nullable __autoreleasing * _Nullable)#>];
     NSLog(@"%ld=======%@",navigationType,request.URL.absoluteString);
     // 开启网络加载
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
@@ -714,6 +732,8 @@ static double backForwardImagVWH = 50;
             [self.web addGestureRecognizer:self.panSearchMode];
         }
     }
+    self.toolBarForwardBtn.selected = !self.web.canGoForward;
+    self.toolBarBackBtn.selected = !self.web.canGoBack;
 //    if (self.isSearchMode){
 //        self.saveBtn.selected = NO;
 //    }
@@ -734,12 +754,28 @@ static double backForwardImagVWH = 50;
     "document.getElementsByTagName('head')[0].appendChild(script);";
     
     [self.web stringByEvaluatingJavaScriptFromString:injectionJSString];
-     
+    
+    // 删除广告节点
+    [self webDidRemoveNode];
+    
+}
+
+- (void)webDidRemoveNode{
+    
+    // 必须样式执行,因为广告是要一段时间才动态加载出来
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        // uc全屏广告屏蔽:该广告div的class以"FloatLayer__floatlayer"开头
+        [self.web stringByEvaluatingJavaScriptFromString:@"var floatDiv =$(\"div[class^='FloatLayer__floatlayer']\")[0].remove()"];
+        //    uc底部轮播条的class为:slider__sdk__wrapper sdk__sharepage __web-inspector-hide-
+        [self.web stringByEvaluatingJavaScriptFromString:@"var deleteNode =document.getElementsByClassName('sdk__sharepage')[0];document.body.removeChild(deleteNode)"];
+        
+    });
+    
 }
 
 #pragma mark - UIScrollViewDelegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
-//    NSLog(@"%.2f",scrollView.contentOffset.y);
+
     if (scrollView.contentOffset.y < 0 || self.isDrag == NO){
         // 到达最顶部和最底部,触发弹簧效果时,需要实时更新最后的y偏移,但是不能改变view的frame
         self.lastContentY = scrollView.contentOffset.y;
