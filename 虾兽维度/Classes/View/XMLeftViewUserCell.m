@@ -8,6 +8,13 @@
 
 #import "XMLeftViewUserCell.h"
 
+@interface XMLeftViewUserCell()
+
+@property (weak, nonatomic) IBOutlet UILabel *versionLab;
+
+
+@end
+
 
 @implementation XMLeftViewUserCell
 
@@ -16,6 +23,10 @@
     XMLeftViewUserCell *cell = [tableView dequeueReusableCellWithIdentifier:ID];
     if (!cell){
         cell = [[[NSBundle mainBundle] loadNibNamed:@"XMLeftViewUserCell" owner:nil options:nil] lastObject];
+        
+        NSDictionary *infoDict = [[NSBundle mainBundle] infoDictionary];
+        NSString *versionStr = infoDict[@"CFBundleVersion"];
+        cell.versionLab.text = [NSString stringWithFormat:@"V%@",versionStr];
     }
     return cell;
 }

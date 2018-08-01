@@ -13,8 +13,6 @@
 
 #import "AppDelegate.h"
 #import "AppDelegate+HJVideoRotation.h"
-#import "XMWXVCFloatWindow.h"
-
 
 @interface XMFileDisplayWebViewViewController ()<UIGestureRecognizerDelegate,UIWebViewDelegate,UIScrollViewDelegate>
 
@@ -72,8 +70,6 @@
         NSNumber *orientationTarget = [NSNumber numberWithInt:UIInterfaceOrientationLandscapeRight];
         [[UIDevice currentDevice] setValue:orientationTarget forKey:@"orientation"];
     }
-    // 隐藏浮窗
-    [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = YES;
 }
 
 - (void)viewDidDisappear:(BOOL)animated{
@@ -87,9 +83,6 @@
     delegate.orientationMask = UIInterfaceOrientationMaskPortrait;
     NSNumber *orientationTarget = [NSNumber numberWithInt:UIInterfaceOrientationPortrait];
     [[UIDevice currentDevice] setValue:orientationTarget forKey:@"orientation"];
-    
-    // 显示浮窗
-    [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = NO;
 }
 
 - (void)dealloc{

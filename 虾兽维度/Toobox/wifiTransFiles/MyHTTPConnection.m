@@ -231,6 +231,9 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_VERBOSE; // | HTTP_LOG_FLAG_TRACE
         
         HTTPLogInfo(@"star upload file:%@",filename);
         dispatch_async(dispatch_get_main_queue(), ^{
+            //开启屏幕长亮
+            [UIApplication sharedApplication].idleTimerDisabled = YES;
+            
             if (self.haveReceiveFiles.length > 0){
                 // 接收非第一个文件
                 self.hud.detailsLabel.text = [NSString stringWithFormat:@"%@ 接收中.. 总大小:%.3fM \n%@",self.receiveFileName ? self.receiveFileName:@"",self.receiveFileTotalLength /1024.0/ 1024.0,self.haveReceiveFiles? self.haveReceiveFiles:@""];
@@ -303,6 +306,8 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_VERBOSE; // | HTTP_LOG_FLAG_TRACE
     self.haveReceiveFiles = [NSString stringWithFormat:@"%@\n文件:%@ 接收成功",self.haveReceiveFiles? self.haveReceiveFiles : @"",self.receiveFileName ? self.receiveFileName:@""];
     // 结束进度条,每次接收的大小最大为262144
     dispatch_async(dispatch_get_main_queue(), ^{
+        //关闭屏幕长亮
+        [UIApplication sharedApplication].idleTimerDisabled = NO;
         // 所有文件已经接收完毕或者最后一次的262144没有被计算进去也算完成
         if (0 == self.receiveFileTotalLength || 262144 >= self.receiveFileTotalLength){
             UIWindow *window = [UIApplication sharedApplication].keyWindow;

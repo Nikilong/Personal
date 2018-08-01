@@ -9,9 +9,15 @@
 #import "XMNavigationController.h"
 #import "XMRightBottomFloatView.h"
 #import "XMWXVCFloatWindow.h"
+#import "XMWXFloatWindowIconConfig.h"
+#import "XMImageUtil.h"
 
 @interface XMNavigationController()<UIGestureRecognizerDelegate>
 
+@property (weak, nonatomic)  UIImageView *screenshotImgV;
+@property (nonatomic, strong) UIImage *screenshotImage;
+
+@property (weak, nonatomic)  UIImageView *screenshotTopImgV;
 @end
 
 @implementation XMNavigationController
@@ -27,26 +33,53 @@
     edge.edges = UIRectEdgeLeft;
     edge.delegate = self;
     [self.view addGestureRecognizer:edge];
+    
+    // 使原生的interactivePopGestureRecognizer和自己定义的edge同时有效
+    self.interactivePopGestureRecognizer.delegate = self;
+
 }
 
 
-#warning todo 以后统一在这里将需要隐藏浮窗的vc列出,例如播放视频,查看文件
 - (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated{
-//    if ([viewController isKindOfClass:NSClassFromString(@"XMWebViewController")]){
-//        [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = YES;
-//    }else{
-//        [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = NO;
-//    }
+    
+    if(![viewController isKindOfClass:NSClassFromString(@"XMMainViewController")]){
+        
+        // 标记浮窗是否隐藏
+        BOOL middleFlag = [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden ;
+        [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = YES;
+        self.screenshotImage = [XMImageUtil screenShot];
+        [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = middleFlag;
+        
+        // 将上一个控制器截图
+        if(!self.screenshotImgV){
+            UIImageView *imgV = [[UIImageView alloc] initWithFrame:CGRectMake(-100, 0, XMScreenW, XMScreenH)];
+            [self.view.subviews[0].subviews[0] addSubview:imgV];
+            self.screenshotImgV = imgV;
+        }
+        self.screenshotImgV.image = self.screenshotImage;
+    }
+    
     [super pushViewController:viewController animated:animated];
+
+    if ([NSStringFromClass([viewController class]) isEqualToString:@"XMMainViewController"]){
+        // 主页,不需要作任何处理
+        return;
+    }
+    
+    if([XMWXFloatWindowIconConfig shouldHideFloatWindow] || [self shoudHideFloatWindowInViewController:viewController]){
+        [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = YES;
+    }else{
+        [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = NO;
+    }
 }
 
 - (UIViewController *)popViewControllerAnimated:(BOOL)animated{
     UIViewController *viewController = [super popViewControllerAnimated:animated];
-//    if ([viewController isKindOfClass:NSClassFromString(@"XMWebViewController")]){
-//        [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = NO;
-//    }else{
-//        [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = YES;
-//    }
+    if([XMWXFloatWindowIconConfig shouldHideFloatWindow]){
+        [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = YES;
+    }else{
+        [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = NO;
+    }
     return viewController;
 }
 
@@ -56,19 +89,69 @@
     if([self.childViewControllers.lastObject isKindOfClass:NSClassFromString(@"XMMainViewController")]){
         return;
     }
-    CGPoint point = [gest locationInView:[UIApplication sharedApplication].windows[0]];
+    CGPoint blockPoint = [gest locationInView:[UIApplication sharedApplication].windows[0]];
+    CGPoint point = [gest translationInView:[UIApplication sharedApplication].windows[0]];
     if (gest.state == UIGestureRecognizerStateBegan) {
         if ([XMRightBottomFloatView shareRightBottomFloatView].rightBottomStartBlock) {
             [XMRightBottomFloatView shareRightBottomFloatView].rightBottomStartBlock(YES);
         }
+        
+        // 记录浮窗是否隐藏
+        BOOL middleFlag = [XMWXVCFloatWindow shareXMWXVCFloatWindow].isHidden;
+        BOOL navBarFlag = self.navigationBar.isHidden;
+        self.navigationBar.hidden = YES;
+        [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = YES;
+        UIImage *image = [XMImageUtil screenShot];
+        [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = middleFlag;
+        self.navigationBar.hidden = navBarFlag;
+
+        // 将当前控制器截图,这是覆盖在最上面的控制器的视图,防止上面的手势动作
+        UIImageView *imgV = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, XMScreenW, XMScreenH)];
+        [self.childViewControllers.lastObject.view.superview addSubview:imgV];
+        imgV.image = image;
+        self.screenshotTopImgV = imgV;
+        
     }else if (gest.state == UIGestureRecognizerStateChanged) {
         if ([XMRightBottomFloatView shareRightBottomFloatView].rightBottomChangeBlock) {
-            [XMRightBottomFloatView shareRightBottomFloatView].rightBottomChangeBlock(point);
+            [XMRightBottomFloatView shareRightBottomFloatView].rightBottomChangeBlock(blockPoint);
         }
+        
+//        NSLog(@"%.2f",blockPoint.x);
+        // 防止过多向左移动视图
+        if(self.childViewControllers.lastObject.view.frame.origin.x < 0 && point.x < 0){
+            [gest setTranslation:CGPointZero inView:[UIApplication sharedApplication].windows[0]];
+            return;
+        }
+        //        self.navigationBar.transform = CGAffineTransformTranslate(self.navigationBar.transform, point.x, 0);
+        //        self.view.subviews[0].subviews[0].transform =  CGAffineTransformTranslate(self.view.subviews[0].subviews[0].transform, point.x, 0);
+        self.navigationBar.alpha = 1 - blockPoint.x / XMScreenW;
+        // 将当前最上面的控制器视图移动
+        self.childViewControllers.lastObject.view.transform = CGAffineTransformTranslate(self.childViewControllers.lastObject.view.transform, point.x, 0);
+        // 两张截图联动
+        self.screenshotImgV.transform = CGAffineTransformTranslate(self.screenshotImgV.transform, point.x * 100/(XMScreenW), 0);
+        self.screenshotTopImgV.transform = CGAffineTransformTranslate(self.screenshotTopImgV.transform, point.x, 0);
+        
+        // 重置移动距离
+        [gest setTranslation:CGPointZero inView:[UIApplication sharedApplication].windows[0]];
+        
     }else if (gest.state == UIGestureRecognizerStateEnded) {
         if ([XMRightBottomFloatView shareRightBottomFloatView].rightBottomEndBlock) {
             [XMRightBottomFloatView shareRightBottomFloatView].rightBottomEndBlock(YES);
         }
+        
+        if(self.childViewControllers.lastObject.view.frame.origin.x > 100){
+            if(![XMRightBottomFloatView shareRightBottomFloatView].isInArea){
+                [self popViewControllerAnimated:NO];
+            }
+        }
+        
+        // 恢复所有移动的视图
+        self.childViewControllers.lastObject.view.transform = CGAffineTransformIdentity;
+        self.navigationBar.alpha = 1;
+        self.screenshotTopImgV.transform = CGAffineTransformIdentity;
+        self.screenshotImgV.transform = CGAffineTransformIdentity;
+        [self.screenshotTopImgV removeFromSuperview];
+        
     }else{
         if ([XMRightBottomFloatView shareRightBottomFloatView].rightBottomCancelOrFailBlock) {
             [XMRightBottomFloatView shareRightBottomFloatView].rightBottomCancelOrFailBlock();
@@ -105,5 +188,11 @@
 //}
 
 //- (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated;
+
+
+// 判断该控制器是否需要隐藏浮窗
+- (BOOL)shoudHideFloatWindowInViewController:(UIViewController *)viewController{
+    return [@"XMFileDisplayWebViewViewController|XMPhotoCollectionViewController|HJVideoPlayerController" containsString:NSStringFromClass([viewController class])];
+}
 
 @end

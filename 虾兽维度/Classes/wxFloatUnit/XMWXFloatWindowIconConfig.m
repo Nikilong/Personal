@@ -22,6 +22,17 @@ NSString *const wxfloatVCParamsTitleKey = @"wxfloatVCParamsTitleKey";
 
 @implementation XMWXFloatWindowIconConfig
 
+/// 是否需要隐藏浮窗
++ (BOOL)shouldHideFloatWindow{
+    NSString *saveVCName = [[NSUserDefaults standardUserDefaults] valueForKey:wxfloatVCKey];
+    if(saveVCName.length > 0){
+        return NO;
+    }else{
+        return YES;
+    }
+    
+}
+
 /// 清空存档数据
 + (void)removeBackupData{
     
@@ -49,8 +60,10 @@ NSString *const wxfloatVCParamsTitleKey = @"wxfloatVCParamsTitleKey";
     [btn setTitle:@"" forState:UIControlStateNormal];
     [btn setImage:nil forState:UIControlStateNormal];
     
-//    __block NSURL *imgURL = webVC.model.author_icon;
-//    __block NSString *source = webVC.model.source;
+    // 先保存类名
+    [[NSUserDefaults standardUserDefaults] setValue:NSStringFromClass([XMWebViewController class]) forKey:wxfloatVCKey];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
     __block XMWebModel *model = webVC.model;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         __block UIImage *webCoverImg = [UIImage imageWithData:[NSData dataWithContentsOfURL:model.author_icon]];
@@ -97,7 +110,6 @@ NSString *const wxfloatVCParamsTitleKey = @"wxfloatVCParamsTitleKey";
                                      wxfloatVCParamsImageKey:imgData? imgData : @"",
                                      wxfloatVCParamsTitleKey:title
                                      };
-            [[NSUserDefaults standardUserDefaults] setValue:NSStringFromClass([XMWebViewController class]) forKey:wxfloatVCKey];
             [[NSUserDefaults standardUserDefaults] setValue:params forKey:wxfloatVCParamsKey];
             [[NSUserDefaults standardUserDefaults] synchronize];
             

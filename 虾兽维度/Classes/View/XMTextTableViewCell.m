@@ -16,11 +16,16 @@
     if (!cell){
         cell = [[XMTextTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:ID];
         
+        cell.backgroundColor = [UIColor clearColor];
+        
         // 修改选中状态的背景颜色
         cell.selectedBackgroundView = [[UIView alloc]  initWithFrame:cell.frame];
-        cell.selectedBackgroundView.backgroundColor = [UIColor yellowColor];
+        cell.selectedBackgroundView.backgroundColor = [UIColor grayColor];
         
+        // 字体设置
         cell.textLabel.textAlignment = NSTextAlignmentCenter;
+        cell.textLabel.font = [UIFont systemFontOfSize:13];
+        cell.textLabel.textColor = [UIColor whiteColor];
     }
     return cell;
 }

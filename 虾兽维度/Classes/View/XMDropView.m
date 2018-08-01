@@ -11,7 +11,8 @@
 
 @interface XMDropView()
 
-@property (weak, nonatomic)  UIImageView *container;
+//@property (weak, nonatomic)  UIImageView *container;
+@property (weak, nonatomic)  UIView *container;
 
 @end
 
@@ -20,14 +21,24 @@
 - (instancetype)initWithFrame:(CGRect)frame{
     if (self = [super initWithFrame:frame]){
     
-        // 设置container，根据图片限定宽度为217（没有内容时），并添加到XMDropView对象，必须在这里创建container，否则后面要用到container时可能container还没有被创建
-        UIImageView *container = [[UIImageView alloc] init];
-        container.userInteractionEnabled = YES;
-        container.image = [UIImage imageNamed:@"popover_background"];
-        container.width = 150;
-        container.height = 150;
+//        // 设置container，根据图片限定宽度为217（没有内容时），并添加到XMDropView对象，必须在这里创建container，否则后面要用到container时可能container还没有被创建
+//        UIImageView *container = [[UIImageView alloc] init];
+//        container.backgroundColor = [UIColor darkGrayColor];
+//        container.userInteractionEnabled = YES;
+////        container.image = [UIImage imageNamed:@"popover_background"];
+////        container.width = XMScreenW - 60;
+////        container.height = XMScreenH - 60;
+//        self.container = container;
+//        [self addSubview:container];
+        
+        // 设置container,改为UIView
+        UIView *container = [[UIView alloc] init];
+        container.backgroundColor = [UIColor whiteColor];
         self.container = container;
         [self addSubview:container];
+        
+        container.layer.cornerRadius = 5;
+        container.layer.masksToBounds = YES;
     }
     return self;
     
@@ -42,17 +53,12 @@
     _content = content;
     // 设置content内容居中
     CGFloat padding = 10;
-    CGFloat maxWidth = self.container.width - 2 * padding;
-    
-    if (_content.width <= maxWidth){
-        _content.x = (self.container.width - _content.width) * 0.5;
-    }else{
-        _content.x = padding;
-        _content.width = maxWidth;
-    }
-    _content.y = 15;
+    CGFloat marginY = 0;
     // 根据content设置container的高度
-    self.container.height = content.height + 30;
+    self.container.height = content.height + padding + marginY;
+    self.container.width = content.width + padding;
+    
+    _content.x = (self.container.width - _content.width) * 0.5;
     
     [self.container addSubview:_content];
 }
@@ -63,11 +69,10 @@
 
 - (void)showFrom:(UIView *)view{
     // 1，获得当前的窗口
-//    UIWindow *window = [[UIApplication sharedApplication].windows lastObject];
     UIWindow *window = [UIApplication sharedApplication].keyWindow;
 
     // 2，设置XMDropView对象的尺寸，消除背景颜色
-    self.backgroundColor = [UIColor clearColor];
+    self.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5];
     [window addSubview:self];
     self.frame = window.bounds;
     
@@ -75,7 +80,7 @@
     CGRect frame = [view convertRect:view.bounds toView:window];
     
     self.container.centerX = CGRectGetMidX(frame);
-    self.container.y = CGRectGetMaxY(frame);
+    self.container.y = CGRectGetMaxY(frame) + 5;
     
     // 4，通知代理，XMDropView对象显示完成
     if ([self.delegate respondsToSelector:@selector(dropViewDidShow:)]){

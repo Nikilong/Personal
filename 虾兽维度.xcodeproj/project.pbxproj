@@ -14,6 +14,7 @@
 		200770342059775100551C00 /* XMShowCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2007702D2059775100551C00 /* XMShowCollectionViewCell.xib */; };
 		200770352059775100551C00 /* XMSingleFilmModle.m in Sources */ = {isa = PBXBuildFile; fileRef = 2007702F2059775100551C00 /* XMSingleFilmModle.m */; };
 		200A823420837B1300825E6E /* XMMetorMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200A823320837B1300825E6E /* XMMetorMapViewController.swift */; };
+		200B709C2111F04A0036502B /* XMWebURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 200B709B2111F04A0036502B /* XMWebURLProtocol.m */; };
 		202C84EF1F2624AD0055FD7D /* XMHomeTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 202C84E31F2624AD0055FD7D /* XMHomeTableViewController.m */; };
 		202C84F01F2624AD0055FD7D /* XMQRCodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 202C84E51F2624AD0055FD7D /* XMQRCodeViewController.m */; };
 		202C84F11F2624AD0055FD7D /* XMSaveWebsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 202C84E71F2624AD0055FD7D /* XMSaveWebsTableViewController.m */; };
@@ -167,7 +168,6 @@
 		2086FCE120EBC61400957207 /* XMImageUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 2086FCE020EBC61400957207 /* XMImageUtil.m */; };
 		2086FCE420EBC75F00957207 /* file_upload_able.png in Resources */ = {isa = PBXBuildFile; fileRef = 2086FCE220EBC75F00957207 /* file_upload_able.png */; };
 		2086FCE520EBC75F00957207 /* file_upload_disable.png in Resources */ = {isa = PBXBuildFile; fileRef = 2086FCE320EBC75F00957207 /* file_upload_disable.png */; };
-		20BD92C021046D17004A7AFF /* XMNewNavTitleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20BD92BF21046D17004A7AFF /* XMNewNavTitleViewController.m */; };
 		20C85E382053E1F40057F483 /* XMToolboxViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20C85E372053E1F40057F483 /* XMToolboxViewController.m */; };
 		20C85E53205419C80057F483 /* XMToolBoxConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 20C85E52205419C80057F483 /* XMToolBoxConfig.m */; };
 		20C85E6020541F3B0057F483 /* tool_icon_0.png in Resources */ = {isa = PBXBuildFile; fileRef = 20C85E5620541F3B0057F483 /* tool_icon_0.png */; };
@@ -225,6 +225,8 @@
 		2007702F2059775100551C00 /* XMSingleFilmModle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMSingleFilmModle.m; sourceTree = "<group>"; };
 		200A823320837B1300825E6E /* XMMetorMapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XMMetorMapViewController.swift; sourceTree = "<group>"; };
 		200A823520837BBC00825E6E /* 虾兽维度-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "虾兽维度-Bridging-Header.h"; sourceTree = "<group>"; };
+		200B709A2111F04A0036502B /* XMWebURLProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMWebURLProtocol.h; sourceTree = "<group>"; };
+		200B709B2111F04A0036502B /* XMWebURLProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMWebURLProtocol.m; sourceTree = "<group>"; };
 		202C84E21F2624AD0055FD7D /* XMHomeTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMHomeTableViewController.h; sourceTree = "<group>"; };
 		202C84E31F2624AD0055FD7D /* XMHomeTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMHomeTableViewController.m; sourceTree = "<group>"; };
 		202C84E41F2624AD0055FD7D /* XMQRCodeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMQRCodeViewController.h; sourceTree = "<group>"; };
@@ -510,8 +512,6 @@
 		2086FCE320EBC75F00957207 /* file_upload_disable.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = file_upload_disable.png; sourceTree = "<group>"; };
 		2096B0E620A49C8D00BA249C /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PrefixHeader.pch; path = "虾兽维度/PrefixHeader.pch"; sourceTree = SOURCE_ROOT; };
 		2099EB7C1F19DCD500F8BD42 /* XMOpenWebmoduleProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMOpenWebmoduleProtocol.h; sourceTree = "<group>"; };
-		20BD92BE21046D17004A7AFF /* XMNewNavTitleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMNewNavTitleViewController.h; sourceTree = "<group>"; };
-		20BD92BF21046D17004A7AFF /* XMNewNavTitleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMNewNavTitleViewController.m; sourceTree = "<group>"; };
 		20C85E362053E1F40057F483 /* XMToolboxViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMToolboxViewController.h; sourceTree = "<group>"; };
 		20C85E372053E1F40057F483 /* XMToolboxViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMToolboxViewController.m; sourceTree = "<group>"; };
 		20C85E51205419C80057F483 /* XMToolBoxConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMToolBoxConfig.h; path = ../Config/XMToolBoxConfig.h; sourceTree = "<group>"; };
@@ -661,6 +661,8 @@
 			children = (
 				202C84EB1F2624AD0055FD7D /* XMWebViewController.h */,
 				202C84EC1F2624AD0055FD7D /* XMWebViewController.m */,
+				200B709A2111F04A0036502B /* XMWebURLProtocol.h */,
+				200B709B2111F04A0036502B /* XMWebURLProtocol.m */,
 			);
 			path = Webmodule;
 			sourceTree = "<group>";
@@ -954,8 +956,6 @@
 				205CED051F489F2B00821E38 /* XMLeftTableViewController.m */,
 				205CED081F489F2B00821E38 /* XMNavTitleTableViewController.h */,
 				205CED091F489F2B00821E38 /* XMNavTitleTableViewController.m */,
-				20BD92BE21046D17004A7AFF /* XMNewNavTitleViewController.h */,
-				20BD92BF21046D17004A7AFF /* XMNewNavTitleViewController.m */,
 				FDFAEEC320FD900E00BEA442 /* XMNavigationController.h */,
 				FDFAEEC420FD900E00BEA442 /* XMNavigationController.m */,
 			);
@@ -1598,6 +1598,7 @@
 				2086643620AB403D00D51CCB /* zip.c in Sources */,
 				205CECDD1F48150E00821E38 /* MBProgressHUD.m in Sources */,
 				204D2416209ED8E800F17E2E /* WebSocket.m in Sources */,
+				200B709C2111F04A0036502B /* XMWebURLProtocol.m in Sources */,
 				2086642E20AB403D00D51CCB /* pwd2key.c in Sources */,
 				205CECE51F48150E00821E38 /* SDWebImageDownloader.m in Sources */,
 				204D2406209ED8E800F17E2E /* DDData.m in Sources */,
@@ -1631,7 +1632,6 @@
 				200A823420837B1300825E6E /* XMMetorMapViewController.swift in Sources */,
 				205CECDE1F48150E00821E38 /* MKAnnotationView+WebCache.m in Sources */,
 				2061C22020C56F5F008C7424 /* HJVideoMaskView.m in Sources */,
-				20BD92C021046D17004A7AFF /* XMNewNavTitleViewController.m in Sources */,
 				204D2407209ED8E800F17E2E /* DDNumber.m in Sources */,
 				2086642A20AB403D00D51CCB /* aestab.c in Sources */,
 				204D2433209ED91A00F17E2E /* DDFileLogger.m in Sources */,

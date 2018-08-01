@@ -14,7 +14,7 @@
 #import "XMSavePathUnit.h"
 
 #import "AppDelegate.h"
-#import "XMWXVCFloatWindow.h"
+//#import "XMWXVCFloatWindow.h"
 #import "XMRightBottomFloatView.h"
 #import "XMNavigationController.h"
 
@@ -120,7 +120,7 @@ static double backForwardImagVWH = 50;
 
         _web = [[UIWebView alloc] init];
         // y方向距离为导航栏初始高度44+状态栏高度
-        _web.frame = CGRectMake(0, 44 + XMStatusBarHeight, XMScreenW, XMScreenH);
+        _web.frame = CGRectMake(0, 44 + XMStatusBarHeight, XMScreenW, XMScreenH - 24);
         _web.delegate = self;
         _web.scrollView.delegate = self;
         _web.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
@@ -139,7 +139,7 @@ static double backForwardImagVWH = 50;
         UIPanGestureRecognizer *panToCloseWebmodule = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panToCloseWebmodule:)];
         panToCloseWebmodule.delegate = self;
         self.panToCloseWebmodule = panToCloseWebmodule;
-        [_web addGestureRecognizer:panToCloseWebmodule];
+//        [_web addGestureRecognizer:panToCloseWebmodule];
 
         // 添加双击恢复缩放大小
         UITapGestureRecognizer *tapDouble = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTapToScaleIdentity)];
@@ -276,10 +276,10 @@ static double backForwardImagVWH = 50;
             btn.frame = CGRectMake(margin + i * ( margin + btnWH ), 0, btnWH, btnWH);
             if(i == 0){
                 self.toolBarBackBtn = btn;
-                self.toolBarBackBtn.selected = NO;
+                self.toolBarBackBtn.selected = YES;
             }else if (i == 1){
                 self.toolBarForwardBtn = btn;
-                self.toolBarForwardBtn.selected = NO;
+                self.toolBarForwardBtn.selected = YES;
             }
         }
 
@@ -351,10 +351,6 @@ static double backForwardImagVWH = 50;
     
     [super viewWillAppear:animated];
     
-    // 隐藏悬浮窗口
-    BOOL middleBool = [XMWXVCFloatWindow shareXMWXVCFloatWindow].isHidden;
-    [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = YES;
-    
     // 截图,并且将截图放到底部的图片框上,否则会出现黑底
     if (!self.backScreenshotImageV){
         
@@ -369,7 +365,6 @@ static double backForwardImagVWH = 50;
     // 必须先截图再截屏.否则会没有导航条
     self.navigationController.navigationBarHidden = YES;
     self.statusBar.backgroundColor = [self getNavColor];
-    [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = middleBool;
     
     // 从悬浮窗口恢复的界面, web backImageV toolBar 三个需要复位
 //    self.backImageV.transform = CGAffineTransformIdentity;
@@ -836,6 +831,7 @@ static double backForwardImagVWH = 50;
     // 调整web的y
     CGRect webF = self.web.frame;
     webF.origin.y = CGRectGetMaxY(tarF);
+    webF.size.height = XMScreenH - CGRectGetMaxY(tarF);
     self.web.frame = webF;
     
     // 调整字体大小
@@ -945,7 +941,7 @@ static double backForwardImagVWH = 50;
                 self.backForIconContainV.hidden = YES;
             }
             // 拖拽距离超过rightContentView的相对位置时决定弹回还是隐藏
-            [self showRightContentView:self.containerV.frame.origin.x < 128];
+            [self showRightContentView:self.containerV.frame.origin.x < 100];
             break;
         }
         default:

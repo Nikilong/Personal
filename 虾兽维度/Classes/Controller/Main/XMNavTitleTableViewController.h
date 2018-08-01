@@ -19,4 +19,7 @@
 
 @property (weak, nonatomic)  id<XMNavTitleTableViewControllerDelegate> delegate;
 
+@property (nonatomic, assign)  CGFloat  cellHeight;
+
+
 @end

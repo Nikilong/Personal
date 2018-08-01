@@ -22,4 +22,7 @@ extern NSString *const wxfloatVCKey;
 
 + (void)setBackupImageOrTitlt:(UIButton *)btn;
 
+/// 是否需要隐藏浮窗
++ (BOOL)shouldHideFloatWindow;
+
 @end

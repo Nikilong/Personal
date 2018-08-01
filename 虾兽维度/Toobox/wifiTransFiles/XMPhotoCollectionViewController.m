@@ -10,7 +10,6 @@
 #import "XMWifiTransModel.h"
 #import "XMPhotoCollectionViewCell.h"
 #import "MBProgressHUD+NK.h"
-#import "XMWXVCFloatWindow.h"
 
 @interface XMPhotoCollectionViewController ()<UIScrollViewDelegate,UICollectionViewDelegateFlowLayout,UIGestureRecognizerDelegate>
 
@@ -87,9 +86,6 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
     // 禁用左侧返回手势
     self.navigationController.interactivePopGestureRecognizer.enabled = NO;
     
-    // 记录浮窗是否隐藏,隐藏浮窗防止干扰截图
-    [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = YES;
-    
     // 截图
     UIGraphicsBeginImageContextWithOptions([UIScreen mainScreen].bounds.size, YES, [UIScreen mainScreen].scale);
     [[UIApplication sharedApplication].keyWindow.layer renderInContext:UIGraphicsGetCurrentContext()];
@@ -105,12 +101,8 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
     
     // 移除定时器
     [self stopTimer];
-    
-    // 恢复显示浮窗
-    [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = NO;
 
 }
-
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -319,7 +311,7 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
     [UIView animateWithDuration:0.5f animations:^{
         // 缩放到原来的cell的图片位置,x坐标就是原来图片cell的x,y坐标是原来的坐标减去图片切换造成的位置差 * cell的高度再加上self.collectionView的y偏移高度32,最后缩放的宽固定是cell的相框的高度,最后缩放的高度根据比例缩放
         CGFloat finalX = self.clickImageF.origin.x;
-        CGFloat finalY = self.clickImageF.origin.y + self.currentCell.frame.origin.y  - (self.selectImgIndex - index.row) * self.clickCellH;
+        CGFloat finalY = self.clickImageF.origin.y + self.currentCell.frame.origin.y  - (self.selectImgIndex - index.row) * self.clickCellH + ((self.navigationController.navigationBar.isHidden) ? 0 : (XMStatusBarHeight + 44));
         CGFloat finalW = self.clickImageF.size.width;
         CGFloat finalH = self.currentCell.imgV.frame.size.height * self.clickImageF.size.width / self.currentCell.imgV.frame.size.width;
         self.currentCell.imgV.frame = CGRectMake( finalX, finalY, finalW , finalH);

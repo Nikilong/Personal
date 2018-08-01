@@ -1053,6 +1053,7 @@ UITextFieldDelegate>
             }
         }
         HJVideoPlayerController *videoVC = [[HJVideoPlayerController alloc] init];
+        videoVC.videoIndex = currentVideoIndex;
         videoVC.videoList = videoArr;
         [videoVC setUrl:model.fullPath];
         [videoVC.configModel setOnlyFullScreen:YES];

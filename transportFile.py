@@ -33,7 +33,7 @@ class KeyboardHookThread(threading.Thread):
                 print '发送文件'
                 self.callback(self.args)
             else:
-                print '无效指令'
+                print '无效指令!!提示:输入"send"可以向移动端发送文件,输入"help"查看帮助'
 
 # 重写get和post方法
 class PostHandler(BaseHTTPRequestHandler):
@@ -122,15 +122,14 @@ def startToTransfer(url):
     transFlag = True
     while transFlag:
         #1.将要上传的文件传入一个数组
-        fileStr = raw_input('拖拽要传送的文件: \n')
-        fileList = fileStr.split(" ")
+        fileStr = raw_input('拖拽要传送的文件: \n').replace('\\','')
+        fileList = fileStr.split(" /Users")
         if len(fileStr) == 0:
             print '=====没有选择文件====='
-            return
+#            return
         print '=====已选择文件====='
         for ele in fileList:
             print ele
-
         #2.分批上传
         #先获得上传网页信息
         refreshUploadhtml(url)
@@ -144,6 +143,8 @@ def startToTransfer(url):
             # 一次添加文件
             inputEle = elements[hasInputCount]
             file = fileList[index]
+            if not '/Users' in file:
+                file = '/Users' + file
             # 先清空内容,再传路径
             inputEle.clear()
             inputEle.send_keys(file.decode('utf-8'))
@@ -179,7 +180,7 @@ if __name__=='__main__':
     port = 8000
     serverUrl = 'http://%s:%s'%(get_host_ip(),port)
     print '本机ip是:' + serverUrl
-    # img = qrcode.make(serverUrl)
-    # img.get_image().show()
+#    img = qrcode.make(serverUrl)
+#    img.get_image().show()
     # img.save('/Users/admin/Desktop/wifiTransQrcode.png')
     StartServer(8000)

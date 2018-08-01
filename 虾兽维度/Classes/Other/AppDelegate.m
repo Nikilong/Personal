@@ -14,6 +14,7 @@
 #import "XMSavePathUnit.h"
 #import "XMWXVCFloatWindow.h"
 #import "XMWebViewController.h"
+#import "XMWebURLProtocol.h"
 
 /// 试验区头文件,可随时删除
 #import "XMTouchIDKeyboardViewController.h"
@@ -31,6 +32,9 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    
+    // 监听所有网络请求
+//    [NSURLProtocol registerClass:[XMWebURLProtocol class]];
     
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     
@@ -61,8 +65,52 @@
     // 创建悬浮窗口
     [self recoverFloatVC];
     
+    //注册本地通知
+//    [self registerLocalNotification];
+    
     return YES;
 }
+
+- (void)registerLocalNotification{
+    /**
+     *iOS 8之后需要向系统注册通知，让用户开放权限
+     */
+    if ([UIDevice currentDevice].systemVersion.integerValue > 8) {
+        if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)]) {
+            
+            UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeBadge|UIUserNotificationTypeSound|UIUserNotificationTypeAlert categories:nil];
+            
+            [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
+        }
+    }
+}
+
+- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification{
+    
+    NSLog(@"localNotification---%s",__func__);
+    UIApplicationState state = application.applicationState;
+    if (state == UIApplicationStateActive) {
+        if ([UIDevice currentDevice].systemVersion.integerValue > 9) {
+            UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"警告" message:notification.alertBody preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:nil];
+            [alert addAction:okAction];
+            [self.window.rootViewController presentViewController:alert animated:YES completion:nil];
+            
+        }else{
+            UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"警告" message:notification.alertBody delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+            [alert show];
+            
+        }
+        
+        //        //清除已经推送的消息
+        //        [LocalNotificationManager  compareFiretime:notification needRemove:^(UILocalNotification *item) {
+        //            [[UIApplication sharedApplication] cancelLocalNotification:notification];
+        //        }];
+    }
+    
+}
+
+
 
 /// 根据缓存来恢复之前保存的浮窗
 - (void)recoverFloatVC{
