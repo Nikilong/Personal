@@ -208,7 +208,8 @@ UITextFieldDelegate>
     UISwipeGestureRecognizer *swip = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(showLeftView)];
     [self.view addGestureRecognizer:swip];
     XMNavigationController *nav = (XMNavigationController *)self.navigationController;
-    [swip requireGestureRecognizerToFail:nav.customerPopGestureRecognizer];
+    [nav.customerPopGestureRecognizer requireGestureRecognizerToFail:swip];
+    
 }
 
 

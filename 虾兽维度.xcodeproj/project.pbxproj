@@ -208,6 +208,12 @@
 		FD3332EC20A17DD80017655F /* XMWifiLeftTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FD3332EB20A17DD80017655F /* XMWifiLeftTableViewController.m */; };
 		FD3332EF20A181D40017655F /* XMWifiGroupTool.m in Sources */ = {isa = PBXBuildFile; fileRef = FD3332EE20A181D40017655F /* XMWifiGroupTool.m */; };
 		FD7407E820B4306D00A83979 /* XMPhotoCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FD7407E720B4306D00A83979 /* XMPhotoCollectionViewController.m */; };
+		FD9E34D62114041300FFBE3B /* webFilterList.plist in Resources */ = {isa = PBXBuildFile; fileRef = FD9E34D52114041300FFBE3B /* webFilterList.plist */; };
+		FDB099F12112E71700148492 /* RSSwizzle.m in Sources */ = {isa = PBXBuildFile; fileRef = FDB099F02112E71700148492 /* RSSwizzle.m */; };
+		FDB099F52112E77300148492 /* UIScreenEdgePanGestureRecognizer+UIScreenEdgePanGestureRecognizer_hook.m in Sources */ = {isa = PBXBuildFile; fileRef = FDB099F42112E77300148492 /* UIScreenEdgePanGestureRecognizer+UIScreenEdgePanGestureRecognizer_hook.m */; };
+		FDB099FF2112F5AA00148492 /* UIViewController+hook.m in Sources */ = {isa = PBXBuildFile; fileRef = FDB099FE2112F5AA00148492 /* UIViewController+hook.m */; };
+		FDB09A02211317B800148492 /* XMNavigationInteractiveTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = FDB09A01211317B800148492 /* XMNavigationInteractiveTransition.m */; };
+		FDB09A052113192A00148492 /* XMPopAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = FDB09A042113192A00148492 /* XMPopAnimation.m */; };
 		FDFAEEC520FD900E00BEA442 /* XMNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = FDFAEEC420FD900E00BEA442 /* XMNavigationController.m */; };
 /* End PBXBuildFile section */
 
@@ -569,6 +575,17 @@
 		FD3332EE20A181D40017655F /* XMWifiGroupTool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMWifiGroupTool.m; sourceTree = "<group>"; };
 		FD7407E620B4306D00A83979 /* XMPhotoCollectionViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMPhotoCollectionViewController.h; sourceTree = "<group>"; };
 		FD7407E720B4306D00A83979 /* XMPhotoCollectionViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMPhotoCollectionViewController.m; sourceTree = "<group>"; };
+		FD9E34D52114041300FFBE3B /* webFilterList.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = webFilterList.plist; path = "虾兽维度/Config/webFilterList.plist"; sourceTree = SOURCE_ROOT; };
+		FDB099EF2112E71700148492 /* RSSwizzle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSSwizzle.h; sourceTree = "<group>"; };
+		FDB099F02112E71700148492 /* RSSwizzle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSSwizzle.m; sourceTree = "<group>"; };
+		FDB099F32112E77300148492 /* UIScreenEdgePanGestureRecognizer+UIScreenEdgePanGestureRecognizer_hook.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIScreenEdgePanGestureRecognizer+UIScreenEdgePanGestureRecognizer_hook.h"; sourceTree = "<group>"; };
+		FDB099F42112E77300148492 /* UIScreenEdgePanGestureRecognizer+UIScreenEdgePanGestureRecognizer_hook.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIScreenEdgePanGestureRecognizer+UIScreenEdgePanGestureRecognizer_hook.m"; sourceTree = "<group>"; };
+		FDB099FD2112F5AA00148492 /* UIViewController+hook.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+hook.h"; sourceTree = "<group>"; };
+		FDB099FE2112F5AA00148492 /* UIViewController+hook.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+hook.m"; sourceTree = "<group>"; };
+		FDB09A00211317B800148492 /* XMNavigationInteractiveTransition.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMNavigationInteractiveTransition.h; sourceTree = "<group>"; };
+		FDB09A01211317B800148492 /* XMNavigationInteractiveTransition.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMNavigationInteractiveTransition.m; sourceTree = "<group>"; };
+		FDB09A032113192A00148492 /* XMPopAnimation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMPopAnimation.h; sourceTree = "<group>"; };
+		FDB09A042113192A00148492 /* XMPopAnimation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMPopAnimation.m; sourceTree = "<group>"; };
 		FDFAEEC320FD900E00BEA442 /* XMNavigationController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMNavigationController.h; sourceTree = "<group>"; };
 		FDFAEEC420FD900E00BEA442 /* XMNavigationController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMNavigationController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -615,6 +632,7 @@
 				FD1EA08820A9A96A00658F18 /* XMGlobalConst.m */,
 				205BCF9520AB174900FF9652 /* XMSavePathUnit.h */,
 				205BCF9620AB174900FF9652 /* XMSavePathUnit.m */,
+				FD9E34D52114041300FFBE3B /* webFilterList.plist */,
 			);
 			name = config;
 			path = toolBoxIcons;
@@ -696,6 +714,7 @@
 		203D2FF821036AA7008788B6 /* wxFloatUnit */ = {
 			isa = PBXGroup;
 			children = (
+				FDB099E12112A92500148492 /* Transition */,
 				203D2FF921036AA7008788B6 /* XMWXFloatView */,
 				203D2FFE21036AA7008788B6 /* XMWXFloatWindowIconConfig.h */,
 				203D2FFF21036AA7008788B6 /* XMWXFloatWindowIconConfig.m */,
@@ -873,6 +892,7 @@
 				205CED101F49623200821E38 /* Log */,
 				205CECAD1F48150E00821E38 /* MBProgressHUD */,
 				205CECB31F48150E00821E38 /* SDWebImage */,
+				FDB099EE2112E71700148492 /* RSSwizzle */,
 			);
 			path = Framework;
 			sourceTree = "<group>";
@@ -1426,6 +1446,38 @@
 			path = wifiIcon;
 			sourceTree = "<group>";
 		};
+		FDB099E12112A92500148492 /* Transition */ = {
+			isa = PBXGroup;
+			children = (
+				FDB09A032113192A00148492 /* XMPopAnimation.h */,
+				FDB09A042113192A00148492 /* XMPopAnimation.m */,
+				FDB09A00211317B800148492 /* XMNavigationInteractiveTransition.h */,
+				FDB09A01211317B800148492 /* XMNavigationInteractiveTransition.m */,
+			);
+			path = Transition;
+			sourceTree = "<group>";
+		};
+		FDB099EE2112E71700148492 /* RSSwizzle */ = {
+			isa = PBXGroup;
+			children = (
+				FDB099EF2112E71700148492 /* RSSwizzle.h */,
+				FDB099F02112E71700148492 /* RSSwizzle.m */,
+				FDB099F22112E73400148492 /* hook */,
+			);
+			path = RSSwizzle;
+			sourceTree = "<group>";
+		};
+		FDB099F22112E73400148492 /* hook */ = {
+			isa = PBXGroup;
+			children = (
+				FDB099FD2112F5AA00148492 /* UIViewController+hook.h */,
+				FDB099FE2112F5AA00148492 /* UIViewController+hook.m */,
+				FDB099F32112E77300148492 /* UIScreenEdgePanGestureRecognizer+UIScreenEdgePanGestureRecognizer_hook.h */,
+				FDB099F42112E77300148492 /* UIScreenEdgePanGestureRecognizer+UIScreenEdgePanGestureRecognizer_hook.m */,
+			);
+			path = hook;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1522,6 +1574,7 @@
 				20F112141E864FC000E64A70 /* web.plist in Resources */,
 				20E895B920AEFB120090AD15 /* setting_backup.png in Resources */,
 				84BA255A1E65C7A800C8B204 /* XMWebTableViewCell.xib in Resources */,
+				FD9E34D62114041300FFBE3B /* webFilterList.plist in Resources */,
 				20E895B320ADB58C0090AD15 /* MISFileType.bundle in Resources */,
 				849D26FE1E640E3200F0CA5D /* Assets.xcassets in Resources */,
 				200770342059775100551C00 /* XMShowCollectionViewCell.xib in Resources */,
@@ -1577,6 +1630,7 @@
 				205CECE91F48150E00821E38 /* UIButton+WebCache.m in Sources */,
 				2086642920AB403D00D51CCB /* aeskey.c in Sources */,
 				205CED0A1F489F2B00821E38 /* XMLeftTableViewController.m in Sources */,
+				FDB09A02211317B800148492 /* XMNavigationInteractiveTransition.m in Sources */,
 				20863CBC20CD422F00A0812C /* ZLPhotoPickerViewController.m in Sources */,
 				205CECE21F48150E00821E38 /* SDImageCacheConfig.m in Sources */,
 				205CECEB1F48150E00821E38 /* UIImage+MultiFormat.m in Sources */,
@@ -1629,6 +1683,7 @@
 				84BA25591E65C7A800C8B204 /* XMWebTableViewCell.m in Sources */,
 				2086FCE120EBC61400957207 /* XMImageUtil.m in Sources */,
 				20863CBD20CD422F00A0812C /* ZLPhotoPickerCollectionView.m in Sources */,
+				FDB09A052113192A00148492 /* XMPopAnimation.m in Sources */,
 				200A823420837B1300825E6E /* XMMetorMapViewController.swift in Sources */,
 				205CECDE1F48150E00821E38 /* MKAnnotationView+WebCache.m in Sources */,
 				2061C22020C56F5F008C7424 /* HJVideoMaskView.m in Sources */,
@@ -1687,9 +1742,11 @@
 				205CECE71F48150E00821E38 /* SDWebImageManager.m in Sources */,
 				204D2408209ED8E800F17E2E /* DDRange.m in Sources */,
 				205CECEC1F48150E00821E38 /* UIImage+WebP.m in Sources */,
+				FDB099FF2112F5AA00148492 /* UIViewController+hook.m in Sources */,
 				FD3332EF20A181D40017655F /* XMWifiGroupTool.m in Sources */,
 				2061C21F20C56F5F008C7424 /* HJVideoBottomView.m in Sources */,
 				203D300421036AA7008788B6 /* XMWXFloatWindowIconConfig.m in Sources */,
+				FDB099F52112E77300148492 /* UIScreenEdgePanGestureRecognizer+UIScreenEdgePanGestureRecognizer_hook.m in Sources */,
 				204D240F209ED8E800F17E2E /* MultipartMessageHeaderField.m in Sources */,
 				20C85E53205419C80057F483 /* XMToolBoxConfig.m in Sources */,
 				202C84F01F2624AD0055FD7D /* XMQRCodeViewController.m in Sources */,
@@ -1697,6 +1754,7 @@
 				849D26F31E640E3200F0CA5D /* main.m in Sources */,
 				20863CBE20CD422F00A0812C /* ZLPhotoPickerCollectionViewCell.m in Sources */,
 				2061C22120C56F5F008C7424 /* HJVideoPlayerController.m in Sources */,
+				FDB099F12112E71700148492 /* RSSwizzle.m in Sources */,
 				2061C21120C56F5F008C7424 /* HJVideoPlayTimeRecord.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

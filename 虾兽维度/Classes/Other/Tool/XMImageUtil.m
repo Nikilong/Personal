@@ -13,17 +13,25 @@
 #import <ImageIO/ImageIO.h>
 #import "XMWifiGroupTool.h"
 
+
+
+//#import "XMWXVCFloatWindow.h"
+
 @implementation XMImageUtil
 
 /**--------- 截图 ---------*/
 /// 屏幕截图
 + (UIImage *)screenShot{
+//    BOOL middleFlag = [XMWXVCFloatWindow shareXMWXVCFloatWindow].isHidden;
     UIGraphicsBeginImageContextWithOptions([UIScreen mainScreen].bounds.size, YES, [UIScreen mainScreen].scale);
-//    [[UIApplication sharedApplication].keyWindow.layer renderInContext:UIGraphicsGetCurrentContext()];
+    
+//    [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = YES;
+//        [[UIApplication sharedApplication].keyWindow.layer renderInContext:UIGraphicsGetCurrentContext()];
     // 这样重绘才可以完整将导航栏的所有图层绘出
     [[UIApplication sharedApplication].keyWindow drawViewHierarchyInRect:CGRectMake(0, 0,XMScreenW, XMScreenH) afterScreenUpdates:NO];
     UIImage *img = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
+//    [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = middleFlag;
     return img;
 }
 

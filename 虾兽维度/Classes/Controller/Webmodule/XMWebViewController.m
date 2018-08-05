@@ -14,7 +14,6 @@
 #import "XMSavePathUnit.h"
 
 #import "AppDelegate.h"
-//#import "XMWXVCFloatWindow.h"
 #import "XMRightBottomFloatView.h"
 #import "XMNavigationController.h"
 
@@ -70,7 +69,6 @@ UIScrollViewDelegate>
 
 // 标记右划开始的位置
 @property (nonatomic, assign)  CGFloat starX;
-@property (weak, nonatomic)  UIPanGestureRecognizer *panToCloseWebmodule;
 
 // 截图相框
 @property (weak, nonatomic)  UIImageView *backScreenshotImageV;
@@ -102,7 +100,7 @@ static double backForwardImagVWH = 50;
 /// 底部tabbar高度
 - (double)getBottomToolBarHeight{
     if(isIphoneX){
-        return 83;
+        return 65;
     }else{
         return 49;
     }
@@ -135,12 +133,6 @@ static double backForwardImagVWH = 50;
         longP.minimumPressDuration = 0.25;
         [_web addGestureRecognizer:longP];
 
-        // 添加右划关闭当前webmodule手势
-        UIPanGestureRecognizer *panToCloseWebmodule = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panToCloseWebmodule:)];
-        panToCloseWebmodule.delegate = self;
-        self.panToCloseWebmodule = panToCloseWebmodule;
-//        [_web addGestureRecognizer:panToCloseWebmodule];
-
         // 添加双击恢复缩放大小
         UITapGestureRecognizer *tapDouble = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTapToScaleIdentity)];
         tapDouble.numberOfTapsRequired = 2;
@@ -158,10 +150,6 @@ static double backForwardImagVWH = 50;
         swipDown.delegate = self;
         swipDown.direction = UISwipeGestureRecognizerDirectionDown;
         swipDown.numberOfTouchesRequired = 2;
-        
-        // 手势优先级设置
-        [panToCloseWebmodule requireGestureRecognizerToFail:swipUp];
-        [panToCloseWebmodule requireGestureRecognizerToFail:swipDown];
         
     }
     return _web;
@@ -251,7 +239,7 @@ static double backForwardImagVWH = 50;
        @{@"image": @"webview_share",@"selectImage": @"",@"selector":@"showShareVC"},
                                    ];
         CGFloat toolbarW = [self getBottomToolBarHeight];
-        CGFloat btnWH = (isIphoneX) ? (toolbarW - 34) : toolbarW;
+        CGFloat btnWH = 49;
         NSUInteger btnNumber = tabbarBtnData.count;
         CGFloat margin = (XMScreenW - btnNumber * btnWH) / ( btnNumber + 1);
 
@@ -299,8 +287,6 @@ static double backForwardImagVWH = 50;
     if (!_statusCover){
         UIView *statusCover = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, XMStatusBarHeight)];
         statusCover.backgroundColor = nil;
-#warning todo  以后测试稳定后将保持statusCover的背景颜色为nil,到时候见已经注释掉的设置颜色的代码删除
-//        statusCover.backgroundColor = [self getNavColor];
         statusCover.hidden = YES;
         [self.statusBar addSubview:statusCover];
         _statusCover = statusCover;
@@ -350,25 +336,8 @@ static double backForwardImagVWH = 50;
 - (void)viewWillAppear:(BOOL)animated{
     
     [super viewWillAppear:animated];
-    
-    // 截图,并且将截图放到底部的图片框上,否则会出现黑底
-    if (!self.backScreenshotImageV){
-        
-        UIImageView *backImageV = [[UIImageView alloc] initWithImage:[XMImageUtil screenShot]];
-        backImageV.frame = CGRectMake(-[self getBackImageVStarX], 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
-        self.backScreenshotImageV = backImageV;
-    
-#warning 核心代码,需要把图片加到这上面,如果加到self.view上面会在pop之后闪一下黑色
-        [self.navigationController.view.superview insertSubview:self.backScreenshotImageV belowSubview:self.navigationController.view];
-    }
-    
-    // 必须先截图再截屏.否则会没有导航条
+    // 隐藏导航条
     self.navigationController.navigationBarHidden = YES;
-    self.statusBar.backgroundColor = [self getNavColor];
-    
-    // 从悬浮窗口恢复的界面, web backImageV toolBar 三个需要复位
-//    self.backImageV.transform = CGAffineTransformIdentity;
-    self.containerV.transform = CGAffineTransformIdentity;
     
     // 记录即将显示
     self.isShow = YES;
@@ -475,8 +444,8 @@ static double backForwardImagVWH = 50;
     if (button.isSelected){
         
         XMWebModel *model = [[XMWebModel alloc] init];
-        // 保存的网站需要取消searchMode标记
-        model.searchMode = NO;
+        // 保存的网站统一标记为searchMode
+        model.searchMode = YES;
         model.webURL = [NSURL URLWithString:self.web.request.URL.absoluteString];
         model.title =  [self.web stringByEvaluatingJavaScriptFromString:@"document.title"];
         // 保存网站到本地
@@ -522,7 +491,6 @@ static double backForwardImagVWH = 50;
         self.navToolBtnContentV.hidden = NO;
         // 恢复导航栏盖罩
         self.statusCover.hidden = YES;
-//        self.statusCover.backgroundColor = [self getNavColor];
     }];
 }
 
@@ -534,7 +502,7 @@ static double backForwardImagVWH = 50;
     self.statusBar.backgroundColor = nil;
     [self.statusCover removeFromSuperview];
     if (![XMRightBottomFloatView shareRightBottomFloatView].isInArea){
-        [self.navigationController popViewControllerAnimated:NO];
+        [self.navigationController popViewControllerAnimated:YES];
     }
 }
 
@@ -640,18 +608,36 @@ static double backForwardImagVWH = 50;
 }
 
 #pragma mark - UIWebViewDelegate
+
+- (BOOL)shoudlFilterRequest:(NSString *)urlStr{
+    // 加载过滤plist名单
+    NSArray *filterArr = [NSArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"webFilterList.plist" ofType:nil]];
+    
+    for(NSString *keyWord in filterArr){
+        if([urlStr containsString:keyWord]){
+            return NO;
+        }
+    }
+    return YES;
+}
+
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType{
-//    NSString *ss =[NSString stringWithContentsOfURL:<#(nonnull NSURL *)#> encoding:NSUTF8StringEncoding error:<#(NSError * _Nullable __autoreleasing * _Nullable)#>];
-    NSLog(@"%ld=======%@",navigationType,request.URL.absoluteString);
+//    NSLog(@"%ld===%@",navigationType,request.URL.absoluteString);
     // 开启网络加载
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
-    // 过滤名单
-    if([request.URL.absoluteString containsString:@".js"] || [request.URL.absoluteString containsString:@"eclick.baidu.com"] || [request.URL.absoluteString containsString:@"pos.baidu.com"]){
-        
-        // 关闭网络加载
+    
+    if ([self shoudlFilterRequest:request.URL.absoluteString] == NO){
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
         return NO;
     }
+    
+//                // 过滤名单
+//                if([request.URL.absoluteString containsString:@".js"] || [request.URL.absoluteString containsString:@"eclick.baidu.com"] || [request.URL.absoluteString containsString:@"pos.baidu.com"]){
+//
+//                    // 关闭网络加载
+//                    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+//                    return NO;
+//                }
     
     // 防止拉起appstore
     if([request.URL.absoluteString containsString:@"https://itunes.apple.com/cn/app"]){
@@ -665,7 +651,7 @@ static double backForwardImagVWH = 50;
             weakSelf.canOpenAppstore = YES;
             [weakSelf.web loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:request.URL.absoluteString]]];
         }]];
-        
+
         [self presentViewController:tips animated:YES completion:nil];
         return self.canOpenAppstore;
     }
@@ -684,54 +670,38 @@ static double backForwardImagVWH = 50;
         if (![self.originURL.absoluteString isEqualToString:request.URL.absoluteString] && [[UIApplication sharedApplication] canOpenURL:request.URL]){
             XMWebModel *model = [[XMWebModel alloc] init];
             model.webURL = request.URL;
-            
+            NSLog(@"webmodule====%@",request.URL.absoluteString);
+
             // 调用方法打开新的webmodule
             [XMWebViewController openWebmoduleWithModel:model viewController:self];
+            // 关闭网络加载
+            [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+            // 当网页完成加载之后,禁止再重新加载
+            return NO;
+        }else{
+            // 关闭网络加载
+            [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+            return YES;
         }
-        // 关闭网络加载
-        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-        // 当网页完成加载之后,禁止再重新加载
-        return NO;
     }
 }
 
 - (void)webViewDidStartLoad:(UIWebView *)webView{
-    NSURL *url = [self.web.request mainDocumentURL];
-    NSLog(@"The Redirected URL is %@",url);
-    // 为searchmode添加左划返回手势
-    if (self.panSearchMode){
-        // 防止与右下角的扇形区域手势冲突
-        if(self.navigationController){
-            XMNavigationController *nav = (XMNavigationController *)self.navigationController;
-            [self.panSearchMode requireGestureRecognizerToFail:nav.customerPopGestureRecognizer];
-        }
-    }
-    
+
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView{
     // 关闭网络加载
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-    // 如果在加载完的时候,已经右划发生移动,则不要设置状态栏颜色
-    if (self.containerV.frame.origin.x == 0 && self.isShow){
-        // 设置statusBar随页面的颜色改变
-//        self.webNavColor = [webView colorOfPoint:CGPointMake(10, XMStatusBarHeight + 1)];
-        self.statusBar.backgroundColor = [self getNavColor];
-    }
+
     // 禁止完成加载之后再去加载网页
     self.canLoad = NO;
-    // 加载完成之后判断是否需要添加searchMode的pan手势
-    if(self.web.canGoBack || self.web.canGoForward){
-        // 检测是否最后一页,移除searchMode下的pan手势
-        if (! [self.model.webURL.absoluteString isEqualToString:self.web.request.mainDocumentURL.absoluteString]){
-            [self.web addGestureRecognizer:self.panSearchMode];
-        }
-    }
+
+    // 判定全屏pop手势是否禁用以及前进后退两个箭头,需要在两个地方做判定,因为有时候后退不发起网络请求
+    XMNavigationController *nav = (XMNavigationController *)self.navigationController;
+    nav.customerPopGestureRecognizer.enabled = !self.web.canGoBack;
     self.toolBarForwardBtn.selected = !self.web.canGoForward;
     self.toolBarBackBtn.selected = !self.web.canGoBack;
-//    if (self.isSearchMode){
-//        self.saveBtn.selected = NO;
-//    }
     
     // 设置网页标题
     NSString *title = [self.web stringByEvaluatingJavaScriptFromString:@"document.title"];
@@ -755,6 +725,16 @@ static double backForwardImagVWH = 50;
     
 }
 
+- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error{
+    // 关闭网络加载
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+//    [self.web stopLoading];
+//    // -999是因为上一个网络请求没有加载完就开始加载下一个请求,常发生在"返回"
+//    if(error.code != -999){
+//        [MBProgressHUD showFailed:@"加载网页失败"];
+//    }
+}
+
 - (void)webDidRemoveNode{
     
     // 必须样式执行,因为广告是要一段时间才动态加载出来
@@ -763,6 +743,8 @@ static double backForwardImagVWH = 50;
         [self.web stringByEvaluatingJavaScriptFromString:@"var floatDiv =$(\"div[class^='FloatLayer__floatlayer']\")[0].remove()"];
         //    uc底部轮播条的class为:slider__sdk__wrapper sdk__sharepage __web-inspector-hide-
         [self.web stringByEvaluatingJavaScriptFromString:@"var deleteNode =document.getElementsByClassName('sdk__sharepage')[0];document.body.removeChild(deleteNode)"];
+//        // uc"大家都在看"屏蔽,因为需要打开uc链接,base__wrapper__开头
+//        [self.web stringByEvaluatingJavaScriptFromString:@"var floatDiv =$(\"div[class^='base__wrapper']\")[0].remove()"];
         
     });
     
@@ -790,12 +772,10 @@ static double backForwardImagVWH = 50;
         // 导航栏最大化的时候移除导航栏盖罩
         if(self.statusCover.hidden == NO){
             self.statusCover.hidden = YES;
-//            self.statusCover.backgroundColor = [self getNavColor];
         }
     }else{
         // 导航栏非最大化的时候添加状态栏盖罩
         if(self.statusCover.hidden){
-//            self.statusCover.backgroundColor = nil;
             self.statusCover.hidden = NO;
         }
     }
@@ -853,148 +833,20 @@ static double backForwardImagVWH = 50;
 
 #pragma mark - uigestureDelegate
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
-    
     // 当触发swipe手势时,可能会触发pan手势等手势
     if ([gestureRecognizer isKindOfClass:[UISwipeGestureRecognizer class]]){
-        
-        // swip根据state会触发两次,或者会同时触发pan手势,这都是可以的
+        // swip只会触发一次,或者会同时触发pan手势,这都是可以的
         if ([otherGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]] || [otherGestureRecognizer isKindOfClass:[UISwipeGestureRecognizer class]]){
             return YES;
         }
         // 当web页面有滚动图片时,还会触发一个页面的类似于pan的手势,此时应该屏蔽swipe手势
         return NO;
     }
- 
-    // 当滑动手势伴随着其他手势,例如图片滑动等手势时,禁止右划关闭webmodule
-    if ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]){
-        if (otherGestureRecognizer){
-            return NO;
-        }
-    }
-    
     return YES;
-    
 }
 
 #pragma mark - 手势
 #pragma mark 右划关闭webmodule
-- (void)panToCloseWebmodule:(UIPanGestureRecognizer *)pan{
-    // 手势加载web上面,web随着手的滑动而滑动,需要参考一个不懂的坐标,需要转换坐标系
-    CGFloat currentX = [self.web convertPoint:[pan locationInView:self.web] toView:self.view].x;
-    switch (pan.state) {
-        case UIGestureRecognizerStateBegan: // 拖拽开始
-            // 记录一开始的触点,
-            self.starX = [self.web convertPoint:[pan locationInView:self.web] toView:self.view].x;
-            if (self.isFirstWebmodule){
-                // 修改状态栏颜色
-                self.statusBar.backgroundColor = nil;
-//                self.statusCover.backgroundColor = [self getNavColor];
-                self.statusCover.hidden = NO;
-            }
-            
-            // 复位前进后退箭头以及隐藏
-            self.backForIconContainV.hidden = YES;
-            self.backForIconContainV.transform = CGAffineTransformIdentity;
-            break;
-            
-        case UIGestureRecognizerStateChanged:{
-            // 拖拽改变
-            if (currentX < self.starX){
-                // 只有在containerV没有发生移动的情况下才可以出现前进后退箭头
-                if (self.searchMode && self.web.canGoForward && self.containerV.frame.origin.x == 0){
-                    self.backForIconContainV.hidden = NO;
-                    // 防止过多移动右箭头
-                    if (self.starX - currentX > backForwardImagVWH){
-                        self.backForIconContainV.transform = CGAffineTransformMakeTranslation(-backForwardImagVWH, 0);
-                    }else{
-                        self.backForIconContainV.transform = CGAffineTransformMakeTranslation(currentX - self.starX, 0);
-                    }
-                }
-                break;
-                
-            }
-            
-            // 来到了这里,表示要移动webmodule,必须将左右箭头隐藏及复位
-            self.backForIconContainV.hidden = YES;
-            self.backForIconContainV.transform = CGAffineTransformIdentity;
-            
-            // 一开始web在最左边,因此直接加上滑动距离即可
-            self.containerV.transform = CGAffineTransformMakeTranslation(currentX -self.starX, 0);
-            // 同时让backScreenshotImageV  statusCover跟着移动
-            self.backScreenshotImageV.transform = CGAffineTransformMakeTranslation((currentX - self.starX) * [self getBackImageVStarX] / [UIScreen mainScreen].bounds.size.width, 0);
-            if (self.isFirstWebmodule){
-                self.statusCover.transform = CGAffineTransformMakeTranslation(currentX - self.starX, 0);;
-            }
-            // 同时将透明度随着距离改变(效果不好,多开webmodule会由于上层变透明会看到上上层)
-            //self.backScreenshotImageV.alpha = (currentX / [UIScreen mainScreen].bounds.size.width)* 2/3 + 0.33;
-            break;
-        }
-        case UIGestureRecognizerStateEnded:{
-            // 拖拽结束
-            if(self.searchMode){
-                // 防止先左pan触发了containerV移动再右滑导致forward
-                if(![self.web canGoBack] && self.starX - currentX > backForwardImagVWH && self.backForIconContainV.hidden == NO){
-                    
-                    [self.web goForward];
-                }
-                self.backForIconContainV.transform = CGAffineTransformIdentity;
-                self.backForIconContainV.hidden = YES;
-            }
-            // 拖拽距离超过rightContentView的相对位置时决定弹回还是隐藏
-            [self showRightContentView:self.containerV.frame.origin.x < 100];
-            break;
-        }
-        default:
-            break;
-    }
-}
-
-- (void)showRightContentView:(BOOL)canShow{
-    CGFloat duration = 0.30f;
-    if (canShow){  // 显示
-        // 恢复成一开始最左边的位置
-        [UIView animateWithDuration:duration animations:^{
-            // containerV backScreenshotImageV要联动
-            self.containerV.transform = CGAffineTransformIdentity;
-            self.backScreenshotImageV.transform = CGAffineTransformIdentity;
-            if (self.isFirstWebmodule){
-                // 修改状态栏颜色
-                self.statusCover.transform = CGAffineTransformIdentity;
-            }
-        }completion:^(BOOL finished) {
-            if (self.isFirstWebmodule){
-                // 这时候隐藏不会闪一下,根据导航栏是否最大化显示或隐藏statusCover
-                if(self.navToolV.frame.size.height < 44){
-//                    self.statusCover.backgroundColor = nil;
-                    self.statusCover.hidden = NO;
-                }else{
-                    self.statusCover.hidden = YES;
-//                    self.statusCover.backgroundColor = [self getNavColor];
-                }
-                self.statusBar.backgroundColor = [self getNavColor];
-            }
-        }];
-    }else{
-        // 将webmodule关闭掉
-        [UIView animateWithDuration:duration animations:^{
-            // containerV backScreenshotImageV要联动
-            self.backScreenshotImageV.transform = CGAffineTransformMakeTranslation([self getBackImageVStarX], 0);
-            self.containerV.transform = CGAffineTransformMakeTranslation(XMScreenW, 0);
-            if (self.isFirstWebmodule){
-                self.statusCover.transform = CGAffineTransformMakeTranslation([UIScreen mainScreen].bounds.size.width, 0);
-            }
-        }completion:^(BOOL finished) {
-            if (self.isFirstWebmodule){
-                self.statusCover.hidden = YES;
-            }
-            // 移除背景棘突相框
-            [self.backScreenshotImageV removeFromSuperview];
-            // 移到最右边结束时pop掉当前vc
-            [self closeWebModule];
-        }];
-    }
-}
-
 /**
  双击恢复正常缩放
  */
@@ -1008,22 +860,22 @@ static double backForwardImagVWH = 50;
  */
 - (void)doubleFingerSwipe:(UISwipeGestureRecognizer *)gest{
     // 延时执行滚动,防止触发swipe手势时,scrollerview同时在滚动造成滚动冲突
-        if (gest.direction == UISwipeGestureRecognizerDirectionUp){
-            [MBProgressHUD showMessage:@"下滚到底部"];
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [self webViewDidScrollToBottom];
-            });
-        }else if (gest.direction == UISwipeGestureRecognizerDirectionDown){
-            [MBProgressHUD showMessage:@"上滚到顶部"];
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [self webViewDidScrollToTop];
-            });
-        }
+    if (gest.direction == UISwipeGestureRecognizerDirectionUp){
+        [MBProgressHUD showMessage:@"下滚到底部"];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self webViewDidScrollToBottom];
+        });
+    }else if (gest.direction == UISwipeGestureRecognizerDirectionDown){
+        [MBProgressHUD showMessage:@"上滚到顶部"];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self webViewDidScrollToTop];
+        });
+    }
 }
 
 #pragma mark - searchMode的返回处理
 /** searchMode下手势触发的方法 */
-- (void)panToBackForward:(UIGestureRecognizer *)gesture{
+- (void)panToBackForward:(UIPanGestureRecognizer *)gesture{
     switch (gesture.state) {
         case UIGestureRecognizerStateBegan:{
             
@@ -1031,8 +883,8 @@ static double backForwardImagVWH = 50;
             break;
         }
         case UIGestureRecognizerStateChanged:{
-            
             CGFloat panShift = [gesture locationInView:self.web].x - self.starX;
+
             // 根据左划或者右划移动箭头
             if (panShift > 0 && self.web.canGoBack){
                 // 向右滑
@@ -1052,15 +904,7 @@ static double backForwardImagVWH = 50;
             // 右划且滑动距离大于50,表示应该返回,反之左划并且距离大于50表示向前,并复位左右两个箭头
             if (panShift > backForwardImagVWH){
                 [self.web goBack];
-//                  // todo:检测是否最后一页,防止重定向,暂时延时判断,移除searchMode下的pan手势
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    if (!self.web.canGoBack || [self.model.webURL.absoluteString isEqualToString:self.web.request.mainDocumentURL.absoluteString]){
-                        [self.web removeGestureRecognizer:self.panSearchMode];
-                    }
-                });
-                
             }else if(panShift < -backForwardImagVWH){
-                
                 [self.web goForward];
             }
             
@@ -1068,6 +912,14 @@ static double backForwardImagVWH = 50;
             self.backForIconContainV.transform = CGAffineTransformIdentity;
             self.backForIconContainV.hidden = YES;
             
+            // todo:检测是否最后一页,防止重定向,暂时延时判断,移除searchMode下的pan手势
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                // 返回前进手势判断
+                self.panSearchMode.enabled = (self.web.canGoForward || self.web.canGoBack);
+                // 只要能返回,就要禁用全屏pop手势
+                XMNavigationController *nav = (XMNavigationController *)self.navigationController;
+                nav.customerPopGestureRecognizer.enabled = !self.web.canGoBack;
+            });
             
             break;
         }
@@ -1102,6 +954,8 @@ static double backForwardImagVWH = 50;
     UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panToBackForward:)];
     pan.delegate = self;
     self.panSearchMode = pan;
+    [self.web addGestureRecognizer:pan];
+    
 }
 
 @end

@@ -10,6 +10,7 @@
 @class UIViewController,UIButton;
 
 extern NSString *const wxfloatVCKey;
+extern NSString *const wxfloatFrameStringKey;
 
 /**
  该文件是根据控制器的类名(class),来提供对应的icon或者标题,另外归档浮窗的数据,方便重启app的时候恢复浮窗

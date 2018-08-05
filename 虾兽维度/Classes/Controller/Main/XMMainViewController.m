@@ -51,12 +51,9 @@ UITraitEnvironment>
 @property (weak, nonatomic)  UITextView *guildView;
 /** 强引用主新闻窗口 */
 @property (nonatomic, strong) XMHomeTableViewController *homeVC;
-/** 强引用保存新闻窗口 */
-@property (nonatomic, strong) XMSaveWebsTableViewController *saveVC;
 
 @property (nonatomic, strong) XMDropView *dropView;
 @property (nonatomic, strong) XMNavTitleTableViewController *navTitleVC;
-//@property (nonatomic, strong) XMNewNavTitleViewController *navTitleVC;
 
 /** 蒙板 */
 @property (weak, nonatomic)  UIView *cover;
@@ -71,20 +68,12 @@ UITraitEnvironment>
 
 #pragma mark - lazy
 
--(XMHomeTableViewController *)homeVC{
+- (XMHomeTableViewController *)homeVC{
     if (!_homeVC){
         _homeVC = [[XMHomeTableViewController alloc] init];
         _homeVC.delegate = self;
     }
     return _homeVC;
-}
-
-- (XMSaveWebsTableViewController *)saveVC{
-    if (!_saveVC){
-        _saveVC = [[XMSaveWebsTableViewController alloc] init];
-        _saveVC.delegate = self;
-    }
-    return _saveVC;
 }
 
 - (UIView *)cover{
@@ -426,9 +415,7 @@ UITraitEnvironment>
 #pragma mark - 代理方法
 #pragma 请求网络申请 delegate
 /**   请求网络申请*/
-- (void)openWebmoduleRequest:(XMWebModel *)webModel{
-    
-    webModel.searchMode = self.searchMode;
+- (void)openWebmoduleRequest:(XMWebModel *)webModel{    
     // 标记第一个webmodule
     webModel.firstRequest = YES;
     // 调用webmodule的类方法
@@ -446,9 +433,10 @@ UITraitEnvironment>
         [self createGuildView];
         
     }else if(indexPath.section == 1){
-        // 将specialChannel以webmodule打开
+        // 将specialChannel以webmodule打开,serchMode模式
         XMChannelModel *specialModel = [XMChannelModel specialChannels][indexPath.row];
         XMWebModel *model = [[XMWebModel alloc] init];
+        model.searchMode = YES;
         model.webURL = [NSURL URLWithString:specialModel.url];
         [self openWebmoduleRequest:model];
     
@@ -592,9 +580,10 @@ UITraitEnvironment>
     // 隐藏左侧边栏
     [self hideLeftView];
     
-    // 用导航控制器push，可以使得控制器保持在栈顶
-    [self.navigationController pushViewController:self.saveVC animated:YES];
-    self.navigationItem.title = @"首页";
+    XMSaveWebsTableViewController *saveVC = [[XMSaveWebsTableViewController alloc] init];
+    saveVC.delegate = self;
+    [self.navigationController pushViewController:saveVC animated:YES];
+    self.navigationItem.title = @"首1页";
 }
 
 #pragma mark UIGestureRecognizer delegate

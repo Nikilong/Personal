@@ -28,6 +28,11 @@ static NSMutableArray *requestURLArr;
         return NO;
     }
     
+    // 网址过滤
+    if ([self shoudlFilterRequest:request.URL.absoluteString] == NO){
+//        return NO;
+    }
+    
     // 防止重复加载,用于个数组记录已经加载的url,为了防止数组过长和控制性能,控制数组长度为10
     if(!requestURLArr){
         requestURLArr = [NSMutableArray array];
@@ -43,13 +48,20 @@ static NSMutableArray *requestURLArr;
     [requestURLArr addObject:request.URL.absoluteString];
     
     
-    NSLog(@"$$$$--protocal: %@",request.URL.absoluteString);
+    NSLog(@"$$protocal: %@",request.URL.absoluteString);
     return YES;
 }
 
++ (BOOL)shoudlFilterRequest:(NSString *)urlStr{
+    // http://huichuan.sm.cn/jsad?
+    if([urlStr containsString:@"http://huichuan.sm.cn/jsad?"]){
+        return NO;
+    }
+    return YES;
+}
 
-+ (NSURLRequest *)canonicalRequestForRequest:(NSURLRequest *)request
-{
++ (NSURLRequest *)canonicalRequestForRequest:(NSURLRequest *)request{
+    
 //    NSMutableURLRequest *mutableReqeust = [request mutableCopy];
 //
 //    //request截取重定向

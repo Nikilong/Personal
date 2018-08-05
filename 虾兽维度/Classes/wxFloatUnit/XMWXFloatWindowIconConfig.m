@@ -12,6 +12,8 @@
 
 /// 浮窗保存vc的类名(key)
 NSString *const wxfloatVCKey = @"wxfloatVCKey";
+/// 浮窗位置的frame的string(key)
+NSString *const wxfloatFrameStringKey = @"wxfloatFrameStringKey";
 /// 浮窗保存vc的类参数(key)
 NSString *const wxfloatVCParamsKey = @"wxfloatVCParamsKey";
 // params下的image的key

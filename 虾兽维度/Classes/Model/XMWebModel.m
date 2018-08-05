@@ -104,7 +104,7 @@
 }
 
 
-/** 归档 */
+/** 读档 */
 - (instancetype)initWithCoder:(NSCoder *)aDecoder{
     if (self = [super init]){
         self.imageURL = [aDecoder decodeObjectForKey:@"imageURL"];
@@ -113,10 +113,12 @@
         self.webURL = [aDecoder decodeObjectForKey:@"webURL"];
         self.source = [aDecoder decodeObjectForKey:@"source"];
         self.author_icon = [aDecoder decodeObjectForKey:@"author_icon"];
+        self.searchMode = [aDecoder decodeBoolForKey:@"searchMode"];
     }
     return self;
 }
 
+/** 存档 */
 - (void)encodeWithCoder:(NSCoder *)aCoder{
     [aCoder encodeObject:self.imageURL forKey:@"imageURL"];
     [aCoder encodeObject:self.ID forKey:@"ID"];
@@ -124,6 +126,7 @@
     [aCoder encodeObject:self.webURL forKey:@"webURL"];
     [aCoder encodeObject:self.source forKey:@"source"];
     [aCoder encodeObject:self.author_icon forKey:@"author_icon"];
+    [aCoder encodeBool:self.isSearchMode forKey:@"searchMode"];
     
 }
 

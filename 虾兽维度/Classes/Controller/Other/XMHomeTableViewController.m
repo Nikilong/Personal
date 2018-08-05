@@ -295,9 +295,6 @@ CGFloat const XMRrfreshHeight = 100;
     // 3,创建一个下载任务，类型为NSURLSessionDataTask
     NSURLSessionDataTask *task = [session dataTaskWithURL:idUrl  completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error){
             
-            // 关闭网络加载
-            [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-        
             // 通知刷新组件结束刷新
             // self.refreshHeader.tableViewDidRefreshBlock(self.refreshHeader);^{
         
@@ -313,6 +310,8 @@ CGFloat const XMRrfreshHeight = 100;
                 [self backToMainQueueWithMessage:@"加载失败"];
             }
             dispatch_async(dispatch_get_main_queue(), ^{
+                // 关闭网络加载
+                [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
                 // 恢复刷新
                 self.isRefreshing = NO;
                 // 移除动画

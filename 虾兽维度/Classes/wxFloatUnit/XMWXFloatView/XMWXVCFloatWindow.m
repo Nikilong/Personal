@@ -31,7 +31,15 @@ static double padding = 10.0f;
     static XMWXVCFloatWindow *wxVCFloatWindow = nil;
     static dispatch_once_t wxVCFloatWindowToken;
     dispatch_once(&wxVCFloatWindowToken, ^{
-        CGRect startF = CGRectMake(XMScreenW - viewWH - padding, 200, viewWH, viewWH);
+        CGRect startF;
+        // 根据用户偏好设置保存的位置初始化浮窗位置
+        NSString *saveFrameStr = [[NSUserDefaults standardUserDefaults] valueForKey:wxfloatFrameStringKey];
+        if(saveFrameStr.length > 0){
+            CGRect saveF = CGRectFromString(saveFrameStr);
+            startF = CGRectMake(saveF.origin.x, saveF.origin.y, viewWH, viewWH);
+        }else{
+            startF = CGRectMake(XMScreenW - viewWH - padding, 200, viewWH, viewWH);
+        }
         wxVCFloatWindow = [[XMWXVCFloatWindow alloc] initWithFrame:startF];
         // 浮窗插入到扇形区域的上面
         if([XMRightBottomFloatView shareRightBottomFloatView]){
@@ -73,15 +81,15 @@ static double padding = 10.0f;
                 [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = NO;
                 
                 AppDelegate *dele = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                // 将当前页面保存到appdelegate
-                XMNavigationController *rootVC = (XMNavigationController *)[UIApplication sharedApplication].keyWindow.rootViewController;
-//                UIViewController *rootVC = [UIApplication sharedApplication].keyWindow.rootViewController;
-                dele.floadVC = [rootVC.childViewControllers lastObject];
+//                // 将当前页面保存到appdelegate
+//                XMNavigationController *rootVC = (XMNavigationController *)[UIApplication sharedApplication].keyWindow.rootViewController;
+////                UIViewController *rootVC = [UIApplication sharedApplication].keyWindow.rootViewController;
+//                dele.floadVC = [rootVC.childViewControllers lastObject];
                 
                 // 设置封面或标题
                 [XMWXFloatWindowIconConfig setIconAndTitleByViewController:dele.floadVC button:[XMWXVCFloatWindow shareXMWXVCFloatWindow].coverBtn];
-                // 将当前页面pop掉
-                [rootVC popViewControllerAnimated:NO];
+//                // 将当前页面pop掉
+//                [rootVC popViewControllerAnimated:NO];
             });
         };
         // 完成移除
@@ -118,6 +126,9 @@ static double padding = 10.0f;
                 [MBProgressHUD showFailed:@"当前浮窗已显示"];
             }else{
                 [nav pushViewController:dele.floadVC animated:YES];
+//                [UIView animateWithDuration:0.25 animations:^{
+//                    dele.floadVC.view.frame =CGRectMake(0, 0, XMScreenW, XMScreenH);
+//                }];
             }
         });
     }
@@ -159,6 +170,9 @@ static double padding = 10.0f;
         // 判断是否需要记录前一个位置,默认一直记录,当拖到扇形区域才不需要记录
         if(self.recordFlag){
             self.preFrame = tarF;
+            NSString *frameStr = NSStringFromCGRect(tarF);
+            [[NSUserDefaults standardUserDefaults] setValue:frameStr forKey:wxfloatFrameStringKey];
+            [[NSUserDefaults standardUserDefaults] synchronize];
         }
     }
 }

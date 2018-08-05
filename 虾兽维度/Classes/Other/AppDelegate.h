@@ -13,6 +13,7 @@
 @property (strong, nonatomic) UIWindow *window;
 
 @property (nonatomic, strong) UIViewController *floadVC;
+@property (nonatomic, strong) UIViewController *tempVC;
 
 @end
 
