@@ -79,8 +79,15 @@
     // 3，转换坐标系，使XMDropView对象显示在按钮的正下方
     CGRect frame = [view convertRect:view.bounds toView:window];
     
-    self.container.centerX = CGRectGetMidX(frame);
     self.container.y = CGRectGetMaxY(frame) + 5;
+    // 在不超过屏幕坐标的情况下显示中心指向view
+    if(CGRectGetMidX(frame) + 0.5 * self.container.width > XMScreenW - 5 ){
+        self.container.centerX = XMScreenW - 0.5 * self.container.width - 5;
+    }else if( CGRectGetMidX(frame) - 0.5 * self.container.width < 5){
+        self.container.x = 5;
+    }else{
+        self.container.centerX = CGRectGetMidX(frame);
+    }
     
     // 4，通知代理，XMDropView对象显示完成
     if ([self.delegate respondsToSelector:@selector(dropViewDidShow:)]){
@@ -101,7 +108,8 @@
 
 /** 移除XMDropView对象的实现由XMDropView对象自己控制 */
 -(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
-    [self dismiss];
+//    [self dismiss];
+    [self setHidden:YES];
 }
 
 

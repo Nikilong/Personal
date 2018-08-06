@@ -9,6 +9,9 @@
 #import "XMPopAnimation.h"
 #import "AppDelegate.h"
 
+#import "XMImageUtil.h"
+#import "XMNavigationController.h"
+
 
 @interface XMPopAnimation ()
 
@@ -24,6 +27,13 @@
 
 /// transitionContext你可以看作是一个工具，用来获取一系列动画执行相关的对象，并且通知系统动画是否完成等功能。
 - (void)animateTransition:(id <UIViewControllerContextTransitioning>)transitionContext {
+    /*
+     原理解释:实际上就是上一个控制器和当前控制器两个截图的联动(为了避免两者导航栏颜色差别或者一个有导航栏一个没有导航栏造成很挫的效果),
+     注意点:
+     1.一定要添加toViewController.view到containerView
+     2.两个截图一定要添加到navigationController.navigationBar,而且注意两者添加顺序
+     */
+    
     // 获取动画来自的那个控制器,即目前显示的最顶部的控制器
     UIViewController *fromViewController = [transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
     // 获取转场到的那个控制器,即上一个控制器
@@ -32,24 +42,31 @@
     // 转场动画是两个控制器视图时间的动画，需要一个containerView来作为一个“舞台”，让动画执行。
     UIView *containerView = [transitionContext containerView];
     
-    // 上一个控制器先左偏移一个距离,然后随着右滑跟着移动
-    CGFloat toVCOffsetX = 100;
-    CGRect toVCF = toViewController.view.frame;
-    toVCF.origin.x = -toVCOffsetX;
-    toViewController.view.frame = toVCF;
     [containerView addSubview:toViewController.view];
+    // 上一个控制器截图先左偏移一个距离,然后随着右滑跟着移动
+    CGFloat toVCOffsetX = 100;
+    XMNavigationController *nav = (XMNavigationController *)fromViewController.navigationController;
+    UIImageView *fromVCShot = [[UIImageView alloc] initWithImage:nav.pushScreenShotArr.lastObject];
+    fromVCShot.frame = CGRectMake(-toVCOffsetX, -XMStatusBarHeight, XMScreenW, XMScreenH);
+    [fromViewController.navigationController.navigationBar addSubview:fromVCShot];
     
-    // 创建截图，并把imageView隐藏，造成使用户以为移动的就是 imageView 的假象
-    UIView *snapshotView = [fromViewController.view snapshotViewAfterScreenUpdates:NO];
+    
+    // 创建当前最顶部控制器的截图，并把imageView隐藏，造成使用户以为移动的就是 imageView 的假象
+//    UIView *snapshotView = [fromViewController.view snapshotViewAfterScreenUpdates:NO];
+    UIImageView *snapshotView = [[UIImageView alloc] initWithImage:[XMImageUtil screenShot]];
     snapshotView.frame = [containerView convertRect:fromViewController.view.frame fromView:fromViewController.view];
     
     // tableview等需要额外向下调整一定距离
+    CGRect tarF = snapshotView.frame;
     if ([fromViewController.class isSubclassOfClass:UITableViewController.class]){
-        CGRect tarF = snapshotView.frame;
-        tarF.origin.y -= 44 + XMStatusBarHeight;
+        tarF.origin.y -= (44 + XMStatusBarHeight * 2);
+        snapshotView.frame = tarF;
+    }else{
+        tarF.origin.y -= XMStatusBarHeight;
         snapshotView.frame = tarF;
     }
-    [containerView addSubview:snapshotView];
+//    [containerView addSubview:snapshotView];
+    [fromViewController.navigationController.navigationBar addSubview:snapshotView];
     
     // 截图添加左侧边阴影
     UIImageView *shawdowV = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bodyShodow_L"]];
@@ -60,17 +77,20 @@
     
     // 执行动画，我们让fromVC的视图移动到屏幕最右侧
     [UIView animateWithDuration:duration animations:^{
-        toViewController.view.frame = CGRectMake(0, 0, XMScreenW, XMScreenH);
+//        toViewController.view.frame = CGRectMake(0, 0, XMScreenW, XMScreenH);
+        fromVCShot.frame = CGRectMake(0, -XMStatusBarHeight, XMScreenW, XMScreenH);
         snapshotView.transform = CGAffineTransformMakeTranslation(XMScreenW, 0);
+//        self.
     }completion:^(BOOL finished) {
         // 移除截图
         [snapshotView removeFromSuperview];
+        [fromVCShot removeFromSuperview];
 
         //一定要记得动画完成后执行此方法，让系统管理 navigation
         if ([transitionContext transitionWasCancelled]) {
             [toViewController.view removeFromSuperview];
         }else{
-            AppDelegate *app = [UIApplication sharedApplication].delegate;
+            AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
             app.tempVC = nil;
         }
         // 当你的动画执行完成，这个方法必须要调用，否则系统会认为你的其余任何操作都在动画执行过程中。

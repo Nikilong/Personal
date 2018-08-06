@@ -62,7 +62,7 @@
         [self.interactivePopTransition updateInteractiveTransition:progress];
     }else if (recognizer.state == UIGestureRecognizerStateEnded || recognizer.state == UIGestureRecognizerStateCancelled) {
         
-     // 手势结束时如果进度大于一半，那么就完成pop操作，否则重新来过。
+        // 手势结束时如果进度大于一半，那么就完成pop操作，否则重新来过。
         if (progress > 0.3) {
             [self.interactivePopTransition finishInteractiveTransition];
         }else {
@@ -93,7 +93,7 @@
         self.interactivePopTransition = [[UIPercentDrivenInteractiveTransition alloc] init];
         // 告诉控制器开始执行pop的动画
 //        self.lastVC = self.vc.childViewControllers.lastObject;
-        AppDelegate *app = [UIApplication sharedApplication].delegate;
+        AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
         app.tempVC = self.vc.childViewControllers.lastObject;
         [self.vc popViewControllerAnimated:YES];
         
@@ -107,10 +107,11 @@
         
         
     }else if (gest.state == UIGestureRecognizerStateEnded) {
+        AppDelegate *dele = (AppDelegate *)[UIApplication sharedApplication].delegate;
         // 手势结束时如果进度大于一半，那么就完成pop操作，否则重新来过。
         if([XMRightBottomFloatView shareRightBottomFloatView].isInArea){
-            AppDelegate *dele = (AppDelegate *)[UIApplication sharedApplication].delegate;
-            dele.floadVC = self.lastVC;
+//            dele.floadVC = self.lastVC;
+            dele.floadVC = dele.tempVC;
             [self.interactivePopTransition finishInteractiveTransition];
         }else{
             if (progress > 0.3) {
@@ -120,6 +121,7 @@
                 [self.interactivePopTransition cancelInteractiveTransition];
             }
         }
+        dele.tempVC = nil;
 //        self.lastVC = nil;
         self.interactivePopTransition = nil;
         

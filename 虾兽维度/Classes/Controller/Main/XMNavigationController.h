@@ -13,6 +13,8 @@
 /// 暴露自定义的手势,用于处理手势冲突问题
 @property (weak, nonatomic)  UIGestureRecognizer *customerPopGestureRecognizer;
 
+@property (nonatomic, strong) NSMutableArray *pushScreenShotArr;
+
 //- (void)forceToHandleControllerPop:(UIPanGestureRecognizer *)pan;
 
 @end

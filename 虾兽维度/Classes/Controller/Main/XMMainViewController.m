@@ -319,66 +319,69 @@ UITraitEnvironment>
 
 /** 导航栏titleview的dropview*/
 - (void)callDropView:(UITapGestureRecognizer *)gest{
-    /*
-     // 方案一
-    // 创建频道tableview
-    self.navTitleVC = [[XMNavTitleTableViewController alloc] initWithStyle:UITableViewStylePlain];
-    CGFloat cellHeight = 35;
-    self.navTitleVC.cellHeight = cellHeight;
-    CGFloat height = [XMChannelModel channels].count * cellHeight;
-    if (height + 64 > XMScreenH){
-        height = XMScreenH - 64;
-    }
-    self.navTitleVC.tableView.frame = CGRectMake(0, 0, 100, height);
-    self.navTitleVC.view.backgroundColor = [UIColor clearColor];
-    self.navTitleVC.delegate = self;
+    if (self.dropView){
+        self.dropView.hidden = NO;
+    }else{
+        /*
+         // 方案一
+        // 创建频道tableview
+        self.navTitleVC = [[XMNavTitleTableViewController alloc] initWithStyle:UITableViewStylePlain];
+        CGFloat cellHeight = 35;
+        self.navTitleVC.cellHeight = cellHeight;
+        CGFloat height = [XMChannelModel channels].count * cellHeight;
+        if (height + 64 > XMScreenH){
+            height = XMScreenH - 64;
+        }
+        self.navTitleVC.tableView.frame = CGRectMake(0, 0, 100, height);
+        self.navTitleVC.view.backgroundColor = [UIColor clearColor];
+        self.navTitleVC.delegate = self;
 
-    // 创建dropview
-    self.dropView = [XMDropView dropView];
-    self.dropView.contentController = self.navTitleVC;
-    self.dropView.delegate = self;
-    // 新创建的dropview指向titleview
-    [self.dropView showFrom:self.navigationItem.titleView];
-     
-     */
-    
-    // 整体
-    UIView *containerV = [[UIView alloc] init];
-    CGFloat btnW = 44;
-    CGFloat btnH = 35;
-    CGFloat padding = 5;       // 间隙
-    NSUInteger colMaxNum = 7;      // 每行允许排列的图标个数
-    
-    // 工具箱按钮参数
-    NSUInteger btnNum = [XMChannelModel channels].count;
-    
-    // 添加按钮
-    CGFloat btnX;
-    CGFloat btnY;
-    for (int i = 0; i < btnNum; i++){
-        btnX = padding + ( btnW + padding ) * (i % colMaxNum);
-        btnY = padding + btnH * (i / colMaxNum);
+        // 创建dropview
+        self.dropView = [XMDropView dropView];
+        self.dropView.contentController = self.navTitleVC;
+        self.dropView.delegate = self;
+        // 新创建的dropview指向titleview
+        [self.dropView showFrom:self.navigationItem.titleView];
+         
+         */
         
-        XMChannelModel *model = [XMChannelModel channels][i];
-        // 工具箱按钮
-        UIButton *btn = [[UIButton alloc] initWithFrame:CGRectMake(btnX, btnY, btnW, btnH)];
-        [containerV addSubview:btn];
-        btn.tag = i;
-        btn.titleLabel.font = [UIFont systemFontOfSize:13];
-        [btn setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
-        [btn setTitle:model.channel forState:UIControlStateNormal];
-        [btn addTarget:self action:@selector(channelBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
+        // 整体
+        UIView *containerV = [[UIView alloc] init];
+        CGFloat btnW = 44;
+        CGFloat btnH = 35;
+        CGFloat padding = 5;       // 间隙
+        NSUInteger colMaxNum = 7;      // 每行允许排列的图标个数
+        
+        // 工具箱按钮参数
+        NSUInteger btnNum = [XMChannelModel channels].count;
+        
+        // 添加按钮
+        CGFloat btnX;
+        CGFloat btnY;
+        for (int i = 0; i < btnNum; i++){
+            btnX = padding + ( btnW + padding ) * (i % colMaxNum);
+            btnY = padding + btnH * (i / colMaxNum);
+            
+            XMChannelModel *model = [XMChannelModel channels][i];
+            // 工具箱按钮
+            UIButton *btn = [[UIButton alloc] initWithFrame:CGRectMake(btnX, btnY, btnW, btnH)];
+            [containerV addSubview:btn];
+            btn.tag = i;
+            btn.titleLabel.font = [UIFont systemFontOfSize:13];
+            [btn setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
+            [btn setTitle:model.channel forState:UIControlStateNormal];
+            [btn addTarget:self action:@selector(channelBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
+        }
+        // 计算总的尺寸,x方向有间距,y方向无间距
+        containerV.frame = CGRectMake(0, 0, padding + (padding + btnW) * (colMaxNum - 0),  btnH * ( (btnNum + colMaxNum - 1) / colMaxNum ));
+        
+        // 创建dropview
+        self.dropView = [XMDropView dropView];
+        self.dropView.content = containerV;
+        self.dropView.delegate = self;
+        // 新创建的dropview指向titleview
+        [self.dropView showFrom:self.navigationItem.titleView];
     }
-    // 计算总的尺寸,x方向有间距,y方向无间距
-    containerV.frame = CGRectMake(0, 0, padding + (padding + btnW) * (colMaxNum - 0),  btnH * ( (btnNum + colMaxNum - 1) / colMaxNum ));
-    
-    // 创建dropview
-    self.dropView = [XMDropView dropView];
-    self.dropView.content = containerV;
-    self.dropView.delegate = self;
-    // 新创建的dropview指向titleview
-    [self.dropView showFrom:self.navigationItem.titleView];
-    
 }
 
 #pragma mark 左侧栏
@@ -518,8 +521,8 @@ UITraitEnvironment>
 
 /** (新)导航栏titleview中选择uc频道的代理方法 */
 - (void)channelBtnDidClick:(UIButton *)btn{
-    // 将dropview dismiss掉
-    [self.dropView dismiss];
+    // 将dropview隐藏,防止重复创建
+    self.dropView.hidden = YES;
     // 切换频道
     self.homeVC.currentChannel = btn.tag;
     // 设置导航栏显示当前频道
@@ -583,7 +586,7 @@ UITraitEnvironment>
     XMSaveWebsTableViewController *saveVC = [[XMSaveWebsTableViewController alloc] init];
     saveVC.delegate = self;
     [self.navigationController pushViewController:saveVC animated:YES];
-    self.navigationItem.title = @"首1页";
+    self.navigationItem.title = @"首页";
 }
 
 #pragma mark UIGestureRecognizer delegate

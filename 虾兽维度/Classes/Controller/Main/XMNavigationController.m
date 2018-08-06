@@ -74,10 +74,16 @@ UINavigationControllerDelegate>
 }
 
 - (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated{
-
+    BOOL isHomeVC = [NSStringFromClass([viewController class]) isEqualToString:@"XMMainViewController"];
+    // 添加截图
+    if (!self.pushScreenShotArr){
+        self.pushScreenShotArr = [NSMutableArray array];
+    }
+    [self.pushScreenShotArr addObject:[XMImageUtil screenShot]];
+    
     [super pushViewController:viewController animated:animated];
 
-    if ([NSStringFromClass([viewController class]) isEqualToString:@"XMMainViewController"]){
+    if (isHomeVC){
         // 主页,不需要作任何处理
         return;
     }

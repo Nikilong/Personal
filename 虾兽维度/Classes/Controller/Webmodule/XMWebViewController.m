@@ -16,19 +16,22 @@
 #import "AppDelegate.h"
 #import "XMRightBottomFloatView.h"
 #import "XMNavigationController.h"
+#import "XMDropView.h"
+#import "XMSearchTableViewController.h"
 
 @interface XMWebViewController ()<
 UIWebViewDelegate,
 NSURLSessionDelegate,
 UIGestureRecognizerDelegate,
-UIScrollViewDelegate>
+UIScrollViewDelegate,
+XMOpenWebmoduleProtocol>
 
 /** 网页高度 */
 //@property (nonatomic, assign) NSInteger webHeight;
 
 /** 工具条 */
 @property (nonatomic, strong) UIView *toolBar;
-//@property (weak, nonatomic)  UIButton *saveBtn;
+@property (weak, nonatomic)  UIButton *saveBtn;
 @property (weak, nonatomic)  UIButton *toolBarBackBtn;
 @property (weak, nonatomic)  UIButton *toolBarForwardBtn;
 
@@ -70,8 +73,8 @@ UIScrollViewDelegate>
 // 标记右划开始的位置
 @property (nonatomic, assign)  CGFloat starX;
 
-// 截图相框
-@property (weak, nonatomic)  UIImageView *backScreenshotImageV;
+// 导航栏右边功能栏
+@property (nonatomic, strong) XMDropView *navRightDropV;
 
 /** statusBar相关*/
 // 状态栏
@@ -216,7 +219,7 @@ static double backForwardImagVWH = 50;
         [btnContentV addSubview:rightBtn];
         self.navToolRightBtn = rightBtn;
         [rightBtn setImage:[UIImage imageNamed:@"navTool_more"] forState:UIControlStateNormal];
-        [rightBtn addTarget:self action:@selector(showMoreItem) forControlEvents:UIControlEventTouchUpInside];
+        [rightBtn addTarget:self action:@selector(callNavRightDropView) forControlEvents:UIControlEventTouchUpInside];
         rightBtn.translatesAutoresizingMaskIntoConstraints = NO;
         // 垂直方向约束
         [btnContentV addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[rightBtn(>=0)]-0-|" options:0 metrics:nil views:@{@"rightBtn":rightBtn}]];
@@ -234,9 +237,9 @@ static double backForwardImagVWH = 50;
        @{@"image": @"webview_goback",@"selectImage": @"webview_goback_disable",@"selector":@"webViewDidGoBack"},
        @{@"image": @"webview_goforward",@"selectImage": 
              @"webview_goforward_disable",@"selector":@"webViewDidGoForward"},
+       @{@"image": @"webview_new",@"selectImage": @"",@"selector":@"openNewWebmodule"},
        @{@"image": @"shuaxin",@"selectImage": @"",@"selector":@"webViewDidFresh"},
        @{@"image": @"save_normal",@"selectImage": @"save_selected",@"disableImage": @"",@"selector":@"saveWeb:"},
-       @{@"image": @"webview_share",@"selectImage": @"",@"selector":@"showShareVC"},
                                    ];
         CGFloat toolbarW = [self getBottomToolBarHeight];
         CGFloat btnWH = 49;
@@ -248,10 +251,6 @@ static double backForwardImagVWH = 50;
         toolBar.backgroundColor = [self getNavColor];
         _toolBar = toolBar;
         _toolBar.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
-//        [self.containerV addSubview:toolBar];
-//        [self.containerV bringSubviewToFront:toolBar];
-//        [self.containerV  insertSubview:toolBar belowSubview:self.web];
-//        [self.containerV  insertSubview:toolBar aboveSubview:self.web ];
 
         for (NSUInteger i = 0; i < btnNumber; i++) {
             UIButton *btn = [[UIButton alloc] init];
@@ -268,6 +267,8 @@ static double backForwardImagVWH = 50;
             }else if (i == 1){
                 self.toolBarForwardBtn = btn;
                 self.toolBarForwardBtn.selected = YES;
+            }else if (i == 4){
+                self.saveBtn = btn;
             }
         }
 
@@ -311,7 +312,6 @@ static double backForwardImagVWH = 50;
     if (self.searchMode){
         [self initSearchMode];
     }
-    
     // 在此处添加底部工具条
     [self.containerV addSubview:self.toolBar];
 }
@@ -437,12 +437,13 @@ static double backForwardImagVWH = 50;
 
 /** 保存网页 */
 - (void)saveWeb:(UIButton *)button{
-    
-    // 取反选择状态
-    button.selected = !button.isSelected;
-#warning undo 重复收藏该网页,以及searchMode下的切换
+
     if (button.isSelected){
-        
+        // 取消保存网站到本地
+        [XMWebModelTool deleteWebURL:self.web.request.URL.absoluteString];
+        // 提示用户取消保存网页成功
+        [MBProgressHUD showSuccess:@"取消收藏成功"];
+    }else{
         XMWebModel *model = [[XMWebModel alloc] init];
         // 保存的网站统一标记为searchMode
         model.searchMode = YES;
@@ -453,28 +454,21 @@ static double backForwardImagVWH = 50;
         // 提示用户保存网页成功
         [MBProgressHUD showSuccess:@"收藏成功"];
     }
+    // 取反选择状态
+    button.selected = !button.isSelected;
 }
 
-/**  弹出分享菜单  */
-- (void)showShareVC{
-    
-    // 取出分享参数
-    NSURL *url = [NSURL URLWithString:self.web.request.URL.absoluteString];
-    NSString *title =  [self.web stringByEvaluatingJavaScriptFromString:@"document.title"];
-    if(!url){
-        url = [NSURL URLWithString:@""];
-    }
-    if(!title){
-        title = @"";
-    }
-    NSArray *params = @[url,title];
-    
-    // 创建分享菜单,这里分享为全部平台,可通过设置excludedActivityTypes属性排除不要的平台
-    UIActivityViewController *actVC = [[UIActivityViewController alloc] initWithActivityItems:params applicationActivities:nil];
-    
-    // 弹出分享菜单
-    [self presentViewController:actVC animated:YES completion:nil];
-    
+/** 打开搜索框 */
+- (void)openNewWebmodule{
+    XMSearchTableViewController *searchVC = [[XMSearchTableViewController alloc] init];
+    searchVC.delegate = self;
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:searchVC];
+    // 导航控制器只能present另外一个导航控制器,不能push
+    [self presentViewController:nav animated:YES completion:nil];
+}
+//XMSearchTableViewController的代理方法,必须实现
+- (void)openWebmoduleRequest:(XMWebModel *)webModel{
+    [XMWebViewController openWebmoduleWithModel:webModel viewController:self];
 }
 
 #pragma mark 导航栏的点击事件
@@ -506,21 +500,83 @@ static double backForwardImagVWH = 50;
     }
 }
 
-/**  导航栏右边显示更多选项 */
-- (void)showMoreItem{
-    UIAlertController *tips = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-    __weak typeof(self) weakSelf = self;
-    [tips addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
-    [tips addAction:[UIAlertAction actionWithTitle:@"生成二维码" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action){
-        // 将当前的url的字符串转为二维码图片
-        [weakSelf showQrImage:[XMImageUtil creatQRCodeImageWithString:weakSelf.web.request.URL.absoluteString size:XMScreenW * 0.7]];
+/** 导航栏右边更多的dropview*/
+- (void)callNavRightDropView{
+    if (self.navRightDropV){
+        self.navRightDropV.hidden = NO;
+    }else{
         
-    }]];
-    
-    [self presentViewController:tips animated:YES completion:nil];
-    
+        // 整体
+        UIView *containerV = [[UIView alloc] init];
+        CGFloat btnW = 85;
+        CGFloat btnH = 35;
+        CGFloat padding = 5;       // 间隙
+        NSUInteger colMaxNum = 1;      // 每行允许排列的图标个数
+        
+        // 工具箱按钮参数
+        NSArray *moreBtnArr = @[@"分享",@"二维码",@"Safari",@"护眼模式"];
+        NSArray *moreBtnImgArr = @[@"navMoreBtn_share",@"navMoreBtn_code",@"navMoreBtn_safari",@"navMoreBtn_mode"];
+        NSUInteger btnNum = moreBtnArr.count;
+        
+        // 添加按钮
+        CGFloat btnX;
+        CGFloat btnY;
+        for (int i = 0; i < btnNum; i++){
+            btnX = padding + ( btnW + padding ) * (i % colMaxNum);
+            btnY = padding + btnH * (i / colMaxNum);
+            // 工具箱按钮
+            UIButton *btn = [[UIButton alloc] initWithFrame:CGRectMake(btnX, btnY, btnW, btnH)];
+            [containerV addSubview:btn];
+            btn.tag = i;
+            btn.titleLabel.font = [UIFont systemFontOfSize:13];
+            btn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;  // 左对齐
+            btn.titleEdgeInsets = UIEdgeInsetsMake(0, 7, 0, 0);
+            [btn setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
+            [btn setTitle:moreBtnArr[i] forState:UIControlStateNormal];
+            [btn setImage:[UIImage imageNamed:moreBtnImgArr[i]] forState:UIControlStateNormal];
+            [btn addTarget:self action:@selector(navRightMoreBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
+            // 添加分割线
+            if(i < btnNum - 1){
+                UIView *lineV = [[UIView alloc] initWithFrame:CGRectMake(padding, CGRectGetMaxY(btn.frame), btnW, 1)];
+                [containerV addSubview:lineV];
+                lineV.backgroundColor = [UIColor grayColor];
+            }
+        }
+        // 计算总的尺寸,x方向有间距,y方向无间距
+        containerV.frame = CGRectMake(0, 0, padding + (padding + btnW) * (colMaxNum - 0),  btnH * ( (btnNum + colMaxNum - 1) / colMaxNum ));
+        
+        // 创建dropview
+        self.navRightDropV = [XMDropView dropView];
+        self.navRightDropV.content = containerV;
+        // 新创建的dropview指向titleview
+        [self.navRightDropV showFrom:self.navToolRightBtn];
+    }
 }
 
+/// 导航栏右边更多按钮点击事件
+- (void)navRightMoreBtnDidClick:(UIButton *)btn{
+    self.navRightDropV.hidden = YES;
+    switch (btn.tag) {
+        case 0:{ // 分享
+            [self showShareVC];
+            break;
+        }
+        case 1:{  // 生成当前网页的二维码
+            // 将当前的url的字符串转为二维码图片
+            [self showQrImage:[XMImageUtil creatQRCodeImageWithString:self.web.request.URL.absoluteString size:XMScreenW * 0.7]];
+            break;
+        }
+        case 2:{ // Safari
+            [[UIApplication sharedApplication] openURL:self.web.request.URL];
+            break;
+        }
+        case 99:{ //
+            break;
+        }
+        default:
+            break;
+    }
+}
 
 /// 展示二维码图片
 - (void)showQrImage:(UIImage *)image{
@@ -541,6 +597,29 @@ static double backForwardImagVWH = 50;
 - (void)removeQriamge:(UITapGestureRecognizer *)gest{
     [gest.view removeFromSuperview];
 }
+
+/// 弹出分享菜单
+- (void)showShareVC{
+    
+    // 取出分享参数
+    NSURL *url = [NSURL URLWithString:self.web.request.URL.absoluteString];
+    NSString *title =  [self.web stringByEvaluatingJavaScriptFromString:@"document.title"];
+    if(!url){
+        url = [NSURL URLWithString:@""];
+    }
+    if(!title){
+        title = @"";
+    }
+    NSArray *params = @[url,title];
+    
+    // 创建分享菜单,这里分享为全部平台,可通过设置excludedActivityTypes属性排除不要的平台
+    UIActivityViewController *actVC = [[UIActivityViewController alloc] initWithActivityItems:params applicationActivities:nil];
+    
+    // 弹出分享菜单
+    [self presentViewController:actVC animated:YES completion:nil];
+    
+}
+
 
 #pragma mark - 长按保存网页图片
 - (void)longPress:(UILongPressGestureRecognizer *)longP{
@@ -708,6 +787,8 @@ static double backForwardImagVWH = 50;
     if(title.length > 0 && ![title isEqualToString:self.navToolTitleLab.text]){
         self.navToolTitleLab.text = title;
     }
+    // 判断该网页是否已经保存
+    self.saveBtn.selected = [XMWebModelTool isWebURLHaveSave:self.web.request.URL.absoluteString];
     
     // 记录网页高度
 //    self.webHeight = [[self.web stringByEvaluatingJavaScriptFromString:@"document.body.offsetHeight"] doubleValue];
@@ -740,12 +821,14 @@ static double backForwardImagVWH = 50;
     // 必须样式执行,因为广告是要一段时间才动态加载出来
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         // uc全屏广告屏蔽:该广告div的class以"FloatLayer__floatlayer"开头
-        [self.web stringByEvaluatingJavaScriptFromString:@"var floatDiv =$(\"div[class^='FloatLayer__floatlayer']\")[0].remove()"];
+        [self.web stringByEvaluatingJavaScriptFromString:@"$(\"div[class^='FloatLayer__floatlayer']\")[0].remove()"];
         //    uc底部轮播条的class为:slider__sdk__wrapper sdk__sharepage __web-inspector-hide-
         [self.web stringByEvaluatingJavaScriptFromString:@"var deleteNode =document.getElementsByClassName('sdk__sharepage')[0];document.body.removeChild(deleteNode)"];
 //        // uc"大家都在看"屏蔽,因为需要打开uc链接,base__wrapper__开头
 //        [self.web stringByEvaluatingJavaScriptFromString:@"var floatDiv =$(\"div[class^='base__wrapper']\")[0].remove()"];
         
+        // 必应首页底部广告栏id=TopApp// BottomAppPro
+        [self.web stringByEvaluatingJavaScriptFromString:@"document.body.removeChild(document.getElementById('BottomAppPro'))"];
     });
     
 }
@@ -833,6 +916,7 @@ static double backForwardImagVWH = 50;
 
 #pragma mark - uigestureDelegate
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+//    NSLog(@"%@",otherGestureRecognizer);
     // 当触发swipe手势时,可能会触发pan手势等手势
     if ([gestureRecognizer isKindOfClass:[UISwipeGestureRecognizer class]]){
         // swip只会触发一次,或者会同时触发pan手势,这都是可以的
@@ -840,6 +924,9 @@ static double backForwardImagVWH = 50;
             return YES;
         }
         // 当web页面有滚动图片时,还会触发一个页面的类似于pan的手势,此时应该屏蔽swipe手势
+        return NO;
+    }
+    if ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]] && [otherGestureRecognizer isKindOfClass:NSClassFromString(@"UIScrollViewPanGestureRecognizer")]){
         return NO;
     }
     return YES;
