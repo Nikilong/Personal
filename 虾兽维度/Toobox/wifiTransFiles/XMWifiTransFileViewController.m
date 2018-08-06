@@ -44,7 +44,8 @@ typedef enum : NSUInteger {
 ZLPhotoPickerViewControllerDelegate,
 UINavigationControllerDelegate,
 UIImagePickerControllerDelegate,
-UITextFieldDelegate>
+UITextFieldDelegate,
+UIGestureRecognizerDelegate>
 
 
 @property (nonatomic, strong) HTTPServer *httpServer;
@@ -206,10 +207,20 @@ UITextFieldDelegate>
     [self addLeftVC];
     // 左侧抽屉手势
     UISwipeGestureRecognizer *swip = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(showLeftView)];
+    swip.delegate = self;
     [self.view addGestureRecognizer:swip];
     XMNavigationController *nav = (XMNavigationController *)self.navigationController;
     [nav.customerPopGestureRecognizer requireGestureRecognizerToFail:swip];
     
+}
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
+    NSLog(@"%@",[gestureRecognizer class]);
+    if ([gestureRecognizer isKindOfClass:[UIScreenEdgePanGestureRecognizer class]]){
+        [self hideLeftView];
+    }
+    
+    return YES;
 }
 
 
@@ -685,21 +696,22 @@ UITextFieldDelegate>
 
 #pragma mark 左侧栏
 /**  添加左侧边栏*/
--(void)addLeftVC
-{
+-(void)addLeftVC{
+    
     // 创建左侧边栏容器
-    UIView *leftContentView = [[UIView alloc] initWithFrame:CGRectMake(-XMWifiLeftViewTotalW, 0, XMWifiLeftViewTotalW, XMScreenH)];
+    UIView *leftContentView = [[UIView alloc] initWithFrame:CGRectMake(-XMWifiLeftViewTotalW, 0, XMWifiLeftViewTotalW, XMScreenH - 44 - XMStatusBarHeight - 2 * XMLeftViewPadding)];
     leftContentView.backgroundColor = [UIColor grayColor];
     self.leftContentView = leftContentView;
     self.leftContentView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
     // 创建左侧边栏
     self.leftVC = [[XMWifiLeftTableViewController alloc] initWithStyle:UITableViewStyleGrouped];
     self.leftVC.delegate = self;
-    self.leftVC.view.frame = CGRectMake(XMLeftViewPadding, 40, XMWifiLeftViewTotalW - 2 *XMLeftViewPadding, XMScreenH - XMLeftViewPadding - 54);
+    self.leftVC.view.frame = CGRectMake(XMLeftViewPadding, XMLeftViewPadding, XMWifiLeftViewTotalW - 2 *XMLeftViewPadding, self.leftContentView.frame.size.height - 2 * XMLeftViewPadding);
     [self.leftContentView addSubview:self.leftVC.view];
     
     // 添加到导航条之上
-    [self.navigationController.view insertSubview:self.leftContentView aboveSubview:self.navigationController.navigationBar];
+//    [self.navigationController.view insertSubview:self.leftContentView aboveSubview:self.navigationController.navigationBar];
+    [self.view insertSubview:self.leftContentView belowSubview:self.tableView];
     
     // 左侧边栏添加左划取消手势
     UISwipeGestureRecognizer *swip = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(hideLeftView)];
@@ -708,15 +720,15 @@ UITextFieldDelegate>
 }
 
 /** 显示左侧边栏 */
-- (void)showLeftView
-{
+- (void)showLeftView{
     // 显示蒙板
     self.cover.hidden = NO;
     
-    // 添加到导航栏的上面
-    [self.navigationController.view insertSubview:self.cover aboveSubview:self.navigationController.navigationBar];
-    // 添加到导航条之上
-    [self.navigationController.view insertSubview:self.leftContentView aboveSubview:self.navigationController.navigationBar];
+//    // 添加到导航栏的上面
+//    [self.navigationController.view insertSubview:self.cover aboveSubview:self.navigationController.navigationBar];
+//    // 添加到导航条之上
+//    [self.navigationController.view insertSubview:self.leftContentView aboveSubview:self.navigationController.navigationBar];
+    [self.view insertSubview:self.cover belowSubview:self.tableView];
     
     // 设置动画弹出左侧边栏
     [UIView animateWithDuration:0.5 animations:^{
@@ -726,8 +738,7 @@ UITextFieldDelegate>
 }
 
 /** 隐藏左侧边栏 */
-- (void)hideLeftView
-{
+- (void)hideLeftView{
     // 隐藏蒙板
     self.cover.hidden = YES;
     [UIView animateWithDuration:0.5 animations:^{
@@ -812,6 +823,7 @@ UITextFieldDelegate>
 #pragma mark - UIScrollerViewDelegate
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
     [self cancelSearch];
+    [self hideLeftView];
 }
     
 #pragma mark - 排序方法
