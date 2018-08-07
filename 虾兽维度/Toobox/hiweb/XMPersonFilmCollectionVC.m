@@ -211,6 +211,12 @@ static NSString * const reuseIdentifier = @"Cell";
     }
 }
 
+- (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    self.navigationController.navigationBarHidden = NO;
+    [self statusBar].hidden = NO;
+}
+
 - (void)dealloc
 {
     // 移除监听横竖屏

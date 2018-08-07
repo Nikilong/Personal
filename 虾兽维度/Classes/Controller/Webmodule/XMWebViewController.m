@@ -88,7 +88,9 @@ XMOpenWebmoduleProtocol>
 #pragma mark 常量区
 
 /// 前进后退箭头的宽高
-static double backForwardImagVWH = 50;
+static double backForwardImagVWH = 50.0;
+/// 前进返回的不触发距离,超过这个距离才触发,防止和网页中的滚动手势冲突
+static double backForwardSafeDistance = 80.0;
 
 /// 截图的初始左偏移距离
 - (double)getBackImageVStarX{
@@ -973,15 +975,15 @@ static double backForwardImagVWH = 50;
             CGFloat panShift = [gesture locationInView:self.web].x - self.starX;
 
             // 根据左划或者右划移动箭头
-            if (panShift > 0 && self.web.canGoBack){
+            if (panShift > backForwardSafeDistance && self.web.canGoBack){
                 // 向右滑
                 self.backForIconContainV.hidden = NO;
-                self.backForIconContainV.transform = CGAffineTransformMakeTranslation(panShift > backForwardImagVWH ? backForwardImagVWH : panShift, 0);
+                self.backForIconContainV.transform = CGAffineTransformMakeTranslation(panShift - backForwardSafeDistance > backForwardImagVWH ? backForwardImagVWH : (panShift - backForwardSafeDistance) , 0);
                 
-            }else if(panShift < 0 && self.web.canGoForward){
+            }else if(panShift < -backForwardSafeDistance && self.web.canGoForward){
                 // 向左滑
                 self.backForIconContainV.hidden = NO;
-                self.backForIconContainV.transform = CGAffineTransformMakeTranslation(-panShift > backForwardImagVWH ? -backForwardImagVWH : panShift, 0);
+                self.backForIconContainV.transform = CGAffineTransformMakeTranslation((-panShift - backForwardSafeDistance) > backForwardImagVWH ? -backForwardImagVWH : (panShift + backForwardSafeDistance), 0);
             }
             break;
         }
@@ -989,9 +991,9 @@ static double backForwardImagVWH = 50;
             
             CGFloat panShift = [gesture locationInView:self.web].x - self.starX;
             // 右划且滑动距离大于50,表示应该返回,反之左划并且距离大于50表示向前,并复位左右两个箭头
-            if (panShift > backForwardImagVWH){
+            if (panShift - backForwardSafeDistance > backForwardImagVWH){
                 [self.web goBack];
-            }else if(panShift < -backForwardImagVWH){
+            }else if(-panShift - backForwardSafeDistance > backForwardImagVWH){
                 [self.web goForward];
             }
             

@@ -17,9 +17,8 @@
 
 @implementation XMSaveWebsTableViewController
 
--(NSArray *)saveWebsArr{
-    if (!_saveWebsArr)
-    {
+- (NSArray *)saveWebsArr{
+    if (!_saveWebsArr){
         _saveWebsArr = [XMWebModelTool webModels];
     }
     return _saveWebsArr;
@@ -75,6 +74,10 @@
     
     // 重新加载数据
     [self.tableView reloadData];
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return @"删除";
 }
 
 @end

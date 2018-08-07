@@ -51,7 +51,7 @@
     {
         // 导航栏contentview
         UITextField *searchF = [[UITextField alloc] init];
-        searchF.frame = CGRectMake(10, 64, [UIScreen mainScreen].bounds.size.width - 20, 32);
+        searchF.frame = CGRectMake(10, 44 + XMStatusBarHeight, [UIScreen mainScreen].bounds.size.width - 20, 32);
         searchF.delegate = self;
         searchF.placeholder = @"请输入要搜索的条件";
         searchF.background = [UIImage imageNamed:@"searchbar_textfield_background"];

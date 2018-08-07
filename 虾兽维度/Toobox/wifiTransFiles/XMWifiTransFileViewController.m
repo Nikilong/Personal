@@ -95,11 +95,10 @@ UIGestureRecognizerDelegate>
         CGFloat margin = 10;
         CGFloat btnWH = 30;
         CGFloat btnY = (toolH - btnWH) * 0.5;
-        UIView *toolBar = [[UIView alloc] initWithFrame:CGRectMake(0, XMScreenH - toolH, XMScreenW, toolH)];
+        UIView *toolBar = [[UIView alloc] initWithFrame:CGRectMake(0, XMScreenH - toolH + (isIphoneX ? -24 : 0), XMScreenW, toolH + (isIphoneX ? 24 : 0))];
         toolBar.backgroundColor = [UIColor colorWithRed:249/255.0 green:249/255.0 blue:249/255.0 alpha:1.0f];
         _toolBar = toolBar;
-        UIWindow *window = [UIApplication sharedApplication].keyWindow;
-        [window addSubview:toolBar];
+        [self.view.superview addSubview:toolBar];
         // 全选/反选
         UIButton *allSelectBtn = [UIButton buttonWithType:UIButtonTypeSystem];
         allSelectBtn.frame = CGRectMake(XMScreenW - toolH * 2 - margin, 0, toolH * 2, toolH);
@@ -171,7 +170,7 @@ UIGestureRecognizerDelegate>
     if (!_cover){
         UIView *cover = [[UIView alloc] initWithFrame:CGRectMake(XMWifiLeftViewTotalW, 0, XMScreenW - XMWifiLeftViewTotalW, XMScreenH)];
         cover.backgroundColor = [UIColor clearColor];
-        [self.view addSubview:cover];
+        [self.view.superview insertSubview:cover belowSubview:self.tableView];
         _cover = cover;
         
         // 添加手势点击和拖，触发蒙板隐藏左侧边栏
@@ -196,38 +195,24 @@ UIGestureRecognizerDelegate>
     self.isMoveFilesMode = NO;
     // 更新本地数据
 //    [self refreshDate:nil];
-
+    
     // 初始化导航栏
     [self createNav];
     
     // 添加系统原生下拉刷新
     [self creatRefreshKit];
     
-    // 添加左侧边栏
-    [self addLeftVC];
-    // 左侧抽屉手势
-    UISwipeGestureRecognizer *swip = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(showLeftView)];
-    swip.delegate = self;
-    [self.view addGestureRecognizer:swip];
-    XMNavigationController *nav = (XMNavigationController *)self.navigationController;
-    [nav.customerPopGestureRecognizer requireGestureRecognizerToFail:swip];
-    
+    // 添加左侧栏轻扫手势
+    [self addLeftViewGesture];
 }
-
-- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
-    NSLog(@"%@",[gestureRecognizer class]);
-    if ([gestureRecognizer isKindOfClass:[UIScreenEdgePanGestureRecognizer class]]){
-        [self hideLeftView];
-    }
-    
-    return YES;
-}
-
-
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadFinish:) name:@"XMWifiTransfronFilesComplete" object:nil];
+}
+
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
 }
 
 - (void)viewDidDisappear:(BOOL)animated{
@@ -694,12 +679,26 @@ UIGestureRecognizerDelegate>
     self.toolBar.hidden = YES;
 }
 
+
 #pragma mark 左侧栏
+/// 左侧栏手势设置
+- (void)addLeftViewGesture{
+    // 左侧抽屉手势,限定触发区域在屏幕1/4到最右边
+    UISwipeGestureRecognizer *swip = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(showLeftView)];
+    swip.delegate = self;
+    swip.direction = UISwipeGestureRecognizerDirectionRight;
+    [self.view addGestureRecognizer:swip];
+    
+    // 防止手势冲突
+    XMNavigationController *nav = (XMNavigationController *)self.navigationController;
+    [nav.customerPopGestureRecognizer requireGestureRecognizerToFail:swip];
+}
+
 /**  添加左侧边栏*/
 -(void)addLeftVC{
     
     // 创建左侧边栏容器
-    UIView *leftContentView = [[UIView alloc] initWithFrame:CGRectMake(-XMWifiLeftViewTotalW, 0, XMWifiLeftViewTotalW, XMScreenH - 44 - XMStatusBarHeight - 2 * XMLeftViewPadding)];
+    UIView *leftContentView = [[UIView alloc] initWithFrame:CGRectMake(-XMWifiLeftViewTotalW, 44 + XMStatusBarHeight, XMWifiLeftViewTotalW, XMScreenH - 44 - XMStatusBarHeight)];
     leftContentView.backgroundColor = [UIColor grayColor];
     self.leftContentView = leftContentView;
     self.leftContentView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
@@ -708,10 +707,7 @@ UIGestureRecognizerDelegate>
     self.leftVC.delegate = self;
     self.leftVC.view.frame = CGRectMake(XMLeftViewPadding, XMLeftViewPadding, XMWifiLeftViewTotalW - 2 *XMLeftViewPadding, self.leftContentView.frame.size.height - 2 * XMLeftViewPadding);
     [self.leftContentView addSubview:self.leftVC.view];
-    
-    // 添加到导航条之上
-//    [self.navigationController.view insertSubview:self.leftContentView aboveSubview:self.navigationController.navigationBar];
-    [self.view insertSubview:self.leftContentView belowSubview:self.tableView];
+    [self.view.superview insertSubview:self.leftContentView aboveSubview:self.tableView];
     
     // 左侧边栏添加左划取消手势
     UISwipeGestureRecognizer *swip = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(hideLeftView)];
@@ -721,14 +717,15 @@ UIGestureRecognizerDelegate>
 
 /** 显示左侧边栏 */
 - (void)showLeftView{
+    if (!self.leftContentView){
+        [self addLeftVC];
+    }
     // 显示蒙板
     self.cover.hidden = NO;
     
-//    // 添加到导航栏的上面
-//    [self.navigationController.view insertSubview:self.cover aboveSubview:self.navigationController.navigationBar];
-//    // 添加到导航条之上
-//    [self.navigationController.view insertSubview:self.leftContentView aboveSubview:self.navigationController.navigationBar];
-    [self.view insertSubview:self.cover belowSubview:self.tableView];
+    // 添加到蒙板和侧边栏到最顶部
+    [self.view.superview bringSubviewToFront:self.leftContentView];
+    [self.view.superview bringSubviewToFront:self.cover];
     
     // 设置动画弹出左侧边栏
     [UIView animateWithDuration:0.5 animations:^{
@@ -787,7 +784,7 @@ UIGestureRecognizerDelegate>
         for (NSIndexPath *indexPath in sortArr){
             XMWifiTransModel *model = self.currentDataArr[indexPath.row];
             NSString *newFullPath = [NSString stringWithFormat:@"%@/%@/%@",[XMSavePathUnit getWifiUploadDirPath],groupName,model.pureFileName];
-            NSLog(@"%@",newFullPath);
+//            NSLog(@"%@",newFullPath);
             // 重命名,自己覆盖自己
             NSError *error= nil;
             if (![[NSFileManager defaultManager] moveItemAtPath:model.fullPath toPath:newFullPath error:&error]){
@@ -824,6 +821,20 @@ UIGestureRecognizerDelegate>
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
     [self cancelSearch];
     [self hideLeftView];
+}
+
+#pragma mark - UIGestureRecognizerDelegate
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
+    if ([gestureRecognizer isKindOfClass:[UIScreenEdgePanGestureRecognizer class]]){
+        [self hideLeftView];
+    }
+    /// 左侧栏的轻扫手势作用区域要在1/4到最右边
+    if ([gestureRecognizer isKindOfClass:[UISwipeGestureRecognizer class]]){
+        if ([gestureRecognizer locationInView:self.tableView].x < 0.25 * XMScreenW){
+            return NO;
+        }
+    }
+    return YES;
 }
     
 #pragma mark - 排序方法

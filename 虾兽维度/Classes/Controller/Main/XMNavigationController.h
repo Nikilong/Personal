@@ -15,6 +15,4 @@
 
 @property (nonatomic, strong) NSMutableArray *pushScreenShotArr;
 
-//- (void)forceToHandleControllerPop:(UIPanGestureRecognizer *)pan;
-
 @end

@@ -55,28 +55,12 @@
     XMNavigationController *nav = (XMNavigationController *)fromViewController.navigationController;
     UIImageView *fromVCShot = [[UIImageView alloc] initWithImage:nav.pushScreenShotArr.lastObject];
     fromVCShot.frame = CGRectMake(-toVCOffsetX, 0, XMScreenW, XMScreenH);
-//    fromVCShot.frame = CGRectMake(-toVCOffsetX, -XMStatusBarHeight, XMScreenW, XMScreenH);
-//    [fromViewController.navigationController.navigationBar addSubview:fromVCShot];
     [containerView addSubview:fromVCShot];
     
-    
     // 4.创建当前最顶部控制器的截图
-//    UIView *snapshotView = [fromViewController.view snapshotViewAfterScreenUpdates:NO];
     UIImageView *snapshotView = [[UIImageView alloc] initWithImage:[XMImageUtil screenShot]];
-    snapshotView.frame = [containerView convertRect:fromViewController.view.frame fromView:fromViewController.view];
-    
-    // tableview等需要额外向下调整一定距离
-    CGRect tarF = snapshotView.frame;
-    if ([fromViewController.class isSubclassOfClass:UITableViewController.class]){
-//        tarF.origin.y -= (44 + XMStatusBarHeight * 2);
-        tarF.origin.y -= (44 + XMStatusBarHeight);
-        snapshotView.frame = tarF;
-    }else{
-//        tarF.origin.y -= XMStatusBarHeight;
-//        snapshotView.frame = tarF;
-    }
+    snapshotView.frame = CGRectMake(0, 0, XMScreenW, XMScreenH);
     [containerView addSubview:snapshotView];
-//    [fromViewController.navigationController.navigationBar addSubview:snapshotView];
     
     // (非必须)截图添加左侧边阴影
     UIImageView *shawdowV = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bodyShodow_L"]];
@@ -87,8 +71,6 @@
     
     // 执行动画，我们让fromVC的视图移动到屏幕最右侧
     [UIView animateWithDuration:duration animations:^{
-//        toViewController.view.frame = CGRectMake(0, 0, XMScreenW, XMScreenH);
-//        fromVCShot.frame = CGRectMake(0, -XMStatusBarHeight, XMScreenW, XMScreenH);
         // 两张截图联动
         fromVCShot.frame = CGRectMake(0, 0, XMScreenW, XMScreenH);
         snapshotView.transform = CGAffineTransformMakeTranslation(XMScreenW, 0);

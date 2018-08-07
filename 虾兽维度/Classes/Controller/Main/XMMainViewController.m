@@ -66,6 +66,8 @@ UITraitEnvironment>
 
 @implementation XMMainViewController
 
+static double leftViewAnimateTime = 0.25;
+
 #pragma mark - lazy
 
 - (XMHomeTableViewController *)homeVC{
@@ -124,12 +126,14 @@ UITraitEnvironment>
     [super viewWillAppear:animated];
 }
 
-//- (void)viewDidAppear:(BOOL)animated{
-//    [super viewDidAppear:animated];
-//    XMMetorMapViewController *maVC  = [[XMMetorMapViewController alloc] init];
-//    [self.navigationController pushViewController:maVC animated:YES];
-//
-//}
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+}
+
+- (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    [self hideLeftView];
+}
 
 - (void)dealloc{
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -408,7 +412,7 @@ UITraitEnvironment>
     // 隐藏蒙板
     self.cover.hidden = YES;
     
-    [UIView animateWithDuration:0.5 animations:^{
+    [UIView animateWithDuration:leftViewAnimateTime animations:^{
         // 恢复到最左边的位置
         self.leftContentView.transform = CGAffineTransformIdentity;
         
@@ -431,22 +435,25 @@ UITraitEnvironment>
     // 隐藏左侧边栏
     [self hideLeftView];
     
-    if (indexPath.section == 0){
-        // 创建说明文档
-        [self createGuildView];
-        
-    }else if(indexPath.section == 1){
-        // 将specialChannel以webmodule打开,serchMode模式
-        XMChannelModel *specialModel = [XMChannelModel specialChannels][indexPath.row];
-        XMWebModel *model = [[XMWebModel alloc] init];
-        model.searchMode = YES;
-        model.webURL = [NSURL URLWithString:specialModel.url];
-        [self openWebmoduleRequest:model];
-    
-    }else if ( indexPath.section == 2){
-        // 打开工具箱
-        [self callToolBox];
-    }
+    /// 保持待侧边栏收起再动作,防止push时截图出现截图
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(leftViewAnimateTime * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        if (indexPath.section == 0){
+            // 创建说明文档
+            [self createGuildView];
+            
+        }else if(indexPath.section == 1){
+            // 将specialChannel以webmodule打开,serchMode模式
+            XMChannelModel *specialModel = [XMChannelModel specialChannels][indexPath.row];
+            XMWebModel *model = [[XMWebModel alloc] init];
+            model.searchMode = YES;
+            model.webURL = [NSURL URLWithString:specialModel.url];
+            [self openWebmoduleRequest:model];
+            
+        }else if ( indexPath.section == 2){
+            // 打开工具箱
+            [self callToolBox];
+        }
+    });
     
 }
 

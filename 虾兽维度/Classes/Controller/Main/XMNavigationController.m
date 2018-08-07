@@ -27,19 +27,6 @@ UINavigationControllerDelegate>
 - (void)viewDidLoad{
     [super viewDidLoad];
 
-//    // 禁用原生的左侧边右滑pop手势
-//    self.interactivePopGestureRecognizer.enabled = NO;
-//    // 添加自定义的右滑pop手势
-////    UIScreenEdgePanGestureRecognizer *edge = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(edgeDidPan:)];
-//    UIScreenEdgePanGestureRecognizer *edge = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self.interactivePopGestureRecognizer.delegate action:@selector(handleNavigationTransition:)];
-//    self.customerPopGestureRecognizer = edge;
-//    edge.edges = UIRectEdgeLeft;
-//    edge.delegate = self;
-//    [self.view addGestureRecognizer:edge];
-//
-//    // 使原生的interactivePopGestureRecognizer和自己定义的edge同时有效
-////    self.interactivePopGestureRecognizer.delegate = self;
-    
     UIGestureRecognizer *gesture = self.interactivePopGestureRecognizer;
     gesture.enabled = NO;
     UIView *gestureView = gesture.view;
@@ -55,19 +42,19 @@ UINavigationControllerDelegate>
     [gestureView addGestureRecognizer:popRecognizer];
     
     
-    // 设置左侧pop和添加浮窗手势
-    UIScreenEdgePanGestureRecognizer *edge = [[UIScreenEdgePanGestureRecognizer alloc] init];
-//    self.customerPopGestureRecognizer = edge;
-    edge.edges = UIRectEdgeLeft;
-    edge.delegate = self;
-    [gestureView addGestureRecognizer:edge];
+//    // 设置左侧pop和添加浮窗手势
+//    UIScreenEdgePanGestureRecognizer *edge = [[UIScreenEdgePanGestureRecognizer alloc] init];
+////    self.customerPopGestureRecognizer = edge;
+//    edge.edges = UIRectEdgeLeft;
+//    edge.delegate = self;
+//    [gestureView addGestureRecognizer:edge];
 
     // 添加手势
     [popRecognizer addTarget:self.navT action:@selector(handleControllerPop:)];
-    [edge addTarget:self.navT action:@selector(edgeDidPan:)];
+//    [edge addTarget:self.navT action:@selector(edgeDidPan:)];
     
     // 设置优先级
-    [gesture requireGestureRecognizerToFail:edge];
+//    [gesture requireGestureRecognizerToFail:edge];
 //
 //     // 注意:一旦设置这个所有自定义的pop动画将会失效
 //    self.delegate = self;
@@ -79,7 +66,10 @@ UINavigationControllerDelegate>
     if (!self.pushScreenShotArr){
         self.pushScreenShotArr = [NSMutableArray array];
     }
-    [self.pushScreenShotArr addObject:[XMImageUtil screenShot]];
+    if(![NSStringFromClass([viewController class]) isEqualToString:@"XMPhotoCollectionViewController"]){
+        // 图片浏览器不需要添加截图,因为拖拽关闭图片pop时animate为NO,不走自定义动画
+        [self.pushScreenShotArr addObject:[XMImageUtil screenShot]];
+    }
     
     [super pushViewController:viewController animated:animated];
 
@@ -108,24 +98,15 @@ UINavigationControllerDelegate>
 
 #pragma mark - UIGestureRecognizerDelegate
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
+    if([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]){
+        if ([(UIPanGestureRecognizer *)gestureRecognizer velocityInView:self.view].x < 0){
+            return NO;
+        }
+    }
     // 这里有两个条件不允许手势执行，1、当前控制器为根控制器；2、如果这个push、pop动画正在执行（私有属性）
     return self.viewControllers.count != 1 && ![[self valueForKey:@"_isTransitioning"] boolValue];
 }
 
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch{
-    // 若为UITableViewCellContentView（即点击了tableViewCell），则不截获Touch事件,用于解决全屏pop手势和cell的侧滑删除动作冲突
-    if ([NSStringFromClass([touch.view class]) isEqualToString:@"UITableViewCellContentView"]) {
-        return NO;
-    }
-    return  YES;
-}
-
-
-//
-//- (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated{
-//    NSLog(@"%s",__func__);
-//    NSLog(@"%s",__func__);
-//}
 
 //
 ///// 屏幕左边沿手势方法

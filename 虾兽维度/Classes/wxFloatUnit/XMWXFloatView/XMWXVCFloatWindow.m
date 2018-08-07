@@ -54,6 +54,8 @@ static double padding = 10.0f;
         // 初始化成员变量
         wxVCFloatWindow.recordFlag = YES;
         wxVCFloatWindow.preFrame = startF;
+        // 设置透明度
+        wxVCFloatWindow.alpha = 0.7;
         
         // 子控件
         CGFloat btnWH = viewWH - padding;
@@ -141,6 +143,11 @@ static double padding = 10.0f;
     if(pan.state == UIGestureRecognizerStateChanged){
         // 跟随手指移动
         CGPoint point = [pan translationInView:[UIApplication sharedApplication].windows[0]];
+        
+        // 控制浮窗和顶部(20)和底部(20)的边距
+        if((self.frame.origin.y > XMScreenH - viewWH - 20 && point.y >0) || (self.frame.origin.y < 20  && point.y < 0)){
+            point.y = 0;
+        }
         self.transform = CGAffineTransformTranslate(self.transform, point.x, point.y);
         [pan setTranslation:CGPointZero inView:[UIApplication sharedApplication].windows[0]];
         
@@ -149,10 +156,13 @@ static double padding = 10.0f;
         [XMRightBottomFloatView shareRightBottomFloatView].rightBottomChangeBlock(abPoint);
         
     }else if (pan.state == UIGestureRecognizerStateBegan){
+        // 恢复透明度为1
+        self.alpha = 1;
         // 通知左下角窗口联动
         [XMRightBottomFloatView shareRightBottomFloatView].rightBottomStartBlock(NO);
         
     }else if (pan.state == UIGestureRecognizerStateEnded){
+        
         // 通知左下角窗口联动
         [XMRightBottomFloatView shareRightBottomFloatView].rightBottomEndBlock();
         
@@ -166,6 +176,7 @@ static double padding = 10.0f;
         // 添加动画
         [UIView animateWithDuration:0.25f animations:^{
             self.frame = tarF;
+            self.alpha = 0.7;
         }];
         // 判断是否需要记录前一个位置,默认一直记录,当拖到扇形区域才不需要记录
         if(self.recordFlag){

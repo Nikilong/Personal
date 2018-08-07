@@ -41,6 +41,15 @@
     return 5;
 }
 
+// xcode9和ios11需要实现这个才能设置footer高度
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
+    return [[UIView alloc] init];
+}
+// xcode9和ios11需要实现这个才能设置header高度
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
+    return [[UIView alloc] init];
+}
+
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
     return (section == 0) ? 20 : 5;
 }
@@ -78,6 +87,8 @@
         if (!cell){
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:ID];
             cell.textLabel.textAlignment = NSTextAlignmentCenter;
+            cell.textLabel.font = [UIFont boldSystemFontOfSize:17];
+            cell.textLabel.textColor = [UIColor grayColor];
             
             // 添加长按操作手势
             UILongPressGestureRecognizer *longPre = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(editCell:)];
@@ -87,7 +98,7 @@
 
         XMWifiTransModel *model = self.groupNameArr[indexPath.row];
         cell.textLabel.text = model.groupName;
-        cell.textLabel.textColor = model.isBackup ? [UIColor orangeColor] : [UIColor blackColor];
+        cell.textLabel.textColor = model.isBackup ? [UIColor orangeColor] : [UIColor grayColor];
 
     }else{
         if (indexPath.section == 0){

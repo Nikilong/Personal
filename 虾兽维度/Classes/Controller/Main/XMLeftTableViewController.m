@@ -28,15 +28,26 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    // 默认选中第一组第一行
-    NSIndexPath *indexpath = [NSIndexPath indexPathForRow:0 inSection:1];
-    [self.tableView selectRowAtIndexPath:indexpath animated:YES scrollPosition:UITableViewScrollPositionNone];
-
 }
 
 
 #pragma mark - Table view data source
+// xcode9和ios11需要实现这个才能设置footer高度
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
+    return [[UIView alloc] init];
+}
+// xcode9和ios11需要实现这个才能设置header高度
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
+    return [[UIView alloc] init];
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
+    return 10;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
+    return (section == 0) ? 20 : 10;
+}
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 3;
@@ -48,42 +59,28 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    switch (indexPath.section) {
-        case 0:{
-            XMLeftViewUserCell *cell = [XMLeftViewUserCell cellWithTableView:tableView];
-            return cell;
-            break;
-        }
-        case 1:{
-            UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
-            
-            // 修改选中状态的背景颜色
-            cell.selectedBackgroundView = [[UIView alloc]  initWithFrame:cell.frame];
-            cell.selectedBackgroundView.backgroundColor = [UIColor yellowColor];
-            
+    if(indexPath.section == 0){
+        
+        XMLeftViewUserCell *cell = [XMLeftViewUserCell cellWithTableView:tableView];
+        return cell;
+    }else{
+        
+        UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+        
+        // 修改选中状态的背景颜色
+        cell.selectedBackgroundView = [[UIView alloc]  initWithFrame:cell.frame];
+        cell.selectedBackgroundView.backgroundColor = [UIColor darkGrayColor];
+        cell.textLabel.textAlignment = NSTextAlignmentCenter;
+        cell.textLabel.font = [UIFont boldSystemFontOfSize:17];
+        cell.textLabel.textColor = [UIColor grayColor];
+        if (indexPath.section == 1){
             XMChannelModel *model = self.specialChannelArr[indexPath.row];
             cell.textLabel.text = model.channel;
-            cell.textLabel.textAlignment = NSTextAlignmentCenter;
-            
-            return cell;
-            break;
-        }
-        case 2:{
-            UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
-            
-            // 修改选中状态的背景颜色
-            cell.selectedBackgroundView = [[UIView alloc]  initWithFrame:cell.frame];
-            cell.selectedBackgroundView.backgroundColor = [UIColor yellowColor];
-            
+        }else if (indexPath.section == 2){
             cell.textLabel.text = @"工具箱";
-            cell.textLabel.textAlignment = NSTextAlignmentCenter;
-            
-            return cell;
-            break;
         }
-        default:
-            return nil;
-            break;
+        
+        return cell;
     }
 }
 
@@ -95,6 +92,8 @@
 #pragma mark - 代理方法
 /** 通知代理选中了某一个频道 */
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    // 取消选中状态
+    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
     
     if ([self.delegate respondsToSelector:@selector(leftTableViewControllerDidSelectChannel:)]){
         [self.delegate leftTableViewControllerDidSelectChannel:indexPath];

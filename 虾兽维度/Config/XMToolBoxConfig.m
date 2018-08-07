@@ -24,7 +24,7 @@ NSString *const touchIDKeyboardAuthenPassward = @"2236";    // 键盘验证的�
     return @[
              @{ToolBox_kName:@"Wifi传送文件",
                ToolBox_kType:@(XMToolBoxTypeWifiTransFiles),
-               ToolBox_kAuth:@(XMToolBoxAuthenTypeNone)
+               ToolBox_kAuth:@(XMToolBoxAuthenTypeNeed)
                },
              @{ToolBox_kName:@"裁剪圆环头像",
                ToolBox_kType:@(XMToolBoxTypeClipImg),

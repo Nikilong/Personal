@@ -144,7 +144,7 @@ static NSString *homUrl;
 // 处理单个作品所有图片
 + (NSArray *)dealDatePicture:(NSString *)date
 {
-    NSLog(@"-----------begin-----------");
+//    NSLog(@"-----------begin-----------");
     // 去除头部信息
     NSArray *arrCutHeader = [date componentsSeparatedByString:@"<div id=\"sample-waterfall\">"];
     NSString *strCutHeader = [arrCutHeader lastObject];
@@ -193,7 +193,7 @@ static NSString *homUrl;
 // 处理单个影片中的同类影片
 + (NSArray *)dealRelateFilmArr:(NSString *)date
 {
-    NSLog(@"-----------begin-----------");
+//    NSLog(@"-----------begin-----------");
     // 去除头部信息
     NSArray *arrCutHeader = [date componentsSeparatedByString:@"<div id=\"related-waterfall\" class=\"mb20\">"];
     NSString *strCutHeader = [arrCutHeader lastObject];
@@ -315,11 +315,11 @@ static NSString *homUrl;
         NSString* substringForMatch = [str substringWithRange:match.range];
         [resultArr addObject:substringForMatch];
         if (flag){
-            NSLog(@"%@",substringForMatch);
+//            NSLog(@"%@",substringForMatch);
             
         }
     }
-    NSLog(@"一共有:%zd个结果",arrayOfAllMatches.count);
+//    NSLog(@"一共有:%zd个结果",arrayOfAllMatches.count);
     return resultArr;
     
 }

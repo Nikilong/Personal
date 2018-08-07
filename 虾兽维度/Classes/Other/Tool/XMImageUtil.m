@@ -21,6 +21,8 @@
 
     UIGraphicsBeginImageContextWithOptions([UIScreen mainScreen].bounds.size, YES, [UIScreen mainScreen].scale);
     
+    //    UIView *snapshotView = [fromViewController.view snapshotViewAfterScreenUpdates:NO];
+
     // 这样重绘才可以完整将导航栏的所有图层绘出
 //    [[UIApplication sharedApplication].keyWindow drawViewHierarchyInRect:CGRectMake(0, 0,XMScreenW, XMScreenH) afterScreenUpdates:NO];
     [[UIApplication sharedApplication].keyWindow.rootViewController.view drawViewHierarchyInRect:CGRectMake(0, 0,XMScreenW, XMScreenH) afterScreenUpdates:NO];
