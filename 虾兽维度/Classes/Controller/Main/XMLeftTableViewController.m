@@ -9,11 +9,13 @@
 #import "XMLeftTableViewController.h"
 #import "XMChannelModel.h"
 #import "XMLeftViewUserCell.h"
+#import "MBProgressHUD+NK.h"
 
 @interface XMLeftTableViewController ()
 
 // 特别频道
 @property (nonatomic, strong) NSArray *specialChannelArr;
+@property (weak, nonatomic)  UIButton *addNewChannelBtn;
 
 @end
 
@@ -62,17 +64,24 @@
     if(indexPath.section == 0){
         
         XMLeftViewUserCell *cell = [XMLeftViewUserCell cellWithTableView:tableView];
+        if(!self.addNewChannelBtn){
+            self.addNewChannelBtn = cell.addLeftNewChannelBtn;
+            [self.addNewChannelBtn addTarget:self action:@selector(addNewChannel) forControlEvents:UIControlEventTouchUpInside];
+        }
         return cell;
     }else{
-        
-        UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
-        
-        // 修改选中状态的背景颜色
-        cell.selectedBackgroundView = [[UIView alloc]  initWithFrame:cell.frame];
-        cell.selectedBackgroundView.backgroundColor = [UIColor darkGrayColor];
-        cell.textLabel.textAlignment = NSTextAlignmentCenter;
-        cell.textLabel.font = [UIFont boldSystemFontOfSize:17];
-        cell.textLabel.textColor = [UIColor grayColor];
+        static NSString *ID = @"mainLeftChannelCell";
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ID];
+        if (!cell){
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:ID];
+            // 修改选中状态的背景颜色
+            cell.selectedBackgroundView = [[UIView alloc]  initWithFrame:cell.frame];
+            cell.selectedBackgroundView.backgroundColor = [UIColor darkGrayColor];
+            cell.textLabel.textAlignment = NSTextAlignmentCenter;
+            cell.textLabel.font = [UIFont boldSystemFontOfSize:17];
+            cell.textLabel.textColor = [UIColor grayColor];
+        }
+    
         if (indexPath.section == 1){
             XMChannelModel *model = self.specialChannelArr[indexPath.row];
             cell.textLabel.text = model.channel;
@@ -89,6 +98,89 @@
     return indexPath.section == 0 ? 100 : 44;
 }
 
+
+#pragma mark 编辑操作
+/// iOS8必须实现这个方法才能侧滑编辑
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+}
+
+- (NSArray<UITableViewRowAction *> *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath{
+    if(indexPath.section == 1){
+        __weak typeof(self) weakSelf = self;
+        UITableViewRowAction *delAct = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:@"删除" handler:^(UITableViewRowAction * _Nonnull action, NSIndexPath * _Nonnull indexPath) {
+            BOOL result = [XMChannelModel specialChannelRemoveChannelAtIndex:indexPath.row];
+            [MBProgressHUD showResult:result message:nil];
+            weakSelf.specialChannelArr = nil;
+            [weakSelf.tableView reloadData];
+        }];
+        UITableViewRowAction *renameAct = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleNormal title:@"编辑" handler:^(UITableViewRowAction * _Nonnull action, NSIndexPath * _Nonnull indexPath) {
+            UIAlertController *tips = [UIAlertController alertControllerWithTitle:@"提示" message:@"输入网址和名称" preferredStyle:UIAlertControllerStyleAlert];
+            XMChannelModel *model = self.specialChannelArr[indexPath.row];
+            [tips addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+                textField.text = model.channel;
+                textField.placeholder = @"请输入名称";
+            }];
+            [tips addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+                textField.text = model.url;
+                textField.placeholder = @"请输入url地址";
+            }];
+            [tips addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                [weakSelf.tableView setEditing:NO animated:YES];
+            }]];
+            [tips addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action){
+                NSString *name = tips.textFields[0].text;
+                NSString *url = tips.textFields[1].text;
+                BOOL result = [XMChannelModel specialChannelRenameChannelName:name url:url index:indexPath.row];
+                [MBProgressHUD showResult:result message:nil];
+                weakSelf.specialChannelArr = nil;
+                [weakSelf.tableView reloadData];
+            }]];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self presentViewController:tips animated:YES completion:nil];
+            });
+        }];
+        return @[delAct,renameAct];
+    }
+    return @[];
+}
+
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.section == 1){
+        return YES;
+    }else{
+        return NO;
+    }
+}
+
+
+/// 添加一个新的频道
+- (void)addNewChannel{
+    UIAlertController *tips = [UIAlertController alertControllerWithTitle:@"提示" message:@"输入网址和名称" preferredStyle:UIAlertControllerStyleAlert];
+
+    __weak typeof(self) weakSelf = self;
+    [tips addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+        textField.placeholder = @"请输入名称";
+    }];
+    [tips addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+        textField.placeholder = @"请输入url地址";
+    }];
+    [tips addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    [tips addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action){
+        NSString *name = tips.textFields[0].text;
+        NSString *url = tips.textFields[1].text;
+        BOOL result = [XMChannelModel specialChannelAddNewChannelName:name url:url];
+        [MBProgressHUD showResult:result message:nil];
+        weakSelf.specialChannelArr = nil;
+        [weakSelf.tableView reloadData];
+    }]];
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self presentViewController:tips animated:YES completion:nil];
+    });
+}
 #pragma mark - 代理方法
 /** 通知代理选中了某一个频道 */
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{

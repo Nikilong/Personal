@@ -705,10 +705,10 @@ static double backForwardSafeDistance = 80.0;
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType{
 //    NSLog(@"%ld===%@",navigationType,request.URL.absoluteString);
     // 开启网络加载
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+//    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     
     if ([self shoudlFilterRequest:request.URL.absoluteString] == NO){
-        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+//        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
         return NO;
     }
     
@@ -756,12 +756,12 @@ static double backForwardSafeDistance = 80.0;
             // 调用方法打开新的webmodule
             [XMWebViewController openWebmoduleWithModel:model viewController:self];
             // 关闭网络加载
-            [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+//            [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
             // 当网页完成加载之后,禁止再重新加载
             return NO;
         }else{
             // 关闭网络加载
-            [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+//            [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
             return YES;
         }
     }
@@ -773,7 +773,7 @@ static double backForwardSafeDistance = 80.0;
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView{
     // 关闭网络加载
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+//    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
 
     // 禁止完成加载之后再去加载网页
     self.canLoad = NO;
@@ -810,7 +810,7 @@ static double backForwardSafeDistance = 80.0;
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error{
     // 关闭网络加载
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+//    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
 //    [self.web stopLoading];
 //    // -999是因为上一个网络请求没有加载完就开始加载下一个请求,常发生在"返回"
 //    if(error.code != -999){
@@ -831,6 +831,8 @@ static double backForwardSafeDistance = 80.0;
         
         // 必应首页底部广告栏id=TopApp// BottomAppPro
         [self.web stringByEvaluatingJavaScriptFromString:@"document.body.removeChild(document.getElementById('BottomAppPro'))"];
+        // 百度新闻底部广告 id=oTLzC class= first-card-body
+        [self.web stringByEvaluatingJavaScriptFromString:@"document.body.removeChild(document.getElementsByClassName('first-card-main')[0])"];
     });
     
 }
@@ -918,7 +920,6 @@ static double backForwardSafeDistance = 80.0;
 
 #pragma mark - uigestureDelegate
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
-//    NSLog(@"%@",otherGestureRecognizer);
     // 当触发swipe手势时,可能会触发pan手势等手势
     if ([gestureRecognizer isKindOfClass:[UISwipeGestureRecognizer class]]){
         // swip只会触发一次,或者会同时触发pan手势,这都是可以的
@@ -933,6 +934,18 @@ static double backForwardSafeDistance = 80.0;
     }
     return YES;
 }
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
+    
+    // 前进返回手势在左侧30以内不触发,防止与侧边pop手势冲突
+    if([gestureRecognizer isEqual:self.panSearchMode]){
+        if([gestureRecognizer locationInView:self.view].x < 30){
+            return NO;
+        }
+    }
+    return YES;
+}
+
 
 #pragma mark - 手势
 #pragma mark 右划关闭webmodule
@@ -1005,6 +1018,9 @@ static double backForwardSafeDistance = 80.0;
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 // 返回前进手势判断
                 self.panSearchMode.enabled = (self.web.canGoForward || self.web.canGoBack);
+                // toolbar返回前进箭头
+                self.toolBarForwardBtn.selected = !self.web.canGoForward;
+                self.toolBarBackBtn.selected = !self.web.canGoBack;
                 // 只要能返回,就要禁用全屏pop手势
                 XMNavigationController *nav = (XMNavigationController *)self.navigationController;
                 nav.customerPopGestureRecognizer.enabled = !self.web.canGoBack;
@@ -1044,7 +1060,7 @@ static double backForwardSafeDistance = 80.0;
     pan.delegate = self;
     self.panSearchMode = pan;
     [self.web addGestureRecognizer:pan];
-    
+
 }
 
 @end

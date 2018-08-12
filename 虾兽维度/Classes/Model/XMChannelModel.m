@@ -7,34 +7,63 @@
 //
 
 #import "XMChannelModel.h"
+#import "XMSavePathUnit.h"
 
 @implementation XMChannelModel
 
-+ (NSArray *)channels
-{
-    return [self getChannelFromPlistName:@"web.plist"];
+#pragma mark 主页频道
++ (NSArray *)channels{
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"web.plist" ofType:nil];
+    return [self getChannelWithPath:path];
 }
 
-+ (NSArray *)specialChannels
-{
-    return [self getChannelFromPlistName:@"webSpecial.plist"];
-}
 
-+ (NSArray *)getChannelFromPlistName:(NSString *)name
-{
-    NSArray *channelArr = [NSArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:name ofType:nil]];
-    NSMutableArray *arrM = [NSMutableArray array];
-    for (NSDictionary *dict in channelArr) {
-        XMChannelModel *model = [[XMChannelModel alloc] init];
-        model.channel = dict[@"channel"];
-        model.url = dict[@"url"];
-        model.tags = dict[@"tags"];
-        [arrM addObject:model];
+#pragma mark 左侧栏方法
++ (NSArray *)specialChannels{
+    NSString *path = [XMSavePathUnit getMainLeftSaveChannelPath];
+    if (![[NSFileManager defaultManager] fileExistsAtPath:path]){
+        NSArray *defaultArr = [self getChannelWithPath:[[NSBundle mainBundle] pathForResource:@"webSpecial.plist" ofType:nil]];
+        [NSKeyedArchiver archiveRootObject:defaultArr toFile:[XMSavePathUnit getMainLeftSaveChannelPath]];
     }
-    return arrM;
+    return [NSKeyedUnarchiver unarchiveObjectWithFile:path];
 }
 
+/// 左侧栏添加一条网址
++ (BOOL)specialChannelAddNewChannelName:(NSString *)name url:(NSString *)url{
+    XMChannelModel *model = [[XMChannelModel alloc] init];
+    model.channel = name;
+    model.url = url;
+    NSMutableArray *arr = [NSMutableArray arrayWithArray:[self unarchiveLeftChannelArray]];
+    [arr addObject:model];
+    return [self archiveLeftChannelArray:arr];
+}
 
+/// 左侧栏删除一条网址
++ (BOOL)specialChannelRemoveChannelAtIndex:(NSUInteger)index{
+    NSMutableArray *oldArr = [NSMutableArray arrayWithArray:[self unarchiveLeftChannelArray]];
+    [oldArr removeObjectAtIndex:index];
+    return [self archiveLeftChannelArray:oldArr];
+}
+
+/// 左侧栏重命名或修改url
++ (BOOL)specialChannelRenameChannelName:(NSString *)name url:(NSString *)url index:(NSUInteger)index{
+    NSMutableArray *oldArr = [NSMutableArray arrayWithArray:[self unarchiveLeftChannelArray]];
+    XMChannelModel *model = oldArr[index];
+    model.channel = name;
+    model.url = url;
+    return [self archiveLeftChannelArray:oldArr];
+}
+
+/// 保存左侧频道
++ (BOOL)archiveLeftChannelArray:(NSArray *)arr{
+    return [NSKeyedArchiver archiveRootObject:arr toFile:[XMSavePathUnit getMainLeftSaveChannelPath]];
+}
+
+/// 读取左侧频道
++ (NSArray *)unarchiveLeftChannelArray{
+    return [NSKeyedUnarchiver unarchiveObjectWithFile:[XMSavePathUnit getMainLeftSaveChannelPath]];
+}
+#pragma mark 使用说明
 /**
  使用说明
  */
@@ -50,5 +79,37 @@
     "4.hiWeb\n"
     "双指下划:查看封面  单指下划:退出查看封面  单击:查看单张图片  双击:退出查看单张图片  缩放/旋转/移动  \n";
 
+}
+
+
+#pragma mark 公用方法
++ (NSArray *)getChannelWithPath:(NSString *)path{
+    NSArray *channelArr = [NSArray arrayWithContentsOfFile:path];
+    NSMutableArray *arrM = [NSMutableArray array];
+    for (NSDictionary *dict in channelArr) {
+        XMChannelModel *model = [[XMChannelModel alloc] init];
+        model.channel = dict[@"channel"];
+        model.url = dict[@"url"];
+        model.tags = dict[@"tags"];
+        [arrM addObject:model];
+    }
+    return arrM;
+}
+
+#pragma mark - 归档
+/** 读档 */
+- (instancetype)initWithCoder:(NSCoder *)aDecoder{
+    if (self = [super init]){
+        self.channel = [aDecoder decodeObjectForKey:@"channel"];
+        self.url = [aDecoder decodeObjectForKey:@"url"];
+    }
+    return self;
+}
+
+/** 存档 */
+- (void)encodeWithCoder:(NSCoder *)aCoder{
+    [aCoder encodeObject:self.channel forKey:@"channel"];
+    [aCoder encodeObject:self.url forKey:@"url"];
+    
 }
 @end

@@ -7,6 +7,7 @@
 //
 
 #import "XMWebURLProtocol.h"
+#import <UIKit/UIKit.h>
 
 //static NSString* const KXMWebURLProtocolKey = @"KXMWebURLProtocol";
 static NSMutableArray *requestURLArr;
@@ -16,10 +17,12 @@ static NSMutableArray *requestURLArr;
 
 @property (nonnull,strong) NSURLSessionDataTask *task;
 
-
 @end
 
 @implementation XMWebURLProtocol
+
+// 统计网络请求次数
+static NSUInteger requestCount = 0;
 
 + (BOOL)canInitWithRequest:(NSURLRequest *)request{
     
@@ -28,10 +31,10 @@ static NSMutableArray *requestURLArr;
         return NO;
     }
     
-    // 网址过滤
-    if ([self shoudlFilterRequest:request.URL.absoluteString] == NO){
-//        return NO;
-    }
+//    // 网址过滤
+//    if ([self shoudlFilterRequest:request.URL.absoluteString] == NO){
+////        return NO;
+//    }
     
     // 防止重复加载,用于个数组记录已经加载的url,为了防止数组过长和控制性能,控制数组长度为10
     if(!requestURLArr){
@@ -47,8 +50,6 @@ static NSMutableArray *requestURLArr;
     }
     [requestURLArr addObject:request.URL.absoluteString];
     
-    
-    NSLog(@"$$protocal: %@",request.URL.absoluteString);
     return YES;
 }
 
@@ -104,15 +105,30 @@ static NSMutableArray *requestURLArr;
 //        self.task = [session dataTaskWithRequest:self.request];
 //        [self.task resume];
 //    }
-    NSLog(@"requestURLArr.count--%ld",requestURLArr.count);
-    
     
     NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:nil];
     NSURLSessionDataTask *task = [session dataTaskWithRequest:self.request];
     [task resume];
+    
+    requestCount++;
+    // 开启网络加载标志
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if(requestCount > 0 && [UIApplication sharedApplication].isNetworkActivityIndicatorVisible == NO){
+            [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+        }
+    });
+
 
 }
 - (void)stopLoading{
+    requestCount--;
+    // 关闭网络加载标志
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        if(requestCount == 0 && [UIApplication sharedApplication].isNetworkActivityIndicatorVisible == YES){
+            [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+        }
+    });
+
 
 //    if (self.task != nil){
 //        [self.task  cancel];

@@ -220,6 +220,8 @@ UIGestureRecognizerDelegate>
     [self cancelSearch];
     [self.searchF removeFromSuperview];
     [self hideLeftView];
+    [self.toolBar removeFromSuperview];
+    [self.tableView setEditing:NO animated:YES];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"XMWifiTransfronFilesComplete" object:nil];
 }
 
@@ -533,6 +535,7 @@ UIGestureRecognizerDelegate>
         self.toolBarDeleBtn.enabled = NO;
         self.toolBarMoveBtn.enabled = NO;
         self.toolBar.userInteractionEnabled = YES;
+        [self.view.superview bringSubviewToFront:self.toolBar];
     }else{
         self.toolBar.hidden = YES;
     }
@@ -828,9 +831,9 @@ UIGestureRecognizerDelegate>
     if ([gestureRecognizer isKindOfClass:[UIScreenEdgePanGestureRecognizer class]]){
         [self hideLeftView];
     }
-    /// 左侧栏的轻扫手势作用区域要在1/4到最右边
+    /// 左侧栏的轻扫手势作用区域要在50到最右边
     if ([gestureRecognizer isKindOfClass:[UISwipeGestureRecognizer class]]){
-        if ([gestureRecognizer locationInView:self.tableView].x < 0.25 * XMScreenW){
+        if ([gestureRecognizer locationInView:self.tableView].x < 50){
             return NO;
         }
     }
@@ -1100,43 +1103,45 @@ UIGestureRecognizerDelegate>
 
 #pragma mark 编辑
 
-/// 修改左划文字
-- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return @"删除";
-}
-
-
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath{
     return YES;
 }
 
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath{
-    return YES;
-}
 
+/// iOS8必须实现这个方法才能侧滑编辑
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
-    if (editingStyle == UITableViewCellEditingStyleDelete){
-        XMWifiTransModel *model = self.currentDataArr[indexPath.row];
-        // 如果是文件夹着弹出警告
-        if (model.isDir){
-            UIAlertController *tips = [UIAlertController alertControllerWithTitle:@"警告" message:@"你即将删除一个文件夹及里面的所有文件" preferredStyle:UIAlertControllerStyleActionSheet];
-            __weak typeof(self) weakSelf = self;
-            [tips addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
-            [tips addAction:[UIAlertAction actionWithTitle:@"删除" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action){
-                [weakSelf deleteOneCellAtIndexPath:indexPath];
-            }]];
-            
-            [self presentViewController:tips animated:YES completion:nil];
-        }else{
-            [self deleteOneCellAtIndexPath:indexPath];
-        }
-    }
-    
+
 }
 
-- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath{
-    
-    return UITableViewCellEditingStyleDelete;
+- (NSArray<UITableViewRowAction *> *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath{
+    if(indexPath.section == 0){
+        __weak typeof(self) weakSelf = self;
+        // 提取文件夹信息
+        XMWifiTransModel *model = self.currentDataArr[indexPath.row];
+        UITableViewRowAction *delAct = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:@"删除" handler:^(UITableViewRowAction * _Nonnull action, NSIndexPath * _Nonnull indexPath) {
+            // 如果是文件夹着弹出警告
+            if (model.isDir){
+                UIAlertController *tips = [UIAlertController alertControllerWithTitle:@"警告" message:@"你即将删除一个文件夹及里面的所有文件" preferredStyle:UIAlertControllerStyleActionSheet];
+                __weak typeof(self) weakSelf = self;
+                [tips addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                    [weakSelf.tableView setEditing:NO animated:YES];
+                }]];
+                [tips addAction:[UIAlertAction actionWithTitle:@"删除" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action){
+                    [weakSelf deleteOneCellAtIndexPath:indexPath];
+                }]];
+                
+                [weakSelf presentViewController:tips animated:YES completion:nil];
+            }else{
+                [weakSelf deleteOneCellAtIndexPath:indexPath];
+            }
+        }];
+        UITableViewRowAction *renameAct = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleNormal title:@"重命名" handler:^(UITableViewRowAction * _Nonnull action, NSIndexPath * _Nonnull indexPath) {
+            [weakSelf renameFileAtIndexPath:indexPath];
+        
+        }];
+        return @[delAct,renameAct];
+    }
+    return @[];
 }
 
 #pragma mark - cell长按编辑手势
@@ -1151,12 +1156,6 @@ UIGestureRecognizerDelegate>
         UIAlertController *tips = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
 
         [tips addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
-        [tips addAction:[UIAlertAction actionWithTitle:@"删除" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action){
-            [weakSelf deleteOneCellAtIndexPath:indexPath];
-        }]];
-        [tips addAction:[UIAlertAction actionWithTitle:@"重命名" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
-            [weakSelf renameFileAtIndexPath:indexPath];
-        }]];
         [tips addAction:[UIAlertAction actionWithTitle:@"分享" style: UIAlertActionStyleDefault  handler:^(UIAlertAction * _Nonnull action){
             [weakSelf shareFileAtIndexPath:indexPath];
         }]];
@@ -1204,7 +1203,10 @@ UIGestureRecognizerDelegate>
     UIAlertController *tips = [UIAlertController alertControllerWithTitle:@"重命名" message:@"输入新的名称(不带后缀)" preferredStyle:UIAlertControllerStyleAlert];
     
     __weak typeof(self) weakSelf = self;
-    [tips addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    [tips addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        [weakSelf.tableView setEditing:NO animated:YES];
+    }]];
+
     [tips addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action){
         
         // 获得输入内容

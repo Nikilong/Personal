@@ -225,6 +225,18 @@ static NSString *currentGroupName = @"默认";
     
 }
 
+/// 标记/反标记所有组别
++ (void)markBackupGroup:(BOOL)isBackup{
+    NSArray *arr = [self groupNameDirsModels];
+    for (XMWifiTransModel *model in arr){
+        model.isBackup = isBackup;
+        // 更新标记的名单
+        [self updateZipMarkGroupName:model.groupName isMark:isBackup];
+    }
+    // 更新沙盒文件
+    [self saveGroupMessageWithNewArray:arr];
+}
+
 /// 更新当前文件夹
 + (void)upgradeCurrentGroupName:(NSString *)name{
     currentGroupName = name;

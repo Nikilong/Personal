@@ -12,11 +12,8 @@
 @interface XMNavigationInteractiveTransition : NSObject<UINavigationControllerDelegate>
 
 - (instancetype)initWithViewController:(UIViewController *)vc;
-//- (UIPercentDrivenInteractiveTransition *)interactivePopTransition;
 
-/// 全屏pop手势
+/// 全屏+左侧屏pop手势
 - (void)handleControllerPop:(UIPanGestureRecognizer *)recognizer;
-/// 左侧屏pop手势
-- (void)edgeDidPan:(UIScreenEdgePanGestureRecognizer *)gest;
 
 @end

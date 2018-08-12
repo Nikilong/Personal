@@ -34,11 +34,6 @@ NSString * const XMWifiGroupMarkZipFileName = @"XMWifiGroupZipMark.wifign";  // 
 /// 浮窗webModle的归档文件路径
 + (NSString *)getFloatWindowWebmodelArchivePath{
     return [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"WXfloatWebModel.archiver"];
-    //    NSString *path = [NSHomeDirectory() stringByAppendingPathComponent:@"WXfloatWebModel.archiver"];
-    //    if (![[NSFileManager defaultManager] fileExistsAtPath:path]){
-    //        [[NSFileManager defaultManager] createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil];
-    //    }
-//    return path;
 }
 
 /// hiweb主页路径
@@ -67,9 +62,19 @@ NSString * const XMWifiGroupMarkZipFileName = @"XMWifiGroupZipMark.wifign";  // 
     return [NSString stringWithFormat:@"%@/%@",[self getWifiUploadDirPath],XMWifiGroupNameFileName];
 }
 
+
+/// 主页频道文件的保存路径
++ (NSString *)getMainLeftSaveChannelPath{
+    NSString *dirPath = [NSString stringWithFormat:@"%@/MainLeftChannel",[self getDocumentsPath]];
+    if(![[NSFileManager defaultManager] fileExistsAtPath:dirPath]){
+        [[NSFileManager defaultManager] createDirectoryAtPath:dirPath withIntermediateDirectories:YES attributes:nil error:nil];
+    }
+    return [NSString stringWithFormat:@"%@/XMMainLeftChannel.archiver",dirPath];
+}
+
 /// 返回一个数组,包含所有配置类文件的全路径
 + (NSArray *)getSettingFilesPaths{
-    return @[[self getHiwebHomeUrlPath],[self getWifiGroupNameFilePath],[self getSaveWebModelArchicerPath],[self getWifiGroupMarkZipFilePath]];
+    return @[[self getHiwebHomeUrlPath],[self getWifiGroupNameFilePath],[self getSaveWebModelArchicerPath],[self getWifiGroupMarkZipFilePath],[self getMainLeftSaveChannelPath]];
 }
 
 @end

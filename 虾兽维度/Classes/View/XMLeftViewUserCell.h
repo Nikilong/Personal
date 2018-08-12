@@ -15,5 +15,6 @@ extern NSString *const XMSwitchFloatButtonNotification;
 @interface XMLeftViewUserCell : UITableViewCell
 
 + (instancetype)cellWithTableView:(UITableView *)tableView;
+@property (weak, nonatomic) IBOutlet UIButton *addLeftNewChannelBtn;
 
 @end

@@ -127,6 +127,7 @@
 		20707E9F209F446F00572604 /* XMFileDisplayWebViewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20707E9E209F446F00572604 /* XMFileDisplayWebViewViewController.m */; };
 		20707EA3209F551200572604 /* ZBTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 20707EA2209F551200572604 /* ZBTool.m */; };
 		207BBE8120B7078F00C86EAD /* XMPhotoCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 207BBE8020B7078F00C86EAD /* XMPhotoCollectionViewCell.m */; };
+		20835AEA212025DD0009E17F /* dir_mark.png in Resources */ = {isa = PBXBuildFile; fileRef = 20835AE9212025DD0009E17F /* dir_mark.png */; };
 		20863C9120CD0E3300A0812C /* wifiopen_upload.png in Resources */ = {isa = PBXBuildFile; fileRef = 20863C9020CD0E3300A0812C /* wifiopen_upload.png */; };
 		20863CB720CD422F00A0812C /* ZLPhotoAssets.m in Sources */ = {isa = PBXBuildFile; fileRef = 20863C9F20CD422F00A0812C /* ZLPhotoAssets.m */; };
 		20863CB820CD422F00A0812C /* ZLPhotoPickerDatas.m in Sources */ = {isa = PBXBuildFile; fileRef = 20863CA120CD422F00A0812C /* ZLPhotoPickerDatas.m */; };
@@ -441,6 +442,7 @@
 		20707EA2209F551200572604 /* ZBTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZBTool.m; sourceTree = "<group>"; };
 		207BBE7F20B7078F00C86EAD /* XMPhotoCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPhotoCollectionViewCell.h; sourceTree = "<group>"; };
 		207BBE8020B7078F00C86EAD /* XMPhotoCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPhotoCollectionViewCell.m; sourceTree = "<group>"; };
+		20835AE9212025DD0009E17F /* dir_mark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dir_mark.png; sourceTree = "<group>"; };
 		20863C9020CD0E3300A0812C /* wifiopen_upload.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wifiopen_upload.png; sourceTree = "<group>"; };
 		20863C9E20CD422F00A0812C /* ZLPhotoAssets.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZLPhotoAssets.h; sourceTree = "<group>"; };
 		20863C9F20CD422F00A0812C /* ZLPhotoAssets.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZLPhotoAssets.m; sourceTree = "<group>"; };
@@ -1432,6 +1434,7 @@
 				FD3332E720A1786A0017655F /* wifiopen.png */,
 				20863C9020CD0E3300A0812C /* wifiopen_upload.png */,
 				2086643B20AC87DE00D51CCB /* dir_add.png */,
+				20835AE9212025DD0009E17F /* dir_mark.png */,
 				2086643C20AC87DE00D51CCB /* dir_backup.png */,
 				20E895B820AEFB120090AD15 /* setting_backup.png */,
 				2086643D20AC87DE00D51CCB /* dir_fresh.png */,
@@ -1567,6 +1570,7 @@
 				20863C9120CD0E3300A0812C /* wifiopen_upload.png in Resources */,
 				2061C20F20C56F5F008C7424 /* HJVideoAssets.xcassets in Resources */,
 				20F1121C1E866F9C00E64A70 /* XMLeftViewUserCell.xib in Resources */,
+				20835AEA212025DD0009E17F /* dir_mark.png in Resources */,
 				20FB7DDC20C00F0A00011B5C /* btn_pause.png in Resources */,
 				2061C21A20C56F5F008C7424 /* videoImages.bundle in Resources */,
 				2086644020AC87DE00D51CCB /* dir_fresh.png in Resources */,

@@ -10,6 +10,12 @@
 #import "XMWebModel.h"
 
 //@class XMWebModel;
+/**
+    关于手势问题:
+    1.当searchMode模式下,因为有前进后退手势,会和全屏pop手势冲突,所以能够返回的情况下,禁用全屏pop手势
+    2.当searchMode模式下,前进到某个页面,想要加入浮窗时,需要用到左侧pop手势,这时候需要防止前进后退和左侧pop手势冲突,所以需要设置在左侧30区域内,前进后退手势无效
+    3.综上,需要左侧pop手势和全屏pop手势
+ */
 
 @interface XMWebViewController : UIViewController
 

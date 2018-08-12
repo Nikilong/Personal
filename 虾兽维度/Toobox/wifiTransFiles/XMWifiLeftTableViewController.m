@@ -150,12 +150,15 @@
     // 刷新组列表
     UIButton *refreshGroupBtn = [self addSystemButtonWithImageName:@"dir_fresh" selector:@selector(refreshGroupData) parentView:contentV];
     refreshGroupBtn.frame = CGRectMake(CGRectGetMaxX(creatGroupBtn.frame) + XMLeftViewPadding, XMLeftViewPadding, btnWH, btnWH);
+    // 全部组别标记为备份或者反标记
+    UIButton *markGroupBtn = [self addSystemButtonWithImageName:@"dir_mark" selector:@selector(markGroupData:) parentView:contentV];
+    markGroupBtn.frame = CGRectMake(CGRectGetMaxX(refreshGroupBtn.frame) + XMLeftViewPadding, XMLeftViewPadding, btnWH, btnWH);
     // 备份配置文件
     UIButton *backFileBtn = [self addSystemButtonWithImageName:@"setting_backup" selector:@selector(backupConfigFiles) parentView:contentV];
-    backFileBtn.frame = CGRectMake(CGRectGetMaxX(refreshGroupBtn.frame) + XMLeftViewPadding, XMLeftViewPadding, btnWH, btnWH);
+    backFileBtn.frame = CGRectMake(XMLeftViewPadding, CGRectGetMaxY(markGroupBtn.frame) + XMLeftViewPadding, btnWH, btnWH);
     // 备份文件夹
     UIButton *backDirBtn = [self addSystemButtonWithImageName:@"dir_backup" selector:@selector(backupDirFiles) parentView:contentV];
-    backDirBtn.frame = CGRectMake(XMLeftViewPadding, CGRectGetMaxY(backFileBtn.frame) + XMLeftViewPadding, btnWH, btnWH);
+    backDirBtn.frame = CGRectMake(CGRectGetMaxX(backFileBtn.frame) + XMLeftViewPadding, CGRectGetMaxY(markGroupBtn.frame) + XMLeftViewPadding, btnWH, btnWH);
     // 最后根据按钮的个数和行数计算contentV的高度
     contentV.frame = CGRectMake(0, 0, XMWifiLeftViewTotalW, CGRectGetMaxY(backDirBtn.frame) + 3 * XMLeftViewPadding);
     return contentV;
@@ -230,6 +233,13 @@
     [self refreshData];
 }
 
+/// 全部组别标记为备份或者反标记
+- (void)markGroupData:(UIButton *)btn{
+    XMWifiTransModel *model = self.groupNameArr[0];
+    BOOL backup = !model.isBackup;
+    [XMWifiGroupTool markBackupGroup:backup];
+    [self refreshData];
+}
 
 /// 备份设置文件
 - (void)backupConfigFiles{
@@ -312,57 +322,52 @@
     __weak typeof(self) weakSelf = self;
     UIAlertController *tips = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
     
-    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
-    UIAlertAction *deleAction = [UIAlertAction actionWithTitle:@"删除" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action){
+    [tips addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    [tips addAction:[UIAlertAction actionWithTitle:@"删除" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action){
         [weakSelf deleteGroupDir:model.groupName];
-    }];
-    UIAlertAction *renameAction = [UIAlertAction actionWithTitle:@"重命名" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
+    }]];
+    [tips addAction:[UIAlertAction actionWithTitle:@"重命名" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
         [weakSelf renameGroupDir:model index:index.row];
-    }];
-    UIAlertAction *backupAction = [UIAlertAction actionWithTitle:( model.isBackup ? @"取消备份" : @"标记备份") style: UIAlertActionStyleDefault  handler:^(UIAlertAction * _Nonnull action){
+    }]];
+    [tips addAction:[UIAlertAction actionWithTitle:( model.isBackup ? @"取消备份" : @"标记备份") style: UIAlertActionStyleDefault  handler:^(UIAlertAction * _Nonnull action){
         model.isBackup = !model.isBackup;
         // 更新文件的model归档
         [XMWifiGroupTool saveGroupMessageWithNewArray:weakSelf.groupNameArr];
         // 更新保存标记的文件
         [XMWifiGroupTool updateZipMarkGroupName:model.groupName isMark:model.isBackup];
         [weakSelf refreshData];
-    }];
-    
-    [tips addAction:cancelAction];
-    [tips addAction:deleAction];
-    [tips addAction:renameAction];
-    [tips addAction:backupAction];
-    
-    [self presentViewController:tips animated:YES completion:nil];
+    }]];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self presentViewController:tips animated:YES completion:nil];
+    });
 }
 
 /// 删除
 - (void)deleteGroupDir:(NSString *)groupName{
     __weak typeof(self) weakSelf = self;
     UIAlertController *tips = [UIAlertController alertControllerWithTitle:@"警告" message:@"点击\"确定\"之后将会将该文件夹目录下面的所有文件删除" preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
-    UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action){
+    
+    [tips addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    [tips addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action){
         
         [XMWifiGroupTool deleteWifiFilesGroupWithName:groupName];
         [weakSelf refreshData];
         if ([weakSelf.delegate respondsToSelector:@selector(leftWifiTableViewControllerDidDeleteGroupName:)]){
             [weakSelf.delegate leftWifiTableViewControllerDidDeleteGroupName:groupName];
         }
-    }];
-    
-    [tips addAction:cancelAction];
-    [tips addAction:okAction];
-    
-    [self presentViewController:tips animated:YES completion:nil];
+    }]];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self presentViewController:tips animated:YES completion:nil];
+    });
 }
 
 /// 重命名
 - (void)renameGroupDir:(XMWifiTransModel *)model index:(NSUInteger)index{
     UIAlertController *tips = [UIAlertController alertControllerWithTitle:@"重命名" message:@"输入新的名称" preferredStyle:UIAlertControllerStyleAlert];
     
-    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
     __weak typeof(self) weakSelf = self;
-    UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action){
+    [tips addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    [tips addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action){
         
         // 获得输入内容
         UITextField *textF = tips.textFields[0];
@@ -386,15 +391,14 @@
             [MBProgressHUD showMessage:@"名称已存在" toView:[UIApplication sharedApplication].keyWindow];
         }
         
-    }];
-    
-    [tips addAction:cancelAction];
-    [tips addAction:okAction];
+    }]];
     [tips addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
         textField.clearButtonMode = UITextFieldViewModeAlways;
         textField.text = model.groupName;
     }];
-    [self presentViewController:tips animated:YES completion:nil];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self presentViewController:tips animated:YES completion:nil];
+    });
 }
 
 

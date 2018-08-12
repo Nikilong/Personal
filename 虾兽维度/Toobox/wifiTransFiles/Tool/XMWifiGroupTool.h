@@ -28,6 +28,8 @@ extern NSString * const settingZipFilePre;
 + (NSArray *)updateGroupNameFile;
 /// 当增加标记或者取消备份的标记,需要更新记录zip的文件
 + (void)updateZipMarkGroupName:(NSString *)name isMark:(BOOL)isMark;
+/// 标记/反标记所有组别
++ (void)markBackupGroup:(BOOL)isBackup;
 /// 更新当前文件夹
 + (void)upgradeCurrentGroupName:(NSString *)name;
 

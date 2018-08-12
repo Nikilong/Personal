@@ -17,14 +17,8 @@
 
 @interface XMNavigationInteractiveTransition ()
 
-
 @property (nonatomic, weak) XMNavigationController *vc;
 @property (nonatomic, strong) UIPercentDrivenInteractiveTransition *interactivePopTransition;
-
-/// 创建pan手势的变量,避免重复创建
-//@property (nonatomic, assign)  CGFloat progress;
-//@property (nonatomic, assign)  CGFloat blockPoint;
-
 
 @end
 
@@ -42,7 +36,7 @@ static double progress;
     return self;
 }
 
-/// 全屏pop手势
+/// 全屏pop手势+屏幕左边沿手势方法
 - (void)handleControllerPop:(UIPanGestureRecognizer *)recognizer {
     // interactivePopTransition就是我们说的方法2返回的对象，我们需要更新它的进度来控制Pop动画的流程，我们用手指在视图中的位置与视图宽度比例作为它的进度。
 //    CGPoint blockPoint = [recognizer locationInView:[UIApplication sharedApplication].windows[0]];
@@ -76,7 +70,7 @@ static double progress;
         if ([XMRightBottomFloatView shareRightBottomFloatView].rightBottomChangeBlock) {
             [XMRightBottomFloatView shareRightBottomFloatView].rightBottomChangeBlock(blockPoint);
         }
-    }else if (recognizer.state == UIGestureRecognizerStateEnded || recognizer.state == UIGestureRecognizerStateCancelled) {
+    }else if (recognizer.state == UIGestureRecognizerStateEnded) {
         
         AppDelegate *dele = (AppDelegate *)[UIApplication sharedApplication].delegate;
         // 手势结束时如果进度大于指定距离，那么就完成pop操作，否则重新来过。
@@ -99,71 +93,20 @@ static double progress;
         if ([XMRightBottomFloatView shareRightBottomFloatView].rightBottomEndBlock) {
             [XMRightBottomFloatView shareRightBottomFloatView].rightBottomEndBlock(YES);
         }
-    }
-    
-}
-
-
-/// 屏幕左边沿手势方法
-- (void)edgeDidPan:(UIScreenEdgePanGestureRecognizer *)gest{
-
-    CGFloat progress = [gest translationInView:[UIApplication sharedApplication].windows[0]].x / XMScreenW;
-    // 稳定进度区间，让它在0.0（未完成）～1.0（已完成）之间
-    progress = MIN(1.0, MAX(0.0, progress));
-    
-    CGPoint blockPoint = [gest locationInView:[UIApplication sharedApplication].windows[0]];
-    //    CGPoint point = [gest translationInView:[UIApplication sharedApplication].windows[0]];
-    if (gest.state == UIGestureRecognizerStateBegan) {
-        
-        if ([XMRightBottomFloatView shareRightBottomFloatView].rightBottomStartBlock) {
-            [XMRightBottomFloatView shareRightBottomFloatView].rightBottomStartBlock(YES);
-        }
-        // 手势开始，新建一个监控对象
-        self.interactivePopTransition = [[UIPercentDrivenInteractiveTransition alloc] init];
-        // 告诉控制器开始执行pop的动画
-        AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
-        app.tempVC = self.vc.childViewControllers.lastObject;
-        [self.vc popViewControllerAnimated:YES];
-        
-        
-    }else if (gest.state == UIGestureRecognizerStateChanged) {
-        [self.interactivePopTransition updateInteractiveTransition:progress];
-
-        if ([XMRightBottomFloatView shareRightBottomFloatView].rightBottomChangeBlock) {
-            [XMRightBottomFloatView shareRightBottomFloatView].rightBottomChangeBlock(blockPoint);
-        }
-        
-        
-    }else if (gest.state == UIGestureRecognizerStateEnded) {
+    }else{
+        [self.interactivePopTransition cancelInteractiveTransition];
         AppDelegate *dele = (AppDelegate *)[UIApplication sharedApplication].delegate;
-        // 手势结束时如果进度大于一半，那么就完成pop操作，否则重新来过。
-        if([XMRightBottomFloatView shareRightBottomFloatView].isInArea){
-            dele.floadVC = dele.tempVC;
-            [self.interactivePopTransition finishInteractiveTransition];
-        }else{
-            if (progress > 0.3) {
-                [self.interactivePopTransition finishInteractiveTransition];
-            }
-            else {
-                [self.interactivePopTransition cancelInteractiveTransition];
-            }
-        }
+        progress = 0;
         dele.tempVC = nil;
-//        self.lastVC = nil;
         self.interactivePopTransition = nil;
         
-        // 通知浮窗
-        if ([XMRightBottomFloatView shareRightBottomFloatView].rightBottomEndBlock) {
-            [XMRightBottomFloatView shareRightBottomFloatView].rightBottomEndBlock(YES);
-        }
-        
-    }else{
         if ([XMRightBottomFloatView shareRightBottomFloatView].rightBottomCancelOrFailBlock) {
             [XMRightBottomFloatView shareRightBottomFloatView].rightBottomCancelOrFailBlock();
         }
     }
     
 }
+
 
 - (id<UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController *)navigationController animationControllerForOperation:(UINavigationControllerOperation)operation fromViewController:(UIViewController *)fromVC toViewController:(UIViewController *)toVC {
     // 方法1中判断如果当前执行的是Pop操作，就返回我们自定义的Pop动画对象。

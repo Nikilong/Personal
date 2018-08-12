@@ -34,7 +34,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
     // 监听所有网络请求
-//    [NSURLProtocol registerClass:[XMWebURLProtocol class]];
+    [NSURLProtocol registerClass:[XMWebURLProtocol class]];
     
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     

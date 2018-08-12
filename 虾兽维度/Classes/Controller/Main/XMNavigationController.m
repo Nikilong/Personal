@@ -42,19 +42,19 @@ UINavigationControllerDelegate>
     [gestureView addGestureRecognizer:popRecognizer];
     
     
-//    // 设置左侧pop和添加浮窗手势
-//    UIScreenEdgePanGestureRecognizer *edge = [[UIScreenEdgePanGestureRecognizer alloc] init];
-////    self.customerPopGestureRecognizer = edge;
-//    edge.edges = UIRectEdgeLeft;
-//    edge.delegate = self;
-//    [gestureView addGestureRecognizer:edge];
+    // 设置左侧pop和添加浮窗手势
+    UIScreenEdgePanGestureRecognizer *edge = [[UIScreenEdgePanGestureRecognizer alloc] init];
+//    self.customerPopGestureRecognizer = edge;
+    edge.edges = UIRectEdgeLeft;
+    edge.delegate = self;
+    [gestureView addGestureRecognizer:edge];
 
     // 添加手势
     [popRecognizer addTarget:self.navT action:@selector(handleControllerPop:)];
-//    [edge addTarget:self.navT action:@selector(edgeDidPan:)];
+    [edge addTarget:self.navT action:@selector(handleControllerPop:)];
     
     // 设置优先级
-//    [gesture requireGestureRecognizerToFail:edge];
+    [gesture requireGestureRecognizerToFail:edge];
 //
 //     // 注意:一旦设置这个所有自定义的pop动画将会失效
 //    self.delegate = self;

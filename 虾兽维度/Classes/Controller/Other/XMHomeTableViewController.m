@@ -275,7 +275,7 @@ CGFloat const XMRrfreshHeight = 100;
     // 当前正在刷新则返回避免连续刷新
     if(self.isRefreshing) return;
     // 开启网络加载
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+//    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     self.isRefreshing = YES;
     // 0,设置下拉标题提示用户正在刷新
     self.headerRefreshV.enabled = YES;
@@ -311,7 +311,7 @@ CGFloat const XMRrfreshHeight = 100;
             }
             dispatch_async(dispatch_get_main_queue(), ^{
                 // 关闭网络加载
-                [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+//                [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
                 // 恢复刷新
                 self.isRefreshing = NO;
                 // 移除动画

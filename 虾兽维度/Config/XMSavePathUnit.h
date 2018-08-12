@@ -36,6 +36,9 @@ extern NSString * const XMWifiGroupMarkZipFileName;
 /// wifi传输需要压缩备份的组名列表保存路径
 + (NSString *)getWifiGroupMarkZipFilePath;
 
+/// 主页频道文件的保存路径
++ (NSString *)getMainLeftSaveChannelPath;
+
 
 /// 返回一个数组,包含所有配置类文件的全路径
 + (NSArray *)getSettingFilesPaths;
