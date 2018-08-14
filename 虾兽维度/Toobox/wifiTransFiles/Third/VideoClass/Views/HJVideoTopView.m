@@ -133,11 +133,11 @@
     CGFloat width = frame.size.width;
     CGFloat height = frame.size.height;
    
-    self.backBtn.frame = CGRectMake(0, 0, height, height);
+    self.backBtn.frame = CGRectMake(0, 20, height, height);
     
-    self.listBtn.frame = CGRectMake(width-height, 0, height, height);
+    self.listBtn.frame = CGRectMake(width-height, 20, height, height);
     
-    self.titleLabel.frame = CGRectMake(CGRectGetMaxX(self.backBtn.frame)+10, 0, width-CGRectGetMaxX(self.backBtn.frame)-self.listBtn.frame.origin.y-20, height);
+    self.titleLabel.frame = CGRectMake(CGRectGetMaxX(self.backBtn.frame)+10, 20, width-CGRectGetMaxX(self.backBtn.frame)-self.listBtn.frame.origin.y-20, height);
 }
 
 - (void)setTitle:(NSString *)title{

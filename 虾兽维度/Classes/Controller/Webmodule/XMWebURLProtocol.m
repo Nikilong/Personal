@@ -9,7 +9,7 @@
 #import "XMWebURLProtocol.h"
 #import <UIKit/UIKit.h>
 
-//static NSString* const KXMWebURLProtocolKey = @"KXMWebURLProtocol";
+static NSString* const KXMWebURLProtocolKey = @"KXMWebURLProtocol";
 static NSMutableArray *requestURLArr;
 
 
@@ -25,6 +25,16 @@ static NSMutableArray *requestURLArr;
 static NSUInteger requestCount = 0;
 
 + (BOOL)canInitWithRequest:(NSURLRequest *)request{
+    
+//    NSString *scheme = [[request URL] scheme];
+//    if ( ([scheme caseInsensitiveCompare:@"http"]  == NSOrderedSame ||
+//          [scheme caseInsensitiveCompare:@"https"] == NSOrderedSame )){
+//        //看看是否已经处理过了，防止无限循环
+//        if ([NSURLProtocol propertyForKey:KXMWebURLProtocolKey inRequest:request]){
+//            return NO;
+//        }
+//        return YES;
+//    }
     
     // 空加载判断
     if (request == nil || request.URL == nil){

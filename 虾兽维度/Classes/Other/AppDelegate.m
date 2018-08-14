@@ -13,7 +13,8 @@
 #import "XMWXFloatWindowIconConfig.h"
 #import "XMSavePathUnit.h"
 #import "XMWXVCFloatWindow.h"
-#import "XMWebViewController.h"
+//#import "XMWebViewController.h"
+#import "XMWKWebViewController.h"
 #import "XMWebURLProtocol.h"
 
 /// 试验区头文件,可随时删除
@@ -34,7 +35,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
     // 监听所有网络请求
-    [NSURLProtocol registerClass:[XMWebURLProtocol class]];
+//    [NSURLProtocol registerClass:[XMWebURLProtocol class]];
     
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     
@@ -123,14 +124,14 @@
     self.floadVC = saveVC;
     
     // 如果是webview,需要特殊处理
-    if([saveVC isKindOfClass:[XMWebViewController class]]){
+    if([saveVC isKindOfClass:[XMWKWebViewController class]]){
         XMWebModel *model = nil;
         if ([[NSFileManager defaultManager] fileExistsAtPath:[XMSavePathUnit getFloatWindowWebmodelArchivePath]]) {
             model = [NSKeyedUnarchiver unarchiveObjectWithFile:[XMSavePathUnit getFloatWindowWebmodelArchivePath]];
         }
         // 标记为第一个webmodule,以便pan手势设置statusbar的颜色
         model.firstRequest = YES;
-        XMWebViewController *webVC = (XMWebViewController *)saveVC;
+        XMWKWebViewController *webVC = (XMWKWebViewController *)saveVC;
         webVC.model = model;
     }
     

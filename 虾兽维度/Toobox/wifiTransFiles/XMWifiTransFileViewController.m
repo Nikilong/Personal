@@ -213,6 +213,7 @@ UIGestureRecognizerDelegate>
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
+    self.tableView.frame = CGRectMake(0, 0, XMScreenW, XMScreenH);
 }
 
 - (void)viewDidDisappear:(BOOL)animated{
@@ -839,7 +840,7 @@ UIGestureRecognizerDelegate>
     }
     return YES;
 }
-    
+
 #pragma mark - 排序方法
 /// 排序按钮点击事件
 - (void)sortFiles{

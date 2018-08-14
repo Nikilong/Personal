@@ -22,6 +22,7 @@
 #import "HJVideoConst.h"
 #import "HJVideoPlayTimeRecord.h"
 #import "XMWifiTransModel.h"
+#import "XMNavigationController.h"
 
 typedef NS_ENUM(NSUInteger, MoveDirection) {
     MoveDirection_none = 0,
@@ -118,7 +119,8 @@ static const NSInteger maxSecondsForBottom = 5.f;
         delegate.orientationMask = UIInterfaceOrientationMaskAllButUpsideDown;
     }
     //禁用侧滑手势方法
-    self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+    XMNavigationController *navVC = (XMNavigationController *)self.navigationController ;
+    navVC.customerPopGestureRecognizer.enabled = NO;
     //开启屏幕长亮
     [UIApplication sharedApplication].idleTimerDisabled = YES;
 }
@@ -135,7 +137,8 @@ static const NSInteger maxSecondsForBottom = 5.f;
     //关闭屏幕长亮
     [UIApplication sharedApplication].idleTimerDisabled = NO;
     //禁用侧滑手势方法
-    self.navigationController.interactivePopGestureRecognizer.enabled = YES;
+    XMNavigationController *navVC = (XMNavigationController *)self.navigationController ;
+    navVC.customerPopGestureRecognizer.enabled = YES;
     //暂停播放
     [self pause];
 }
@@ -250,7 +253,7 @@ static const NSInteger maxSecondsForBottom = 5.f;
         [self.playlistV addSubview:btn];
     }
     
-    playListV.frame = CGRectMake((self.isFullScreen ? kVideoScreenH:kVideoScreenW) - btnW - 20, 44, btnW, playListVH);
+    playListV.frame = CGRectMake((self.isFullScreen ? kVideoScreenH:kVideoScreenW) - btnW - 20, 64, btnW, playListVH);
     playListV.contentSize = CGSizeMake(0, btnW * self.videoList.count);
     [self.view addSubview:playListV];
     playListV.hidden = YES;

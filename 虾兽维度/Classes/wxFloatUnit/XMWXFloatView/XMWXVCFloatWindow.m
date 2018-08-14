@@ -83,15 +83,9 @@ static double padding = 10.0f;
                 [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = NO;
                 
                 AppDelegate *dele = (AppDelegate *)[UIApplication sharedApplication].delegate;
-//                // 将当前页面保存到appdelegate
-//                XMNavigationController *rootVC = (XMNavigationController *)[UIApplication sharedApplication].keyWindow.rootViewController;
-////                UIViewController *rootVC = [UIApplication sharedApplication].keyWindow.rootViewController;
-//                dele.floadVC = [rootVC.childViewControllers lastObject];
                 
                 // 设置封面或标题
                 [XMWXFloatWindowIconConfig setIconAndTitleByViewController:dele.floadVC button:[XMWXVCFloatWindow shareXMWXVCFloatWindow].coverBtn];
-//                // 将当前页面pop掉
-//                [rootVC popViewControllerAnimated:NO];
             });
         };
         // 完成移除
@@ -128,9 +122,6 @@ static double padding = 10.0f;
                 [MBProgressHUD showFailed:@"当前浮窗已显示"];
             }else{
                 [nav pushViewController:dele.floadVC animated:YES];
-//                [UIView animateWithDuration:0.25 animations:^{
-//                    dele.floadVC.view.frame =CGRectMake(0, 0, XMScreenW, XMScreenH);
-//                }];
             }
         });
     }

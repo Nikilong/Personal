@@ -10,7 +10,8 @@
 #import "XMHomeTableViewController.h"
 #import "XMLeftTableViewController.h"
 #import "XMNavTitleTableViewController.h"
-#import "XMWebViewController.h"
+//#import "XMWebViewController.h"
+#import "XMWKWebViewController.h"
 #import "XMHiwebViewController.h"
 #import "XMChannelModel.h"
 #import "XMLeftViewUserCell.h"
@@ -426,7 +427,7 @@ static double leftViewAnimateTime = 0.25;
     // 标记第一个webmodule
     webModel.firstRequest = YES;
     // 调用webmodule的类方法
-    [XMWebViewController openWebmoduleWithModel:webModel viewController:self];
+    [XMWKWebViewController openWebmoduleWithModel:webModel viewController:self];
 }
 
 #pragma mark leftTableViewController delegate

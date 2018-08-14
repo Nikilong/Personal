@@ -177,10 +177,10 @@ if __name__=='__main__':
 #    kb_hook_t = KeyboardHookThread(callback = aaa)
 #    kb_hook_t.start()
     #端口号
-    port = 8000
+    port = 8300
     serverUrl = 'http://%s:%s'%(get_host_ip(),port)
     print '本机ip是:' + serverUrl
 #    img = qrcode.make(serverUrl)
 #    img.get_image().show()
-    # img.save('/Users/admin/Desktop/wifiTransQrcode.png')
-    StartServer(8000)
+#    img.save('/Users/admin/Desktop/wifiTransQrcode.png')
+    StartServer(8300)

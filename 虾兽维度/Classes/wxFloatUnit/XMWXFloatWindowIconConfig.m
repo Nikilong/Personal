@@ -7,7 +7,8 @@
 //
 
 #import "XMWXFloatWindowIconConfig.h"
-#import "XMWebViewController.h"
+//#import "XMWebViewController.h"
+#import "XMWKWebViewController.h"
 #import "XMSavePathUnit.h"
 
 /// 浮窗保存vc的类名(key)
@@ -48,22 +49,22 @@ NSString *const wxfloatVCParamsTitleKey = @"wxfloatVCParamsTitleKey";
 /// 根据vc的类型设置浮窗的图片或标题,以及存档
 + (void)setIconAndTitleByViewController:(UIViewController *)vc button:(UIButton *)btn{
 
-    if ([vc isKindOfClass:[XMWebViewController class]]){
-        [self setAndBackupWebViewController:(XMWebViewController *)vc Button:btn];
+    if ([vc isKindOfClass:[XMWKWebViewController class]]){
+        [self setAndBackupWebViewController:(XMWKWebViewController *)vc Button:btn];
     }else{
         [self setAndBackupNormalVC:vc button:btn];
     }
 }
 
 /// 设置XMWebViewController类型的vc的浮窗图片或标题,以及归档XMWebViewController对应的webmodel模型
-+ (void)setAndBackupWebViewController:(XMWebViewController *)webVC Button:(UIButton *)btn{
++ (void)setAndBackupWebViewController:(XMWKWebViewController *)webVC Button:(UIButton *)btn{
     // 对于webview,需要网络加载封面图片,所以需要特殊处理
     // 清空图片和标题
     [btn setTitle:@"" forState:UIControlStateNormal];
     [btn setImage:nil forState:UIControlStateNormal];
     
     // 先保存类名
-    [[NSUserDefaults standardUserDefaults] setValue:NSStringFromClass([XMWebViewController class]) forKey:wxfloatVCKey];
+    [[NSUserDefaults standardUserDefaults] setValue:NSStringFromClass([XMWKWebViewController class]) forKey:wxfloatVCKey];
     [[NSUserDefaults standardUserDefaults] synchronize];
     
     __block XMWebModel *model = webVC.model;
