@@ -10,6 +10,7 @@
 #import "XMWifiTransModel.h"
 #import "XMPhotoCollectionViewCell.h"
 #import "MBProgressHUD+NK.h"
+#import "XMImageUtil.h"
 
 @interface XMPhotoCollectionViewController ()<UIScrollViewDelegate,UICollectionViewDelegateFlowLayout,UIGestureRecognizerDelegate>
 
@@ -87,11 +88,7 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
     self.navigationController.interactivePopGestureRecognizer.enabled = NO;
     
     // 截图
-    UIGraphicsBeginImageContextWithOptions([UIScreen mainScreen].bounds.size, YES, [UIScreen mainScreen].scale);
-    [[UIApplication sharedApplication].keyWindow.layer renderInContext:UIGraphicsGetCurrentContext()];
-    UIImage *img = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    [self.panBgImgV setImage:img];
+    [self.panBgImgV setImage:[XMImageUtil screenShot]];
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
@@ -148,12 +145,12 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
     UIPanGestureRecognizer *cancelPan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panToDismiss:)];
     [self.collectionView addGestureRecognizer:cancelPan];
     
-    // 向下轻扫,退出照片
-    UISwipeGestureRecognizer *swipeD = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeToDismiss:)];
-    swipeD.delegate = self;
-    swipeD.direction = UISwipeGestureRecognizerDirectionDown;
-    [self.collectionView addGestureRecognizer:swipeD];
-//    [cancelPan requireGestureRecognizerToFail:swipeD];
+    // 向下轻扫,退出照片(效果不好,屏蔽该功能)
+//    UISwipeGestureRecognizer *swipeD = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeToDismiss:)];
+//    swipeD.delegate = self;
+//    swipeD.direction = UISwipeGestureRecognizerDirectionDown;
+//    [self.collectionView addGestureRecognizer:swipeD];
+////    [cancelPan requireGestureRecognizerToFail:swipeD];
     
     // 向右滑,上一张图片
     UISwipeGestureRecognizer *swipeR = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(preImage:)];

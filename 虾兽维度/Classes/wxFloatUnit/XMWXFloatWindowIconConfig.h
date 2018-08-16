@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 @class UIViewController,UIButton;
 
+/// 偏好设置保存的类名,如果没有,则为""
 extern NSString *const wxfloatVCKey;
 extern NSString *const wxfloatFrameStringKey;
 
@@ -23,7 +24,7 @@ extern NSString *const wxfloatFrameStringKey;
 
 + (void)setBackupImageOrTitlt:(UIButton *)btn;
 
-/// 是否需要隐藏浮窗
-+ (BOOL)shouldHideFloatWindow;
+/// 偏好设置里面是否存有控制器
++ (BOOL)isSaveFloatVCInUserDefaults;
 
 @end

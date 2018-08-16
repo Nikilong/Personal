@@ -74,24 +74,28 @@ UINavigationControllerDelegate>
     [super pushViewController:viewController animated:animated];
 
     if (isHomeVC){
-        // 主页,不需要作任何处理
+        // 主页,不需要作任何处理,防止浮窗被遮挡
         return;
     }
     
-    if([XMWXFloatWindowIconConfig shouldHideFloatWindow] || [self shoudHideFloatWindowInViewController:viewController]){
-        [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = YES;
-    }else{
-        [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = NO;
+    // 根据偏好设置是否有缓存,以及是否应该在该控制器显示,这两个因素去考虑是否显示浮窗
+    if([XMWXFloatWindowIconConfig isSaveFloatVCInUserDefaults]){
+        if ([self shoudHideFloatWindowInViewController:viewController]){
+            [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = YES;
+        }else{
+            [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = NO;
+        }
     }
 }
 
 - (UIViewController *)popViewControllerAnimated:(BOOL)animated{
     UIViewController *viewController = [super popViewControllerAnimated:animated];
-    if([XMWXFloatWindowIconConfig shouldHideFloatWindow]){
-        [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = YES;
-    }else{
+   
+    // 默认pop掉之后,如果存有浮窗,都应该显示浮窗
+    if([XMWXFloatWindowIconConfig isSaveFloatVCInUserDefaults]){
         [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = NO;
     }
+
     return viewController;
 }
 

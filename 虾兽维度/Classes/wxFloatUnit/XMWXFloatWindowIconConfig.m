@@ -25,13 +25,13 @@ NSString *const wxfloatVCParamsTitleKey = @"wxfloatVCParamsTitleKey";
 
 @implementation XMWXFloatWindowIconConfig
 
-/// 是否需要隐藏浮窗
-+ (BOOL)shouldHideFloatWindow{
+/// 偏好设置里面是否存有控制器
++ (BOOL)isSaveFloatVCInUserDefaults{
     NSString *saveVCName = [[NSUserDefaults standardUserDefaults] valueForKey:wxfloatVCKey];
     if(saveVCName.length > 0){
-        return NO;
-    }else{
         return YES;
+    }else{
+        return NO;
     }
     
 }

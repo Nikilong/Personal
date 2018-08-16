@@ -15,6 +15,8 @@
 
 #import "AppDelegate.h"
 #import "XMRightBottomFloatView.h"
+#import "XMWXVCFloatWindow.h"
+#import "XMWXFloatWindowIconConfig.h"
 #import "XMNavigationController.h"
 #import "XMDropView.h"
 #import "XMSearchTableViewController.h"
@@ -139,7 +141,9 @@ static double backForwardSafeDistance = 80.0;
         _wkWebview.scrollView.delegate = self;
         _wkWebview.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         [self.containerV addSubview:_wkWebview];
-
+        
+//        // 开启左划右划返回
+//        _wkWebview.allowsBackForwardNavigationGestures = YES;
         // 初始化标记,能够加载
         self.canLoad = YES;
 
@@ -177,7 +181,6 @@ static double backForwardSafeDistance = 80.0;
         _containerV = containerV;
         [self.view addSubview:containerV];
         
-        
         // 沉浸式导航栏
         UIView *navToolV = [[UIView alloc] initWithFrame:CGRectMake(0, XMStatusBarHeight, XMScreenW, 44)];
         self.navToolV = navToolV;
@@ -200,7 +203,7 @@ static double backForwardSafeDistance = 80.0;
         [navToolV addSubview:progressV];
         progressV.translatesAutoresizingMaskIntoConstraints = NO;
         // 垂直方向约束
-        [navToolV addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[progressV(2)]-0-|" options:0 metrics:nil views:@{@"progressV":progressV}]];
+        [navToolV addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[progressV(2)]-0-|" options:0 metrics:nil views:@{@"progressV":progressV}]];
         // 水平方向约束
         [navToolV addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-0-[progressV(>=0)]-0-|" options:0 metrics:nil views:@{@"progressV":progressV}]];
 
@@ -362,7 +365,8 @@ static double backForwardSafeDistance = 80.0;
     [super viewWillAppear:animated];
     // 隐藏导航条
     self.navigationController.navigationBarHidden = YES;
-    
+    // 显示状态栏盖罩
+    self.statusCover.hidden = NO;
     // 记录即将显示
     self.isShow = YES;
 }
@@ -381,6 +385,8 @@ static double backForwardSafeDistance = 80.0;
         self.statusBar.backgroundColor = nil;
         [self.statusCover removeFromSuperview];
     }
+    // 隐藏状态栏盖罩
+    self.statusCover.hidden = YES;
     
     // 记录即将隐藏
     self.isShow = NO;
@@ -393,6 +399,9 @@ static double backForwardSafeDistance = 80.0;
     self.wkWebview.scrollView.delegate = nil;
     
     [self.wkWebview removeObserver:self forKeyPath:@"estimatedProgress"];
+    
+    // 取消加载指示
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     NSLog(@"XMWebViewController-----------dealloc");
 }
 
@@ -418,13 +427,21 @@ static double backForwardSafeDistance = 80.0;
 
 #pragma mark - 提供一个类方法让外界打开webmodule
 + (void)openWebmoduleWithModel:(XMWebModel *)model viewController:(UIViewController *)vc{
+    AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
     
-    // 创建一个webmodule
-    XMWKWebViewController *webVC = [[XMWKWebViewController alloc] init];
-    webVC.model = model;
-    webVC.view.frame = vc.view.bounds;
-    // 压到导航控制器的栈顶
-    [vc.navigationController pushViewController:webVC animated:YES];
+    // 先判断是否和上一个pop掉的webmodule的url相同,相同的话就不必再去重复加载
+    if ([app.tempWebModuleVC.originURL.absoluteString isEqualToString:model.webURL.absoluteString]){
+        [vc.navigationController pushViewController:app.tempWebModuleVC animated:YES];
+    }else{
+        app.tempWebModuleVC = nil;
+        // 创建一个webmodule
+        XMWKWebViewController *webVC = [[XMWKWebViewController alloc] init];
+        app.tempWebModuleVC = webVC;
+        webVC.model = model;
+        webVC.view.frame = vc.view.bounds;
+        // 压到导航控制器的栈顶
+        [vc.navigationController pushViewController:webVC animated:YES];
+    }
 }
 
 #pragma mark - toolbar和导航栏 点击事件
@@ -631,6 +648,10 @@ static double backForwardSafeDistance = 80.0;
 
 /// 展示二维码图片
 - (void)showQrImage:(UIImage *)image{
+    // 隐藏浮窗
+    if([XMWXFloatWindowIconConfig isSaveFloatVCInUserDefaults]){
+        [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = YES;
+    }
     
     // 最底部
     UIView *contentV = [[UIView alloc] initWithFrame:CGRectMake(0, 0, XMScreenW, XMScreenH)];
@@ -659,6 +680,10 @@ static double backForwardSafeDistance = 80.0;
 /// 移除二维码图片
 - (void)removeQriamge:(UITapGestureRecognizer *)gest{
     [gest.view removeFromSuperview];
+    // 显示浮窗
+    if([XMWXFloatWindowIconConfig isSaveFloatVCInUserDefaults]){
+        [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = NO;
+    }
 }
 
 /// 弹出分享菜单
@@ -757,14 +782,29 @@ static double backForwardSafeDistance = 80.0;
 }
 
 #pragma mark - WKUIDelegate
+- (WKWebView *)webView:(WKWebView *)webView createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration forNavigationAction:(WKNavigationAction *)navigationAction windowFeatures:(WKWindowFeatures *)windowFeatures{
+    // wkWebView 点击链接无反应,多半是因为网页中有target="_blank" 在新窗口打开链接,而你有没有实现createWebViewWithConfiguration
+    if (!navigationAction.targetFrame.isMainFrame) {
+        [webView loadRequest:navigationAction.request];
+    }
+    return nil;
+}
 
 #pragma mark - WKNavigationDelegate
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
-    //    NSLog(@"--%@---",navigationAction.request.URL.absoluteString);
+    
+//    NSLog(@"--%@---",navigationAction.request.URL.absoluteString);
     // 是否在过滤名单
     if ([self shoudlFilterRequest:navigationAction.request.URL.absoluteString] == NO){
         decisionHandler(WKNavigationActionPolicyCancel);
         return;
+    }
+    
+    // 过滤uc跳转
+    if([navigationAction.request.URL.absoluteString containsString:@"ucbrowser://"]){
+        decisionHandler(WKNavigationActionPolicyCancel);
+        return;
+
     }
     
     // 防止拉起appstore
@@ -794,12 +834,9 @@ static double backForwardSafeDistance = 80.0;
             XMWebModel *model = [[XMWebModel alloc] init];
             model.webURL = navigationAction.request.URL;
             
-            // 防止自动拉起uc造成的打开空白页面
-            if(![navigationAction.request.URL.absoluteString containsString:@"ucbrowser://"]){
-                //            NSLog(@"webmodule====%@",navigationAction.request.URL.absoluteString);
-                // 调用方法打开新的webmodule
-                [XMWKWebViewController openWebmoduleWithModel:model viewController:self];
-            }
+            // NSLog(@"webmodule====%@",navigationAction.request.URL.absoluteString);
+            // 调用方法打开新的webmodule
+            [XMWKWebViewController openWebmoduleWithModel:model viewController:self];
             // 当网页完成加载之后,禁止再重新加载
             decisionHandler(WKNavigationActionPolicyCancel);
             return;
@@ -809,12 +846,10 @@ static double backForwardSafeDistance = 80.0;
     decisionHandler(WKNavigationActionPolicyAllow);
 }
 - (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation {
-//    NSLog(@"webView开始加载");
+//    NSLog(@"webView开始加载,%@",webView.URL.absoluteString);
     // 新增一个网络请求
     [self startNewWebRequestCount];
     self.progerssV.hidden = NO;
-//    [self.navToolV bringSubviewToFront:self.progerssV];
-    
 }
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationResponse:(WKNavigationResponse *)navigationResponse decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler {
 //    NSLog(@"webview开始收到响应");

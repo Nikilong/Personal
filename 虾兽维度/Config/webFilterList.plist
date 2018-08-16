@@ -2,7 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <array>
-	<string>//huichuan.sm.cn/jsad?</string>
+	<string>about:blank</string>
 	<string>unet.ucweb.com/ucbrowser/ulcall?</string>
+	<string>http://m.uczzd.cn/webview/static/cdls</string>
+	<string>//huichuan.sm.cn/jsad?</string>
+	<string>pos.baidu.com</string>
 </array>
 </plist>

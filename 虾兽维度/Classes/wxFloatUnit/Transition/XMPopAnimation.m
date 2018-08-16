@@ -56,6 +56,10 @@
     UIImageView *fromVCShot = [[UIImageView alloc] initWithImage:nav.pushScreenShotArr.lastObject];
     fromVCShot.frame = CGRectMake(-toVCOffsetX, 0, XMScreenW, XMScreenH);
     [containerView addSubview:fromVCShot];
+    UIView *cover = [[UIView alloc] initWithFrame:CGRectMake(0, 0, XMScreenW, XMScreenH)];
+    cover.backgroundColor = [UIColor blackColor];
+    cover.alpha = 0.3;
+    [fromVCShot addSubview:cover];
     
     // 4.创建当前最顶部控制器的截图
     UIImageView *snapshotView = [[UIImageView alloc] initWithImage:[XMImageUtil screenShot]];
@@ -74,6 +78,7 @@
         // 两张截图联动
         fromVCShot.frame = CGRectMake(0, 0, XMScreenW, XMScreenH);
         snapshotView.transform = CGAffineTransformMakeTranslation(XMScreenW, 0);
+        cover.alpha = 0;
     }completion:^(BOOL finished) {
         // 恢复上一个控制器导航栏的状态
         toViewController.navigationController.navigationBar.hidden = hideFlag;
