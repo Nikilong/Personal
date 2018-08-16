@@ -381,7 +381,7 @@ static double backForwardSafeDistance = 80.0;
     if(![self.navigationController.childViewControllers.lastObject isKindOfClass:[XMWKWebViewController class]]){
         
         self.navigationController.navigationBarHidden = NO;
-        // 恢复状态栏颜色,原来的为空
+        // 恢复状态栏颜色,原来的为空 
         self.statusBar.backgroundColor = nil;
         [self.statusCover removeFromSuperview];
     }
