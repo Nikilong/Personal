@@ -10,100 +10,11 @@
 
 @interface XMWebModel()<NSCoding>
 
-@property (nonatomic, strong) NSMutableArray *arr;
-
 @end
 
 @implementation XMWebModel
 
-/// web的网址，需要拼接参数
-+ (NSString *)appendWebURLByName:(NSString *)name{
-    return [NSString stringWithFormat:@"http://m.uczzd.cn/webview/news?app=uc-iflow&aid=%@&cid=100&zzd_from=uc-iflow&uc_param_str=dndsfrvesvntnwpfgicp&recoid=3902548323263252739&rd_type=reco&sp_gz=1",name];
-}
-
-+ (NSArray *)websWithDict:(NSDictionary *)dict refreshCount:(NSUInteger)count keyWordArray:(NSArray *)keyWordArr{
-    
-    NSMutableArray *arrM = [NSMutableArray array];
-    NSArray *arrOrigin = dict[@"data"][@"items"];
-    NSUInteger originNum = arrOrigin.count;
-
-    // 当没有加载够所需数据不结束循环
-    for (int i = 0; arrM.count < count; i++){
-        // 防止越界,需要重新发送网络请求来获得json数据
-        if (i == originNum) break;
-        
-        // 创建模型
-        XMWebModel *model = [[XMWebModel alloc] init];
-        
-        model.ID = dict[@"data"][@"items"][i][@"id"];
-        // 广告的id都是8位,通过id来过滤掉广告
-        if (model.ID.integerValue < 99999999) continue;
-        
-        // 这个tag是分类,可用于过滤
-        model.tags = dict[@"data"][@"articles"][model.ID][@"tags"];
-        if (keyWordArr.count != 0)
-        {
-            if (![self filterArray:model.tags keyWordArray:keyWordArr])
-            {
-                continue;
-            }
-        }
-        model.webURL = [NSURL URLWithString:[XMWebModel appendWebURLByName:model.ID]];
-        model.author_icon = [NSURL URLWithString:dict[@"data"][@"articles"][model.ID][@"wm_author"][@"author_icon"][@"url"]];
-        model.cmt_cnt = [dict[@"data"][@"articles"][model.ID][@"cmt_cnt"] unsignedIntegerValue];
-        model.source = dict[@"data"][@"articles"][model.ID][@"source_name"];
-//model.source = model.ID;
-//        NSLog(@"%@",dict[@"data"][@"articles"][model.ID][@"dislike_infos"]);
-        model.title =  dict[@"data"][@"articles"][model.ID][@"title"];
-        // 过滤掉标题为空的新闻
-        if (model.title.length == 0 || model.title == nil){
-            continue;
-        }
-        model.publishTime = [model getCurrentTime];
-        NSArray *arr = dict[@"data"][@"articles"][model.ID][@"thumbnails"];
-        // 没有图片的新闻要做一个判断
-        if (arr.count)
-        {
-            model.imageURL = [NSURL URLWithString:dict[@"data"][@"articles"][model.ID][@"thumbnails"][0][@"url"]];
-        }
-        
-        [arrM addObject:model];
-    }
-    return arrM;
-}
-
-/** 对新闻关键词过滤 */
-+ (BOOL)filterArray:(NSArray *)arrOrigin keyWordArray:(NSArray *)arrKeyWord
-{
-    // 拼接新闻的tags
-    NSMutableString *strM = [NSMutableString string];
-    for (NSString *str in arrOrigin) {
-        [strM appendString:str];
-    }
-    
-    // 检查是否含有关键字
-    for (NSString *kerWordStr in arrKeyWord) {
-        if ([strM containsString:kerWordStr])
-        {
-            return YES;
-        }
-    }
-    // 来到这里表示没有关键字
-    return NO;
-}
-
-// 获取系统当前时间作为发布时间
-- (NSString *)getCurrentTime
-{
-    NSCalendar *calendar = [NSCalendar currentCalendar];
-    //组合元素（时分秒）
-    NSDateComponents *components = [calendar components:kCFCalendarUnitHour|kCFCalendarUnitMinute|NSCalendarUnitSecond  fromDate:[NSDate date]];
-    NSString *time = [NSString stringWithFormat:@"%ld时%ld分%ld秒",components.hour,components.minute,components.second];
-    
-    return time;
-}
-
-
+#pragma mark - NSCoding
 /** 读档 */
 - (instancetype)initWithCoder:(NSCoder *)aDecoder{
     if (self = [super init]){
@@ -112,6 +23,8 @@
         self.title = [aDecoder decodeObjectForKey:@"title"];
         self.webURL = [aDecoder decodeObjectForKey:@"webURL"];
         self.source = [aDecoder decodeObjectForKey:@"source"];
+        self.cmt_cnt = [[aDecoder decodeObjectForKey:@"source"] integerValue];
+        self.publishTime = [aDecoder decodeObjectForKey:@"publishTime"];
         self.author_icon = [aDecoder decodeObjectForKey:@"author_icon"];
         self.searchMode = [aDecoder decodeBoolForKey:@"searchMode"];
     }
@@ -125,6 +38,8 @@
     [aCoder encodeObject:self.title forKey:@"title"];
     [aCoder encodeObject:self.webURL forKey:@"webURL"];
     [aCoder encodeObject:self.source forKey:@"source"];
+    [aCoder encodeObject:@(self.cmt_cnt) forKey:@"cmt_cnt"];
+    [aCoder encodeObject:self.publishTime forKey:@"publishTime"];
     [aCoder encodeObject:self.author_icon forKey:@"author_icon"];
     [aCoder encodeBool:self.isSearchMode forKey:@"searchMode"];
     

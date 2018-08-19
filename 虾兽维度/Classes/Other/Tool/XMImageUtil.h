@@ -17,6 +17,14 @@
 ///通过url保存网络的图片或者gif到本地或者相册
 + (void)savePictrue:(NSString *)imageUrl path:(NSString *)path callBackViewController:(UIViewController *)vc;
 
+/// 将图片(url的string)保存到沙盒本地文件
++ (void)saveToLocalTempDirPicture:(NSString *)imageUrl;
+
+/// 将图片(UIImage)保存到沙盒本地文件
++ (void)saveToLocalTempDirWithImage:(UIImage *)image;
+/// 将图片(UIImage)保存到设备相册
++ (void)saveToAlbumWithImage:(UIImage *)image;
+
 /**--------- 相册信息 ---------*/
 /// 获得压缩图
 + (UIImage *)thumbImageWithAsset:(ALAsset *)asset;

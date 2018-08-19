@@ -12,6 +12,7 @@
 #import "XMWXFloatWindowIconConfig.h"
 #import "XMImageUtil.h"
 #import "XMNavigationInteractiveTransition.h"
+#import "MBProgressHUD+NK.h"
 
 
 @interface XMNavigationController()<
@@ -279,4 +280,11 @@ UINavigationControllerDelegate>
     return [@"XMFileDisplayWebViewViewController|XMPhotoCollectionViewController|HJVideoPlayerController" containsString:NSStringFromClass([viewController class])];
 }
 
+
+#pragma mark - 保存照片到设备相册实现方法
+/** 提示用户保存图片成功与否(系统必须实现的方法) */
+- (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo{
+    NSString *msg = (error) ? @"保存到相册失败" : @"保存到相册成功";
+    [MBProgressHUD showMessage:msg toView:nil];
+}
 @end

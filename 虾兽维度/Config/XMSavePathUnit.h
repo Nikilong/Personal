@@ -39,6 +39,9 @@ extern NSString * const XMWifiGroupMarkZipFileName;
 /// 主页频道文件的保存路径
 + (NSString *)getMainLeftSaveChannelPath;
 
+/// 主页历史新闻存档路径,不同的channel的文件不一样
++ (NSString *)getMainHistoryNewsPathWithChannel:(NSString *)channel;
+
 
 /// 返回一个数组,包含所有配置类文件的全路径
 + (NSArray *)getSettingFilesPaths;

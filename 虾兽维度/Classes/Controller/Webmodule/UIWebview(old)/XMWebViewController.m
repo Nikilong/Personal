@@ -7,7 +7,7 @@
 //
 
 #import "XMWebViewController.h"
-#import "XMWebModelTool.h"
+#import "XMWebModelLogic.h"
 #import "UIView+getPointColor.h"
 #import "XMImageUtil.h"
 #import "MBProgressHUD+NK.h"
@@ -442,7 +442,7 @@ static double backForwardSafeDistance = 80.0;
 
     if (button.isSelected){
         // 取消保存网站到本地
-        [XMWebModelTool deleteWebURL:self.web.request.URL.absoluteString];
+        [XMWebModelLogic deleteWebURL:self.web.request.URL.absoluteString];
         // 提示用户取消保存网页成功
         [MBProgressHUD showSuccess:@"取消收藏成功"];
     }else{
@@ -452,7 +452,7 @@ static double backForwardSafeDistance = 80.0;
         model.webURL = [NSURL URLWithString:self.web.request.URL.absoluteString];
         model.title =  [self.web stringByEvaluatingJavaScriptFromString:@"document.title"];
         // 保存网站到本地
-        [XMWebModelTool saveWebModel:model];
+        [XMWebModelLogic saveWebModel:model];
         // 提示用户保存网页成功
         [MBProgressHUD showSuccess:@"收藏成功"];
     }
@@ -790,7 +790,7 @@ static double backForwardSafeDistance = 80.0;
         self.navToolTitleLab.text = title;
     }
     // 判断该网页是否已经保存
-    self.saveBtn.selected = [XMWebModelTool isWebURLHaveSave:self.web.request.URL.absoluteString];
+    self.saveBtn.selected = [XMWebModelLogic isWebURLHaveSave:self.web.request.URL.absoluteString];
     
     // 记录网页高度
 //    self.webHeight = [[self.web stringByEvaluatingJavaScriptFromString:@"document.body.offsetHeight"] doubleValue];

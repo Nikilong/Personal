@@ -72,6 +72,15 @@ NSString * const XMWifiGroupMarkZipFileName = @"XMWifiGroupZipMark.wifign";  // 
     return [NSString stringWithFormat:@"%@/XMMainLeftChannel.archiver",dirPath];
 }
 
+/// 主页历史新闻存档路径,不同的channel的文件不一样
++ (NSString *)getMainHistoryNewsPathWithChannel:(NSString *)channel{
+    NSString *dirPath = [NSString stringWithFormat:@"%@/HistoryNews",[self getDocumentsPath]];
+    if(![[NSFileManager defaultManager] fileExistsAtPath:dirPath]){
+        [[NSFileManager defaultManager] createDirectoryAtPath:dirPath withIntermediateDirectories:YES attributes:nil error:nil];
+    }
+    return [NSString stringWithFormat:@"%@/XMHistoryNews-%@.archiver",dirPath,channel];
+}
+
 /// 返回一个数组,包含所有配置类文件的全路径
 + (NSArray *)getSettingFilesPaths{
     return @[[self getHiwebHomeUrlPath],[self getWifiGroupNameFilePath],[self getSaveWebModelArchicerPath],[self getWifiGroupMarkZipFilePath],[self getMainLeftSaveChannelPath]];

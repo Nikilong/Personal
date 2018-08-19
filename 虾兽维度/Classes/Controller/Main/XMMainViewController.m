@@ -13,7 +13,7 @@
 //#import "XMWebViewController.h"
 #import "XMWKWebViewController.h"
 #import "XMHiwebViewController.h"
-#import "XMChannelModel.h"
+#import "XMChannelModelLogic.h"
 #import "XMLeftViewUserCell.h"
 #import "XMConerAccessoryView.h"
 #import "XMSaveWebsTableViewController.h"
@@ -358,7 +358,7 @@ static double leftViewAnimateTime = 0.25;
         NSUInteger colMaxNum = 7;      // 每行允许排列的图标个数
         
         // 工具箱按钮参数
-        NSUInteger btnNum = [XMChannelModel channels].count;
+        NSUInteger btnNum = [XMChannelModelLogic channels].count;
         
         // 添加按钮
         CGFloat btnX;
@@ -367,7 +367,7 @@ static double leftViewAnimateTime = 0.25;
             btnX = padding + ( btnW + padding ) * (i % colMaxNum);
             btnY = padding + btnH * (i / colMaxNum);
             
-            XMChannelModel *model = [XMChannelModel channels][i];
+            XMChannelModel *model = [XMChannelModelLogic channels][i];
             // 工具箱按钮
             UIButton *btn = [[UIButton alloc] initWithFrame:CGRectMake(btnX, btnY, btnW, btnH)];
             [containerV addSubview:btn];
@@ -444,7 +444,7 @@ static double leftViewAnimateTime = 0.25;
             
         }else if(indexPath.section == 1){
             // 将specialChannel以webmodule打开,serchMode模式
-            XMChannelModel *specialModel = [XMChannelModel specialChannels][indexPath.row];
+            XMChannelModel *specialModel = [XMChannelModelLogic specialChannels][indexPath.row];
             XMWebModel *model = [[XMWebModel alloc] init];
             model.searchMode = YES;
             model.webURL = [NSURL URLWithString:specialModel.url];
@@ -496,7 +496,7 @@ static double leftViewAnimateTime = 0.25;
     UITextView *guildView = [[UITextView alloc] initWithFrame:CGRectMake(0, 64, XMScreenW, XMScreenH - 64)];
     self.guildView = guildView;
     [self.view insertSubview:guildView aboveSubview:self.homeVC.view];
-    guildView.text = [XMChannelModel userGuild];
+    guildView.text = [XMChannelModelLogic userGuild];
     guildView.textColor = [UIColor orangeColor];
     guildView.font = [UIFont systemFontOfSize:20];
     guildView.editable = NO;
@@ -523,7 +523,7 @@ static double leftViewAnimateTime = 0.25;
     // 切换频道
     self.homeVC.currentChannel = indexPath.row;
     // 设置导航栏显示当前频道
-    XMChannelModel *model = [XMChannelModel channels][indexPath.row];
+    XMChannelModel *model = [XMChannelModelLogic channels][indexPath.row];
     [self setNavTitle:model.channel];
 }
 
@@ -534,7 +534,7 @@ static double leftViewAnimateTime = 0.25;
     // 切换频道
     self.homeVC.currentChannel = btn.tag;
     // 设置导航栏显示当前频道
-    XMChannelModel *model = [XMChannelModel channels][btn.tag];
+    XMChannelModel *model = [XMChannelModelLogic channels][btn.tag];
     [self setNavTitle:model.channel];
 }
 

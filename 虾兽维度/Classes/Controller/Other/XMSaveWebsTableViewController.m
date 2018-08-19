@@ -7,7 +7,7 @@
 //
 
 #import "XMSaveWebsTableViewController.h"
-#import "XMWebModelTool.h"
+#import "XMWebModelLogic.h"
 
 @interface XMSaveWebsTableViewController ()
 
@@ -19,7 +19,7 @@
 
 - (NSArray *)saveWebsArr{
     if (!_saveWebsArr){
-        _saveWebsArr = [XMWebModelTool webModels];
+        _saveWebsArr = [XMWebModelLogic webModels];
     }
     return _saveWebsArr;
 }
@@ -70,7 +70,7 @@
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
     
-    [XMWebModelTool deleteWebModelAtIndex:indexPath.row];
+    [XMWebModelLogic deleteWebModelAtIndex:indexPath.row];
     
     // 重新加载数据
     [self.tableView reloadData];

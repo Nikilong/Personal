@@ -7,11 +7,10 @@
 //
 
 #import "XMWifiTransModel.h"
-#import "XMWifiGroupTool.h"
-#import <AVFoundation/AVFoundation.h>
-#import <ImageIO/ImageIO.h>
+//#import "XMWifiGroupTool.h"
 #import <UIKit/UIKit.h>
 #import "XMImageUtil.h"
+#import "XMTimeTool.h"
 
 NSString * const fileTypeCodeName = @"code";
 NSString * const fileTypeImageName = @"image";
@@ -73,7 +72,7 @@ NSString * const fileTypeZipName = @"zip";
         model.rootPath = groupFullPath;
         model.fullPath = [NSString stringWithFormat:@"%@/%@",groupFullPath,ele];
         model.size = dict.fileSize;
-        model.createDateStr = [XMWifiGroupTool dateChangeToString:dict.fileCreationDate];
+        model.createDateStr = [XMTimeTool dateChangeToString:dict.fileCreationDate formatString:@"YYYYMMdd_HH时mm分ss秒"];
         model.createDateCount = dict.fileCreationDate.timeIntervalSince1970;
         // 文件大小
         if(dict.fileSize < 1024){
@@ -100,10 +99,10 @@ NSString * const fileTypeZipName = @"zip";
                 
             }else if ([@"avi|wmv|mpeg|mp4|mov|mkv|flv|f4v|m4v|rmvb|rm|3gp|dat|ts|mts|vob" containsString:exten]){
                 model.fileType = fileTypeVideoName;
-                model.mediaLengthStr = [self getMediaLengthString:model.fullPath];
+                model.mediaLengthStr = [XMTimeTool getMediaLengthString:model.fullPath];
             }else if ([@"mp3|wav|wma|ape|rm|vqf|ogg|asf|mp3pro|real|module|midi" containsString:exten]){
                 model.fileType = fileTypeAudioName;
-                model.mediaLengthStr = [self getMediaLengthString:model.fullPath];
+                model.mediaLengthStr = [XMTimeTool getMediaLengthString:model.fullPath];
             }else if ([@"homeurl|archiver|wifign" containsString:exten]){
                 model.fileType = fileTypeSettingName;
             }else if ([@"zip|rar" containsString:exten]){
@@ -118,30 +117,6 @@ NSString * const fileTypeZipName = @"zip";
         
     }
     return fileFilterArr;
-}
-    
-
-/// 获取音频视频类时长
-+ (NSString *)getMediaLengthString:(NSString *)path{
-    NSURL *url = [NSURL fileURLWithPath:path];
-//    NSDictionary *opts = [NSDictionary dictionaryWithObject:@(NO) forKey:AVURLAssetPreferPreciseDurationAndTimingKey];
-    AVURLAsset *urlAsset = [AVURLAsset URLAssetWithURL:url options:nil]; // 初始化视频媒体文件
-    NSUInteger second = 0;
-    second = urlAsset.duration.value / urlAsset.duration.timescale; // 获取视频总时长,单位秒
-    NSString *string = @"";
-    if(second == 0){
-        string = @"未知";
-    }else if(second < 60){
-        string = [NSString stringWithFormat:@"%zd秒",second];
-    }else if(second < 3600){
-        string = [NSString stringWithFormat:@"%ld分%zd秒",second/60,second%60];
-    }else{
-        NSUInteger hourC = second/3600;
-        NSUInteger miniC = (second - hourC * 3600) / 60;
-        NSUInteger secC = (second - hourC * 3600) % 60;
-        string = [NSString stringWithFormat:@"%ld时%ld分%zd秒",hourC,miniC,secC];
-    }
-    return string;
 }
 
 @end

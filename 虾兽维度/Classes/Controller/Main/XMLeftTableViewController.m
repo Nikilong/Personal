@@ -8,6 +8,7 @@
 
 #import "XMLeftTableViewController.h"
 #import "XMChannelModel.h"
+#import "XMChannelModelLogic.h"
 #import "XMLeftViewUserCell.h"
 #import "MBProgressHUD+NK.h"
 
@@ -23,7 +24,7 @@
 
 -(NSArray *)specialChannelArr{
     if (!_specialChannelArr){
-        _specialChannelArr = [XMChannelModel specialChannels];
+        _specialChannelArr = [XMChannelModelLogic specialChannels];
     }
     return _specialChannelArr;
 }
@@ -109,7 +110,7 @@
     if(indexPath.section == 1){
         __weak typeof(self) weakSelf = self;
         UITableViewRowAction *delAct = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:@"删除" handler:^(UITableViewRowAction * _Nonnull action, NSIndexPath * _Nonnull indexPath) {
-            BOOL result = [XMChannelModel specialChannelRemoveChannelAtIndex:indexPath.row];
+            BOOL result = [XMChannelModelLogic specialChannelRemoveChannelAtIndex:indexPath.row];
             [MBProgressHUD showResult:result message:nil];
             weakSelf.specialChannelArr = nil;
             [weakSelf.tableView reloadData];
@@ -131,7 +132,7 @@
             [tips addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action){
                 NSString *name = tips.textFields[0].text;
                 NSString *url = tips.textFields[1].text;
-                BOOL result = [XMChannelModel specialChannelRenameChannelName:name url:url index:indexPath.row];
+                BOOL result = [XMChannelModelLogic specialChannelRenameChannelName:name url:url index:indexPath.row];
                 [MBProgressHUD showResult:result message:nil];
                 weakSelf.specialChannelArr = nil;
                 [weakSelf.tableView reloadData];
@@ -171,7 +172,7 @@
     [tips addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action){
         NSString *name = tips.textFields[0].text;
         NSString *url = tips.textFields[1].text;
-        BOOL result = [XMChannelModel specialChannelAddNewChannelName:name url:url];
+        BOOL result = [XMChannelModelLogic specialChannelAddNewChannelName:name url:url];
         [MBProgressHUD showResult:result message:nil];
         weakSelf.specialChannelArr = nil;
         [weakSelf.tableView reloadData];

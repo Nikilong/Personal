@@ -25,9 +25,5 @@
 @property (nonatomic, assign, getter=isSearchMode)  BOOL searchMode;
 /** 是否从main发送的网络请求,即是否第一个webmodule的标记 */
 @property (nonatomic, assign, getter=isFirstRequest)  BOOL firstRequest;
-+ (NSArray *)websWithDict:(NSDictionary *)dict refreshCount:(NSUInteger)count keyWordArray:(NSArray *)keyWordArr;
-
-/// web的网址，需要拼接参数
-+ (NSString *)appendWebURLByName:(NSString *)name;
 
 @end

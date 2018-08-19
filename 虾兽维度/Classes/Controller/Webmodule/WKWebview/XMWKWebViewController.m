@@ -7,7 +7,7 @@
 //
 
 #import "XMWKWebViewController.h"
-#import "XMWebModelTool.h"
+#import "XMWebModelLogic.h"
 #import "UIView+getPointColor.h"
 #import "XMImageUtil.h"
 #import "MBProgressHUD+NK.h"
@@ -22,6 +22,8 @@
 #import "XMSearchTableViewController.h"
 #import <WebKit/WebKit.h>
 #import "NSURLProtocol+WKWebview.h"
+#import "XMVisualView.h"
+
 
 @interface XMWKWebViewController ()<
 NSURLSessionDelegate,
@@ -29,7 +31,8 @@ UIGestureRecognizerDelegate,
 UIScrollViewDelegate,
 WKUIDelegate,
 WKNavigationDelegate,
-XMOpenWebmoduleProtocol>
+XMOpenWebmoduleProtocol,
+XMVisualViewDelegate>
 
 /** 网页高度 */
 //@property (nonatomic, assign) NSInteger webHeight;
@@ -132,8 +135,19 @@ static double backForwardSafeDistance = 80.0;
 #pragma mark - 初始化
 - (WKWebView *)wkWebview{
     if (_wkWebview == nil){
+        
+        NSMutableString*javascript = [NSMutableString string];
+        //禁止长按弹出
+        [javascript appendString:@"document.documentElement.style.webkitTouchCallout='none';"];
+        //javascript 注入
+        WKUserScript *noneSelectScript = [[WKUserScript alloc] initWithSource:javascript injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:YES];
+        
+        WKUserContentController *userContentController = [[WKUserContentController alloc] init];
+        [userContentController addUserScript:noneSelectScript];
 
         WKWebViewConfiguration * configuration = [[WKWebViewConfiguration alloc]init];
+        configuration.userContentController = userContentController;
+        
         // y方向距离为导航栏初始高度44+状态栏高度
         _wkWebview = [[WKWebView alloc] initWithFrame:CGRectMake(0, 44 + XMStatusBarHeight, XMScreenW, XMScreenH - 24) configuration:configuration];
         _wkWebview.UIDelegate = self;
@@ -150,7 +164,7 @@ static double backForwardSafeDistance = 80.0;
         // 添加长按手势
         UILongPressGestureRecognizer *longP = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
         longP.delegate = self;
-        longP.minimumPressDuration = 0.25;
+//        longP.minimumPressDuration = 0.25;
         [_wkWebview addGestureRecognizer:longP];
 
         // 添加双击恢复缩放大小
@@ -506,7 +520,7 @@ static double backForwardSafeDistance = 80.0;
 
     if (button.isSelected){
         // 取消保存网站到本地
-        [XMWebModelTool deleteWebURL:self.wkWebview.URL.absoluteString];
+        [XMWebModelLogic deleteWebURL:self.wkWebview.URL.absoluteString];
         // 提示用户取消保存网页成功
         [MBProgressHUD showSuccess:@"取消收藏成功"];
     }else{
@@ -517,7 +531,7 @@ static double backForwardSafeDistance = 80.0;
             model.webURL = [NSURL URLWithString:self.wkWebview.URL.absoluteString];
             model.title = title;
             // 保存网站到本地
-            [XMWebModelTool saveWebModel:model];
+            [XMWebModelLogic saveWebModel:model];
             // 提示用户保存网页成功
             [MBProgressHUD showSuccess:@"收藏成功"];
         }];
@@ -653,38 +667,12 @@ static double backForwardSafeDistance = 80.0;
         [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = YES;
     }
     
-    // 最底部
-    UIView *contentV = [[UIView alloc] initWithFrame:CGRectMake(0, 0, XMScreenW, XMScreenH)];
-    contentV.backgroundColor = [UIColor clearColor];
+    // 创建二维码图片展示框
+    XMVisualView *visualView = [XMVisualView creatVisualImageViewWithImage:image imageSize:CGSizeMake(XMScreenW * 0.7, XMScreenW * 0.7) blurEffectStyle:0];
+    visualView.delegate = self;
     
-    // 毛玻璃
-    UIBlurEffect *blur = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
-    UIVisualEffectView *effV = [[UIVisualEffectView alloc] initWithEffect:blur];
-    effV.frame = CGRectMake(0, 0, XMScreenW, XMScreenH);
-    
-    // 二维码图片
-    UIImageView *imageV = [[UIImageView alloc] initWithFrame:CGRectMake(XMScreenW * 0.15, (XMScreenH - XMScreenW) * 0.5, XMScreenW * 0.7, XMScreenW * 0.7)];
-    imageV.image = image;
-
-    // 层级结构
-    [self.view addSubview:contentV];
-    [contentV addSubview:effV];
-    [effV.contentView addSubview:imageV];
-    
-    // 添加点击移除手势
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(removeQriamge:)];
-    [contentV addGestureRecognizer:tap];
 }
 
-
-/// 移除二维码图片
-- (void)removeQriamge:(UITapGestureRecognizer *)gest{
-    [gest.view removeFromSuperview];
-    // 显示浮窗
-    if([XMWXFloatWindowIconConfig isSaveFloatVCInUserDefaults]){
-        [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = NO;
-    }
-}
 
 /// 弹出分享菜单
 - (void)showShareVC{
@@ -743,15 +731,16 @@ static double backForwardSafeDistance = 80.0;
         [XMImageUtil savePictrue:imageUrl path:nil callBackViewController:weakSelf];
     }]];
     [tips addAction:[UIAlertAction actionWithTitle:@"保存图片到本地缓存" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
-        NSString *path = [XMSavePathUnit getWifiImageTempDirPath];
-        // 确保文件文件夹以及上一级文件夹存在
-        if (![[NSFileManager defaultManager] fileExistsAtPath:[XMSavePathUnit getWifiUploadDirPath]]){
-            [[NSFileManager defaultManager] createDirectoryAtPath:[XMSavePathUnit getWifiUploadDirPath] withIntermediateDirectories:NO attributes:nil error:nil];
-        }
-        if (![[NSFileManager defaultManager] fileExistsAtPath:path]){
-            [[NSFileManager defaultManager] createDirectoryAtPath:path withIntermediateDirectories:NO attributes:nil error:nil];
-        }
-        [XMImageUtil savePictrue:imageUrl path:path callBackViewController:weakSelf];
+        [XMImageUtil saveToLocalTempDirPicture:imageUrl];
+//        NSString *path = [XMSavePathUnit getWifiImageTempDirPath];
+//        // 确保文件文件夹以及上一级文件夹存在
+//        if (![[NSFileManager defaultManager] fileExistsAtPath:[XMSavePathUnit getWifiUploadDirPath]]){
+//            [[NSFileManager defaultManager] createDirectoryAtPath:[XMSavePathUnit getWifiUploadDirPath] withIntermediateDirectories:NO attributes:nil error:nil];
+//        }
+//        if (![[NSFileManager defaultManager] fileExistsAtPath:path]){
+//            [[NSFileManager defaultManager] createDirectoryAtPath:path withIntermediateDirectories:NO attributes:nil error:nil];
+//        }
+//        [XMImageUtil savePictrue:imageUrl path:path callBackViewController:weakSelf];
     }]];
     
     // 判断是否含有二维码
@@ -886,7 +875,7 @@ static double backForwardSafeDistance = 80.0;
         }
     }];
     // 判断该网页是否已经保存
-    self.saveBtn.selected = [XMWebModelTool isWebURLHaveSave:self.wkWebview.URL.absoluteString];
+    self.saveBtn.selected = [XMWebModelLogic isWebURLHaveSave:self.wkWebview.URL.absoluteString];
     
     // 记录网页高度
     //    self.webHeight = [[self.wkWebview evaluateJavaScript:@"document.body.offsetHeight"] doubleValue];
@@ -1055,6 +1044,13 @@ static double backForwardSafeDistance = 80.0;
     self.isDrag = NO;
 }
 
+#pragma mark - XMVisualViewDelegate
+- (void)visualViewWillRemoveFromSuperView{
+    // 显示浮窗
+    if([XMWXFloatWindowIconConfig isSaveFloatVCInUserDefaults]){
+        [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = NO;
+    }
+}
 
 #pragma mark - uigestureDelegate
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{

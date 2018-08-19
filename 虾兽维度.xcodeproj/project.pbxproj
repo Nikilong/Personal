@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		20021F8A21298B4800A2BA02 /* XMVisualView.m in Sources */ = {isa = PBXBuildFile; fileRef = 20021F8921298B4800A2BA02 /* XMVisualView.m */; };
 		200770302059775100551C00 /* XMHiwebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 200770262059775100551C00 /* XMHiwebViewController.m */; };
 		200770312059775100551C00 /* XMPersonDataUnit.m in Sources */ = {isa = PBXBuildFile; fileRef = 200770282059775100551C00 /* XMPersonDataUnit.m */; };
 		200770322059775100551C00 /* XMPersonFilmCollectionVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2007702A2059775100551C00 /* XMPersonFilmCollectionVC.m */; };
@@ -128,6 +129,8 @@
 		20707EA3209F551200572604 /* ZBTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 20707EA2209F551200572604 /* ZBTool.m */; };
 		207BBE8120B7078F00C86EAD /* XMPhotoCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 207BBE8020B7078F00C86EAD /* XMPhotoCollectionViewCell.m */; };
 		20835AEA212025DD0009E17F /* dir_mark.png in Resources */ = {isa = PBXBuildFile; fileRef = 20835AE9212025DD0009E17F /* dir_mark.png */; };
+		20835AED21294AFE0009E17F /* XMWebModelLogic.m in Sources */ = {isa = PBXBuildFile; fileRef = 20835AEC21294AFE0009E17F /* XMWebModelLogic.m */; };
+		20835AF0212956590009E17F /* XMChannelModelLogic.m in Sources */ = {isa = PBXBuildFile; fileRef = 20835AEF212956590009E17F /* XMChannelModelLogic.m */; };
 		20863C9120CD0E3300A0812C /* wifiopen_upload.png in Resources */ = {isa = PBXBuildFile; fileRef = 20863C9020CD0E3300A0812C /* wifiopen_upload.png */; };
 		20863CB720CD422F00A0812C /* ZLPhotoAssets.m in Sources */ = {isa = PBXBuildFile; fileRef = 20863C9F20CD422F00A0812C /* ZLPhotoAssets.m */; };
 		20863CB820CD422F00A0812C /* ZLPhotoPickerDatas.m in Sources */ = {isa = PBXBuildFile; fileRef = 20863CA120CD422F00A0812C /* ZLPhotoPickerDatas.m */; };
@@ -188,7 +191,6 @@
 		20F112171E86697400E64A70 /* XMChannelModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 20F112161E86697400E64A70 /* XMChannelModel.m */; };
 		20F1121B1E866F9C00E64A70 /* XMLeftViewUserCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 20F112191E866F9C00E64A70 /* XMLeftViewUserCell.m */; };
 		20F1121C1E866F9C00E64A70 /* XMLeftViewUserCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 20F1121A1E866F9C00E64A70 /* XMLeftViewUserCell.xib */; };
-		20F112251E86BF4600E64A70 /* XMWebModelTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 20F112241E86BF4600E64A70 /* XMWebModelTool.m */; };
 		20FB7DDC20C00F0A00011B5C /* btn_pause.png in Resources */ = {isa = PBXBuildFile; fileRef = 20FB7DDA20C00F0A00011B5C /* btn_pause.png */; };
 		20FB7DDD20C00F0A00011B5C /* btn_play@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 20FB7DDB20C00F0A00011B5C /* btn_play@2x.png */; };
 		842971041E654644002BDBC0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 842970FD1E654644002BDBC0 /* AppDelegate.m */; };
@@ -217,10 +219,13 @@
 		FDB099FF2112F5AA00148492 /* UIViewController+hook.m in Sources */ = {isa = PBXBuildFile; fileRef = FDB099FE2112F5AA00148492 /* UIViewController+hook.m */; };
 		FDB09A02211317B800148492 /* XMNavigationInteractiveTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = FDB09A01211317B800148492 /* XMNavigationInteractiveTransition.m */; };
 		FDB09A052113192A00148492 /* XMPopAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = FDB09A042113192A00148492 /* XMPopAnimation.m */; };
+		FDE985412126CB1D003D2FE2 /* XMTimeTool.m in Sources */ = {isa = PBXBuildFile; fileRef = FDE985402126CB1D003D2FE2 /* XMTimeTool.m */; };
 		FDFAEEC520FD900E00BEA442 /* XMNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = FDFAEEC420FD900E00BEA442 /* XMNavigationController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		20021F8821298B4800A2BA02 /* XMVisualView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMVisualView.h; sourceTree = "<group>"; };
+		20021F8921298B4800A2BA02 /* XMVisualView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMVisualView.m; sourceTree = "<group>"; };
 		200770252059775100551C00 /* XMHiwebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMHiwebViewController.h; sourceTree = "<group>"; };
 		200770262059775100551C00 /* XMHiwebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMHiwebViewController.m; sourceTree = "<group>"; };
 		200770272059775100551C00 /* XMPersonDataUnit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPersonDataUnit.h; sourceTree = "<group>"; };
@@ -445,6 +450,10 @@
 		207BBE7F20B7078F00C86EAD /* XMPhotoCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPhotoCollectionViewCell.h; sourceTree = "<group>"; };
 		207BBE8020B7078F00C86EAD /* XMPhotoCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPhotoCollectionViewCell.m; sourceTree = "<group>"; };
 		20835AE9212025DD0009E17F /* dir_mark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dir_mark.png; sourceTree = "<group>"; };
+		20835AEB21294AFE0009E17F /* XMWebModelLogic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMWebModelLogic.h; sourceTree = "<group>"; };
+		20835AEC21294AFE0009E17F /* XMWebModelLogic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMWebModelLogic.m; sourceTree = "<group>"; };
+		20835AEE212956590009E17F /* XMChannelModelLogic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMChannelModelLogic.h; sourceTree = "<group>"; };
+		20835AEF212956590009E17F /* XMChannelModelLogic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMChannelModelLogic.m; sourceTree = "<group>"; };
 		20863C9020CD0E3300A0812C /* wifiopen_upload.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wifiopen_upload.png; sourceTree = "<group>"; };
 		20863C9E20CD422F00A0812C /* ZLPhotoAssets.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZLPhotoAssets.h; sourceTree = "<group>"; };
 		20863C9F20CD422F00A0812C /* ZLPhotoAssets.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZLPhotoAssets.m; sourceTree = "<group>"; };
@@ -548,8 +557,6 @@
 		20F112181E866F9C00E64A70 /* XMLeftViewUserCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMLeftViewUserCell.h; sourceTree = "<group>"; };
 		20F112191E866F9C00E64A70 /* XMLeftViewUserCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMLeftViewUserCell.m; sourceTree = "<group>"; };
 		20F1121A1E866F9C00E64A70 /* XMLeftViewUserCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = XMLeftViewUserCell.xib; sourceTree = "<group>"; };
-		20F112231E86BF4600E64A70 /* XMWebModelTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMWebModelTool.h; sourceTree = "<group>"; };
-		20F112241E86BF4600E64A70 /* XMWebModelTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMWebModelTool.m; sourceTree = "<group>"; };
 		20FB7DDA20C00F0A00011B5C /* btn_pause.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_pause.png; sourceTree = "<group>"; };
 		20FB7DDB20C00F0A00011B5C /* btn_play@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn_play@2x.png"; sourceTree = "<group>"; };
 		842970FC1E654644002BDBC0 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -594,6 +601,8 @@
 		FDB09A01211317B800148492 /* XMNavigationInteractiveTransition.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMNavigationInteractiveTransition.m; sourceTree = "<group>"; };
 		FDB09A032113192A00148492 /* XMPopAnimation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMPopAnimation.h; sourceTree = "<group>"; };
 		FDB09A042113192A00148492 /* XMPopAnimation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMPopAnimation.m; sourceTree = "<group>"; };
+		FDE9853F2126CB1D003D2FE2 /* XMTimeTool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMTimeTool.h; sourceTree = "<group>"; };
+		FDE985402126CB1D003D2FE2 /* XMTimeTool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMTimeTool.m; sourceTree = "<group>"; };
 		FDFAEEC320FD900E00BEA442 /* XMNavigationController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMNavigationController.h; sourceTree = "<group>"; };
 		FDFAEEC420FD900E00BEA442 /* XMNavigationController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMNavigationController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -610,6 +619,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		20021F8721298B2A00A2BA02 /* XMVisualView */ = {
+			isa = PBXGroup;
+			children = (
+				20021F8821298B4800A2BA02 /* XMVisualView.h */,
+				20021F8921298B4800A2BA02 /* XMVisualView.m */,
+			);
+			name = XMVisualView;
+			path = XMVisualImageView;
+			sourceTree = "<group>";
+		};
 		200770242059775100551C00 /* hiweb */ = {
 			isa = PBXGroup;
 			children = (
@@ -1310,10 +1329,10 @@
 		20F112221E86BF1800E64A70 /* Tool */ = {
 			isa = PBXGroup;
 			children = (
-				20F112231E86BF4600E64A70 /* XMWebModelTool.h */,
-				20F112241E86BF4600E64A70 /* XMWebModelTool.m */,
 				2086FCDF20EBC61400957207 /* XMImageUtil.h */,
 				2086FCE020EBC61400957207 /* XMImageUtil.m */,
+				FDE9853F2126CB1D003D2FE2 /* XMTimeTool.h */,
+				FDE985402126CB1D003D2FE2 /* XMTimeTool.m */,
 			);
 			name = Tool;
 			path = Other/Tool;
@@ -1325,6 +1344,7 @@
 				205CECAC1F48150E00821E38 /* Framework */,
 				842970EE1E654644002BDBC0 /* Controller */,
 				842970FA1E654644002BDBC0 /* Model */,
+				FDE985422126CC33003D2FE2 /* ViewModel */,
 				842970FE1E654644002BDBC0 /* View */,
 				842970FB1E654644002BDBC0 /* Other */,
 				20C85E5420541BD50057F483 /* Toolbox */,
@@ -1380,6 +1400,7 @@
 				205CECF81F4898A600821E38 /* XMDropView.m */,
 				205CED0D1F48AA5600821E38 /* XMTextTableViewCell.h */,
 				205CED0E1F48AA5600821E38 /* XMTextTableViewCell.m */,
+				20021F8721298B2A00A2BA02 /* XMVisualView */,
 				203D2FF021031F26008788B6 /* XMPullRefreshHeader */,
 				20C85E6A2054311B0057F483 /* XMUIKit */,
 			);
@@ -1505,6 +1526,17 @@
 				FDB099F42112E77300148492 /* UIScreenEdgePanGestureRecognizer+UIScreenEdgePanGestureRecognizer_hook.m */,
 			);
 			path = hook;
+			sourceTree = "<group>";
+		};
+		FDE985422126CC33003D2FE2 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				20835AEB21294AFE0009E17F /* XMWebModelLogic.h */,
+				20835AEC21294AFE0009E17F /* XMWebModelLogic.m */,
+				20835AEE212956590009E17F /* XMChannelModelLogic.h */,
+				20835AEF212956590009E17F /* XMChannelModelLogic.m */,
+			);
+			path = ViewModel;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1644,6 +1676,7 @@
 				205CECEA1F48150E00821E38 /* UIImage+GIF.m in Sources */,
 				205CECF01F48150E00821E38 /* UIView+WebCacheOperation.m in Sources */,
 				2086642820AB403D00D51CCB /* aescrypt.c in Sources */,
+				20835AED21294AFE0009E17F /* XMWebModelLogic.m in Sources */,
 				FDFAEEC520FD900E00BEA442 /* XMNavigationController.m in Sources */,
 				2056D8731E8D67B200EB4BB5 /* XMConerAccessoryView.m in Sources */,
 				20E9E373204C4BEC007D442E /* XMClipImageViewController.m in Sources */,
@@ -1676,6 +1709,7 @@
 				205CECE11F48150E00821E38 /* SDImageCache.m in Sources */,
 				203D2FF321031F48008788B6 /* XMRefreshHeaderView.m in Sources */,
 				200770302059775100551C00 /* XMHiwebViewController.m in Sources */,
+				FDE985412126CB1D003D2FE2 /* XMTimeTool.m in Sources */,
 				204D2431209ED91A00F17E2E /* DDAbstractDatabaseLogger.m in Sources */,
 				2086643020AB403D00D51CCB /* crypt.c in Sources */,
 				20863D2B20CD4E9400A0812C /* ZLPhotoPickerGroup.m in Sources */,
@@ -1731,6 +1765,7 @@
 				2061C21520C56F5F008C7424 /* HJVideoTimeUtil.m in Sources */,
 				20F1121B1E866F9C00E64A70 /* XMLeftViewUserCell.m in Sources */,
 				203D300321036AA7008788B6 /* XMWXVCFloatWindow.m in Sources */,
+				20021F8A21298B4800A2BA02 /* XMVisualView.m in Sources */,
 				2086643320AB403D00D51CCB /* ioapi_mem.c in Sources */,
 				FD7407E820B4306D00A83979 /* XMPhotoCollectionViewController.m in Sources */,
 				20863CC020CD422F00A0812C /* ZLPhotoPickerGroupTableViewCell.m in Sources */,
@@ -1742,6 +1777,7 @@
 				2061C21920C56F5F008C7424 /* UIImage+getImage.m in Sources */,
 				204D2437209ED91A00F17E2E /* DispatchQueueLogFormatter.m in Sources */,
 				202C84F21F2624AD0055FD7D /* XMSearchTableViewController.m in Sources */,
+				20835AF0212956590009E17F /* XMChannelModelLogic.m in Sources */,
 				2061C21C20C56F5F008C7424 /* HJCircleLoading.m in Sources */,
 				205CECF41F48151700821E38 /* UIView+getPointColor.m in Sources */,
 				2086643220AB403D00D51CCB /* ioapi_buf.c in Sources */,
@@ -1759,7 +1795,6 @@
 				203D300221036AA7008788B6 /* XMRightBottomFloatView.m in Sources */,
 				204D2412209ED8E800F17E2E /* HTTPDynamicFileResponse.m in Sources */,
 				204D2432209ED91A00F17E2E /* DDASLLogger.m in Sources */,
-				20F112251E86BF4600E64A70 /* XMWebModelTool.m in Sources */,
 				2061C21620C56F5F008C7424 /* HJVideoUIManager.m in Sources */,
 				2086642D20AB403D00D51CCB /* prng.c in Sources */,
 				2086643720AB403D00D51CCB /* SSZipArchive.m in Sources */,

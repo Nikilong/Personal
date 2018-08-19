@@ -9,6 +9,7 @@
 #import "XMWifiGroupTool.h"
 #import "XMWifiTransModel.h"
 #import "SSZipArchive.h"
+#import "XMTimeTool.h"
 
 @implementation XMWifiGroupTool
 
@@ -29,7 +30,7 @@ static NSString *currentGroupName = @"默认";
         [[NSFileManager defaultManager] createDirectoryAtPath:backupDirPath withIntermediateDirectories:YES attributes:nil error:nil];
     }
     // 保存到"备份"文件夹 ..../备份/config_日期.zip
-    NSString *zipPath = [NSString stringWithFormat:@"%@/%@_%@.zip",backupDirPath,settingZipFilePre,[self dateChangeToString:[NSDate date]]];
+    NSString *zipPath = [NSString stringWithFormat:@"%@/%@_%@.zip",backupDirPath,settingZipFilePre,[XMTimeTool dateChangeToString:[NSDate date] formatString:@"YYYYMMdd_HH时mm分ss秒"]];
     NSArray *saveFilesPathArr =[XMSavePathUnit getSettingFilesPaths];
     // 压缩多个文件
     return [SSZipArchive createZipFileAtPath:zipPath withFilesAtPaths:saveFilesPathArr];
@@ -42,7 +43,7 @@ static NSString *currentGroupName = @"默认";
     if (![[NSFileManager defaultManager] fileExistsAtPath:backupDirPath]){
         [[NSFileManager defaultManager] createDirectoryAtPath:backupDirPath withIntermediateDirectories:YES attributes:nil error:nil];
     }
-    NSString *zipPath = [NSString stringWithFormat:@"%@/dirs_%@.zip",backupDirPath,[self dateChangeToString:[NSDate date]]];
+    NSString *zipPath = [NSString stringWithFormat:@"%@/dirs_%@.zip",backupDirPath,[XMTimeTool dateChangeToString:[NSDate date] formatString:@"YYYYMMdd_HH时mm分ss秒"]];
     NSString *tmpDirPatn = [[XMSavePathUnit getTmpPath] stringByAppendingPathComponent:@"backup"];
     // 备份前检查临时文件是否存在,没有就创建空文件夹,有就删除
     if ([[NSFileManager defaultManager] fileExistsAtPath:tmpDirPatn]){
@@ -298,19 +299,6 @@ static NSString *currentGroupName = @"默认";
         return NO;
     }
     return YES;
-}
-
-/// 获取字符串的时间戳
-+ (NSString *)dateChangeToString:(NSDate *)date{
-    
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    //设置你想要的格式,hh与HH的区别:分别表示12小时制,24小时制
-    [formatter setDateFormat:@"YYYYMMdd_HH时mm分ss秒"];
-//    NSDate *datenow = [NSDate date];
-    //将nsdate按formatter格式转成nsstring
-    NSString *currentTimeString = [formatter stringFromDate:date];
-    return currentTimeString;
-    
 }
 
 @end

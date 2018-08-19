@@ -8,12 +8,13 @@
 
 #import "XMHomeTableViewController.h"
 #import "XMWebTableViewCell.h"
-#import "XMChannelModel.h"
+#import "XMChannelModelLogic.h"
 
 #import "XMMainViewController.h"
 #import "MBProgressHUD+NK.h"
 
 #import "XMRefreshHeaderView.h"
+#import "XMWebModelLogic.h"
 
 CGFloat const XMRowHeight = 100;
 CGFloat const XMRrfreshHeight = 100;
@@ -24,6 +25,11 @@ CGFloat const XMRrfreshHeight = 100;
 @property (nonatomic, strong) NSMutableArray *webs;
 // 最新加载的新闻
 @property (nonatomic, strong) NSMutableArray *freshWebsArr;
+// 历史新闻
+@property (nonatomic, strong) NSMutableArray *historyNewsArr;
+// 第一组headerView的标题
+@property (nonatomic, copy) NSString *headerVTitle;
+
 
 // 下拉刷新条幅
 @property (nonatomic, weak) UIButton *headerRefreshV;
@@ -61,6 +67,22 @@ CGFloat const XMRrfreshHeight = 100;
     return _freshWebsArr;
 }
 
+- (NSMutableArray *)historyNewsArr{
+    
+    if (_historyNewsArr == nil){
+        XMChannelModel *model = [XMChannelModelLogic channels][self.currentChannel];
+        _historyNewsArr = [NSMutableArray arrayWithArray:[XMWebModelLogic unarchiveHistoryNewsArrayWithChannel:model.channel]];
+    }
+    return _historyNewsArr;
+}
+
+- (NSString *)headerVTitle{
+    if (!_headerVTitle){
+        XMChannelModel *model = [XMChannelModelLogic channels][self.currentChannel];
+        _headerVTitle = [XMWebModelLogic getHistoryNewUpdateTimeWithChannel:model.channel];
+    }
+    return _headerVTitle;
+}
 
 #pragma mark - 初始化
 
@@ -133,17 +155,6 @@ CGFloat const XMRrfreshHeight = 100;
             [countLabel removeFromSuperview];
         }];
     }];
-}
-
-#pragma mark - 频道切换
-- (void)setCurrentChannel:(NSUInteger)currentChannel{
-    _currentChannel = currentChannel;
-    
-    // 清空当前频道的新闻
-    self.webs = nil;
-    
-    // 刷新一波新闻
-    [self refresh];
 }
 
 #pragma mark - 快速滚动到顶部和底部
@@ -242,9 +253,72 @@ CGFloat const XMRrfreshHeight = 100;
     
 }
 
+#pragma mark - 频道切换
+- (void)setCurrentChannel:(NSUInteger)currentChannel{
+    
+    _currentChannel = currentChannel;
+    
+    // 刷新一波新闻
+    [self refresh];
+}
+
 #pragma mark - uitableview 的基本实现
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
+    if(self.historyNewsArr.count > 0){
+        // 必须返回一个不为空的标题才会显示headerview
+        return section == 1 ? @"历史新闻" : @"";
+    }else{
+        return @"";
+    }
+    
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
+    if(section == 1){
+        // 标题栏
+        UIView *headerV  = [[UIView alloc] initWithFrame:CGRectMake(0, 0, XMScreenW, 25)];
+        headerV.backgroundColor = RGB(242, 242, 242);
+        
+        UILabel *titleLab = [[UILabel alloc] initWithFrame:headerV.bounds];
+        titleLab.textAlignment = NSTextAlignmentCenter;
+        titleLab.textColor = [UIColor grayColor];
+        [headerV addSubview:titleLab];
+        
+        // 设置字体样式
+        NSMutableAttributedString *str = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@看到了这里，点击刷新",self.headerVTitle]];
+        // 设置第一行样式
+        NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+        dict[NSFontAttributeName] = [UIFont boldSystemFontOfSize:11];
+        [str setAttributes:dict range:NSMakeRange(0, str.length - 5)];
+        
+        // 设置"点击刷新"的样式
+        NSMutableDictionary *dictChannel = [NSMutableDictionary dictionary];
+        dictChannel[NSFontAttributeName] = [UIFont boldSystemFontOfSize:11];
+        dictChannel[NSForegroundColorAttributeName] = RGB(48, 107, 255);
+        [str setAttributes:dictChannel range:NSMakeRange(str.length - 4, 4)];
+        titleLab.attributedText = str;
+        
+        // 添加点击刷新的手势
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(refresh)];
+        [headerV addGestureRecognizer:tap];
+    
+        return headerV;
+    }else{
+        return [[UIView alloc] init];
+    }
+    
+}
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+    return (self.historyNewsArr.count > 0) ? 2 : 1;
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return self.webs.count;
+    if(self.historyNewsArr.count > 0){
+        return section == 0 ? self.webs.count : self.historyNewsArr.count;
+    }else{
+        return self.webs.count;
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -252,7 +326,12 @@ CGFloat const XMRrfreshHeight = 100;
     XMWebTableViewCell *cell = [XMWebTableViewCell cellWithTableView:tableView];
     
     //设置cell的其他信息
-    XMWebModel *model = self.webs[indexPath.row];
+    XMWebModel *model;
+    if(indexPath.section == 0){
+        model = self.webs[indexPath.row];
+    }else if(indexPath.section == 1){
+        model = self.historyNewsArr[indexPath.row];
+    }
     cell.model = model;
 
     return cell;
@@ -261,7 +340,12 @@ CGFloat const XMRrfreshHeight = 100;
 // 根据选中哪一行播放相关的新闻
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     // 取出对应的模型
-    XMWebModel *model = self.webs[indexPath.row];
+    XMWebModel *model;
+    if(indexPath.section == 0){
+        model = self.webs[indexPath.row];
+    }else if(indexPath.section == 1){
+        model = self.historyNewsArr[indexPath.row];
+    }
 
     // 通知代理发送网络请求
     if ([self.delegate respondsToSelector:@selector(openWebmoduleRequest:)]){
@@ -274,8 +358,10 @@ CGFloat const XMRrfreshHeight = 100;
     
     // 当前正在刷新则返回避免连续刷新
     if(self.isRefreshing) return;
+    // 设置tableview的下拉偏移
+    [self.tableView setContentOffset:CGPointMake(0, -XMRrfreshHeight)];
     // 开启网络加载
-//    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     self.isRefreshing = YES;
     // 0,设置下拉标题提示用户正在刷新
     self.headerRefreshV.enabled = YES;
@@ -289,7 +375,7 @@ CGFloat const XMRrfreshHeight = 100;
     
     // 2,创建url
     // 取出当前频道
-    XMChannelModel *model = [XMChannelModel channels][self.currentChannel];
+    XMChannelModel *model = [XMChannelModelLogic channels][self.currentChannel];
     NSURL *idUrl = [NSURL URLWithString:model.url];
     
     // 3,创建一个下载任务，类型为NSURLSessionDataTask
@@ -311,7 +397,7 @@ CGFloat const XMRrfreshHeight = 100;
             }
             dispatch_async(dispatch_get_main_queue(), ^{
                 // 关闭网络加载
-//                [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+                [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
                 // 恢复刷新
                 self.isRefreshing = NO;
                 // 移除动画
@@ -343,18 +429,64 @@ CGFloat const XMRrfreshHeight = 100;
 
 // 根据dict更新数据
 - (void)dealJsonDataWithDict:(NSDictionary *)dict{
-    
+    /// --1.更新数据前准备
     // 根据屏幕高度除以每个cell高度(100)去请求个数,适应不同的屏幕
     NSUInteger refreshCount = (NSUInteger)(XMScreenH / 100);
     // 取出当前频道
-    XMChannelModel *model = [XMChannelModel channels][self.currentChannel];
-    if ([model.channel isEqualToString:@"时尚"]){
-        [self.freshWebsArr addObjectsFromArray:[XMWebModel websWithDict:dict refreshCount:refreshCount keyWordArray:model.tags]];
-    }else if ([model.channel isEqualToString:@"段子"]){
-        [self.freshWebsArr addObjectsFromArray:[XMWebModel websWithDict:dict refreshCount:refreshCount keyWordArray:nil]];
-    }else{
-        [self.freshWebsArr addObjectsFromArray:[XMWebModel websWithDict:dict refreshCount:refreshCount keyWordArray:nil]];
-    }
+    XMChannelModel *model = [XMChannelModelLogic channels][self.currentChannel];
+    
+    // 先保存上一次刷新时间
+    self.headerVTitle = [XMWebModelLogic getHistoryNewUpdateTimeWithChannel:model.channel];
+    // 先清空并加载历史数据,防止最新加载的数据同时在第0组和第1组展示
+    NSUInteger oldHisNewsCount = self.historyNewsArr.count;
+    self.historyNewsArr = nil;
+    [self historyNewsArr];
+    
+    
+//    // 告知系统第1组的数据变化
+//    [self.tableView beginUpdates];
+//
+//    if (oldHisNewsCount > 0 && !self.historyNewsArr.count){
+//        // 原本有历史组,新切换的频道没有历史组,需删除一个组
+//        [self.tableView deleteSections:[[NSIndexSet alloc] initWithIndex:1] withRowAnimation:UITableViewRowAnimationFade];
+//    }else if (!(oldHisNewsCount > 0) && self.historyNewsArr.count > 0){
+//        // 原本没有历史组,新切换的频道有历史组,需增加一个组
+//        [self.tableView insertSections:[[NSIndexSet alloc] initWithIndex:1] withRowAnimation:UITableViewRowAnimationFade];
+//    }
+//
+//    // 历史数据组,必须保持cell的个数统一,需要作出相应的insert或者delete
+//    if (oldHisNewsCount > 0 && self.historyNewsArr.count > 0){
+//        if (self.historyNewsArr.count > oldHisNewsCount){
+//            // 新数组大于旧数组,需要增加对应的cell空位
+//            NSUInteger newMinisOldCount = self.historyNewsArr.count - oldHisNewsCount;
+//            NSMutableArray *arr = [NSMutableArray array];
+//            for (int i = 0; i < newMinisOldCount; i++) {
+//                [arr addObject:[NSIndexPath indexPathForRow:oldHisNewsCount + i inSection:1]];
+//            }
+//            [self.tableView insertRowsAtIndexPaths:arr withRowAnimation:UITableViewRowAnimationFade];
+//        }else{
+//            // 新数组长度小于旧数据,这需要删除多余的旧cell
+//            NSUInteger newMinisOldCount = oldHisNewsCount - self.historyNewsArr.count;
+//            for (int i = 1; i < newMinisOldCount + 1; i++) {
+//                [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:oldHisNewsCount - i inSection:1]] withRowAnimation:UITableViewRowAnimationFade];
+//            }
+//        }
+//    
+//    }
+//
+//    [self.tableView endUpdates];
+    
+    //    if ([model.channel isEqualToString:@"时尚"]){
+    //        [self.freshWebsArr addObjectsFromArray:[XMWebModel websWithDict:dict refreshCount:refreshCount keyWordArray:model.tags]];
+    //    }else if ([model.channel isEqualToString:@"段子"]){
+    //        [self.freshWebsArr addObjectsFromArray:[XMWebModel websWithDict:dict refreshCount:refreshCount keyWordArray:nil]];
+    //    }else{
+    //        [self.freshWebsArr addObjectsFromArray:[XMWebModel websWithDict:dict refreshCount:refreshCount keyWordArray:nil]];
+    //    }
+    
+    
+    /// --2.更新数据源
+    [self.freshWebsArr addObjectsFromArray:[XMWebModelLogic websWithDict:dict refreshCount:refreshCount keyWordArray:nil channel:model.channel]];
     // 未加载够足够新闻再次请求加载数据
     if (self.freshWebsArr.count < refreshCount){
         // 防止死循环无限加载数据
@@ -372,20 +504,13 @@ CGFloat const XMRrfreshHeight = 100;
 //    NSString *jsonStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
 //    NSLog(@"这是全部数据%@",jsonStr);
      */
-    // 拼接新刷新的数据到最前面
-    if (self.webs.count){
-        
-        [self.freshWebsArr addObjectsFromArray:self.webs];
-    }
-    self.webs = self.freshWebsArr;
+    // 清空第0组数据
+    self.webs = nil;
+    self.webs = [NSMutableArray arrayWithArray:self.freshWebsArr];
     // 清空中转数组
     self.freshWebsArr = nil;
     
-    if (self.webs.count > 30){
-        for (int i = 0; i < refreshCount;i++) {
-            [self.webs removeLastObject];
-        }
-    }
+    /// --3.更新tableview的cell数据
     // 6，回到主线程设置cell的信息
     [self backToMainQueueWithMessage:[NSString stringWithFormat:@"成功加载%zd条新闻",acturallyCount]];
 }
@@ -394,21 +519,23 @@ CGFloat const XMRrfreshHeight = 100;
 - (void)backToMainQueueWithMessage:(NSString *)message{
     
     // 6，回到主线程设置cell的信息
+    __weak typeof(self) weakSelf = self;
     [[NSOperationQueue mainQueue] addOperationWithBlock:^{
         
         // 结束刷新
         [UIView animateWithDuration:0.25 animations:^{
-            self.tableView.contentInset = UIEdgeInsetsMake(44 + XMStatusBarHeight, 0, 0, 0);
+            weakSelf.tableView.contentInset = UIEdgeInsetsMake(44 + XMStatusBarHeight, 0, 0, 0);
         }completion:^(BOOL finished) {
             // 滚到最顶部
-            [self upToTop];
+            [weakSelf upToTop];
         }];
         
         // 提示用户刷新成功
-        [self setRefreshCount:message];
+        [weakSelf setRefreshCount:message];
         
         // 刷新表格
-        [self.tableView reloadData];
+        [weakSelf.tableView reloadData];
+//        [weakSelf.tableView reloadSections:[[NSIndexSet alloc] initWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
     }];
 }
 

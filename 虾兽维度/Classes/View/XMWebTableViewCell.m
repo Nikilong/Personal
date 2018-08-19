@@ -10,6 +10,7 @@
 #import "XMWebModel.h"
 #import "XMWifiTransModel.h"
 #import "UIImageView+WebCache.h"
+#import "XMVisualView.h"
 
 @interface XMWebTableViewCell()
 
@@ -99,9 +100,54 @@
     
     if (cell == nil) {
         cell = [[[NSBundle mainBundle] loadNibNamed:@"XMWebTableViewCell" owner:nil options:nil] lastObject];
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:cell action:@selector(tapToShowBigImage)];
+        [cell.imageV addGestureRecognizer:tap];
+        cell.imageV.userInteractionEnabled = YES;
     }
     
     return cell;
 }
+
+
+/// 展示大图
+- (void)tapToShowBigImage{
+    if (self.model){
+        [XMVisualView creatVisualImageViewWithImage:self.model.imageURL];
+    }
+}
+
+///// 取消大图
+//- (void)removeBigImage:(UITapGestureRecognizer *)tap{
+//    [tap.view removeFromSuperview];
+//}
+//
+//{
+//    // 底部手势区域
+//    UIView *containV = [[UIView alloc] initWithFrame:CGRectMake(0, 0, XMScreenW, XMScreenH)];
+//    containV.backgroundColor = [UIColor clearColor];
+//    
+//    // 毛玻璃
+//    UIBlurEffect *blur = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
+//    UIVisualEffectView *effV = [[UIVisualEffectView alloc] initWithEffect:blur];
+//    effV.frame = containV.bounds;
+//    
+//    // 相框
+//    UIImageView *imgV = [[UIImageView alloc] initWithFrame:containV.bounds];
+//    imgV.userInteractionEnabled = YES;
+//    imgV.contentMode = UIViewContentModeScaleAspectFit;
+//    [imgV sd_setImageWithURL:self.model.imageURL];
+//    
+//    // 主窗口
+//    UIWindow *window = [UIApplication sharedApplication].keyWindow;
+//    
+//    // 依次添加视图
+//    [containV addSubview:effV];
+//    [effV.contentView addSubview:imgV];
+//    [window addSubview:containV];
+//    
+//    // 添加点击移除手势
+//    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(removeBigImage:)];
+//    [containV addGestureRecognizer:tap];
+//}
 
 @end

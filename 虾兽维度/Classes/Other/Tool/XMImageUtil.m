@@ -12,6 +12,7 @@
 #import "MBProgressHUD+NK.h"
 #import <ImageIO/ImageIO.h>
 #import "XMWifiGroupTool.h"
+#import "XMTimeTool.h"
 
 @implementation XMImageUtil
 
@@ -197,6 +198,51 @@
     return imageS;
 }
 
+/// 将图片(url的string)保存到沙盒本地文件
++ (void)saveToLocalTempDirPicture:(NSString *)imageUrl{
+    NSString *path = [XMSavePathUnit getWifiImageTempDirPath];
+    // 确保文件文件夹以及上一级文件夹存在
+    if (![[NSFileManager defaultManager] fileExistsAtPath:[XMSavePathUnit getWifiUploadDirPath]]){
+        [[NSFileManager defaultManager] createDirectoryAtPath:[XMSavePathUnit getWifiUploadDirPath] withIntermediateDirectories:NO attributes:nil error:nil];
+    }
+    if (![[NSFileManager defaultManager] fileExistsAtPath:path]){
+        [[NSFileManager defaultManager] createDirectoryAtPath:path withIntermediateDirectories:NO attributes:nil error:nil];
+    }
+    [self savePictrue:imageUrl path:path callBackViewController:nil];
+}
+
+/// 将图片(UIImage)保存到沙盒本地文件
++ (void)saveToLocalTempDirWithImage:(UIImage *)image{
+    NSString *path = [XMSavePathUnit getWifiImageTempDirPath];
+    // 确保文件文件夹以及上一级文件夹存在
+    if (![[NSFileManager defaultManager] fileExistsAtPath:[XMSavePathUnit getWifiUploadDirPath]]){
+        [[NSFileManager defaultManager] createDirectoryAtPath:[XMSavePathUnit getWifiUploadDirPath] withIntermediateDirectories:NO attributes:nil error:nil];
+    }
+    if (![[NSFileManager defaultManager] fileExistsAtPath:path]){
+        [[NSFileManager defaultManager] createDirectoryAtPath:path withIntermediateDirectories:NO attributes:nil error:nil];
+    }
+    
+    // 拼接文件名
+    NSString *filePath = [path stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.jpg",[XMTimeTool dateChangeToString:[NSDate date] formatString:@"YYYYMMdd_HH时mm分ss秒"]]];
+    
+    // 转为NSData保存
+    NSData *data = UIImageJPEGRepresentation(image, 0.7);
+    BOOL result = [data writeToFile:filePath atomically:YES];
+    [MBProgressHUD showResult:result message:nil];
+}
+
+/// 将图片(UIImage)保存到设备相册
++ (void)saveToAlbumWithImage:(UIImage *)image{
+    UIViewController *vc = [UIApplication sharedApplication].keyWindow.rootViewController;
+    
+    //要保存到本地相册,控制器必须实现@selector(image:didFinishSavingWithError:contextInfo:),目前指定到XMNavigationController
+    if([vc isKindOfClass:NSClassFromString(@"XMNavigationController")]){
+        UIImageWriteToSavedPhotosAlbum(image, vc, @selector(image:didFinishSavingWithError:contextInfo:), NULL);
+    }else{
+        [MBProgressHUD showFailed:@"未知原因"];
+    }
+}
+
 
 /**
  通过url保存网络的图片或者gif到本地或者相册
@@ -223,7 +269,7 @@
         NSData * imageData = [NSData dataWithContentsOfURL:location];
         if(path){
             // 如果path存在,那么保存到本地
-            NSString *filePath = [path stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@",[XMWifiGroupTool dateChangeToString:[NSDate date]],extent]];
+            NSString *filePath = [path stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@",[XMTimeTool dateChangeToString:[NSDate date] formatString:@"YYYYMMdd_HH时mm分ss秒"],extent]];
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                 BOOL result = [imageData writeToFile:filePath atomically:YES];
                 dispatch_async(dispatch_get_main_queue(), ^{

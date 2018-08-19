@@ -8,6 +8,7 @@
 
 #import "XMNavTitleTableViewController.h"
 #import "XMChannelModel.h"
+#import "XMChannelModelLogic.h"
 #import "XMTextTableViewCell.h"
 
 @interface XMNavTitleTableViewController ()
@@ -21,7 +22,7 @@
 
 - (NSArray *)channelArr{
     if (!_channelArr){
-        _channelArr = [XMChannelModel channels];
+        _channelArr = [XMChannelModelLogic channels];
     }
     return _channelArr;
 }
