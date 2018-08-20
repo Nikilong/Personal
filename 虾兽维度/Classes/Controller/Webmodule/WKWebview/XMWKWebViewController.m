@@ -23,6 +23,7 @@
 #import <WebKit/WebKit.h>
 #import "NSURLProtocol+WKWebview.h"
 #import "XMVisualView.h"
+#import "XMPhotoCollectionViewController.h"
 
 
 @interface XMWKWebViewController ()<
@@ -92,6 +93,9 @@ XMVisualViewDelegate>
 @property (nonatomic, strong) UIView *statusBar;
 // 状态栏遮罩
 @property (weak, nonatomic)  UIView *statusCover;
+
+/// 图片组
+@property (nonatomic, strong) NSArray *imageArr;
 
 @end
 
@@ -184,6 +188,11 @@ static double backForwardSafeDistance = 80.0;
         swipDown.delegate = self;
         swipDown.direction = UISwipeGestureRecognizerDirectionDown;
         swipDown.numberOfTouchesRequired = 2;
+        
+        // 图片点击手势
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(webviewDidTap:)];
+        tap.delegate = self;
+        [_wkWebview addGestureRecognizer:tap];
         
     }
     return _wkWebview;
@@ -338,6 +347,13 @@ static double backForwardSafeDistance = 80.0;
         [statusCover addGestureRecognizer:tap];
     }
     return _statusCover;
+}
+
+- (NSArray *)imageArr{
+    if (!_imageArr) {
+        _imageArr = [NSArray array];
+    }
+    return _imageArr;
 }
 
 - (void)setModel:(XMWebModel *)model{
@@ -732,15 +748,6 @@ static double backForwardSafeDistance = 80.0;
     }]];
     [tips addAction:[UIAlertAction actionWithTitle:@"保存图片到本地缓存" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
         [XMImageUtil saveToLocalTempDirPicture:imageUrl];
-//        NSString *path = [XMSavePathUnit getWifiImageTempDirPath];
-//        // 确保文件文件夹以及上一级文件夹存在
-//        if (![[NSFileManager defaultManager] fileExistsAtPath:[XMSavePathUnit getWifiUploadDirPath]]){
-//            [[NSFileManager defaultManager] createDirectoryAtPath:[XMSavePathUnit getWifiUploadDirPath] withIntermediateDirectories:NO attributes:nil error:nil];
-//        }
-//        if (![[NSFileManager defaultManager] fileExistsAtPath:path]){
-//            [[NSFileManager defaultManager] createDirectoryAtPath:path withIntermediateDirectories:NO attributes:nil error:nil];
-//        }
-//        [XMImageUtil savePictrue:imageUrl path:path callBackViewController:weakSelf];
     }]];
     
     // 判断是否含有二维码
@@ -891,6 +898,9 @@ static double backForwardSafeDistance = 80.0;
     // 删除广告节点
     [self webDidRemoveNode];
     
+    // 检查是否可以图片模式
+    [self checkImagesMode];
+    
     // 完成一个网络加载
     [self finishNewWebRequestCount];
 }
@@ -961,6 +971,17 @@ static double backForwardSafeDistance = 80.0;
         // 百度新闻底部广告 id=oTLzC class= first-card-body
         [self.wkWebview evaluateJavaScript:@"document.body.removeChild(document.getElementsByClassName('first-card-main')[0])" completionHandler:nil];
     });
+    
+}
+
+- (void)checkImagesMode{
+    __weak typeof(self) weakSelf = self;
+    [self.wkWebview evaluateJavaScript:@"function xmGetImagesUrl(){var imageList = xissJsonData.images;var imageURLList = new Array();for (i=0;i<imageList.length;i++){imageURLList.push(imageList[i].url);};return imageURLList;};xmGetImagesUrl();" completionHandler:^(id _Nullable result, NSError * _Nullable error) {
+        NSArray  *imageArr = [NSArray arrayWithArray:result];
+        if(imageArr.count > 0){
+            weakSelf.imageArr = imageArr;
+        }
+    }];
     
 }
 
@@ -1082,6 +1103,42 @@ static double backForwardSafeDistance = 80.0;
 
 
 #pragma mark - 手势
+
+#pragma mark 点击手势
+- (void)webviewDidTap:(UITapGestureRecognizer *)tap{
+    CGPoint touchPoint = [tap locationInView:self.wkWebview];
+    NSString *imgURL = [NSString stringWithFormat:@"document.elementFromPoint(%f, %f).src", touchPoint.x, touchPoint.y];
+    __weak typeof(self) weakSelf = self;
+    [self.wkWebview evaluateJavaScript:imgURL completionHandler:^(id _Nullable result, NSError * _Nullable error) {
+        NSString *urlToSave = (NSString *)result;
+        // 有地址证明长按了图片区域
+        if (urlToSave.length > 0){
+            // 找出点击的图片的序号
+            NSUInteger index = 0;
+            for (NSUInteger i = 0; i < self.imageArr.count; i++) {
+                NSString *eleUrl = self.imageArr[i];
+                // 警告:目前发现uc点击得到的地址包含从网页提取的地址,此处可能有隐患
+                if([urlToSave containsString:eleUrl]){
+                    index = i;
+                    break;
+                }
+            }
+            [weakSelf callPhotoDisplayViewcontrollerWithIndex:index];
+        }
+    }];
+}
+
+- (void)callPhotoDisplayViewcontrollerWithIndex:(NSUInteger)index{
+    UICollectionViewFlowLayout * layout = [[UICollectionViewFlowLayout alloc] init];
+    layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+    XMPhotoCollectionViewController *photoVC = [[XMPhotoCollectionViewController alloc] initWithCollectionViewLayout:layout];
+    photoVC.sourceType = XMPhotoDisplayImageSourceTypeWebURL;
+    photoVC.photoModelArr = self.imageArr;
+    photoVC.selectImgIndex = index;
+    photoVC.collectionView.contentSize = CGSizeMake(XMScreenW * self.imageArr.count, XMScreenH);
+    [self.navigationController pushViewController:photoVC animated:YES];
+}
+
 #pragma mark 右划关闭webmodule
 /**
  双击恢复正常缩放

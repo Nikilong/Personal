@@ -1058,12 +1058,11 @@ UIGestureRecognizerDelegate>
         UICollectionViewFlowLayout * layout = [[UICollectionViewFlowLayout alloc]init];
         layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
         XMPhotoCollectionViewController *photoVC = [[XMPhotoCollectionViewController alloc] initWithCollectionViewLayout:layout];
+        photoVC.sourceType = XMPhotoDisplayImageSourceTypeLocalPath;
         photoVC.clickImageF = imgF;
         photoVC.clickCellH = cell.frame.size.height;
         photoVC.selectImgIndex = currentImgIndex;
         photoVC.photoModelArr = imgArr;
-        photoVC.cellSize = CGSizeMake(XMScreenW, XMScreenH);
-        photoVC.cellInset = UIEdgeInsetsMake(- (44 + XMStatusBarHeight), 0, 0, 0);
         photoVC.collectionView.contentSize = CGSizeMake(XMScreenW * imgArr.count, XMScreenH);
         [self.navigationController pushViewController:photoVC animated:YES];
     

@@ -11,6 +11,7 @@
 #import "XMPhotoCollectionViewCell.h"
 #import "MBProgressHUD+NK.h"
 #import "XMImageUtil.h"
+#import "UIImageView+WebCache.h"
 
 @interface XMPhotoCollectionViewController ()<UIScrollViewDelegate,UICollectionViewDelegateFlowLayout,UIGestureRecognizerDelegate>
 
@@ -25,10 +26,8 @@
 /**拖拽图片退出浏览的相关变量**/
 @property (strong, nonatomic)  UIImageView *panBgImgV;    // 背景截图相框
 @property (weak, nonatomic)  XMPhotoCollectionViewCell *currentCell;  // 当前拖拽的cell
-@property (nonatomic, assign)  CGFloat starY;  // 拖拽图片开始的y坐标
+@property (nonatomic, assign)  CGPoint starP;  // 拖拽图片开始的坐标点
 @property (nonatomic, assign)  CGSize startSize;  // 拖拽开始图片的尺寸
-@property (nonatomic, assign)  CGFloat currentY; // 拖拽图片的实时y坐标
-@property (nonatomic, assign)  CGPoint panPoint;  // 拖拽移动的距离
 /**拖拽图片退出浏览的相关变量**/
 
 
@@ -39,23 +38,10 @@
 static NSString * const reuseIdentifier = @"XMPhotoCell";
 static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览的距离
 
-- (UILabel *)titLab{
-    if (!_titLab){
-        // 添加标题栏
-        UILabel *lab = [[UILabel alloc] initWithFrame:CGRectMake(0, XMStatusBarHeight, XMScreenW, 44)];
-        [self.view addSubview:lab];
-        _titLab = lab;
-        lab.textAlignment = NSTextAlignmentCenter;
-        lab.backgroundColor = [UIColor clearColor];
-        lab.textColor = [UIColor whiteColor];
-    }
-    return _titLab;
-}
 - (UIImageView *)panBgImgV{
     if (!_panBgImgV){
-        _panBgImgV = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, XMScreenW, XMScreenH)];
-        _panBgImgV.backgroundColor = [UIColor orangeColor];
-        
+        _panBgImgV = [[UIImageView alloc] initWithFrame:CGRectMake(0, -XMStatusBarHeight, XMScreenW, XMScreenH)];
+        _panBgImgV.hidden = YES;
     }
     return _panBgImgV;
 }
@@ -78,23 +64,33 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
     // 添加图片手势
     [self addImageGesture];
     
-    // 设置导航栏按钮
-    [self setNavBarItem];
+    // 设置工具按钮
+    [self setToolKit];
 }
     
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    // 禁用左侧返回手势
+    // 禁用左侧返回手势,导航栏隐藏,采用白色主题的状态栏
     self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+    self.navigationController.navigationBar.hidden = YES;
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     
     // 截图
     [self.panBgImgV setImage:[XMImageUtil screenShot]];
 }
 
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    // 在这里插入背景图片
+    [self.collectionView insertSubview:self.panBgImgV atIndex:0];
+
+}
+
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
-    // 恢复左侧返回手势,显示导航栏
+    // 导航栏显示,采用黑色主题的状态栏
     self.navigationController.navigationBar.hidden = NO;
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
     
     // 移除定时器
     [self stopTimer];
@@ -108,49 +104,64 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
 
 - (void)dealloc{
     NSLog(@"XMPhotoCollectionViewController----%s",__func__);
-
 }
 
-- (void)setNavBarItem{
-    UIBarButtonItem *backBtn = [[UIBarButtonItem alloc] initWithTitle:@"返回" style:UIBarButtonItemStylePlain target:self action:@selector(dismiss:)];
-    UIBarButtonItem *gifTimeBtn = [[UIBarButtonItem alloc] initWithTitle:@"12.5帧" style:UIBarButtonItemStylePlain target:self action:@selector(changeGifTimeInterval:)];
-    self.navigationItem.leftBarButtonItems = @[backBtn,gifTimeBtn];
-    
-    UIButton *timerBtn = [UIButton buttonWithType:UIButtonTypeSystem];
-    self.timerBtn = timerBtn;
-    timerBtn.frame = CGRectMake(0, 0, 44, 44);
-    [timerBtn addTarget:self action:@selector(toggleTimer:) forControlEvents:UIControlEventTouchUpInside];
-#warning undo 以后设置两张图片的颜色,然后选为UIButtonTypeCustom
-    [timerBtn setImage:[UIImage imageNamed:@"btn_play"] forState:UIControlStateNormal];
-//    [timerBtn setImage:[UIImage imageNamed:@"btn_pause"] forState:UIControlStateSelected];
-    UIBarButtonItem *beginBtn = [[UIBarButtonItem alloc] initWithCustomView:timerBtn];
-    UIBarButtonItem *timeSettingBtn = [[UIBarButtonItem alloc] initWithTitle:@"1.0s" style:UIBarButtonItemStylePlain target:self action:@selector(changeTimeInterval:)];
-    
-    self.navigationItem.rightBarButtonItems = @[beginBtn,timeSettingBtn];
 
+/// 设置工具按钮
+- (void)setToolKit{
+    
+    CGFloat toolBarH = 44;
+    CGFloat btnWH = 44;
+    
+    // 退出按钮(左上角)
+    UIButton *backBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 18, btnWH, btnWH)];
+    [backBtn setImage:[UIImage imageNamed:@"navTool_close_white"] forState:UIControlStateNormal];
+    [backBtn addTarget:self action:@selector(dismiss:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:backBtn];
+    
+    // 底部工具条的容器
+    UIView *bottomToolV = [[UIView alloc] initWithFrame:CGRectMake(0, XMScreenH - toolBarH, XMScreenW, toolBarH)];
+    [self.view addSubview:bottomToolV];
+    
+    // 页数标题(底部靠左)
+    UILabel *lab = [[UILabel alloc] initWithFrame:CGRectMake(0, -8, 60, 60)];
+    [bottomToolV addSubview:lab];
+    self.titLab = lab;
+    lab.textAlignment = NSTextAlignmentCenter;
+    lab.textColor = [UIColor whiteColor];
+    
+    // gif帧数按钮(底部靠右)
+    UIButton *gifTimeBtn = [[UIButton alloc] initWithFrame:CGRectMake(XMScreenW - 60, 0, 60, btnWH)];
+    [gifTimeBtn setTitle:@"12.5帧" forState:UIControlStateNormal];
+    [gifTimeBtn addTarget:self action:@selector(changeGifTimeInterval:) forControlEvents:UIControlEventTouchUpInside];
+    [bottomToolV addSubview:gifTimeBtn];
+    
+    // 幻灯片间隔按钮(底部靠右)
+    UIButton *timeSettingBtn = [[UIButton alloc] initWithFrame:CGRectMake(XMScreenW - 120, 0, 60, btnWH)];
+    [timeSettingBtn setTitle:@"1.0s" forState:UIControlStateNormal];
+    [timeSettingBtn addTarget:self action:@selector(changeTimeInterval:) forControlEvents:UIControlEventTouchUpInside];
+    [bottomToolV addSubview:timeSettingBtn];
+    
+    // 播放按钮(底部居中显示)
+    UIButton *timerBtn = [[UIButton alloc] initWithFrame:CGRectMake((XMScreenW - btnWH) * 0.5 , 0, btnWH, btnWH)];
+    self.timerBtn = timerBtn;
+    [timerBtn addTarget:self action:@selector(toggleTimer:) forControlEvents:UIControlEventTouchUpInside];
+    [timerBtn setImage:[UIImage imageNamed:@"btn_play"] forState:UIControlStateNormal];
+    [timerBtn setImage:[UIImage imageNamed:@"btn_pause"] forState:UIControlStateSelected];
+    [bottomToolV addSubview:timerBtn];
+    
 }
     
 - (void)addImageGesture{
-    // 添加点击手势(单点隐藏/显示导航栏)
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapCollectionView:)];
-    [self.collectionView addGestureRecognizer:tap];
+
     // 添加点击手势(双击放大/复原)
     UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didDoubleTapCollectionView:)];
     doubleTap.numberOfTapsRequired = 2;
     [self.collectionView addGestureRecognizer:doubleTap];
     
-    [tap requireGestureRecognizerToFail:doubleTap];
-    
     // 向下滑动,退出照片
     UIPanGestureRecognizer *cancelPan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panToDismiss:)];
     [self.collectionView addGestureRecognizer:cancelPan];
-    
-    // 向下轻扫,退出照片(效果不好,屏蔽该功能)
-//    UISwipeGestureRecognizer *swipeD = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeToDismiss:)];
-//    swipeD.delegate = self;
-//    swipeD.direction = UISwipeGestureRecognizerDirectionDown;
-//    [self.collectionView addGestureRecognizer:swipeD];
-////    [cancelPan requireGestureRecognizerToFail:swipeD];
     
     // 向右滑,上一张图片
     UISwipeGestureRecognizer *swipeR = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(preImage:)];
@@ -169,7 +180,7 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
     [cancelPan requireGestureRecognizerToFail:swipeL];
 }
 
-#pragma mark - 导航栏店家时间
+#pragma mark - 工具按钮点击事件
 #pragma mark 定时器与幻灯片播放
 
 /// 开启/关闭定时
@@ -188,7 +199,7 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
 /// 开启定时器
 - (void)beginTimer{
     if (!self.timer){
-        [self.timerBtn setImage:[UIImage imageNamed:@"btn_pause"] forState:UIControlStateNormal];
+        self.timerBtn.selected = YES;
         NSTimer *timer = [NSTimer timerWithTimeInterval:self.timeInterval target:self selector:@selector(displayImages) userInfo:nil repeats:YES];
         [[NSRunLoop mainRunLoop] addTimer:timer forMode:NSDefaultRunLoopMode];
         self.timer = timer;
@@ -198,14 +209,14 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
 /// 关闭定时器
 - (void)stopTimer{
     if(self.timer){
-        [self.timerBtn setImage:[UIImage imageNamed:@"btn_play"] forState:UIControlStateNormal];
+        self.timerBtn.selected = NO;
         [self.timer invalidate];
         self.timer = nil;
     }
 }
     
 /// 设置幻灯片播放时间间隔
-- (void)changeTimeInterval:(UIBarButtonItem *)btn{
+- (void)changeTimeInterval:(UIButton *)btn{
     [self stopTimer];
     UIAlertController *tips = [UIAlertController alertControllerWithTitle:@"提示" message:@"输入幻灯片播放时间间隔(单位:秒)" preferredStyle:UIAlertControllerStyleAlert];
     __weak typeof(self) weakSelf = self;
@@ -213,7 +224,7 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
     [tips addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         UITextField *textF = tips.textFields[0];
         weakSelf.timeInterval = (textF.text.doubleValue && textF.text.doubleValue >= 0.5 ) ? textF.text.doubleValue : 2.0;
-        btn.title = [NSString stringWithFormat:@"%.1fs",weakSelf.timeInterval];
+        [btn setTitle:[NSString stringWithFormat:@"%.1fs",weakSelf.timeInterval] forState:UIControlStateNormal];
     }]];
     [tips addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField){
         textField.clearButtonMode = UITextFieldViewModeAlways;
@@ -236,8 +247,19 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
 }
 
 #pragma mark 其他
+/// 更新当前页面的索引标题
+- (void)updatePageTitleWithIndex:(NSUInteger)index{
+    NSMutableAttributedString *str = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%zd/%zd",index,self.photoModelArr.count]];
+    // 设置当前页样式
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    dict[NSFontAttributeName] = [UIFont systemFontOfSize:30];
+    [str setAttributes:dict range:NSMakeRange(0, [NSString stringWithFormat:@"%zd",index].length)];
+    
+    self.titLab.attributedText = str;
+}
+
 /// 设置gif每秒播放的帧数
-- (void)changeGifTimeInterval:(UIBarButtonItem *)btn{
+- (void)changeGifTimeInterval:(UIButton *)btn{
     [self stopTimer];
     UIAlertController *tips = [UIAlertController alertControllerWithTitle:@"提示" message:@"每秒播放的帧数" preferredStyle:UIAlertControllerStyleAlert];
     __weak typeof(self) weakSelf = self;
@@ -247,8 +269,7 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
         if(textF.text.integerValue > 0 ){
 
             weakSelf.gifTimeInterval = 1.0 / textF.text.integerValue;
-            btn.title = [NSString stringWithFormat:@"%ld帧",textF.text.integerValue];
-            
+            [btn setTitle:[NSString stringWithFormat:@"%ld帧",textF.text.integerValue] forState:UIControlStateNormal];
             [weakSelf.collectionView reloadData];
         }
     }]];
@@ -280,7 +301,7 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
         }
     }
 }
-    
+
 /// 下一张图片,左划
 - (void)nextImage:(UISwipeGestureRecognizer *)gest{
     if (gest.state == UIGestureRecognizerStateEnded){
@@ -297,26 +318,25 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
     [self stopTimer];
     
     NSIndexPath *index = [self.collectionView indexPathForItemAtPoint:[gest locationInView:self.collectionView]];
-    if ([gest isKindOfClass:[UISwipeGestureRecognizer class]]){
-        XMPhotoCollectionViewCell *cell = (XMPhotoCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:index];
-        self.currentCell = cell;
-        // 插入背景截图
-        [cell.imgScroV insertSubview:self.panBgImgV belowSubview:cell.imgV];
-    }
-        
+    
     // 缩放一半
     [UIView animateWithDuration:0.5f animations:^{
-        // 缩放到原来的cell的图片位置,x坐标就是原来图片cell的x,y坐标是原来的坐标减去图片切换造成的位置差 * cell的高度再加上self.collectionView的y偏移高度32,最后缩放的宽固定是cell的相框的高度,最后缩放的高度根据比例缩放
-        CGFloat finalX = self.clickImageF.origin.x;
-        CGFloat finalY = self.clickImageF.origin.y + self.currentCell.frame.origin.y  - (self.selectImgIndex - index.row) * self.clickCellH + ((self.navigationController.navigationBar.isHidden) ? 0 : (XMStatusBarHeight + 44));
-        CGFloat finalW = self.clickImageF.size.width;
-        CGFloat finalH = self.currentCell.imgV.frame.size.height * self.clickImageF.size.width / self.currentCell.imgV.frame.size.width;
-        self.currentCell.imgV.frame = CGRectMake( finalX, finalY, finalW , finalH);
+        // 如果指定了需要消失的终点,则移到终点,否则采取沿着y中心线向下边缩小边移动
+        if(self.clickImageF.size.width > 0){
+            // 缩放到原来的cell的图片位置,x坐标就是原来图片cell的x,y坐标是原来的坐标减去图片切换造成的位置差 * cell的高度再加上self.collectionView的y偏移高度32,最后缩放的宽固定是cell的相框的高度,最后缩放的高度根据比例缩放
+            CGFloat finalX = self.clickImageF.origin.x;
+//            CGFloat finalY = self.clickImageF.origin.y + self.currentCell.frame.origin.y  - (self.selectImgIndex - index.row) * self.clickCellH + ((self.navigationController.navigationBar.isHidden) ? 0 : (XMStatusBarHeight + 44));
+            CGFloat finalY = self.clickImageF.origin.y + self.currentCell.frame.origin.y  - (self.selectImgIndex - index.row) * self.clickCellH;
+            CGFloat finalW = self.clickImageF.size.width;
+            CGFloat finalH = self.currentCell.imgV.frame.size.height * self.clickImageF.size.width / self.currentCell.imgV.frame.size.width;
+            self.currentCell.imgV.frame = CGRectMake( finalX, finalY, finalW , finalH);
+        }else{
+            self.currentCell.imgV.frame = CGRectMake(CGRectGetMidX(self.currentCell.imgV.frame) - 50, XMScreenH, 100 , 100);
+        }
         
     }completion:^(BOOL finished) {
         if(finished){
             [self.navigationController popViewControllerAnimated:NO];
-            [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:NO];
         }
     }];
 }
@@ -324,67 +344,70 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
 /// 拖拽图片退出浏览
 -(void)panToDismiss:(UIPanGestureRecognizer *)pan{
     if(pan.state == UIGestureRecognizerStateChanged){
-        self.currentY = [pan locationInView:self.collectionView].y;
-        self.panPoint = [pan translationInView:pan.view];
         
+        CGPoint currentP = [pan locationInView:self.collectionView];
+        // 一开始的触点的y值与底部的距离作为总距离,越接近底部,ratio越大
+        CGFloat ratio = (currentP.y - self.starP.y) / (XMScreenH - self.starP.y);
         // 拖到一开始往上的位置时
-        if(self.currentY > self.starY){
+        if(currentP.y > self.starP.y){
+            // 越靠近底部,截图应该更加清晰,alpha也应该越大,即透明度是0->1
+            self.panBgImgV.alpha = ratio;
             self.panBgImgV.hidden = NO;
-//            self.panBgImgV.alpha = (ABS((self.currentY - self.starY) / panToDismissDistance) > 1) ? 1 : ABS((self.currentY - self.starY) / panToDismissDistance);
-            self.panBgImgV.alpha = ABS((self.currentY - self.starY) / (XMScreenH - self.starY));
         }else{
-            self.panBgImgV.hidden = YES;
             self.panBgImgV.alpha = 1;
+            self.panBgImgV.hidden = YES;
         }
         
-        // 改变图片位置
-        self.currentCell.imgV.transform = CGAffineTransformTranslate(self.currentCell.imgV.transform, self.panPoint.x, self.panPoint.y);
-        
-        // 图片缩放
-//        CGRect tarF = self.currentCell.imgV.frame;
-//        tarF.size = CGSizeMake(tarF.size.width * (self.currentY - self.starY) / (XMScreenH - self.starY), tarF.size.height * (self.currentY - self.starY) / (XMScreenH - self.starY));
-//        self.currentCell.imgV.frame = tarF;
-        if(self.panPoint.y > 0){  // 缩小
-#warning todo 缩放很慢时不理想
-            // 根据拖拽距离去缩放图片,近似用图片目前的比例和拖拽距离/总距离的比例乘以一个系数这两个比例来比较,系数越大,越早开始缩放;另外设置一个最小的缩放比例为0.33
-//            if (self.currentCell.imgV.frame.size.width / XMScreenW < (self.currentY - self.starY) / panToDismissDistance * 20  && self.currentCell.imgV.frame.size.width / XMScreenW > 0.33){
-            if (self.currentCell.imgV.frame.size.width / XMScreenW > 0.33){
-                self.currentCell.imgV.transform = CGAffineTransformScale(self.currentCell.imgV.transform, 0.99, 0.99);
-            }
-        }else{ // 放大
-            if ( self.currentCell.imgV.frame.size.width <= XMScreenW){
-                self.currentCell.imgV.transform = CGAffineTransformScale(self.currentCell.imgV.transform, 1.01, 1.01);
-            }
+        // 图片则和截图的alpha相反,越接近底部,图片应该越小,即是1->0,因此取反得到实际的缩放系数,另外限制缩放比例在0.4-1之间
+        ratio = 1 - ratio;
+        if (ratio < 0.4){
+            ratio = 0.4;
+        }else if (ratio > 1){
+            ratio = 1;
         }
+        /*
+         X方向:
+         图片需要边移动边缩小,因此,以屏幕左边沿为参考点,最终的结果应该是下面的公式:
+         {当前触点与屏幕左边的距离(currentP.x - XMScreenW * self.imageIndex)} - {相片缩小造成的坐标调整(0.5 * self.startSize.width * ratio)} - {一开始的触点与图片中心的距离 * 缩放系数((self.starP.x - XMScreenW * 0.5) * ratio)}
+         注意:由于触点相对于collectionView,必须减去XMScreenW * self.imageIndex才是相对于屏幕左边的距离,同理,self.starP也必须减去这个距离(这个在begin的方法里已经减去)
+         Y方向:
+         同x方向,不过y没有不需要减去cell序号造成的影响,除非改为垂直滚动
+         */
+        CGFloat moveX = (currentP.x - XMScreenW * self.imageIndex) - 0.5 * self.startSize.width * ratio - (self.starP.x - XMScreenW * 0.5) * ratio;
+        CGFloat moveY = currentP.y - 0.5 * self.startSize.height * ratio - (self.starP.y - XMScreenH * 0.5) * ratio;
         
-        // 重设滑动距离
-        [pan setTranslation:CGPointZero inView:pan.view];
+        // 边缩小边移动
+        self.currentCell.imgV.frame = CGRectMake(moveX, moveY, self.startSize.width * ratio, self.startSize.height * ratio);
     }
     
     if(pan.state == UIGestureRecognizerStateBegan){
         // 停止幻灯片
         [self stopTimer];
-        self.starY = [pan locationInView:self.collectionView].y;
+        // 背景截图放在self.collectionView,需要随着图片滑动来调整x坐标,保持在当前图片的正下方
+        CGRect tarF = self.panBgImgV.frame;
+        tarF.origin.x = XMScreenW * self.imageIndex;
+        self.panBgImgV.frame = tarF;
+        
+        // 因为参考点是collectionView,所以每一个cell的x都不一样,实际上需要参考的是与屏幕左边的距离,因此需要减去(XMScreenW * self.imageIndex),y则一样
+        CGPoint absP = [pan locationInView:self.collectionView];
+        self.starP = CGPointMake(absP.x - XMScreenW * self.imageIndex, absP.y);
+        
+        // 找出当前拖拽的cell
         NSIndexPath *index = [self.collectionView indexPathForItemAtPoint:[pan locationInView:self.collectionView]];
         XMPhotoCollectionViewCell *cell = (XMPhotoCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:index];
         self.currentCell = cell;
-        [cell.imgScroV insertSubview:self.panBgImgV belowSubview:cell.imgV];
         self.startSize = cell.imgV.frame.size;
     }
     
     if(pan.state == UIGestureRecognizerStateEnded){
         CGFloat endY = [pan locationInView:self.collectionView].y;
-//        NSLog(@"%f",(endY - self.starY));
-        if(endY - self.starY > panToDismissDistance){
-//            NSLog(@"%s",__func__);
-            //            [self dismiss:nil];
-//            [self.navigationController popViewControllerAnimated:NO];
+        if(endY - self.starP.y > panToDismissDistance){
             [self swipeToDismiss:pan];
         }else{
             self.panBgImgV.hidden = YES;
             // 回弹添加动画,防止手势过快造成震动
-            [UIView animateWithDuration:0.5f animations:^{
-                self.currentCell.imgV.transform = CGAffineTransformIdentity;
+            [UIView animateWithDuration:0.2f animations:^{
+                self.currentCell.imgV.frame = CGRectMake(0, XMScreenH * 0.5 - self.startSize.height * 0.5, self.startSize.width, self.startSize.height);
             }];
         }
     }
@@ -424,29 +447,6 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
     }
 }
 
-/// 单击事件
-- (void)didTapCollectionView:(UITapGestureRecognizer *)tap{
-    if (tap.state == UIGestureRecognizerStateEnded){
-//        self.navigationController.navigationBar.hidden = !self.navigationController.navigationBar.isHidden;
-        if (self.navigationController.navigationBar.isHidden){
-            // 导航条已经隐藏,需要回复显示
-            self.navigationController.navigationBar.hidden = NO;
-            
-            // 显示状态栏并且调整cell的偏移
-            [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:NO];
-            self.cellInset = UIEdgeInsetsMake(- (44 + XMStatusBarHeight), 0, 0, 0);
-            [self.collectionView reloadData];
-        }else{
-            self.navigationController.navigationBar.hidden = YES;
-            // 隐藏状态栏并且调整cell的偏移
-            [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:NO];
-            self.cellInset = UIEdgeInsetsMake(0, 0, 0, 0);
-            [self.collectionView reloadData];
-            
-        }
-    }
-}
-
 /*
 #pragma mark - Navigation
 
@@ -475,7 +475,12 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
         cell = [[XMPhotoCollectionViewCell alloc] init];
     }
     cell.gifPerTime = self.gifTimeInterval;
-    cell.wifiModle = self.photoModelArr[indexPath.row];
+    // 区分从本地加载图片还是从网路加载图片
+    if(self.sourceType == XMPhotoDisplayImageSourceTypeWebURL){
+        [cell setDisplayImage:self.photoModelArr[indexPath.row]];
+    }else if (self.sourceType == XMPhotoDisplayImageSourceTypeLocalPath){
+        cell.wifiModle = self.photoModelArr[indexPath.row];
+    }
     return cell;
 }
     
@@ -514,19 +519,18 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
 */
 #pragma mark ---- UICollectionViewDelegateFlowLayout
 //定义每个UICollectionViewCell 的大小
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    return self.cellSize;
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
+    return CGSizeMake(XMScreenW, XMScreenH);
 }
 //定义每个Section 的 margin
--(UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
-{
-    return self.cellInset;
+-(UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{
+    
+    return UIEdgeInsetsMake(0, 0, 0, 0);
 }
 
 //每个section中不同的行之间的行间距
-- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section
-{
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section{
+    
     return 0;
 }
 
@@ -535,9 +539,8 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
     NSUInteger currentP = scrollView.contentOffset.x / XMScreenW + 1.5;
     self.imageIndex = (int)currentP - 1;
-    self.navigationItem.title = [NSString stringWithFormat:@"%zd/%zd",currentP,self.photoModelArr.count];
-    self.titLab.text = [NSString stringWithFormat:@"%zd/%zd",currentP,self.photoModelArr.count];
-//    NSLog(@"%@",NSStringFromCGPoint(scrollView.contentOffset));
+    
+    [self updatePageTitleWithIndex:currentP];
 }
 
  //拖拽滚动结束

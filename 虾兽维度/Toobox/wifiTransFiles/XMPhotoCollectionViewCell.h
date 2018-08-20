@@ -21,4 +21,7 @@
 /// 提供方法让外界获取计算的原始图片尺寸
 - (CGSize)getImgOriginSize;
 
+/// 直接通过网络url设置cell的图片
+- (void)setDisplayImage:(NSString *)url;
+
 @end

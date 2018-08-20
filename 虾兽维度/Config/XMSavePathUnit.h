@@ -42,6 +42,8 @@ extern NSString * const XMWifiGroupMarkZipFileName;
 /// 主页历史新闻存档路径,不同的channel的文件不一样
 + (NSString *)getMainHistoryNewsPathWithChannel:(NSString *)channel;
 
+/// webmodule的网络下载的gif的本地缓存路径
++ (NSString *)getWebmoduleGifTempDirectory;
 
 /// 返回一个数组,包含所有配置类文件的全路径
 + (NSArray *)getSettingFilesPaths;

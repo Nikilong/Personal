@@ -81,6 +81,15 @@ NSString * const XMWifiGroupMarkZipFileName = @"XMWifiGroupZipMark.wifign";  // 
     return [NSString stringWithFormat:@"%@/XMHistoryNews-%@.archiver",dirPath,channel];
 }
 
+/// webmodule的网络下载的gif的本地缓存路径
++ (NSString *)getWebmoduleGifTempDirectory{
+    NSString *rootPath = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES)[0] stringByAppendingPathComponent:@"gifTemp"];
+    if(![[NSFileManager defaultManager] fileExistsAtPath:rootPath]){
+        [[NSFileManager defaultManager] createDirectoryAtPath:rootPath withIntermediateDirectories:YES attributes:nil error:nil];
+    }
+    return rootPath;
+}
+
 /// 返回一个数组,包含所有配置类文件的全路径
 + (NSArray *)getSettingFilesPaths{
     return @[[self getHiwebHomeUrlPath],[self getWifiGroupNameFilePath],[self getSaveWebModelArchicerPath],[self getWifiGroupMarkZipFilePath],[self getMainLeftSaveChannelPath]];
