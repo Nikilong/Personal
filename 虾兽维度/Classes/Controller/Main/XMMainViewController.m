@@ -129,6 +129,8 @@ static double leftViewAnimateTime = 0.25;
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
+    
+//    [self callSaveViewController]; // 测试用
 }
 
 - (void)viewWillDisappear:(BOOL)animated{

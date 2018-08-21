@@ -14,6 +14,7 @@
 
 #import "XMTouchIDKeyboardViewController.h"
 #import "MBProgressHUD+NK.h"
+#import "XMDebugDefine.h"
 
 static NSString * const kAuthenCallBackNotificaiton = @"kAuthenCallBackNotificaiton";
 double const XMToolBoxViewAnimationTime = 0.2;
@@ -96,7 +97,7 @@ typedef enum : NSUInteger {
     toolView.backgroundColor = [UIColor clearColor];
     self.toolView = toolView;
     
-    // 工具箱按钮参数(根据需求只开放微信好友和朋友圈和facebook)
+    // 工具箱按钮参数
     NSArray *btnParams = [XMToolBoxConfig toolBoxs];
     NSUInteger btnNum = btnParams.count;
     
@@ -160,19 +161,18 @@ typedef enum : NSUInteger {
 
 #pragma mark 弹出或隐藏
 /** 隐藏或者隐藏工具箱面板整体 */
-- (void)showToolView:(BOOL)result caller:(UIButton *)button dismiss:(BOOL)flag
-{
-    if(result) // 显示工具箱菜单
-    {
+- (void)showToolView:(BOOL)result caller:(UIButton *)button dismiss:(BOOL)flag{
+    
+    if(result){
+        // 显示工具箱菜单
         // 菜单栏整体上升
         [UIView animateWithDuration:XMToolBoxViewAnimationTime animations:^{
     
-            if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
-            {
+            if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){
                 // iphone在最底下显示工具箱菜单
                 self.toolView.transform = CGAffineTransformMakeTranslation(0, -self.toolView.frame.size.height);
-            }else if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-            {
+            }else if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
+                
                 // ipad显示在屏幕中央
                 self.toolView.transform = CGAffineTransformMakeTranslation(0, -( [UIScreen mainScreen].bounds.size.height + self.toolView.frame.size.height ) * 0.5);
             }
@@ -228,9 +228,9 @@ typedef enum : NSUInteger {
     NSString *msg = @"";
     BOOL touchIDKeyboardFlag = NO;
     //模拟器强制判断为成功验证
-    if (TARGET_OS_SIMULATOR == 1 && TARGET_OS_IPHONE == 1) {
-        result = AuthenResultTypeSuccess;
-    }
+#ifdef XMToolboxWithoutAuthentication
+    result = AuthenResultTypeSuccess;
+#endif
     // 处理验证的结果
     switch (result) {
         case AuthenResultTypeSuccess:{ //验证成功

@@ -15,6 +15,7 @@
 
 #import "XMRefreshHeaderView.h"
 #import "XMWebModelLogic.h"
+#import "XMDebugDefine.h"
 
 CGFloat const XMRowHeight = 100;
 CGFloat const XMRrfreshHeight = 100;
@@ -94,8 +95,9 @@ CGFloat const XMRrfreshHeight = 100;
     self.tableView.rowHeight = XMRowHeight;
     
     // 设置下拉刷新
+#ifndef XMLauchAutoRefrehFobiden
     [self setRreflashControl];
-    
+#endif
     // 设置摇一摇刷新
     [UIApplication sharedApplication].applicationSupportsShakeToEdit = YES;
     [self becomeFirstResponder];

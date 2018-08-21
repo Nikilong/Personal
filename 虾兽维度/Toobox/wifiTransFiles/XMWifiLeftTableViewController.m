@@ -10,6 +10,7 @@
 #import "XMWifiGroupTool.h"
 #import "XMWifiTransModel.h"
 #import "MBProgressHUD+NK.h"
+#import "XMFileManageTool.h"
 
 @interface XMWifiLeftTableViewController ()
 
@@ -56,7 +57,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     if (indexPath.section == 0){
-        return 100;
+        return 120;
     }else if (indexPath.section == 1){
         return 44;
     }else{
@@ -159,8 +160,24 @@
     // 备份文件夹
     UIButton *backDirBtn = [self addSystemButtonWithImageName:@"dir_backup" selector:@selector(backupDirFiles) parentView:contentV];
     backDirBtn.frame = CGRectMake(CGRectGetMaxX(backFileBtn.frame) + XMLeftViewPadding, CGRectGetMaxY(markGroupBtn.frame) + XMLeftViewPadding, btnWH, btnWH);
+    // 占用容量的标签
+    CGFloat labH = 20;
+    UILabel *lab = [[UILabel alloc] initWithFrame:CGRectMake(XMLeftViewPadding, CGRectGetMaxY(backDirBtn.frame) + XMLeftViewPadding, XMWifiLeftViewTotalW - 3 * XMLeftViewPadding, labH)];
+    lab.textAlignment = NSTextAlignmentLeft;
+    lab.font = [UIFont boldSystemFontOfSize:10];
+    lab.textColor = [UIColor grayColor];
+    [contentV addSubview:lab];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        double size = [XMFileManageTool folderSizeAtPath:[XMSavePathUnit getWifiUploadDirPath]] / 1024.0 / 1024.0 / 1024.0;
+        double totalLeftSize = [XMFileManageTool freeDiskSpaceInBytes] / 1024.0 / 1024.0 / 1024.0;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            lab.text = [NSString stringWithFormat:@"总大小:%.1fG 剩余:%.1fG",size,totalLeftSize];
+//            lab.text = @"总大小:128.1G 剩余:128.9G";  // 测试用,看字数是否超过标签
+        });
+    });
+    
     // 最后根据按钮的个数和行数计算contentV的高度
-    contentV.frame = CGRectMake(0, 0, XMWifiLeftViewTotalW, CGRectGetMaxY(backDirBtn.frame) + 3 * XMLeftViewPadding);
+    contentV.frame = CGRectMake(0, 0, XMWifiLeftViewTotalW, CGRectGetMaxY(backDirBtn.frame) + 3 * XMLeftViewPadding + labH);
     return contentV;
 }
 

@@ -871,10 +871,12 @@ static double backForwardSafeDistance = 80.0;
     self.toolBarBackBtn.selected = !self.wkWebview.canGoBack;
     
     // 设置网页标题
-    //    NSString *title = [self.wkWebview evaluateJavaScript:@"document.title"];
     __weak typeof(self) weakSelf = self;
     [self.wkWebview evaluateJavaScript:@"document.title" completionHandler:^(id _Nullable result, NSError * _Nullable error) {
         NSString *title = (NSString *)result;
+        // 添加进浏览历史
+        [XMWebModelLogic saveHistoryUrl:weakSelf.wkWebview.URL.absoluteString title:title];
+        // 设置标题
         if(title.length > 0 && ![title isEqualToString:weakSelf.navToolTitleLab.text]){
             dispatch_async(dispatch_get_main_queue(), ^{
                 weakSelf.navToolTitleLab.text = title;
@@ -883,6 +885,7 @@ static double backForwardSafeDistance = 80.0;
     }];
     // 判断该网页是否已经保存
     self.saveBtn.selected = [XMWebModelLogic isWebURLHaveSave:self.wkWebview.URL.absoluteString];
+    
     
     // 记录网页高度
     //    self.webHeight = [[self.wkWebview evaluateJavaScript:@"document.body.offsetHeight"] doubleValue];
@@ -926,7 +929,7 @@ static double backForwardSafeDistance = 80.0;
     requestCount++;
     // 开启网络加载标志
     dispatch_async(dispatch_get_main_queue(), ^{
-        if(requestCount > 0 && [UIApplication sharedApplication].isNetworkActivityIndicatorVisible == NO){
+        if([UIApplication sharedApplication].isNetworkActivityIndicatorVisible == NO){
             [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
         }
     });
@@ -937,7 +940,7 @@ static double backForwardSafeDistance = 80.0;
     requestCount--;
     // 关闭网络加载标志
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        if(requestCount == 0 && [UIApplication sharedApplication].isNetworkActivityIndicatorVisible == YES){
+        if([UIApplication sharedApplication].isNetworkActivityIndicatorVisible == YES){
             [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
         }
     });
@@ -1106,6 +1109,9 @@ static double backForwardSafeDistance = 80.0;
 
 #pragma mark 点击手势
 - (void)webviewDidTap:(UITapGestureRecognizer *)tap{
+    // 没有图片组直接返回
+    if(self.imageArr.count <= 0) return;
+    
     CGPoint touchPoint = [tap locationInView:self.wkWebview];
     NSString *imgURL = [NSString stringWithFormat:@"document.elementFromPoint(%f, %f).src", touchPoint.x, touchPoint.y];
     __weak typeof(self) weakSelf = self;

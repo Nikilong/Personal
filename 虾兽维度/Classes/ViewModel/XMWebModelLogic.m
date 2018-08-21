@@ -211,4 +211,49 @@ static NSMutableArray *_saveWebModelArr;
     return _saveWebModelArr;
 }
 
+#pragma mark 浏览历史
+/// 保存浏览历史
++ (void)saveHistoryUrl:(NSString *)url title:(NSString *)title{
+    // 读取旧数据
+    NSMutableArray *oldArr = [NSMutableArray arrayWithArray:[self getHistoryUrlArray]];
+    [oldArr insertObject:@{@"url":url,@"title":title} atIndex:0];
+    // 暂时设定为保存100条记录
+    if(oldArr.count > 100){
+        [oldArr removeLastObject];
+    }
+    
+    // 保存新数据
+    NSArray *newArr = [NSArray arrayWithArray:oldArr];
+    [NSKeyedArchiver archiveRootObject:newArr toFile:[XMSavePathUnit getWebModelHistoryUrlArchicerPath]];
+    
+}
+
+/// 获取浏览历史
++ (NSArray *)getHistoryUrlArray{
+    return [NSKeyedUnarchiver unarchiveObjectWithFile:[XMSavePathUnit getWebModelHistoryUrlArchicerPath]];
+}
+
+/// 根据索引,该方法用于侧滑删除,不用遍历数组,删除某条历史记录
++ (void)deleteWebModelHistoryAtIndex:(NSUInteger)index{
+    // 读取旧数据
+    NSMutableArray *oldArr = [NSMutableArray arrayWithArray:[self getHistoryUrlArray]];
+    [oldArr removeObjectAtIndex:index];
+    // 保存新数据
+    [NSKeyedArchiver archiveRootObject:oldArr toFile:[XMSavePathUnit getWebModelHistoryUrlArchicerPath]];
+}
+
+/// 批量删除历史记录
++ (void)deleteWebModelHistoryWithNumber:(NSUInteger)count{
+    // 读取旧数据
+    NSMutableArray *oldArr = [NSMutableArray arrayWithArray:[self getHistoryUrlArray]];
+    if(count > oldArr.count){
+        oldArr = [NSMutableArray array];
+    }else{
+        NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, count)];
+        [oldArr removeObjectsAtIndexes:indexSet];
+    }
+    // 保存新数据
+    [NSKeyedArchiver archiveRootObject:oldArr toFile:[XMSavePathUnit getWebModelHistoryUrlArchicerPath]];
+}
+
 @end

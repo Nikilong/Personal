@@ -30,17 +30,16 @@
 
 @implementation XMTouchIDKeyboardViewController
 
-- (NSMutableArray *)inputBtnArr
-{
-    if (!_inputBtnArr)
-    {
+- (NSMutableArray *)inputBtnArr{
+    if (!_inputBtnArr){
+        
         _inputBtnArr = [[NSMutableArray alloc] init];
     }
     return _inputBtnArr;
 }
 
-- (NSMutableArray *)clickBtnArr
-{
+- (NSMutableArray *)clickBtnArr{
+    
     if (!_clickBtnArr)
     {
         _clickBtnArr = [[NSMutableArray alloc] init];
@@ -65,8 +64,8 @@
 #pragma mark - 工具箱面板整体
 #pragma mark 创建工具箱面板
 /** 初始化工具箱面板 */
-- (void)initToolView
-{
+- (void)initToolView{
+    
     // 1.顶部提示和'取消按钮'
     UIView *topContentV = [[UIView alloc] initWithFrame:CGRectMake(0, 20, XMScreenW, 44)];
     [self.view addSubview:topContentV];
@@ -120,7 +119,7 @@
     [self.view addSubview:toolView];
     toolView.backgroundColor = [UIColor clearColor];
     
-    // 工具箱按钮参数(根据需求只开放微信好友和朋友圈和facebook)
+    // 工具箱按钮参数
     NSArray *btnParams = @[@1,@1,@1,@1,@1,@1,@1,@1,@1,@1,@1,@1];
     NSUInteger btnNum = btnParams.count;
     

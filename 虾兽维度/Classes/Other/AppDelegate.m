@@ -16,12 +16,16 @@
 //#import "XMWebViewController.h"
 #import "XMWKWebViewController.h"
 #import "XMWebURLProtocol.h"
+#import "XMDebugDefine.h"
+#import "XMSavePathUnit.h"
+#import "XMFileManageTool.h"
 
 /// 试验区头文件,可随时删除
 #import "XMTouchIDKeyboardViewController.h"
 #import "XMHiwebViewController.h"
 #import "XMClipImageViewController.h"
 #import "XMWifiTransFileViewController.h"
+#import "XMSaveWebsTableViewController.h"
 
 @interface AppDelegate ()<UITraitEnvironment>
 
@@ -38,15 +42,13 @@
 //    [NSURLProtocol registerClass:[XMWebURLProtocol class]];
     
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-    
-    if (TARGET_OS_SIMULATOR == 1 && TARGET_OS_IPHONE == 1) {
+#ifdef XMDebugHomeVC
         //模拟器
         self.mainVC = [[XMMainViewController alloc] init];
-    }else{
+#else
         //真机
         self.mainVC = [[XMMainViewController alloc] init];
-    }
-
+#endif
     
     XMNavigationController *nav = [[XMNavigationController alloc] initWithRootViewController:_mainVC];
     
@@ -69,9 +71,22 @@
     //注册本地通知
 //    [self registerLocalNotification];
     
+    // 检查是否需要清理缓存文件
+    [self checkToClearCache];
+    
     return YES;
 }
 
+/// 检查是否需要清理缓存文件
+- (void)checkToClearCache{
+    NSString *gifFolder = [XMSavePathUnit getWebmoduleGifTempDirectory];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        // 检查gif缓存文件夹,不超过100M
+        [XMFileManageTool checkAndClearFolder:gifFolder maxSize:100 * 1024 * 1024];
+    });
+}
+
+///注册本地通知
 - (void)registerLocalNotification{
     /**
      *iOS 8之后需要向系统注册通知，让用户开放权限

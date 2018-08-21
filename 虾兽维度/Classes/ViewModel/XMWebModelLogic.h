@@ -36,4 +36,14 @@
 /// 已保存网址列表
 + (NSArray *)webModels;
 
+
+/// 保存浏览历史
++ (void)saveHistoryUrl:(NSString *)url title:(NSString *)title;
+/// 获取浏览历史
++ (NSArray *)getHistoryUrlArray;
+/// 根据索引,该方法用于侧滑删除,不用遍历数组,删除某条历史记录
++ (void)deleteWebModelHistoryAtIndex:(NSUInteger)index;
+/// 批量删除历史记录
++ (void)deleteWebModelHistoryWithNumber:(NSUInteger)count;
+
 @end

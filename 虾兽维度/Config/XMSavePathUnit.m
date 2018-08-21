@@ -31,6 +31,11 @@ NSString * const XMWifiGroupMarkZipFileName = @"XMWifiGroupZipMark.wifign";  // 
     return [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"webModel.archiver"];
 }
 
+/// web模块浏览历史记录的文件保存路径
++ (NSString *)getWebModelHistoryUrlArchicerPath{
+    return [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"webHistory.archiver"];
+}
+
 /// 浮窗webModle的归档文件路径
 + (NSString *)getFloatWindowWebmodelArchivePath{
     return [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"WXfloatWebModel.archiver"];

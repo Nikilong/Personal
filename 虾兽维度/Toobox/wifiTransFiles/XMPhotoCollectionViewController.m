@@ -12,6 +12,8 @@
 #import "MBProgressHUD+NK.h"
 #import "XMImageUtil.h"
 #import "UIImageView+WebCache.h"
+#import "XMNavigationController.h"
+
 
 @interface XMPhotoCollectionViewController ()<UIScrollViewDelegate,UICollectionViewDelegateFlowLayout,UIGestureRecognizerDelegate>
 
@@ -114,7 +116,7 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
     CGFloat btnWH = 44;
     
     // 退出按钮(左上角)
-    UIButton *backBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 18, btnWH, btnWH)];
+    UIButton *backBtn = [[UIButton alloc] initWithFrame:CGRectMake(3, XMStatusBarHeight, btnWH, btnWH)];
     [backBtn setImage:[UIImage imageNamed:@"navTool_close_white"] forState:UIControlStateNormal];
     [backBtn addTarget:self action:@selector(dismiss:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:backBtn];
@@ -336,6 +338,9 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
         
     }completion:^(BOOL finished) {
         if(finished){
+            // 由于popViewControllerAnimated为NO,需要手动移除最后一张截图
+            XMNavigationController *nav = (XMNavigationController *)self.navigationController;
+            [nav.pushScreenShotArr removeLastObject];
             [self.navigationController popViewControllerAnimated:NO];
         }
     }];

@@ -67,10 +67,8 @@ UINavigationControllerDelegate>
     if (!self.pushScreenShotArr){
         self.pushScreenShotArr = [NSMutableArray array];
     }
-    if(![NSStringFromClass([viewController class]) isEqualToString:@"XMPhotoCollectionViewController"]){
-        // 图片浏览器不需要添加截图,因为拖拽关闭图片pop时animate为NO,不走自定义动画
-        [self.pushScreenShotArr addObject:[XMImageUtil screenShot]];
-    }
+    // 统一在这里添加截图,但是移除截图根据popViewControllerAnimated:是否为yes,如果是yes,由XMPopAnimation统一移除截图,如果是NO,由该设置为NO的控制器移除截图
+    [self.pushScreenShotArr addObject:[XMImageUtil screenShot]];
     
     [super pushViewController:viewController animated:animated];
 

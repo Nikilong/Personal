@@ -219,6 +219,7 @@
 		FDB099FF2112F5AA00148492 /* UIViewController+hook.m in Sources */ = {isa = PBXBuildFile; fileRef = FDB099FE2112F5AA00148492 /* UIViewController+hook.m */; };
 		FDB09A02211317B800148492 /* XMNavigationInteractiveTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = FDB09A01211317B800148492 /* XMNavigationInteractiveTransition.m */; };
 		FDB09A052113192A00148492 /* XMPopAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = FDB09A042113192A00148492 /* XMPopAnimation.m */; };
+		FDD895A3212BAAE800E2EDAD /* XMFileManageTool.m in Sources */ = {isa = PBXBuildFile; fileRef = FDD895A2212BAAE800E2EDAD /* XMFileManageTool.m */; };
 		FDE985412126CB1D003D2FE2 /* XMTimeTool.m in Sources */ = {isa = PBXBuildFile; fileRef = FDE985402126CB1D003D2FE2 /* XMTimeTool.m */; };
 		FDFAEEC520FD900E00BEA442 /* XMNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = FDFAEEC420FD900E00BEA442 /* XMNavigationController.m */; };
 /* End PBXBuildFile section */
@@ -601,6 +602,9 @@
 		FDB09A01211317B800148492 /* XMNavigationInteractiveTransition.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMNavigationInteractiveTransition.m; sourceTree = "<group>"; };
 		FDB09A032113192A00148492 /* XMPopAnimation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMPopAnimation.h; sourceTree = "<group>"; };
 		FDB09A042113192A00148492 /* XMPopAnimation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMPopAnimation.m; sourceTree = "<group>"; };
+		FDD895A0212BA62100E2EDAD /* XMDebugDefine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = XMDebugDefine.h; path = "虾兽维度/Config/XMDebugDefine.h"; sourceTree = SOURCE_ROOT; };
+		FDD895A1212BAAE800E2EDAD /* XMFileManageTool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMFileManageTool.h; sourceTree = "<group>"; };
+		FDD895A2212BAAE800E2EDAD /* XMFileManageTool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMFileManageTool.m; sourceTree = "<group>"; };
 		FDE9853F2126CB1D003D2FE2 /* XMTimeTool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMTimeTool.h; sourceTree = "<group>"; };
 		FDE985402126CB1D003D2FE2 /* XMTimeTool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMTimeTool.m; sourceTree = "<group>"; };
 		FDFAEEC320FD900E00BEA442 /* XMNavigationController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMNavigationController.h; sourceTree = "<group>"; };
@@ -660,6 +664,7 @@
 				205BCF9520AB174900FF9652 /* XMSavePathUnit.h */,
 				205BCF9620AB174900FF9652 /* XMSavePathUnit.m */,
 				FD9E34D52114041300FFBE3B /* webFilterList.plist */,
+				FDD895A0212BA62100E2EDAD /* XMDebugDefine.h */,
 			);
 			name = config;
 			path = toolBoxIcons;
@@ -1333,6 +1338,8 @@
 				2086FCE020EBC61400957207 /* XMImageUtil.m */,
 				FDE9853F2126CB1D003D2FE2 /* XMTimeTool.h */,
 				FDE985402126CB1D003D2FE2 /* XMTimeTool.m */,
+				FDD895A1212BAAE800E2EDAD /* XMFileManageTool.h */,
+				FDD895A2212BAAE800E2EDAD /* XMFileManageTool.m */,
 			);
 			name = Tool;
 			path = Other/Tool;
@@ -1741,6 +1748,7 @@
 				204D240E209ED8E800F17E2E /* MultipartMessageHeader.m in Sources */,
 				204D242F209ED91A00F17E2E /* GCDAsyncSocket.m in Sources */,
 				205CECFC1F489A0000821E38 /* UIView+Extension.m in Sources */,
+				FDD895A3212BAAE800E2EDAD /* XMFileManageTool.m in Sources */,
 				2086642B20AB403D00D51CCB /* fileenc.c in Sources */,
 				204D2435209ED91A00F17E2E /* DDTTYLogger.m in Sources */,
 				204D240C209ED8E800F17E2E /* HTTPServer.m in Sources */,
