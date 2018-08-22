@@ -57,7 +57,7 @@
         // 一小时之内,按分钟算
         int mininus = minisTime / 60;
         text = [NSString stringWithFormat:@"%d分钟前",mininus];
-    }else if(minisTime < 21600){
+    }else if(minisTime < 86400){
         // 一天之内,按小时算
         int days = minisTime / 3600;
         text = [NSString stringWithFormat:@"%d小时前",days];

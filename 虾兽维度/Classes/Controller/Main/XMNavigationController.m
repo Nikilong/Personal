@@ -68,7 +68,9 @@ UINavigationControllerDelegate>
         self.pushScreenShotArr = [NSMutableArray array];
     }
     // 统一在这里添加截图,但是移除截图根据popViewControllerAnimated:是否为yes,如果是yes,由XMPopAnimation统一移除截图,如果是NO,由该设置为NO的控制器移除截图
-    [self.pushScreenShotArr addObject:[XMImageUtil screenShot]];
+    if(!isHomeVC){
+        [self.pushScreenShotArr addObject:[XMImageUtil screenShot]];
+    }
     
     [super pushViewController:viewController animated:animated];
 

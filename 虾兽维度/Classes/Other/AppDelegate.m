@@ -26,6 +26,8 @@
 #import "XMClipImageViewController.h"
 #import "XMWifiTransFileViewController.h"
 #import "XMSaveWebsTableViewController.h"
+#import "XMWebMultiWindowCollectionViewController.h"
+#import "XMMutiWindowFlowLayout.h"
 
 @interface AppDelegate ()<UITraitEnvironment>
 
@@ -44,7 +46,11 @@
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
 #ifdef XMDebugHomeVC
         //模拟器
-        self.mainVC = [[XMMainViewController alloc] init];
+    XMMutiWindowFlowLayout * layout = [[XMMutiWindowFlowLayout alloc]init];
+    XMWebMultiWindowCollectionViewController *photoVC = [[XMWebMultiWindowCollectionViewController alloc] initWithCollectionViewLayout:layout];
+                                                         
+//                                                         initWithCollectionViewLayout:layout];
+    self.mainVC = photoVC;
 #else
         //真机
         self.mainVC = [[XMMainViewController alloc] init];

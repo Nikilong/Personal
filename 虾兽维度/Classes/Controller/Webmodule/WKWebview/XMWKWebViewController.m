@@ -24,6 +24,8 @@
 #import "NSURLProtocol+WKWebview.h"
 #import "XMVisualView.h"
 #import "XMPhotoCollectionViewController.h"
+#import "XMWebMultiWindowCollectionViewController.h"
+#import "XMMutiWindowFlowLayout.h"
 
 
 @interface XMWKWebViewController ()<
@@ -33,7 +35,8 @@ UIScrollViewDelegate,
 WKUIDelegate,
 WKNavigationDelegate,
 XMOpenWebmoduleProtocol,
-XMVisualViewDelegate>
+XMVisualViewDelegate,
+XMWebMultiWindowCollectionViewControllerDelegate>
 
 /** 网页高度 */
 //@property (nonatomic, assign) NSInteger webHeight;
@@ -43,6 +46,7 @@ XMVisualViewDelegate>
 @property (weak, nonatomic)  UIButton *saveBtn;
 @property (weak, nonatomic)  UIButton *toolBarBackBtn;
 @property (weak, nonatomic)  UIButton *toolBarForwardBtn;
+@property (weak, nonatomic)  UILabel *multiWindowCountLab;
 
 
 /** 网页view */
@@ -287,7 +291,7 @@ static double backForwardSafeDistance = 80.0;
        @{@"image": @"webview_goback",@"selectImage": @"webview_goback_disable",@"selector":@"webViewDidGoBack"},
        @{@"image": @"webview_goforward",@"selectImage": 
              @"webview_goforward_disable",@"selector":@"webViewDidGoForward"},
-       @{@"image": @"webview_new",@"selectImage": @"",@"selector":@"openNewWebmodule"},
+       @{@"image": @"webview_multiwindow",@"selectImage": @"",@"selector":@"openMultiWindowViewController"},
        @{@"image": @"shuaxin",@"selectImage": @"",@"selector":@"webViewDidFresh"},
        @{@"image": @"save_normal",@"selectImage": @"save_selected",@"disableImage": @"",@"selector":@"saveWeb:"},
                                    ];
@@ -317,6 +321,13 @@ static double backForwardSafeDistance = 80.0;
             }else if (i == 1){
                 self.toolBarForwardBtn = btn;
                 self.toolBarForwardBtn.selected = YES;
+            }else if (i == 2){
+                UILabel *lab = [[UILabel alloc] initWithFrame:btn.bounds];
+                self.multiWindowCountLab = lab;
+                lab.textAlignment = NSTextAlignmentCenter;
+                lab.font = [UIFont systemFontOfSize:9];
+                lab.textColor = [UIColor grayColor];
+                [btn addSubview:lab];
             }else if (i == 4){
                 self.saveBtn = btn;
             }
@@ -399,6 +410,9 @@ static double backForwardSafeDistance = 80.0;
     self.statusCover.hidden = NO;
     // 记录即将显示
     self.isShow = YES;
+    // 设置窗口数字
+    XMNavigationController *nav = (XMNavigationController *)self.navigationController;
+    self.multiWindowCountLab.text = [NSString stringWithFormat:@"%ld",nav.pushScreenShotArr.count];
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -556,17 +570,15 @@ static double backForwardSafeDistance = 80.0;
     button.selected = !button.isSelected;
 }
 
-/** 打开搜索框 */
-- (void)openNewWebmodule{
-    XMSearchTableViewController *searchVC = [[XMSearchTableViewController alloc] init];
-    searchVC.delegate = self;
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:searchVC];
-    // 导航控制器只能present另外一个导航控制器,不能push
-    [self presentViewController:nav animated:YES completion:nil];
-}
-//XMSearchTableViewController的代理方法,必须实现
-- (void)openWebmoduleRequest:(XMWebModel *)webModel{
-    [XMWKWebViewController openWebmoduleWithModel:webModel viewController:self];
+/** 打开多窗口切换 */
+- (void)openMultiWindowViewController{
+    XMNavigationController *nav = (XMNavigationController *)self.navigationController;
+    
+    XMMutiWindowFlowLayout *layout = [[XMMutiWindowFlowLayout alloc] init];
+    XMWebMultiWindowCollectionViewController *multiVC = [[XMWebMultiWindowCollectionViewController alloc] initWithCollectionViewLayout:layout];
+    multiVC.shotImageArr = [NSMutableArray arrayWithArray:nav.pushScreenShotArr];
+    multiVC.delegate = self;
+    [self presentViewController:multiVC animated:YES completion:nil];
 }
 
 #pragma mark 导航栏的点击事件
@@ -775,6 +787,23 @@ static double backForwardSafeDistance = 80.0;
 /** 提示用户保存图片成功与否(系统必须实现的方法) */
 - (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo{
     [MBProgressHUD showResult:error ? NO :YES message:error ? @"保存失败" : @"保存成功"];
+}
+
+#pragma mark - XMWebMultiWindowCollectionViewControllerDelegate
+- (void)webMultiWindowCollectionViewControllerCallForNewSearchModule:(XMWebMultiWindowCollectionViewController *)multiVC{
+    
+    [multiVC dismissViewControllerAnimated:YES completion:nil];
+    
+    XMSearchTableViewController *searchVC = [[XMSearchTableViewController alloc] init];
+    searchVC.delegate = self;
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:searchVC];
+    // 导航控制器只能present另外一个导航控制器,不能push
+    [self presentViewController:nav animated:YES completion:nil];
+}
+
+//XMSearchTableViewController的代理方法,必须实现
+- (void)openWebmoduleRequest:(XMWebModel *)webModel{
+    [XMWKWebViewController openWebmoduleWithModel:webModel viewController:self];
 }
 
 #pragma mark - WKUIDelegate

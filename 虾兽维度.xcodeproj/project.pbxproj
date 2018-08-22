@@ -200,6 +200,7 @@
 		84BA25591E65C7A800C8B204 /* XMWebTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 84BA25571E65C7A800C8B204 /* XMWebTableViewCell.m */; };
 		84BA255A1E65C7A800C8B204 /* XMWebTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84BA25581E65C7A800C8B204 /* XMWebTableViewCell.xib */; };
 		84D9ED061E656BC30046840E /* XMWebModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 84D9ED051E656BC30046840E /* XMWebModel.m */; };
+		FD04E861212C07A900EC3ED6 /* XMMutiWindowFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = FD04E860212C07A900EC3ED6 /* XMMutiWindowFlowLayout.m */; };
 		FD1EA08920A9A96A00658F18 /* XMGlobalConst.m in Sources */ = {isa = PBXBuildFile; fileRef = FD1EA08820A9A96A00658F18 /* XMGlobalConst.m */; };
 		FD1EA08B20A9B59B00658F18 /* clipIcon.py in Resources */ = {isa = PBXBuildFile; fileRef = FD1EA08A20A9B59A00658F18 /* clipIcon.py */; };
 		FD1EA0DA20AC52B300658F18 /* phone_documents_icon_update.png in Resources */ = {isa = PBXBuildFile; fileRef = FD1EA0D220AC52B200658F18 /* phone_documents_icon_update.png */; };
@@ -220,6 +221,8 @@
 		FDB09A02211317B800148492 /* XMNavigationInteractiveTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = FDB09A01211317B800148492 /* XMNavigationInteractiveTransition.m */; };
 		FDB09A052113192A00148492 /* XMPopAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = FDB09A042113192A00148492 /* XMPopAnimation.m */; };
 		FDD895A3212BAAE800E2EDAD /* XMFileManageTool.m in Sources */ = {isa = PBXBuildFile; fileRef = FDD895A2212BAAE800E2EDAD /* XMFileManageTool.m */; };
+		FDD895A7212BFF3200E2EDAD /* XMWebMultiWindowCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FDD895A6212BFF3200E2EDAD /* XMWebMultiWindowCollectionViewController.m */; };
+		FDD895AA212BFF5C00E2EDAD /* XMWebMultiWindowCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FDD895A9212BFF5C00E2EDAD /* XMWebMultiWindowCollectionViewCell.m */; };
 		FDE985412126CB1D003D2FE2 /* XMTimeTool.m in Sources */ = {isa = PBXBuildFile; fileRef = FDE985402126CB1D003D2FE2 /* XMTimeTool.m */; };
 		FDFAEEC520FD900E00BEA442 /* XMNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = FDFAEEC420FD900E00BEA442 /* XMNavigationController.m */; };
 /* End PBXBuildFile section */
@@ -572,6 +575,8 @@
 		84BA25581E65C7A800C8B204 /* XMWebTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = XMWebTableViewCell.xib; sourceTree = "<group>"; };
 		84D9ED041E656BC30046840E /* XMWebModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMWebModel.h; sourceTree = "<group>"; };
 		84D9ED051E656BC30046840E /* XMWebModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMWebModel.m; sourceTree = "<group>"; };
+		FD04E85F212C07A900EC3ED6 /* XMMutiWindowFlowLayout.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMMutiWindowFlowLayout.h; sourceTree = "<group>"; };
+		FD04E860212C07A900EC3ED6 /* XMMutiWindowFlowLayout.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMMutiWindowFlowLayout.m; sourceTree = "<group>"; };
 		FD1EA08720A9A96A00658F18 /* XMGlobalConst.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = XMGlobalConst.h; path = "虾兽维度/Config/XMGlobalConst.h"; sourceTree = SOURCE_ROOT; };
 		FD1EA08820A9A96A00658F18 /* XMGlobalConst.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = XMGlobalConst.m; path = "虾兽维度/Config/XMGlobalConst.m"; sourceTree = SOURCE_ROOT; };
 		FD1EA08A20A9B59A00658F18 /* clipIcon.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = clipIcon.py; sourceTree = "<group>"; };
@@ -605,6 +610,10 @@
 		FDD895A0212BA62100E2EDAD /* XMDebugDefine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = XMDebugDefine.h; path = "虾兽维度/Config/XMDebugDefine.h"; sourceTree = SOURCE_ROOT; };
 		FDD895A1212BAAE800E2EDAD /* XMFileManageTool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMFileManageTool.h; sourceTree = "<group>"; };
 		FDD895A2212BAAE800E2EDAD /* XMFileManageTool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMFileManageTool.m; sourceTree = "<group>"; };
+		FDD895A5212BFF3200E2EDAD /* XMWebMultiWindowCollectionViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMWebMultiWindowCollectionViewController.h; sourceTree = "<group>"; };
+		FDD895A6212BFF3200E2EDAD /* XMWebMultiWindowCollectionViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMWebMultiWindowCollectionViewController.m; sourceTree = "<group>"; };
+		FDD895A8212BFF5C00E2EDAD /* XMWebMultiWindowCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMWebMultiWindowCollectionViewCell.h; sourceTree = "<group>"; };
+		FDD895A9212BFF5C00E2EDAD /* XMWebMultiWindowCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMWebMultiWindowCollectionViewCell.m; sourceTree = "<group>"; };
 		FDE9853F2126CB1D003D2FE2 /* XMTimeTool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMTimeTool.h; sourceTree = "<group>"; };
 		FDE985402126CB1D003D2FE2 /* XMTimeTool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMTimeTool.m; sourceTree = "<group>"; };
 		FDFAEEC320FD900E00BEA442 /* XMNavigationController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMNavigationController.h; sourceTree = "<group>"; };
@@ -1355,6 +1364,7 @@
 				842970FE1E654644002BDBC0 /* View */,
 				842970FB1E654644002BDBC0 /* Other */,
 				20C85E5420541BD50057F483 /* Toolbox */,
+				FDD895A4212BFEC000E2EDAD /* MultiWindow */,
 				203D2FF821036AA7008788B6 /* wxFloatUnit */,
 				20F112221E86BF1800E64A70 /* Tool */,
 			);
@@ -1535,6 +1545,19 @@
 			path = hook;
 			sourceTree = "<group>";
 		};
+		FDD895A4212BFEC000E2EDAD /* MultiWindow */ = {
+			isa = PBXGroup;
+			children = (
+				FDD895A5212BFF3200E2EDAD /* XMWebMultiWindowCollectionViewController.h */,
+				FDD895A6212BFF3200E2EDAD /* XMWebMultiWindowCollectionViewController.m */,
+				FDD895A8212BFF5C00E2EDAD /* XMWebMultiWindowCollectionViewCell.h */,
+				FDD895A9212BFF5C00E2EDAD /* XMWebMultiWindowCollectionViewCell.m */,
+				FD04E85F212C07A900EC3ED6 /* XMMutiWindowFlowLayout.h */,
+				FD04E860212C07A900EC3ED6 /* XMMutiWindowFlowLayout.m */,
+			);
+			path = MultiWindow;
+			sourceTree = "<group>";
+		};
 		FDE985422126CC33003D2FE2 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
@@ -1710,6 +1733,7 @@
 				205CECF91F4898A600821E38 /* XMDropView.m in Sources */,
 				20C85E7020551B800057F483 /* XMTouchIDKeyboardViewController.m in Sources */,
 				205CECEF1F48150E00821E38 /* UIView+WebCache.m in Sources */,
+				FD04E861212C07A900EC3ED6 /* XMMutiWindowFlowLayout.m in Sources */,
 				205CECE41F48150E00821E38 /* SDWebImageDecoder.m in Sources */,
 				842971041E654644002BDBC0 /* AppDelegate.m in Sources */,
 				205CECEE1F48150E00821E38 /* UIImageView+WebCache.m in Sources */,
@@ -1729,6 +1753,7 @@
 				204D2406209ED8E800F17E2E /* DDData.m in Sources */,
 				204D240A209ED8E800F17E2E /* HTTPConnection.m in Sources */,
 				2061C21220C56F5F008C7424 /* AppDelegate+HJVideoRotation.m in Sources */,
+				FDD895AA212BFF5C00E2EDAD /* XMWebMultiWindowCollectionViewCell.m in Sources */,
 				20F112171E86697400E64A70 /* XMChannelModel.m in Sources */,
 				2061C21720C56F5F008C7424 /* HJViewFactory.m in Sources */,
 				20863CB820CD422F00A0812C /* ZLPhotoPickerDatas.m in Sources */,
@@ -1800,6 +1825,7 @@
 				20863CBF20CD422F00A0812C /* ZLPhotoPickerFooterCollectionReusableView.m in Sources */,
 				2086642F20AB403D00D51CCB /* sha1.c in Sources */,
 				2061C21D20C56F5F008C7424 /* HJFastForwardView.m in Sources */,
+				FDD895A7212BFF3200E2EDAD /* XMWebMultiWindowCollectionViewController.m in Sources */,
 				203D300221036AA7008788B6 /* XMRightBottomFloatView.m in Sources */,
 				204D2412209ED8E800F17E2E /* HTTPDynamicFileResponse.m in Sources */,
 				204D2432209ED91A00F17E2E /* DDASLLogger.m in Sources */,

@@ -18,6 +18,8 @@
 #define RGB(R,G,B) ([UIColor colorWithRed:R/255.0 green:G/255.0 blue:B/255.0 alpha:1])
 #define RGBA(R,G,B,A) ([UIColor colorWithRed:R/255.0 green:G/255.0 blue:B/255.0 alpha:A])
 
+#define XMRandomColor ([UIColor colorWithRed:(arc4random()%256)/255.0 green:(arc4random()%256)/255.0 blue:(arc4random()%256)/255.0 alpha:1])
+
 // 状态栏高度
 #define XMStatusBarHeight ([UIApplication sharedApplication].statusBarFrame.size.height)
 

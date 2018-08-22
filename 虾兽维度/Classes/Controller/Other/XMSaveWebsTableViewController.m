@@ -10,8 +10,8 @@
 #import "XMWebModelLogic.h"
 
 typedef enum{
-    XMSaveVCDataSourceSave,
-    XMSaveVCDataSourceHistory,
+    XMSaveVCDataSourceSave,         // 收藏网页
+    XMSaveVCDataSourceHistory,      // 历史浏览数据
 } XMSaveVCDataSource;
 
 @interface XMSaveWebsTableViewController ()
@@ -20,7 +20,7 @@ typedef enum{
 @property (nonatomic, strong) NSArray *historyWebsArr;      // 历史数组
 @property (nonatomic, assign)  XMSaveVCDataSource sourceType;
 
-@property (weak, nonatomic)  UIButton *clearBtn;
+@property (weak, nonatomic)  UIButton *clearBtn;        // 清除历史浏览记录按钮
 
 
 @end
