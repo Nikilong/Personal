@@ -34,16 +34,20 @@
 + (void)deleteWebURL:(NSString *)url;
 + (void)deleteWebModelAtIndex:(NSUInteger)index;
 /// 已保存网址列表
-+ (NSArray *)webModels;
++ (NSArray<XMWebModel *> *)webModels;
 
 
 /// 保存浏览历史
 + (void)saveHistoryUrl:(NSString *)url title:(NSString *)title;
-/// 获取浏览历史
-+ (NSArray *)getHistoryUrlArray;
+/// 获取浏览历史的model数据
++ (NSArray<XMWebModel *> *)getHistoryModelArray;
 /// 根据索引,该方法用于侧滑删除,不用遍历数组,删除某条历史记录
 + (void)deleteWebModelHistoryAtIndex:(NSUInteger)index;
 /// 批量删除历史记录
 + (void)deleteWebModelHistoryWithNumber:(NSUInteger)count;
+
+/// 从历史记录或者书签中搜索是否有关键字
++ (NSArray<XMWebModel *> *)searchForKeywordInWebData:(NSString *)keyworld;
+
 
 @end

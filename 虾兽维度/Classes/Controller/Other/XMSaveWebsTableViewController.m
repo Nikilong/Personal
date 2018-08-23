@@ -36,7 +36,7 @@ typedef enum{
 
 - (NSArray *)historyWebsArr{
     if (!_historyWebsArr){
-        _historyWebsArr = [XMWebModelLogic getHistoryUrlArray];
+        _historyWebsArr = [XMWebModelLogic getHistoryModelArray];
     }
     return _historyWebsArr;
 }
@@ -96,7 +96,7 @@ typedef enum{
     self.navigationItem.titleView = seg;
     
     UIButton *clearBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 30)];
-    [clearBtn setTitle:@"清除记录" forState:UIControlStateNormal];
+    [clearBtn setTitle:@"清除" forState:UIControlStateNormal];
     [clearBtn setTitleColor:RGB(42, 122, 252) forState:UIControlStateNormal];
     [clearBtn addTarget:self action:@selector(clearHistoryRecord) forControlEvents:UIControlEventTouchUpInside];
     self.clearBtn = clearBtn;
@@ -146,6 +146,9 @@ typedef enum{
 }
 
 #pragma mark - Table view data source
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return 44;
+}
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     return (self.sourceType == XMSaveVCDataSourceSave) ? self.saveWebsArr.count : self.historyWebsArr.count;
@@ -155,17 +158,18 @@ typedef enum{
     static NSString *ID = @"saveCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ID];
     if (!cell){
-        
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:ID];
+        cell.textLabel.font = [UIFont boldSystemFontOfSize:13];
+        cell.detailTextLabel.font = [UIFont systemFontOfSize:9];
     }
+    XMWebModel *model;
     if (self.sourceType == XMSaveVCDataSourceSave){
-        XMWebModel *model = self.saveWebsArr[indexPath.row];
-        cell.textLabel.text = model.title;
-        cell.detailTextLabel.text = model.webURL.absoluteString;
+        model = self.saveWebsArr[indexPath.row];
     }else if (self.sourceType == XMSaveVCDataSourceHistory){
-        cell.textLabel.text = self.historyWebsArr[indexPath.row][@"title"];
-        cell.detailTextLabel.text = self.historyWebsArr[indexPath.row][@"url"];
+        model = self.historyWebsArr[indexPath.row];
     }
+    cell.textLabel.text = model.title;
+    cell.detailTextLabel.text = model.webURL.absoluteString;
     
     return cell;
 }
@@ -177,13 +181,9 @@ typedef enum{
     if (self.sourceType == XMSaveVCDataSourceSave){
         model = self.saveWebsArr[indexPath.row];
     }else if (self.sourceType == XMSaveVCDataSourceHistory){
-        model = [[XMWebModel alloc] init];
-        model.webURL = [NSURL URLWithString:self.historyWebsArr[indexPath.row][@"url"]];
+        model = self.historyWebsArr[indexPath.row];
     }
     
-//    // 因为webmodule是push出来的,必须先pop掉当前控制器
-//    [self.navigationController popViewControllerAnimated:YES];
-
     // 通知代理发送网络请求
     if ([self.delegate respondsToSelector:@selector(openWebmoduleRequest:)]){
         [self.delegate openWebmoduleRequest:model];

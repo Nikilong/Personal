@@ -172,6 +172,10 @@
 		2086FCE120EBC61400957207 /* XMImageUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 2086FCE020EBC61400957207 /* XMImageUtil.m */; };
 		2086FCE420EBC75F00957207 /* file_upload_able.png in Resources */ = {isa = PBXBuildFile; fileRef = 2086FCE220EBC75F00957207 /* file_upload_able.png */; };
 		2086FCE520EBC75F00957207 /* file_upload_disable.png in Resources */ = {isa = PBXBuildFile; fileRef = 2086FCE320EBC75F00957207 /* file_upload_disable.png */; };
+		20A12707212ED099009CF024 /* icon_baidu.png in Resources */ = {isa = PBXBuildFile; fileRef = 20A12703212ED099009CF024 /* icon_baidu.png */; };
+		20A12708212ED099009CF024 /* icon_bing.png in Resources */ = {isa = PBXBuildFile; fileRef = 20A12704212ED099009CF024 /* icon_bing.png */; };
+		20A12709212ED099009CF024 /* icon_google.png in Resources */ = {isa = PBXBuildFile; fileRef = 20A12705212ED099009CF024 /* icon_google.png */; };
+		20A1270A212ED099009CF024 /* icon_sogou.png in Resources */ = {isa = PBXBuildFile; fileRef = 20A12706212ED099009CF024 /* icon_sogou.png */; };
 		20C85E382053E1F40057F483 /* XMToolboxViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20C85E372053E1F40057F483 /* XMToolboxViewController.m */; };
 		20C85E53205419C80057F483 /* XMToolBoxConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 20C85E52205419C80057F483 /* XMToolBoxConfig.m */; };
 		20C85E6020541F3B0057F483 /* tool_icon_0.png in Resources */ = {isa = PBXBuildFile; fileRef = 20C85E5620541F3B0057F483 /* tool_icon_0.png */; };
@@ -535,6 +539,10 @@
 		2086FCE320EBC75F00957207 /* file_upload_disable.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = file_upload_disable.png; sourceTree = "<group>"; };
 		2096B0E620A49C8D00BA249C /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PrefixHeader.pch; path = "虾兽维度/PrefixHeader.pch"; sourceTree = SOURCE_ROOT; };
 		2099EB7C1F19DCD500F8BD42 /* XMOpenWebmoduleProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMOpenWebmoduleProtocol.h; sourceTree = "<group>"; };
+		20A12703212ED099009CF024 /* icon_baidu.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_baidu.png; sourceTree = "<group>"; };
+		20A12704212ED099009CF024 /* icon_bing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_bing.png; sourceTree = "<group>"; };
+		20A12705212ED099009CF024 /* icon_google.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_google.png; sourceTree = "<group>"; };
+		20A12706212ED099009CF024 /* icon_sogou.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_sogou.png; sourceTree = "<group>"; };
 		20C85E362053E1F40057F483 /* XMToolboxViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMToolboxViewController.h; sourceTree = "<group>"; };
 		20C85E372053E1F40057F483 /* XMToolboxViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMToolboxViewController.m; sourceTree = "<group>"; };
 		20C85E51205419C80057F483 /* XMToolBoxConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMToolBoxConfig.h; path = ../Config/XMToolBoxConfig.h; sourceTree = "<group>"; };
@@ -1306,6 +1314,17 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		20A12702212ED099009CF024 /* searchIcon */ = {
+			isa = PBXGroup;
+			children = (
+				20A12703212ED099009CF024 /* icon_baidu.png */,
+				20A12704212ED099009CF024 /* icon_bing.png */,
+				20A12705212ED099009CF024 /* icon_google.png */,
+				20A12706212ED099009CF024 /* icon_sogou.png */,
+			);
+			path = searchIcon;
+			sourceTree = "<group>";
+		};
 		20C85E5420541BD50057F483 /* Toolbox */ = {
 			isa = PBXGroup;
 			children = (
@@ -1451,6 +1470,7 @@
 				200A823520837BBC00825E6E /* 虾兽维度-Bridging-Header.h */,
 				20077036205AA78F00551C00 /* config */,
 				20C85E5520541F3B0057F483 /* toolBoxIcons */,
+				20A12702212ED099009CF024 /* searchIcon */,
 				203D2FBA20FF79C8008788B6 /* wxFloatWindowIcon */,
 				849D26FF1E640E3200F0CA5D /* LaunchScreen.storyboard */,
 				2096B0E620A49C8D00BA249C /* PrefixHeader.pch */,
@@ -1645,6 +1665,7 @@
 				20863D1B20CD432200A0812C /* AssetsPickerChecked.png in Resources */,
 				20C85E6920541F3B0057F483 /* tool_icon_default.png in Resources */,
 				2066C30B209F643600799A1E /* index.html in Resources */,
+				20A12707212ED099009CF024 /* icon_baidu.png in Resources */,
 				204D2430209ED91A00F17E2E /* About.txt in Resources */,
 				203D2FC420FF79C8008788B6 /* wxFloatWindowIcon_4.png in Resources */,
 				20C85E6720541F3B0057F483 /* tool_icon_4.png in Resources */,
@@ -1679,8 +1700,11 @@
 				FD1EA0E220AC58C200658F18 /* file_delete_able.png in Resources */,
 				204D242E209ED91A00F17E2E /* About.txt in Resources */,
 				20863D1C20CD432200A0812C /* AssetsPickerChecked@2x.png in Resources */,
+				20A12708212ED099009CF024 /* icon_bing.png in Resources */,
 				203D2FC520FF79C8008788B6 /* wxFloatWindowIcon_5.png in Resources */,
 				20C85E6320541F3B0057F483 /* tool_icon_3.png in Resources */,
+				20A12709212ED099009CF024 /* icon_google.png in Resources */,
+				20A1270A212ED099009CF024 /* icon_sogou.png in Resources */,
 				2086643F20AC87DE00D51CCB /* dir_backup.png in Resources */,
 				205CECDC1F48150E00821E38 /* MBProgressHUD.bundle in Resources */,
 				2061C1DC20C3C534008C7424 /* code.html in Resources */,

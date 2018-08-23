@@ -214,7 +214,7 @@ static double backForwardSafeDistance = 80.0;
         [_containerV addSubview:navToolV];
         navToolV.backgroundColor = [self getNavColor];
         // 点击事件
-        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(resetNavFrame)];
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(naVTitleLabDidClick)];
         [navToolV addGestureRecognizer:tap];
         
         // 添加顶部的view,防止系统进入后台时隐藏statusbar造成的空隙
@@ -354,7 +354,7 @@ static double backForwardSafeDistance = 80.0;
         _statusCover = statusCover;
         
         // 点击事件
-        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(resetNavFrame)];
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(naVTitleLabDidClick)];
         [statusCover addGestureRecognizer:tap];
     }
     return _statusCover;
@@ -585,17 +585,21 @@ static double backForwardSafeDistance = 80.0;
 /**
  重设沉浸式导航栏原来的尺寸
  */
-- (void)resetNavFrame{
-    [UIView animateWithDuration:0.25f animations:^{
-        self.navToolV.frame = CGRectMake(0, XMStatusBarHeight, XMScreenW, 44);
-        self.wkWebview.frame = CGRectMake(0, 44 + XMStatusBarHeight, XMScreenW, XMScreenH);
-        self.navToolTitleLab.font = [UIFont systemFontOfSize:17];
-        self.toolBar.frame = CGRectMake(0, XMScreenH - [self getBottomToolBarHeight], XMScreenW, [self getBottomToolBarHeight]);
-    }completion:^(BOOL finished) {
-        self.navToolBtnContentV.hidden = NO;
-        // 恢复导航栏盖罩
-        self.statusCover.hidden = YES;
-    }];
+- (void)naVTitleLabDidClick{
+    if(self.navToolV.frame.size.height < 44){
+        [UIView animateWithDuration:0.25f animations:^{
+            self.navToolV.frame = CGRectMake(0, XMStatusBarHeight, XMScreenW, 44);
+            self.wkWebview.frame = CGRectMake(0, 44 + XMStatusBarHeight, XMScreenW, XMScreenH);
+            self.navToolTitleLab.font = [UIFont systemFontOfSize:17];
+            self.toolBar.frame = CGRectMake(0, XMScreenH - [self getBottomToolBarHeight], XMScreenW, [self getBottomToolBarHeight]);
+        }completion:^(BOOL finished) {
+            self.navToolBtnContentV.hidden = NO;
+            // 恢复导航栏盖罩
+            self.statusCover.hidden = YES;
+        }];
+    }else{
+        [self openNewModule:YES];
+    }
 }
 
 /** 将webmodule关闭掉 */
@@ -794,12 +798,22 @@ static double backForwardSafeDistance = 80.0;
     
     [multiVC dismissViewControllerAnimated:YES completion:nil];
     
+    [self openNewModule:NO];
+}
+
+/// 打开一个新的webmodule
+- (void)openNewModule:(BOOL)isPassUrl{
+
     XMSearchTableViewController *searchVC = [[XMSearchTableViewController alloc] init];
     searchVC.delegate = self;
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:searchVC];
-    // 导航控制器只能present另外一个导航控制器,不能push
-    [self presentViewController:nav animated:YES completion:nil];
+    [self presentViewController:nav animated:YES completion:^{
+        if(isPassUrl){
+            searchVC.passUrl = self.wkWebview.URL.absoluteString;
+        }
+    }];
 }
+
 
 //XMSearchTableViewController的代理方法,必须实现
 - (void)openWebmoduleRequest:(XMWebModel *)webModel{

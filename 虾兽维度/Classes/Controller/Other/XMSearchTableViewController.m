@@ -7,18 +7,21 @@
 //
 
 #import "XMSearchTableViewController.h"
+#import "XMWebModelLogic.h"
 
-static NSString *const kName = @"name";
+static NSString *const kImageName = @"imageName";
 static NSString *const kEngine = @"engine";
 
 @interface XMSearchTableViewController ()<UITextFieldDelegate,UIGestureRecognizerDelegate>
 
 @property (nonatomic, strong) NSString *selectEngine;
 @property (nonatomic, strong) NSMutableArray *engineArr;
+@property (nonatomic, strong) NSArray *searchResultArr;
 
 @property (weak, nonatomic)  UITextField *searchF;
-    
-@property (weak, nonatomic)  UITableViewCell *urlCell;
+
+@property (nonatomic, assign)  NSUInteger searchBtnWH;
+
 
 @end
 
@@ -34,17 +37,17 @@ static NSString *const kEngine = @"engine";
          http://cn.bing.com/search?q=a11a
          https://www.sogou.com/web?query=a11a
          */
-        NSDictionary *bingDict = @{kName : @"必应",
+        NSDictionary *bingDict = @{kImageName : @"icon_bing",
                                    kEngine : @"http://cn.bing.com/search?q="
                                    };
-        NSDictionary *baiduDict = @{kName : @"百毒",
-                                   kEngine : @"https://www.baidu.com/s?ie=UTF-8&wd="
+        NSDictionary *baiduDict = @{kImageName : @"icon_baidu",
+                                    kEngine : @"https://www.baidu.com/s?ie=UTF-8&wd="
                                    };
-        NSDictionary *sogouDict = @{kName : @"搜狗",
-                                     kEngine : @"https://www.sogou.com/web?query="
+        NSDictionary *sogouDict = @{kImageName : @"icon_sogou",
+                                    kEngine : @"https://www.sogou.com/web?query="
                                      };
-        NSDictionary *googleDict = @{@"name" : @"谷歌",
-                                   @"engine" : @"https://www.google.com/search?q="
+        NSDictionary *googleDict = @{kImageName : @"icon_google",
+                                     kEngine : @"https://www.google.com/search?q="
                                    };
         [_engineArr addObject:bingDict];
         [_engineArr addObject:baiduDict];
@@ -55,9 +58,38 @@ static NSString *const kEngine = @"engine";
     return _engineArr;
 }
 
+- (NSArray *)searchResultArr{
+    if (!_searchResultArr){
+        _searchResultArr = [NSArray array];
+    }
+    return _searchResultArr;
+}
+
+- (void)setPassUrl:(NSString *)passUrl{
+    _passUrl = passUrl;
+    
+    // 设置输入框和cell的内容
+    self.searchF.text = passUrl;
+    [self textFieldDidChangeNotification:nil];
+    
+    // 全选并且移动光标到首位(先移动光标到首位,再全选所有)
+    UITextRange *range = self.searchF.selectedTextRange;
+    UITextPosition *start = [self.searchF positionFromPosition:range.start inDirection:UITextLayoutDirectionLeft offset:self.searchF.text.length];
+    // 控制光标在开始的位置
+    if (start) {
+        [self.searchF setSelectedTextRange:[self.searchF textRangeFromPosition:start toPosition:start]];
+    }
+    // 全选
+    [self.searchF selectAll:self];
+    
+}
+
 #pragma mark - 系统默认
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    // 设置搜索引擎按钮宽高
+    self.searchBtnWH = 70;
     // 设置导航栏
     [self setNavItem];
     // 默认初始搜索引擎为必应
@@ -112,27 +144,29 @@ static NSString *const kEngine = @"engine";
 
 - (void)goWithUrlFlag:(BOOL)urlFlag{
     
-    // 收起键盘
-    [self.searchF resignFirstResponder];
-    
-    // 传递web数据给webmodule
-    XMWebModel *model = [[XMWebModel alloc] init];
-    // 对于搜索内容为中文时,需要转码
-    NSString *webStr;
-    if (urlFlag){
-        webStr = [self.searchF.text stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
+    // 如果该url和初始传递的url一样,并且是进行网页跳转时,直接dismiss掉
+    if([self.searchF.text isEqualToString:self.passUrl] && urlFlag){
+        [self cancel];
     }else{
-        webStr = [[NSString stringWithFormat:@"%@%@",self.selectEngine,self.searchF.text] stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
-    }
-    model.webURL = [NSURL URLWithString:webStr];
-    model.searchMode = YES;
-    
-    // 先dismiss掉self,然后再通知代理去加载网页
-    [self dismissViewControllerAnimated:YES completion:^{
-        if ([self.delegate respondsToSelector:@selector(openWebmoduleRequest:)]){
-            [self.delegate openWebmoduleRequest:model];
+        // 传递web数据给webmodule
+        XMWebModel *model = [[XMWebModel alloc] init];
+        // 对于搜索内容为中文时,需要转码
+        NSString *webStr;
+        if (urlFlag){
+            webStr = [self.searchF.text stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
+        }else{
+            webStr = [[NSString stringWithFormat:@"%@%@",self.selectEngine,self.searchF.text] stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
         }
-    }];
+        model.webURL = [NSURL URLWithString:webStr];
+        model.searchMode = YES;
+        
+        // 先dismiss掉self,然后再通知代理去加载网页
+        [self dismissViewControllerAnimated:YES completion:^{
+            if ([self.delegate respondsToSelector:@selector(openWebmoduleRequest:)]){
+                [self.delegate openWebmoduleRequest:model];
+            }
+        }];
+    }
 }
 
 - (void)cancel{
@@ -142,58 +176,133 @@ static NSString *const kEngine = @"engine";
 
 #pragma mark - delegate
 #pragma mark tableview delegate
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
 
-    return 2;
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
+    NSString *title = @"";
+    if(section == 1){
+        title = @"搜索";
+    }else if (section == 2){
+        title = @"书签或浏览历史";
+    }
+    return title;
+}
+
+//- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
+//    if (section == 0){
+//        return [[UIView alloc] init];
+//    }else{
+//        return [[UIView alloc] initWithFrame:CGRectMake(0, 0, XMScreenW, 25)];
+//    }
+//}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return indexPath.section == 1 ? self.searchBtnWH : 44;
+}
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+    return self.searchResultArr.count > 0 ? 3 : 2;
 }
     
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return section == 0 ? 1 : self.engineArr.count;
+    if(section == 2){
+        return self.searchResultArr.count;
+    }else{
+        return 1;
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString *ID = @"cell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ID];
-    if (!cell){
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:ID];
-    }
+    UITableViewCell *cell;
     if(indexPath.section == 0){
-        cell.textLabel.text = @"前往URL:";
-        self.urlCell = cell;
-    }else{
-    
-        cell.textLabel.text = self.engineArr[indexPath.row][kName];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"searchCellOne"];
+        cell.textLabel.text = [NSString stringWithFormat:@"前往URL: %@",self.searchF.text];
+    }else if(indexPath.section == 1){
+        
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"searchCellTwo"];
+        [self setSearchBtnInCell:cell];
+        
+    }else if(indexPath.section == 2){
+        static NSString *ID = @"searchCellThree";
+        cell = [tableView dequeueReusableCellWithIdentifier:ID];
+        if (!cell){
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:ID];
+        }
+        XMWebModel *model = self.searchResultArr[indexPath.row];
+        cell.textLabel.text = model.title;
+        cell.detailTextLabel.text = model.webURL.absoluteString;
     }
     
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    // 收起键盘
+    [self.searchF resignFirstResponder];
     
     if(indexPath.section == 0){
         [self goWithUrlFlag:YES];
-    }else{
+    }else if(indexPath.section == 2){
+        XMWebModel *model = self.searchResultArr[indexPath.row];
+        BOOL canOpenNewWebmodule = ![model.webURL.absoluteString isEqualToString:self.passUrl];
+        [self dismissViewControllerAnimated:YES completion:^{
+            if (canOpenNewWebmodule && [self.delegate respondsToSelector:@selector(openWebmoduleRequest:)]){
+                [self.delegate openWebmoduleRequest:model];
+            }
+        }];
     
-        // 改变频道
-        self.selectEngine = self.engineArr[indexPath.row][kEngine];
-        // 然后去搜索
-        [self goWithUrlFlag:NO];
     }
 }
 
-#pragma mark textfield delegate
-- (BOOL)textFieldShouldReturn:(UITextField *)textField{
-    // 按下键盘的return去搜索
+/// 第1组,搜索引擎组UI设置
+- (void)setSearchBtnInCell:(UITableViewCell *)cell{
+    NSUInteger btnCount = self.engineArr.count;
+    CGFloat margin = (XMScreenW - self.searchBtnWH * btnCount) / (btnCount + 1);
+    CGFloat btnX = 0;
+    for (NSUInteger i = 0; i < btnCount; i++) {
+        btnX = margin + (margin + self.searchBtnWH) * i;
+        btnX = margin + (margin + self.searchBtnWH) * i;
+        UIButton *btn = [[UIButton alloc] initWithFrame:CGRectMake(btnX , 0, self.searchBtnWH, self.searchBtnWH)];
+        btn.tag = i;
+        [cell.contentView addSubview:btn];
+        [btn setImage:[UIImage imageNamed:self.engineArr[i][kImageName]] forState:UIControlStateNormal];
+        [btn addTarget:self action:@selector(searchEngineBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    
+}
+
+/// 搜索引擎点击事件
+- (void)searchEngineBtnDidClick:(UIButton *)btn{
+    // 收起键盘
+    [self.searchF resignFirstResponder];
+    // 改变频道
+    self.selectEngine = self.engineArr[btn.tag][kEngine];
+    // 然后去搜索
     [self goWithUrlFlag:NO];
+    
+}
+
+#pragma mark - textfield delegate
+- (BOOL)textFieldShouldReturn:(UITextField *)textField{
+    // 按下键盘的return去搜索,如果包含http或者https开头,默认打开网址
+    if([textField.text hasPrefix:@"http://"] || [textField.text hasPrefix:@"https://"]){
+        [self goWithUrlFlag:YES];
+    }else{
+        [self goWithUrlFlag:NO];
+    }
     return YES;
 }
     
 #pragma mark - 监听textfield的输入
 - (void)textFieldDidChangeNotification:(NSNotification *)noti{
-
-    self.urlCell.textLabel.text = [NSString stringWithFormat:@"前往URL: %@",self.searchF.text];
-}
     
+    NSArray *result = [XMWebModelLogic searchForKeywordInWebData:self.searchF.text];
+    self.searchResultArr = nil;
+    if(result.count > 0){
+        self.searchResultArr = result;
+    }
+    [self.tableView reloadData];
+}
+
 
 
 @end

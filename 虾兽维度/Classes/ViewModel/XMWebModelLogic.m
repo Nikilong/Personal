@@ -207,7 +207,7 @@ static NSMutableArray *_saveWebModelArr;
     [NSKeyedArchiver archiveRootObject:_saveWebModelArr toFile:[XMSavePathUnit getSaveWebModelArchicerPath]];
 }
 
-+ (NSArray *)webModels{
++ (NSArray<XMWebModel *> *)webModels{
     return _saveWebModelArr;
 }
 
@@ -228,8 +228,22 @@ static NSMutableArray *_saveWebModelArr;
     
 }
 
+/// 获取浏览历史的model数据
++ (NSArray<XMWebModel *> *)getHistoryModelArray{
+    NSMutableArray *webmodelArr = [NSMutableArray array];
+    NSArray *saveArr = [self getHistoryUrlArray];
+    // 将字典转为模型数组
+    for (NSDictionary *dict in saveArr) {
+        XMWebModel *model = [[XMWebModel alloc] init];
+        model.title = dict[@"title"];
+        model.webURL = [NSURL URLWithString:dict[@"url"]];
+        [webmodelArr addObject:model];
+    }
+    return webmodelArr;
+}
+
 /// 获取浏览历史
-+ (NSArray *)getHistoryUrlArray{
++ (NSArray<NSDictionary *> *)getHistoryUrlArray{
     return [NSKeyedUnarchiver unarchiveObjectWithFile:[XMSavePathUnit getWebModelHistoryUrlArchicerPath]];
 }
 
@@ -254,6 +268,30 @@ static NSMutableArray *_saveWebModelArr;
     }
     // 保存新数据
     [NSKeyedArchiver archiveRootObject:oldArr toFile:[XMSavePathUnit getWebModelHistoryUrlArchicerPath]];
+}
+
+/// 从历史记录或者书签中搜索是否有关键字
++ (NSArray<XMWebModel *> *)searchForKeywordInWebData:(NSString *)keyworld{
+    NSMutableArray *resultArr = [NSMutableArray array];
+    // 书签中寻找
+    NSArray *saveArr = [self webModels];
+    for (XMWebModel *model in saveArr) {
+        if([model.title containsString:keyworld]){
+            [resultArr addObject:model];
+        }else if([model.webURL.absoluteString containsString:keyworld]){
+            [resultArr addObject:model];
+        }
+    }
+    // 历史浏览记录中查找
+    NSArray *historyArr = [self getHistoryModelArray];
+    for (XMWebModel *model in historyArr) {
+        if([model.title containsString:keyworld]){
+            [resultArr addObject:model];
+        }else if([model.webURL.absoluteString containsString:keyworld]){
+            [resultArr addObject:model];
+        }
+    }
+    return resultArr;
 }
 
 @end

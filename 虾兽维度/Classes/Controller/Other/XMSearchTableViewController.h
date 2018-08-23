@@ -12,5 +12,6 @@
 @interface XMSearchTableViewController : UITableViewController
 
 @property (weak, nonatomic)  id<XMOpenWebmoduleProtocol> delegate;
+@property (nonatomic, copy) NSString *passUrl;  // 是否传递url
 
 @end
