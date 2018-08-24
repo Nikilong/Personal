@@ -122,7 +122,7 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
     [self.view addSubview:backBtn];
     
     // 底部工具条的容器
-    UIView *bottomToolV = [[UIView alloc] initWithFrame:CGRectMake(0, XMScreenH - toolBarH, XMScreenW, toolBarH)];
+    UIView *bottomToolV = [[UIView alloc] initWithFrame:CGRectMake(0, XMScreenH - toolBarH -  (isIphoneX ? 20 : 0), XMScreenW, toolBarH + (isIphoneX ? 20 : 0))];
     [self.view addSubview:bottomToolV];
     
     // 页数标题(底部靠左)

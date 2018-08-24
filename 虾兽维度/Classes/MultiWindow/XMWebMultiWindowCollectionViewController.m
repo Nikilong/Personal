@@ -71,7 +71,7 @@ static NSString * const reuseIdentifier = @"XMMultiWindowCellIdentify";
     // 毛玻璃
     UIBlurEffect *eff = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
     UIVisualEffectView *effV = [[UIVisualEffectView alloc] initWithEffect:eff];
-    effV.frame = CGRectMake(0, XMScreenH - btnWH, XMScreenW, btnWH);
+    effV.frame = CGRectMake(0, XMScreenH - btnWH - (isIphoneX ? 20 : 0), XMScreenW, btnWH + (isIphoneX ? 20 : 0));
     
     
     UIButton * privateBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, btnWH)];
@@ -106,12 +106,10 @@ static NSString * const reuseIdentifier = @"XMMultiWindowCellIdentify";
     if([self.delegate respondsToSelector:@selector(webMultiWindowCollectionViewControllerCallForNewSearchModule:)]){
         [self.delegate webMultiWindowCollectionViewControllerCallForNewSearchModule:self];
     }
-//    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 /// 返回
 - (void)diss{
-    NSLog(@"%s",__func__);
     if(self.navigationController){
         [self.navigationController popViewControllerAnimated:YES];
     }else{

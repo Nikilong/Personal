@@ -33,8 +33,10 @@ NSString *const XMNewsSaveTimeDictKey = @"XMNewsSaveTimeDictKey";
     NSArray *arrOrigin = dict[@"data"][@"items"];
     NSUInteger originNum = arrOrigin.count;
     
-    // 当没有加载够所需数据不结束循环
-    for (int i = 0; arrM.count < count; i++){
+    // 改为显示加载的所有数据
+    for (int i = 0; i < arrOrigin.count; i++){
+////         当没有加载够所需数据不结束循环
+//    for (int i = 0; arrM.count < count; i++){
         // 防止越界,需要重新发送网络请求来获得json数据
         if (i == originNum) break;
         

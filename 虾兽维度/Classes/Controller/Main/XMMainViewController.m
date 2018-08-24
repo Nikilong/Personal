@@ -313,7 +313,9 @@ static double leftViewAnimateTime = 0.25;
     searchVC.delegate = self;
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:searchVC];
     // 导航控制器只能present另外一个导航控制器,不能push
-    [self presentViewController:nav animated:YES completion:nil];
+    [self presentViewController:nav animated:YES completion:^{
+        self.homeVC.tableView.scrollEnabled = YES;
+    }];
 }
 
 
@@ -322,6 +324,8 @@ static double leftViewAnimateTime = 0.25;
     //
     XMMetorMapViewController *maVC  = [[XMMetorMapViewController alloc] init];
     [self.navigationController pushViewController:maVC animated:YES];
+    
+    self.homeVC.tableView.scrollEnabled = YES;
 }
 
 /** 导航栏titleview的dropview*/
@@ -589,7 +593,7 @@ static double leftViewAnimateTime = 0.25;
 
 /**  打开珍藏VC*/
 - (void)callSaveViewController{
-    
+//    self.homeVC.tableView.scrollEnabled  = NO;
     // 隐藏左侧边栏
     [self hideLeftView];
     
@@ -597,12 +601,24 @@ static double leftViewAnimateTime = 0.25;
     saveVC.delegate = self;
     [self.navigationController pushViewController:saveVC animated:YES];
     self.navigationItem.title = @"首页";
+    self.homeVC.tableView.scrollEnabled  = YES;
 }
 
 #pragma mark UIGestureRecognizer delegate
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
     return YES;
 }
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
+    if([gestureRecognizer isKindOfClass:[UISwipeGestureRecognizer class]]){
+        UISwipeGestureRecognizer *swip = (UISwipeGestureRecognizer *)gestureRecognizer;
+        if(swip.numberOfTouchesRequired >= 2){
+            self.homeVC.tableView.scrollEnabled = NO;
+        }
+    }
+    return YES;
+}
+
 #pragma mark XMToolBoxViewControllerDelegate delegate
 - (void)toolboxButtonDidClick:(UIButton *)btn{
     switch (btn.tag) {

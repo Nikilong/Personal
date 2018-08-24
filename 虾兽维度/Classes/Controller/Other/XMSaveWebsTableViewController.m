@@ -95,7 +95,7 @@ typedef enum{
     [seg addTarget:self action:@selector(segmentedButtonDidClick:) forControlEvents:UIControlEventValueChanged];
     self.navigationItem.titleView = seg;
     
-    UIButton *clearBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 30)];
+    UIButton *clearBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 60, 30)];
     [clearBtn setTitle:@"清除" forState:UIControlStateNormal];
     [clearBtn setTitleColor:RGB(42, 122, 252) forState:UIControlStateNormal];
     [clearBtn addTarget:self action:@selector(clearHistoryRecord) forControlEvents:UIControlEventTouchUpInside];
