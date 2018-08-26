@@ -12,7 +12,6 @@
 #import "XMNavTitleTableViewController.h"
 //#import "XMWebViewController.h"
 #import "XMWKWebViewController.h"
-#import "XMHiwebViewController.h"
 #import "XMChannelModelLogic.h"
 #import "XMLeftViewUserCell.h"
 #import "XMConerAccessoryView.h"
@@ -143,10 +142,7 @@ static double leftViewAnimateTime = 0.25;
 }
 
 - (void)test{
-    
-    XMHiwebViewController *clipVC = [[XMHiwebViewController alloc] init];
-    clipVC.view.backgroundColor = [UIColor whiteColor];
-    [self.navigationController pushViewController:clipVC animated:YES];
+
 }
 
 - (void)addCornerAccessoryView{

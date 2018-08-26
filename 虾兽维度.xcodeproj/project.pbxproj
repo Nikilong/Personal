@@ -8,12 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		20021F8A21298B4800A2BA02 /* XMVisualView.m in Sources */ = {isa = PBXBuildFile; fileRef = 20021F8921298B4800A2BA02 /* XMVisualView.m */; };
-		200770302059775100551C00 /* XMHiwebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 200770262059775100551C00 /* XMHiwebViewController.m */; };
-		200770312059775100551C00 /* XMPersonDataUnit.m in Sources */ = {isa = PBXBuildFile; fileRef = 200770282059775100551C00 /* XMPersonDataUnit.m */; };
-		200770322059775100551C00 /* XMPersonFilmCollectionVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2007702A2059775100551C00 /* XMPersonFilmCollectionVC.m */; };
-		200770332059775100551C00 /* XMShowCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2007702C2059775100551C00 /* XMShowCollectionViewCell.m */; };
-		200770342059775100551C00 /* XMShowCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2007702D2059775100551C00 /* XMShowCollectionViewCell.xib */; };
-		200770352059775100551C00 /* XMSingleFilmModle.m in Sources */ = {isa = PBXBuildFile; fileRef = 2007702F2059775100551C00 /* XMSingleFilmModle.m */; };
 		200A823420837B1300825E6E /* XMMetorMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200A823320837B1300825E6E /* XMMetorMapViewController.swift */; };
 		200B709C2111F04A0036502B /* XMWebURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 200B709B2111F04A0036502B /* XMWebURLProtocol.m */; };
 		202C84EF1F2624AD0055FD7D /* XMHomeTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 202C84E31F2624AD0055FD7D /* XMHomeTableViewController.m */; };
@@ -88,10 +82,8 @@
 		205CECEE1F48150E00821E38 /* UIImageView+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 205CECD61F48150E00821E38 /* UIImageView+WebCache.m */; };
 		205CECEF1F48150E00821E38 /* UIView+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 205CECD81F48150E00821E38 /* UIView+WebCache.m */; };
 		205CECF01F48150E00821E38 /* UIView+WebCacheOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 205CECDA1F48150E00821E38 /* UIView+WebCacheOperation.m */; };
-		205CECF41F48151700821E38 /* UIView+getPointColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 205CECF31F48151700821E38 /* UIView+getPointColor.m */; };
 		205CECF61F488EF700821E38 /* webSpecial.plist in Resources */ = {isa = PBXBuildFile; fileRef = 205CECF51F488EF700821E38 /* webSpecial.plist */; };
 		205CECF91F4898A600821E38 /* XMDropView.m in Sources */ = {isa = PBXBuildFile; fileRef = 205CECF81F4898A600821E38 /* XMDropView.m */; };
-		205CECFC1F489A0000821E38 /* UIView+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = 205CECFB1F489A0000821E38 /* UIView+Extension.m */; };
 		205CED0A1F489F2B00821E38 /* XMLeftTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 205CED051F489F2B00821E38 /* XMLeftTableViewController.m */; };
 		205CED0B1F489F2B00821E38 /* XMMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 205CED071F489F2B00821E38 /* XMMainViewController.m */; };
 		205CED0C1F489F2B00821E38 /* XMNavTitleTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 205CED091F489F2B00821E38 /* XMNavTitleTableViewController.m */; };
@@ -176,6 +168,8 @@
 		20A12708212ED099009CF024 /* icon_bing.png in Resources */ = {isa = PBXBuildFile; fileRef = 20A12704212ED099009CF024 /* icon_bing.png */; };
 		20A12709212ED099009CF024 /* icon_google.png in Resources */ = {isa = PBXBuildFile; fileRef = 20A12705212ED099009CF024 /* icon_google.png */; };
 		20A1270A212ED099009CF024 /* icon_sogou.png in Resources */ = {isa = PBXBuildFile; fileRef = 20A12706212ED099009CF024 /* icon_sogou.png */; };
+		20A1273B2132F9FF009CF024 /* UIView+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = 20A127382132F9FF009CF024 /* UIView+Extension.m */; };
+		20A1273C2132F9FF009CF024 /* UIView+getPointColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 20A1273A2132F9FF009CF024 /* UIView+getPointColor.m */; };
 		20C85E382053E1F40057F483 /* XMToolboxViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20C85E372053E1F40057F483 /* XMToolboxViewController.m */; };
 		20C85E53205419C80057F483 /* XMToolBoxConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 20C85E52205419C80057F483 /* XMToolBoxConfig.m */; };
 		20C85E6020541F3B0057F483 /* tool_icon_0.png in Resources */ = {isa = PBXBuildFile; fileRef = 20C85E5620541F3B0057F483 /* tool_icon_0.png */; };
@@ -234,17 +228,6 @@
 /* Begin PBXFileReference section */
 		20021F8821298B4800A2BA02 /* XMVisualView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMVisualView.h; sourceTree = "<group>"; };
 		20021F8921298B4800A2BA02 /* XMVisualView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMVisualView.m; sourceTree = "<group>"; };
-		200770252059775100551C00 /* XMHiwebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMHiwebViewController.h; sourceTree = "<group>"; };
-		200770262059775100551C00 /* XMHiwebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMHiwebViewController.m; sourceTree = "<group>"; };
-		200770272059775100551C00 /* XMPersonDataUnit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPersonDataUnit.h; sourceTree = "<group>"; };
-		200770282059775100551C00 /* XMPersonDataUnit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPersonDataUnit.m; sourceTree = "<group>"; };
-		200770292059775100551C00 /* XMPersonFilmCollectionVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPersonFilmCollectionVC.h; sourceTree = "<group>"; };
-		2007702A2059775100551C00 /* XMPersonFilmCollectionVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPersonFilmCollectionVC.m; sourceTree = "<group>"; };
-		2007702B2059775100551C00 /* XMShowCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMShowCollectionViewCell.h; sourceTree = "<group>"; };
-		2007702C2059775100551C00 /* XMShowCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMShowCollectionViewCell.m; sourceTree = "<group>"; };
-		2007702D2059775100551C00 /* XMShowCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = XMShowCollectionViewCell.xib; sourceTree = "<group>"; };
-		2007702E2059775100551C00 /* XMSingleFilmModle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMSingleFilmModle.h; sourceTree = "<group>"; };
-		2007702F2059775100551C00 /* XMSingleFilmModle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMSingleFilmModle.m; sourceTree = "<group>"; };
 		200A823320837B1300825E6E /* XMMetorMapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XMMetorMapViewController.swift; sourceTree = "<group>"; };
 		200A823520837BBC00825E6E /* 虾兽维度-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "虾兽维度-Bridging-Header.h"; sourceTree = "<group>"; };
 		200B709A2111F04A0036502B /* XMWebURLProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMWebURLProtocol.h; sourceTree = "<group>"; };
@@ -382,13 +365,9 @@
 		205CECD81F48150E00821E38 /* UIView+WebCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+WebCache.m"; sourceTree = "<group>"; };
 		205CECD91F48150E00821E38 /* UIView+WebCacheOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+WebCacheOperation.h"; sourceTree = "<group>"; };
 		205CECDA1F48150E00821E38 /* UIView+WebCacheOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+WebCacheOperation.m"; sourceTree = "<group>"; };
-		205CECF21F48151700821E38 /* UIView+getPointColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+getPointColor.h"; sourceTree = "<group>"; };
-		205CECF31F48151700821E38 /* UIView+getPointColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+getPointColor.m"; sourceTree = "<group>"; };
 		205CECF51F488EF700821E38 /* webSpecial.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = webSpecial.plist; path = ../Config/webSpecial.plist; sourceTree = "<group>"; };
 		205CECF71F4898A600821E38 /* XMDropView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMDropView.h; sourceTree = "<group>"; };
 		205CECF81F4898A600821E38 /* XMDropView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMDropView.m; sourceTree = "<group>"; };
-		205CECFA1F489A0000821E38 /* UIView+Extension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Extension.h"; sourceTree = "<group>"; };
-		205CECFB1F489A0000821E38 /* UIView+Extension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Extension.m"; sourceTree = "<group>"; };
 		205CED041F489F2B00821E38 /* XMLeftTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMLeftTableViewController.h; sourceTree = "<group>"; };
 		205CED051F489F2B00821E38 /* XMLeftTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMLeftTableViewController.m; sourceTree = "<group>"; };
 		205CED061F489F2B00821E38 /* XMMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMMainViewController.h; sourceTree = "<group>"; };
@@ -543,6 +522,10 @@
 		20A12704212ED099009CF024 /* icon_bing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_bing.png; sourceTree = "<group>"; };
 		20A12705212ED099009CF024 /* icon_google.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_google.png; sourceTree = "<group>"; };
 		20A12706212ED099009CF024 /* icon_sogou.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_sogou.png; sourceTree = "<group>"; };
+		20A127372132F9FF009CF024 /* UIView+Extension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Extension.h"; sourceTree = "<group>"; };
+		20A127382132F9FF009CF024 /* UIView+Extension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Extension.m"; sourceTree = "<group>"; };
+		20A127392132F9FF009CF024 /* UIView+getPointColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+getPointColor.h"; sourceTree = "<group>"; };
+		20A1273A2132F9FF009CF024 /* UIView+getPointColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+getPointColor.m"; sourceTree = "<group>"; };
 		20C85E362053E1F40057F483 /* XMToolboxViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMToolboxViewController.h; sourceTree = "<group>"; };
 		20C85E372053E1F40057F483 /* XMToolboxViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMToolboxViewController.m; sourceTree = "<group>"; };
 		20C85E51205419C80057F483 /* XMToolBoxConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMToolBoxConfig.h; path = ../Config/XMToolBoxConfig.h; sourceTree = "<group>"; };
@@ -648,25 +631,6 @@
 			);
 			name = XMVisualView;
 			path = XMVisualImageView;
-			sourceTree = "<group>";
-		};
-		200770242059775100551C00 /* hiweb */ = {
-			isa = PBXGroup;
-			children = (
-				205CECF11F48151700821E38 /* Category */,
-				200770252059775100551C00 /* XMHiwebViewController.h */,
-				200770262059775100551C00 /* XMHiwebViewController.m */,
-				200770272059775100551C00 /* XMPersonDataUnit.h */,
-				200770282059775100551C00 /* XMPersonDataUnit.m */,
-				200770292059775100551C00 /* XMPersonFilmCollectionVC.h */,
-				2007702A2059775100551C00 /* XMPersonFilmCollectionVC.m */,
-				2007702B2059775100551C00 /* XMShowCollectionViewCell.h */,
-				2007702C2059775100551C00 /* XMShowCollectionViewCell.m */,
-				2007702D2059775100551C00 /* XMShowCollectionViewCell.xib */,
-				2007702E2059775100551C00 /* XMSingleFilmModle.h */,
-				2007702F2059775100551C00 /* XMSingleFilmModle.m */,
-			);
-			path = hiweb;
 			sourceTree = "<group>";
 		};
 		20077036205AA78F00551C00 /* config */ = {
@@ -1004,18 +968,6 @@
 			path = SDWebImage;
 			sourceTree = "<group>";
 		};
-		205CECF11F48151700821E38 /* Category */ = {
-			isa = PBXGroup;
-			children = (
-				205CECF21F48151700821E38 /* UIView+getPointColor.h */,
-				205CECF31F48151700821E38 /* UIView+getPointColor.m */,
-				205CECFA1F489A0000821E38 /* UIView+Extension.h */,
-				205CECFB1F489A0000821E38 /* UIView+Extension.m */,
-			);
-			name = Category;
-			path = ../../Classes/Category;
-			sourceTree = "<group>";
-		};
 		205CED031F489F2B00821E38 /* Main */ = {
 			isa = PBXGroup;
 			children = (
@@ -1331,7 +1283,6 @@
 				204D23D9209ED84000F17E2E /* wifiTransFiles */,
 				20077038205AA7E400551C00 /* Main */,
 				20077037205AA7D200551C00 /* clipImage */,
-				200770242059775100551C00 /* hiweb */,
 			);
 			name = Toolbox;
 			path = ../Toobox;
@@ -1417,6 +1368,10 @@
 				842970FC1E654644002BDBC0 /* AppDelegate.h */,
 				842970FD1E654644002BDBC0 /* AppDelegate.m */,
 				2099EB7C1F19DCD500F8BD42 /* XMOpenWebmoduleProtocol.h */,
+				20A127372132F9FF009CF024 /* UIView+Extension.h */,
+				20A127382132F9FF009CF024 /* UIView+Extension.m */,
+				20A127392132F9FF009CF024 /* UIView+getPointColor.h */,
+				20A1273A2132F9FF009CF024 /* UIView+getPointColor.m */,
 			);
 			path = Other;
 			sourceTree = "<group>";
@@ -1690,7 +1645,6 @@
 				FD9E34D62114041300FFBE3B /* webFilterList.plist in Resources */,
 				20E895B320ADB58C0090AD15 /* MISFileType.bundle in Resources */,
 				849D26FE1E640E3200F0CA5D /* Assets.xcassets in Resources */,
-				200770342059775100551C00 /* XMShowCollectionViewCell.xib in Resources */,
 				20E895B520ADDAA50090AD15 /* file_move_disable.png in Resources */,
 				FD3332E920A1786A0017655F /* wifiopen.png in Resources */,
 				203D2FC820FF90E9008788B6 /* wxFloatWindowIcon_6.png in Resources */,
@@ -1746,6 +1700,7 @@
 				20863CBA20CD422F00A0812C /* ZLPhotoPickerAssetsViewController.m in Sources */,
 				205CECE91F48150E00821E38 /* UIButton+WebCache.m in Sources */,
 				2086642920AB403D00D51CCB /* aeskey.c in Sources */,
+				20A1273C2132F9FF009CF024 /* UIView+getPointColor.m in Sources */,
 				205CED0A1F489F2B00821E38 /* XMLeftTableViewController.m in Sources */,
 				FDB09A02211317B800148492 /* XMNavigationInteractiveTransition.m in Sources */,
 				20863CBC20CD422F00A0812C /* ZLPhotoPickerViewController.m in Sources */,
@@ -1753,7 +1708,6 @@
 				205CECEB1F48150E00821E38 /* UIImage+MultiFormat.m in Sources */,
 				202C84EF1F2624AD0055FD7D /* XMHomeTableViewController.m in Sources */,
 				2061C21B20C56F5F008C7424 /* HJBufferSlider.m in Sources */,
-				200770322059775100551C00 /* XMPersonFilmCollectionVC.m in Sources */,
 				205CECF91F4898A600821E38 /* XMDropView.m in Sources */,
 				20C85E7020551B800057F483 /* XMTouchIDKeyboardViewController.m in Sources */,
 				205CECEF1F48150E00821E38 /* UIView+WebCache.m in Sources */,
@@ -1763,7 +1717,6 @@
 				205CECEE1F48150E00821E38 /* UIImageView+WebCache.m in Sources */,
 				205CECE11F48150E00821E38 /* SDImageCache.m in Sources */,
 				203D2FF321031F48008788B6 /* XMRefreshHeaderView.m in Sources */,
-				200770302059775100551C00 /* XMHiwebViewController.m in Sources */,
 				FDE985412126CB1D003D2FE2 /* XMTimeTool.m in Sources */,
 				204D2431209ED91A00F17E2E /* DDAbstractDatabaseLogger.m in Sources */,
 				2086643020AB403D00D51CCB /* crypt.c in Sources */,
@@ -1772,6 +1725,7 @@
 				205CECDD1F48150E00821E38 /* MBProgressHUD.m in Sources */,
 				204D2416209ED8E800F17E2E /* WebSocket.m in Sources */,
 				200B709C2111F04A0036502B /* XMWebURLProtocol.m in Sources */,
+				20A1273B2132F9FF009CF024 /* UIView+Extension.m in Sources */,
 				2086642E20AB403D00D51CCB /* pwd2key.c in Sources */,
 				205CECE51F48150E00821E38 /* SDWebImageDownloader.m in Sources */,
 				204D2406209ED8E800F17E2E /* DDData.m in Sources */,
@@ -1796,7 +1750,6 @@
 				205CECDF1F48150E00821E38 /* NSData+ImageContentType.m in Sources */,
 				204D240E209ED8E800F17E2E /* MultipartMessageHeader.m in Sources */,
 				204D242F209ED91A00F17E2E /* GCDAsyncSocket.m in Sources */,
-				205CECFC1F489A0000821E38 /* UIView+Extension.m in Sources */,
 				FDD895A3212BAAE800E2EDAD /* XMFileManageTool.m in Sources */,
 				2086642B20AB403D00D51CCB /* fileenc.c in Sources */,
 				204D2435209ED91A00F17E2E /* DDTTYLogger.m in Sources */,
@@ -1811,7 +1764,6 @@
 				204D2407209ED8E800F17E2E /* DDNumber.m in Sources */,
 				2086642A20AB403D00D51CCB /* aestab.c in Sources */,
 				204D2433209ED91A00F17E2E /* DDFileLogger.m in Sources */,
-				200770332059775100551C00 /* XMShowCollectionViewCell.m in Sources */,
 				205CECE31F48150E00821E38 /* SDWebImageCompat.m in Sources */,
 				2061C21020C56F5F008C7424 /* HJVideoConfigModel.m in Sources */,
 				2086643420AB403D00D51CCB /* minishared.c in Sources */,
@@ -1826,7 +1778,6 @@
 				2086643320AB403D00D51CCB /* ioapi_mem.c in Sources */,
 				FD7407E820B4306D00A83979 /* XMPhotoCollectionViewController.m in Sources */,
 				20863CC020CD422F00A0812C /* ZLPhotoPickerGroupTableViewCell.m in Sources */,
-				200770312059775100551C00 /* XMPersonDataUnit.m in Sources */,
 				204D2410209ED8E800F17E2E /* HTTPAsyncFileResponse.m in Sources */,
 				204D240B209ED8E800F17E2E /* HTTPMessage.m in Sources */,
 				204D2415209ED8E800F17E2E /* HTTPRedirectResponse.m in Sources */,
@@ -1836,7 +1787,6 @@
 				202C84F21F2624AD0055FD7D /* XMSearchTableViewController.m in Sources */,
 				20835AF0212956590009E17F /* XMChannelModelLogic.m in Sources */,
 				2061C21C20C56F5F008C7424 /* HJCircleLoading.m in Sources */,
-				205CECF41F48151700821E38 /* UIView+getPointColor.m in Sources */,
 				2086643220AB403D00D51CCB /* ioapi_buf.c in Sources */,
 				205CED0B1F489F2B00821E38 /* XMMainViewController.m in Sources */,
 				2086642720AB403D00D51CCB /* aes_ni.c in Sources */,
@@ -1856,7 +1806,6 @@
 				2061C21620C56F5F008C7424 /* HJVideoUIManager.m in Sources */,
 				2086642D20AB403D00D51CCB /* prng.c in Sources */,
 				2086643720AB403D00D51CCB /* SSZipArchive.m in Sources */,
-				200770352059775100551C00 /* XMSingleFilmModle.m in Sources */,
 				20C85E382053E1F40057F483 /* XMToolboxViewController.m in Sources */,
 				205CED0F1F48AA5600821E38 /* XMTextTableViewCell.m in Sources */,
 				204D240D209ED8E800F17E2E /* MultipartFormDataParser.m in Sources */,

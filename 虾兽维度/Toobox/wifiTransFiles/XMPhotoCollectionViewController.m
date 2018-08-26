@@ -32,6 +32,9 @@
 @property (nonatomic, assign)  CGSize startSize;  // 拖拽开始图片的尺寸
 /**拖拽图片退出浏览的相关变量**/
 
+@property (weak, nonatomic)  UIView *topToolBar;
+@property (weak, nonatomic)  UIView *bottomToolBar;
+
 
 @end
 
@@ -115,15 +118,21 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
     CGFloat toolBarH = 44;
     CGFloat btnWH = 44;
     
+    // 底部工具条的容器
+    UIView *topToolBar = [[UIView alloc] initWithFrame:CGRectMake(0, XMStatusBarHeight, XMScreenW, btnWH)];
+    [self.view addSubview:topToolBar];
+    self.topToolBar = topToolBar;
+    topToolBar.backgroundColor = [UIColor clearColor];
     // 退出按钮(左上角)
-    UIButton *backBtn = [[UIButton alloc] initWithFrame:CGRectMake(3, XMStatusBarHeight, btnWH, btnWH)];
+    UIButton *backBtn = [[UIButton alloc] initWithFrame:CGRectMake(3, 0, btnWH, btnWH)];
     [backBtn setImage:[UIImage imageNamed:@"navTool_close_white"] forState:UIControlStateNormal];
     [backBtn addTarget:self action:@selector(dismiss:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:backBtn];
+    [topToolBar addSubview:backBtn];
     
     // 底部工具条的容器
     UIView *bottomToolV = [[UIView alloc] initWithFrame:CGRectMake(0, XMScreenH - toolBarH -  (isIphoneX ? 20 : 0), XMScreenW, toolBarH + (isIphoneX ? 20 : 0))];
     [self.view addSubview:bottomToolV];
+    self.bottomToolBar = bottomToolV;
     
     // 页数标题(底部靠左)
     UILabel *lab = [[UILabel alloc] initWithFrame:CGRectMake(0, -8, 60, 60)];
@@ -388,6 +397,8 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
     if(pan.state == UIGestureRecognizerStateBegan){
         // 停止幻灯片
         [self stopTimer];
+        // 隐藏工具条
+        [self hideToolBar];
         // 背景截图放在self.collectionView,需要随着图片滑动来调整x坐标,保持在当前图片的正下方
         CGRect tarF = self.panBgImgV.frame;
         tarF.origin.x = XMScreenW * self.imageIndex;
@@ -413,9 +424,28 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
             // 回弹添加动画,防止手势过快造成震动
             [UIView animateWithDuration:0.2f animations:^{
                 self.currentCell.imgV.frame = CGRectMake(0, XMScreenH * 0.5 - self.startSize.height * 0.5, self.startSize.width, self.startSize.height);
+            }completion:^(BOOL finished) {
+                // 显示工具条
+                [self showToolBar];
             }];
         }
     }
+}
+
+/// 显示上下工具条
+- (void)showToolBar{
+    [UIView animateWithDuration:0.25f animations:^{
+        self.topToolBar.transform = CGAffineTransformIdentity;
+        self.bottomToolBar.transform = CGAffineTransformIdentity;
+    }];
+}
+
+/// 隐藏上下工具条
+- (void)hideToolBar{
+    [UIView animateWithDuration:0.25f animations:^{
+        self.topToolBar.transform = CGAffineTransformMakeTranslation(0, -CGRectGetMaxY(self.topToolBar.frame));
+        self.bottomToolBar.transform = CGAffineTransformMakeTranslation(0, self.bottomToolBar.frame.size.height);
+    }];
 }
     
 /// 双击事件

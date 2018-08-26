@@ -63,6 +63,9 @@ XMWebMultiWindowCollectionViewControllerDelegate>
 
 /// 记录上一次的位置
 @property (nonatomic, assign)  CGFloat lastContentY;
+
+/// 记录是否在滚动
+@property (nonatomic, assign)  BOOL isScroller;
 /// 记录是否在拖拽
 @property (nonatomic, assign)  BOOL isDrag;
 /// 记录是否显示当前webmodule
@@ -1111,6 +1114,14 @@ static double backForwardSafeDistance = 80.0;
     self.isDrag = NO;
 }
 
+- (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView{
+    self.isScroller = YES;
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
+    self.isScroller = NO;
+}
+
 #pragma mark - XMVisualViewDelegate
 - (void)visualViewWillRemoveFromSuperView{
     // 显示浮窗
@@ -1154,6 +1165,9 @@ static double backForwardSafeDistance = 80.0;
 - (void)webviewDidTap:(UITapGestureRecognizer *)tap{
     // 没有图片组直接返回
     if(self.imageArr.count <= 0) return;
+    
+    // 滚动中不能点击
+    if(self.isScroller) return;
     
     CGPoint touchPoint = [tap locationInView:self.wkWebview];
     NSString *imgURL = [NSString stringWithFormat:@"document.elementFromPoint(%f, %f).src", touchPoint.x, touchPoint.y];
