@@ -62,13 +62,13 @@ static double padding = 10.0f;
         
         // 子控件
         // 1.左侧图片
-        UIImageView *leftImgV = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, viewWH * 0.5, viewWH)];
+        UIImageView *leftImgV = [[UIImageView alloc] initWithFrame:CGRectMake(viewWH * 0.15, 0, viewWH * 0.35, viewWH * 0.7)];
         leftImgV.image = [UIImage imageNamed:@"float_icon_hide_right"];
         leftImgV.hidden = YES;
         wxVCFloatWindow.leftImgV = leftImgV;
         [wxVCFloatWindow addSubview:leftImgV];
         // 2.右侧图片
-        UIImageView *rightImgV = [[UIImageView alloc] initWithFrame:CGRectMake( viewWH * 1.5, 0, viewWH * 0.5, viewWH)];
+        UIImageView *rightImgV = [[UIImageView alloc] initWithFrame:CGRectMake( viewWH * 1.5, 0, viewWH * 0.35, viewWH * 0.7)];
         rightImgV.image = [UIImage imageNamed:@"float_icon_hide_left"];
         rightImgV.hidden = YES;
         wxVCFloatWindow.rightImgV = rightImgV;
@@ -175,7 +175,7 @@ static double padding = 10.0f;
         self.frame = CGRectMake(finalX, self.frame.origin.y, self.frame.size.width, self.frame.size.height);
     }completion:^(BOOL finished) {
         self.isAnimate = NO;
-        if(!self.isPan) {
+        if(!self.isPan && finished) {
             [self hideFlowWindowAnimate];
         }
     }];
@@ -198,17 +198,19 @@ static double padding = 10.0f;
         }completion:^(BOOL finished) {
             self.isAnimate = NO;
             if(self.isPan || self.isAnimate) return;
-            self.leftImgV.hidden = isLeft;
-            self.rightImgV.hidden = !isLeft;
-            BOOL isStillLeft =CGRectGetMidX(self.frame) < XMScreenW * 0.5;
-            CGFloat finalX = isStillLeft ? (-1.5 * viewWH)  : (XMScreenW - viewWH * 0.5);
-            self.isAnimate = YES;
-            // 然后再探头出来
-            [UIView animateWithDuration:2.0f animations:^{
-                self.frame = CGRectMake(finalX, self.frame.origin.y, self.frame.size.width, self.frame.size.height);
-            }completion:^(BOOL finished) {
-                self.isAnimate = NO;
-            }];
+            if(finished){
+                self.leftImgV.hidden = isLeft;
+                self.rightImgV.hidden = !isLeft;
+                BOOL isStillLeft =CGRectGetMidX(self.frame) < XMScreenW * 0.5;
+                CGFloat finalX = isStillLeft ? (-1.5 * viewWH)  : (XMScreenW - viewWH * 0.5);
+                self.isAnimate = YES;
+                // 然后再探头出来
+                [UIView animateWithDuration:2.0f animations:^{
+                    self.frame = CGRectMake(finalX, self.frame.origin.y, self.frame.size.width, self.frame.size.height);
+                }completion:^(BOOL finished) {
+                    self.isAnimate = NO;
+                }];
+            }
         }];
     });
     

@@ -30,6 +30,8 @@
 @property (weak, nonatomic)  XMPhotoCollectionViewCell *currentCell;  // 当前拖拽的cell
 @property (nonatomic, assign)  CGPoint starP;  // 拖拽图片开始的坐标点
 @property (nonatomic, assign)  CGSize startSize;  // 拖拽开始图片的尺寸
+@property (nonatomic, assign)  double starT;
+
 /**拖拽图片退出浏览的相关变量**/
 
 @property (weak, nonatomic)  UIView *topToolBar;
@@ -135,10 +137,10 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
     self.bottomToolBar = bottomToolV;
     
     // 页数标题(底部靠左)
-    UILabel *lab = [[UILabel alloc] initWithFrame:CGRectMake(0, -8, 60, 60)];
+    UILabel *lab = [[UILabel alloc] initWithFrame:CGRectMake(10, -8, 100, 60)];
     [bottomToolV addSubview:lab];
     self.titLab = lab;
-    lab.textAlignment = NSTextAlignmentCenter;
+    lab.textAlignment = NSTextAlignmentLeft;
     lab.textColor = [UIColor whiteColor];
     
     // gif帧数按钮(底部靠右)
@@ -170,17 +172,31 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
     doubleTap.numberOfTapsRequired = 2;
     [self.collectionView addGestureRecognizer:doubleTap];
     
+    // 单点,退出图片
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gestureToDismiss:)];
+    [self.collectionView addGestureRecognizer:tap];
+    
+    // 双击手势失效才允许单击手势执行
+    [tap requireGestureRecognizerToFail:doubleTap];
+    
+    
     // 向下滑动,退出照片
     UIPanGestureRecognizer *cancelPan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panToDismiss:)];
     [self.collectionView addGestureRecognizer:cancelPan];
     
-    // 向右滑,上一张图片
+    // 向下轻扫,退出
+//    UISwipeGestureRecognizer *swipeD = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(gestureToDismiss:)];
+//    swipeD.delegate = self;
+//    swipeD.direction = UISwipeGestureRecognizerDirectionDown;
+//    [self.collectionView addGestureRecognizer:swipeD];
+    
+    // 向右轻扫,上一张图片
     UISwipeGestureRecognizer *swipeR = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(preImage:)];
     swipeR.delegate = self;
     swipeR.direction = UISwipeGestureRecognizerDirectionRight;
     [self.collectionView addGestureRecognizer:swipeR];
     
-    // 向左滑,下一张图片
+    // 向左轻扫,下一张图片
     UISwipeGestureRecognizer *swipeL = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(nextImage:)];
     swipeL.delegate = self;
     swipeL.direction = UISwipeGestureRecognizerDirectionLeft;
@@ -323,15 +339,20 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
     }
 }
 
-/// 向下轻扫图片退出浏览
-- (void)swipeToDismiss:(UIGestureRecognizer *)gest{
-    // 停止幻灯片
-    [self stopTimer];
+/// 图片手势直接退出浏览
+- (void)gestureToDismiss:(UIGestureRecognizer *)gest{
     
-    NSIndexPath *index = [self.collectionView indexPathForItemAtPoint:[gest locationInView:self.collectionView]];
+    CGFloat duration = 0.5f;
+    // 当时swipe和tap手势触发的时候,需要设置背景相框位置/透明度/隐藏
+    NSIndexPath *index = [self prepareToResponeGesture:gest];
+    if(self.panBgImgV.hidden){
+        self.panBgImgV.alpha = 0;
+        self.panBgImgV.hidden = NO;
+        duration = 0.8f;
+    }
     
     // 缩放一半
-    [UIView animateWithDuration:0.5f animations:^{
+    [UIView animateWithDuration:duration animations:^{
         // 如果指定了需要消失的终点,则移到终点,否则采取沿着y中心线向下边缩小边移动
         if(self.clickImageF.size.width > 0){
             // 缩放到原来的cell的图片位置,x坐标就是原来图片cell的x,y坐标是原来的坐标减去图片切换造成的位置差 * cell的高度再加上self.collectionView的y偏移高度32,最后缩放的宽固定是cell的相框的高度,最后缩放的高度根据比例缩放
@@ -345,6 +366,7 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
             self.currentCell.imgV.frame = CGRectMake(CGRectGetMidX(self.currentCell.imgV.frame) - 50, XMScreenH, 100 , 100);
         }
         
+        self.panBgImgV.alpha = 1;
     }completion:^(BOOL finished) {
         if(finished){
             // 由于popViewControllerAnimated为NO,需要手动移除最后一张截图
@@ -395,30 +417,26 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
     }
     
     if(pan.state == UIGestureRecognizerStateBegan){
-        // 停止幻灯片
-        [self stopTimer];
-        // 隐藏工具条
-        [self hideToolBar];
-        // 背景截图放在self.collectionView,需要随着图片滑动来调整x坐标,保持在当前图片的正下方
-        CGRect tarF = self.panBgImgV.frame;
-        tarF.origin.x = XMScreenW * self.imageIndex;
-        self.panBgImgV.frame = tarF;
-        
-        // 因为参考点是collectionView,所以每一个cell的x都不一样,实际上需要参考的是与屏幕左边的距离,因此需要减去(XMScreenW * self.imageIndex),y则一样
-        CGPoint absP = [pan locationInView:self.collectionView];
-        self.starP = CGPointMake(absP.x - XMScreenW * self.imageIndex, absP.y);
-        
-        // 找出当前拖拽的cell
-        NSIndexPath *index = [self.collectionView indexPathForItemAtPoint:[pan locationInView:self.collectionView]];
-        XMPhotoCollectionViewCell *cell = (XMPhotoCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:index];
-        self.currentCell = cell;
-        self.startSize = cell.imgV.frame.size;
+        // 记录手势开始时间
+        self.starT = [[NSDate date] timeIntervalSince1970];
+        // 手势开始前准备工作
+        [self prepareToResponeGesture:pan];
     }
     
     if(pan.state == UIGestureRecognizerStateEnded){
+        // 必须第一时间记录结束的时间来算时间间隔
+        CGFloat gestTime = [[NSDate date] timeIntervalSince1970] - self.starT;
+        // 手势动作过快(<0.05s),则直接退出,并且将工具条隐藏,工具条隐藏动画早晨的隐藏
+        if(gestTime < 0.06){
+            self.topToolBar.hidden = YES;
+            self.bottomToolBar.hidden = YES;
+            [self gestureToDismiss:pan];
+            return;
+        }
         CGFloat endY = [pan locationInView:self.collectionView].y;
+        // 如果手势超过退出距离,则退出
         if(endY - self.starP.y > panToDismissDistance){
-            [self swipeToDismiss:pan];
+            [self gestureToDismiss:pan];
         }else{
             self.panBgImgV.hidden = YES;
             // 回弹添加动画,防止手势过快造成震动
@@ -432,8 +450,35 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
     }
 }
 
+
+// 手势开始前的准备工作
+- (NSIndexPath *)prepareToResponeGesture:(UIGestureRecognizer *)gest{
+    // 停止幻灯片
+    [self stopTimer];
+    // 隐藏工具条
+    [self hideToolBar];
+    // 背景截图放在self.collectionView,需要随着图片滑动来调整x坐标,保持在当前图片的正下方
+    CGRect tarF = self.panBgImgV.frame;
+    tarF.origin.x = XMScreenW * self.imageIndex;
+    self.panBgImgV.frame = tarF;
+    
+    // 因为参考点是collectionView,所以每一个cell的x都不一样,实际上需要参考的是与屏幕左边的距离,因此需要减去(XMScreenW * self.imageIndex),y则一样
+    CGPoint absP = [gest locationInView:self.collectionView];
+    self.starP = CGPointMake(absP.x - XMScreenW * self.imageIndex, absP.y);
+    
+    // 找出当前拖拽的cell
+    NSIndexPath *index = [self.collectionView indexPathForItemAtPoint:[gest locationInView:self.collectionView]];
+    XMPhotoCollectionViewCell *cell = (XMPhotoCollectionViewCell *)[self.collectionView cellForItemAtIndexPath:index];
+    self.currentCell = cell;
+    self.startSize = cell.imgV.frame.size;
+
+    return index;
+}
+
 /// 显示上下工具条
 - (void)showToolBar{
+    self.topToolBar.hidden = NO;
+    self.bottomToolBar.hidden = NO;
     [UIView animateWithDuration:0.25f animations:^{
         self.topToolBar.transform = CGAffineTransformIdentity;
         self.bottomToolBar.transform = CGAffineTransformIdentity;
@@ -445,6 +490,11 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
     [UIView animateWithDuration:0.25f animations:^{
         self.topToolBar.transform = CGAffineTransformMakeTranslation(0, -CGRectGetMaxY(self.topToolBar.frame));
         self.bottomToolBar.transform = CGAffineTransformMakeTranslation(0, self.bottomToolBar.frame.size.height);
+    }completion:^(BOOL finished) {
+        if(finished){
+            self.topToolBar.hidden = YES;
+            self.bottomToolBar.hidden = YES;
+        }
     }];
 }
     

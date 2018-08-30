@@ -119,7 +119,7 @@ static NSString *const kEngine = @"engine";
     
     // 导航栏titleview
     UITextField *searchF = [[UITextField alloc] init];
-    searchF.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - 120, 32);
+    searchF.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - 60, 32);
     searchF.delegate = self;
     searchF.placeholder = @"请输入要搜索的条件";
     searchF.background = [UIImage imageNamed:@"searchbar_textfield_background"];
@@ -135,11 +135,8 @@ static NSString *const kEngine = @"engine";
     self.navigationItem.titleView = searchF;
     self.searchF = searchF;
 
-    // 左侧取消按钮
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStyleDone target:self action:@selector(cancel)];
-    
-    // 右侧go按钮
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"go" style:UIBarButtonItemStyleDone target:self action:@selector(goWithUrlFlag:)];
+    // 右侧取消按钮
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStyleDone target:self action:@selector(cancel)];
 }
 
 - (void)goWithUrlFlag:(BOOL)urlFlag{

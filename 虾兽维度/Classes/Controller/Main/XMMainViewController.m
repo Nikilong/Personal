@@ -142,7 +142,9 @@ static double leftViewAnimateTime = 0.25;
 }
 
 - (void)test{
-
+    if([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"xmweb://"]]){
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"xmweb://"]];
+    }
 }
 
 - (void)addCornerAccessoryView{
@@ -178,6 +180,14 @@ static double leftViewAnimateTime = 0.25;
     mapSwip.delegate = self;
     mapSwip.direction = UISwipeGestureRecognizerDirectionDown;
     [self.view addGestureRecognizer:mapSwip];
+    
+    // 3指上划快捷打开工具箱手势
+    UISwipeGestureRecognizer *toolboxSwip = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(callToolBox)];
+    toolboxSwip.numberOfTouchesRequired = 3;
+    // 必须要实现一个代理方法支持多手势,这时候3指下滑同时也会触发单指滚动tableview
+    toolboxSwip.delegate = self;
+    toolboxSwip.direction = UISwipeGestureRecognizerDirectionUp;
+    [self.view addGestureRecognizer:toolboxSwip];
     
     // 2指上划打开收藏快捷手势
     UISwipeGestureRecognizer *saveSwip = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(callSaveViewController)];
@@ -484,6 +494,7 @@ static double leftViewAnimateTime = 0.25;
         toolboxVC.toolBoxViewCover = cover;
         // 用导航控制器推出分享控制器
         [self.navigationController presentViewController:toolboxVC animated:YES completion:^{
+            self.homeVC.tableView.scrollEnabled = YES;
             // 设置父视图透明,否则看不到webmodule
             toolboxVC.view.superview.backgroundColor = [UIColor clearColor];
         }];
