@@ -33,6 +33,22 @@
     return img;
 }
 
+/// 将view转为截图
++ (UIImage *)screenShotWithView:(UIView *)shotView{
+    
+    UIGraphicsBeginImageContextWithOptions([UIScreen mainScreen].bounds.size, YES, [UIScreen mainScreen].scale);
+    
+    //    UIView *snapshotView = [fromViewController.view snapshotViewAfterScreenUpdates:NO];
+    
+    // 这样重绘才可以完整将导航栏的所有图层绘出
+    //    [[UIApplication sharedApplication].keyWindow drawViewHierarchyInRect:CGRectMake(0, 0,XMScreenW, XMScreenH) afterScreenUpdates:NO];
+    [shotView drawViewHierarchyInRect:CGRectMake(0, 0,XMScreenW, XMScreenH) afterScreenUpdates:NO];
+    
+    UIImage *img = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return img;
+}
+
 /**--------- 二维码图片 ---------*/
 // 识别图片二维码
 + (NSString *)detectorQRCodeImage:(UIImage *)selectImage{

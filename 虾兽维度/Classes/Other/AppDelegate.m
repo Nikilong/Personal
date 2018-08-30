@@ -36,6 +36,13 @@
 
 @implementation AppDelegate
 
+- (NSMutableArray<XMWKWebViewController *> *)webModuleStack{
+    if (!_webModuleStack){
+        _webModuleStack = [NSMutableArray array];
+    }
+    return _webModuleStack;
+}
+
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     

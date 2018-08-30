@@ -57,6 +57,8 @@
 /**--------- 截图 ---------*/
 /// 屏幕截图
 + (UIImage *)screenShot;
+/// 将view转为截图
++ (UIImage *)screenShotWithView:(UIView *)shotView;
 
 
 @end

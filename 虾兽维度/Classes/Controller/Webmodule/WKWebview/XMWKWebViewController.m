@@ -486,6 +486,11 @@ static double backForwardSafeDistance = 80.0;
         app.tempWebModuleVC = webVC;
         webVC.model = model;
         webVC.view.frame = vc.view.bounds;
+        //-------------
+        NSLog(@"Init--saveToStack----%@",vc);
+        [app.webModuleStack addObject:webVC];
+
+        //-------------
         // 压到导航控制器的栈顶
         [vc.navigationController pushViewController:webVC animated:YES];
     }
@@ -575,12 +580,21 @@ static double backForwardSafeDistance = 80.0;
 
 /** 打开多窗口切换 */
 - (void)openMultiWindowViewController{
-    XMNavigationController *nav = (XMNavigationController *)self.navigationController;
     
-    XMMutiWindowFlowLayout *layout = [[XMMutiWindowFlowLayout alloc] init];
-    XMWebMultiWindowCollectionViewController *multiVC = [[XMWebMultiWindowCollectionViewController alloc] initWithCollectionViewLayout:layout];
-    multiVC.shotImageArr = [NSMutableArray arrayWithArray:nav.pushScreenShotArr];
+    XMWebMultiWindowCollectionViewController *multiVC = [XMWebMultiWindowCollectionViewController shareWebMultiWindowCollectionViewController];
     multiVC.delegate = self;
+    
+    // 每次打开检查多窗口的截图和缓存栈的保存数目是否一致,否则需要更新多窗口的截图组
+    AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    if(app.webModuleStack.count > multiVC.shotImageArr.count){
+        for (NSUInteger i = multiVC.shotImageArr.count; i < app.webModuleStack.count; i++) {
+            XMWKWebViewController *webmodule = app.webModuleStack[i];
+            [multiVC.shotImageArr addObject:[XMImageUtil screenShotWithView:webmodule.view]];
+        }
+        // 必须刷新
+        [multiVC.collectionView reloadData];
+    }
+    
     [self presentViewController:multiVC animated:YES completion:nil];
 }
 

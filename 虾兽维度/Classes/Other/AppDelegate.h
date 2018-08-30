@@ -23,6 +23,8 @@
 
 // 保存上一个webmodule,防止重复加载上一个webmodule
 @property (nonatomic, strong) XMWKWebViewController *tempWebModuleVC;
+// 保存webmodule的栈
+@property (nonatomic, strong) NSMutableArray<XMWKWebViewController *> *webModuleStack;
 
 @end
 

@@ -12,6 +12,10 @@
 
 #import "XMVisualView.h"
 
+#import "AppDelegate.h"
+#import "XMWKWebViewController.h"
+#import "XMImageUtil.h"
+
 @interface XMWebMultiWindowCollectionViewController ()<UIGestureRecognizerDelegate>
 
 
@@ -29,6 +33,26 @@ static NSString * const reuseIdentifier = @"XMMultiWindowCellIdentify";
 //        }
     }
     return _shotImageArr;
+}
+
++ (XMWebMultiWindowCollectionViewController *)shareWebMultiWindowCollectionViewController{
+    static XMWebMultiWindowCollectionViewController *webMultiVC = nil;
+    static dispatch_once_t webMultiVCToken;
+    dispatch_once(&webMultiVCToken, ^{
+        // 初始化
+        XMMutiWindowFlowLayout *layout = [[XMMutiWindowFlowLayout alloc] init];
+        webMultiVC = [[XMWebMultiWindowCollectionViewController alloc] initWithCollectionViewLayout:layout];
+        
+        // 初始化添加截图
+        AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
+        for (NSUInteger i = 0; i < app.webModuleStack.count; i++) {
+            XMWKWebViewController *webmodule = app.webModuleStack[i];
+            [webMultiVC.shotImageArr addObject:[XMImageUtil screenShotWithView:webmodule.view]];
+            NSLog(@"initlize--add-- image");
+        }
+
+    });
+    return webMultiVC;
 }
 
 - (void)viewDidLoad {
@@ -143,7 +167,7 @@ static NSString * const reuseIdentifier = @"XMMultiWindowCellIdentify";
 //    if(!cell){
 //        cell = [[XMWebMultiWindowCollectionViewCell alloc] init];
 //    }
-    NSLog(@"%lu--%lu",indexPath.row,indexPath.item);
+//    NSLog(@"%lu--%lu",indexPath.row,indexPath.item);
 //    [cell setBackgroundImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@",self.shotImageArr[indexPath.item % 4]]]];
     [cell setBackgroundImage:self.shotImageArr[indexPath.item]];
 //    [cell setIndex:indexPath.row];

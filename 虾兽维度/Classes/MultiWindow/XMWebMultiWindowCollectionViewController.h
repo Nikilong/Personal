@@ -22,4 +22,6 @@
 
 @property (weak, nonatomic)  id<XMWebMultiWindowCollectionViewControllerDelegate> delegate;
 
++ (XMWebMultiWindowCollectionViewController *)shareWebMultiWindowCollectionViewController;
+
 @end
