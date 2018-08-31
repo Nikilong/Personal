@@ -14,11 +14,12 @@
 #import "MBProgressHUD+NK.h"
 
 #import "XMRefreshHeaderView.h"
+#import "XMFreshView.h"
 #import "XMWebModelLogic.h"
 #import "XMDebugDefine.h"
 
 CGFloat const XMRowHeight = 100;
-CGFloat const XMRrfreshHeight = 100;
+CGFloat const XMRrfreshHeight = 64;
 
 @interface XMHomeTableViewController () <UITableViewDataSource,UITableViewDelegate,NSURLSessionDelegate>
 
@@ -33,12 +34,12 @@ CGFloat const XMRrfreshHeight = 100;
 
 
 // 下拉刷新条幅
-@property (nonatomic, weak) UIButton *headerRefreshV;
-// 下拉刷新组件
-@property (weak, nonatomic)  XMRefreshHeaderView *refreshHeader;
+@property (nonatomic, weak) XMFreshView *headerRefreshV;
+//// 下拉刷新组件
+//@property (weak, nonatomic)  XMRefreshHeaderView *refreshHeader;
 
 // 标记拖拽状态
-@property (nonatomic, assign) BOOL isDragging;
+//@property (nonatomic, assign) BOOL isDragging;
 
 // 标记刷新状态
 @property (nonatomic, assign) BOOL isRefreshing;
@@ -93,6 +94,8 @@ CGFloat const XMRrfreshHeight = 100;
     self.loadCount = 0;
     // 设置行高
     self.tableView.rowHeight = XMRowHeight;
+    self.tableView.estimatedSectionFooterHeight = 0;
+    self.tableView.estimatedSectionHeaderHeight = 0;
     
     // 设置下拉刷新
 #ifndef XMLauchAutoRefrehFobiden
@@ -115,8 +118,7 @@ CGFloat const XMRrfreshHeight = 100;
 
 #pragma mark - 摇一摇
 - (void)motionBegan:(UIEventSubtype)motion withEvent:(UIEvent *)event{
-    
-    [self refresh];
+    [self nonePullFresh];
 }
 
 - (void)dealloc{
@@ -169,7 +171,6 @@ CGFloat const XMRrfreshHeight = 100;
 
 // 悬浮按钮的方法实现(滚到最顶部)
 - (void)upToTop{
-    
     [self.tableView setContentOffset:CGPointMake(0, -(XMStatusBarHeight + 44)) animated:YES];
 }
 
@@ -177,34 +178,16 @@ CGFloat const XMRrfreshHeight = 100;
 
 #pragma mark -  设置下拉刷新
 - (void)setRreflashControl{
-    
-    UIButton *headerRefreshV = [[UIButton alloc] initWithFrame:CGRectMake(0, -44, [UIScreen mainScreen].bounds.size.width, 44)];
-    self.headerRefreshV = headerRefreshV;
-    self.headerRefreshV.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    headerRefreshV.hidden = YES;
-    
-    [headerRefreshV setTitle:@"下拉刷新" forState:UIControlStateNormal];
-    [headerRefreshV setTitle:@"加载数据中..." forState:UIControlStateSelected];
-    [headerRefreshV setImage:[UIImage imageNamed:@"shuaxin"] forState:UIControlStateSelected];
-    [headerRefreshV setTitle:@"松手可刷新" forState:UIControlStateDisabled];
-    
-    [headerRefreshV setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
-    headerRefreshV.titleLabel.font = [UIFont systemFontOfSize:13];
-    headerRefreshV.backgroundColor = [UIColor clearColor];
-    [headerRefreshV setImageEdgeInsets:UIEdgeInsetsMake(0, -20, 0, 0)];
-    [self.view addSubview:headerRefreshV];
-    
-//    XMRefreshHeaderView *refreshHeader = [XMRefreshHeaderView xm_addPullRefreshHeader:self.tableView];
-//    self.refreshHeader = refreshHeader;
-//    __weak typeof(self) weakSelf = self;
-//    refreshHeader.tableViewShouldRefreshBlock = ^(){
-//        [weakSelf refresh];
-//    };
-    
+    self.headerRefreshV = [XMFreshView addHeaderFreshViewInTableView:self.tableView hasTimeLable:NO];
+    __weak typeof(self) weakSelf = self;
+    self.headerRefreshV.freshBlock = ^(){
+        [weakSelf refresh];
+    };
+    self.headerRefreshV.finishFreshBlock = ^(){
+        [weakSelf upToTop];
+    };
 
-    // 设置tableview下拉并且刷新
-    self.isRefreshing = NO;
-    self.tableView.contentInset = UIEdgeInsetsMake(self.headerRefreshV.frame.size.height, 0, 0, 0);
+    // 开始刷新
     [self refresh];
     
 }
@@ -212,47 +195,20 @@ CGFloat const XMRrfreshHeight = 100;
 #pragma mark 监听scroller的滚动
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
     
-    if (_isRefreshing) return;
-    
-    CGFloat tableViewOffet = -self.tableView.contentOffset.y;
-    
-    if (tableViewOffet > 44 + XMStatusBarHeight){
-        // 取消下拉横幅隐藏
-        self.headerRefreshV.hidden = NO;
-    }else if (tableViewOffet == 44 + XMStatusBarHeight){
-        // 隐藏刷新
-        self.headerRefreshV.hidden = YES;
-    }
-    
-    // 如果下拉到固定值修改标题提示用户
-    if (tableViewOffet > XMRrfreshHeight && _isDragging){
-        self.headerRefreshV.enabled = NO;
-    }else{
-        self.headerRefreshV.enabled = YES;
-    }
-
+    [self.headerRefreshV tableViewDidScroller];
 }
 
 /**
  开始拖拽,做标记
  */
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
-    _isDragging = YES;
+    [self.headerRefreshV tableViewWillBeginDragging];
 }
 /**
  结束拖拽,处理事件
  */
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
-    // 标记拖拽完毕
-    _isDragging = NO;
-    // 判断是否触发刷新
-    if (-self.tableView.contentOffset.y > XMRrfreshHeight){
-        // 固定下拉标签
-        self.tableView.contentInset = UIEdgeInsetsMake(XMRrfreshHeight, 0, 0, 0);
-        // 刷新数据
-        [self refresh];
-    }
-    
+    [self.headerRefreshV tableViewDidEndDraggingWillDecelerate:decelerate];
 }
 
 #pragma mark - 频道切换
@@ -261,7 +217,7 @@ CGFloat const XMRrfreshHeight = 100;
     _currentChannel = currentChannel;
     
     // 刷新一波新闻
-    [self refresh];
+    [self nonePullFresh];
 }
 
 #pragma mark - uitableview 的基本实现
@@ -301,15 +257,18 @@ CGFloat const XMRrfreshHeight = 100;
         titleLab.attributedText = str;
         
         // 添加点击刷新的手势
-        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(refresh)];
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(nonePullFresh)];
         [headerV addGestureRecognizer:tap];
     
         return headerV;
     }else{
-        return [[UIView alloc] init];
+        UIView *v = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
+        v.backgroundColor = [UIColor redColor];
+        return nil;
     }
     
 }
+
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
     return (self.historyNewsArr.count > 0) ? 2 : 1;
@@ -356,20 +315,23 @@ CGFloat const XMRrfreshHeight = 100;
 }
 
 #pragma mark - 刷新表格数据
+
+// 非手动下拉刷新触发的刷新
+- (void)nonePullFresh{
+    // 先模拟下拉一个高度
+    [self.tableView setContentOffset:CGPointMake(0, -(XMStatusBarHeight + 44 + self.headerRefreshV.frame.size.height)) animated:YES];
+    // 在强制刷新
+    [self refresh];
+}
+
 - (void)refresh{
     
     // 当前正在刷新则返回避免连续刷新
     if(self.isRefreshing) return;
-    // 设置tableview的下拉偏移
-    [self.tableView setContentOffset:CGPointMake(0, -XMRrfreshHeight)];
     // 开启网络加载
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
-    self.isRefreshing = YES;
-    // 0,设置下拉标题提示用户正在刷新
-    self.headerRefreshV.enabled = YES;
-    self.headerRefreshV.selected = YES;
-    // 添加动画
-    [self.headerRefreshV.imageView.layer addAnimation:[self addRotationAnimation] forKey:nil];
+    
+    [self.headerRefreshV startLoading];
     
     // 1,创建session
     NSURLSessionConfiguration *cfg = [NSURLSessionConfiguration defaultSessionConfiguration];
@@ -382,9 +344,6 @@ CGFloat const XMRrfreshHeight = 100;
     
     // 3,创建一个下载任务，类型为NSURLSessionDataTask
     NSURLSessionDataTask *task = [session dataTaskWithURL:idUrl  completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error){
-            
-            // 通知刷新组件结束刷新
-            // self.refreshHeader.tableViewDidRefreshBlock(self.refreshHeader);^{
         
             if (!error){
                 // 5,创建session网络请求结束后
@@ -400,20 +359,14 @@ CGFloat const XMRrfreshHeight = 100;
             dispatch_async(dispatch_get_main_queue(), ^{
                 // 关闭网络加载
                 [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-                // 恢复刷新
-                self.isRefreshing = NO;
-                // 移除动画
-                [self.headerRefreshV.imageView.layer removeAllAnimations];
-                // 隐藏刷新
-                self.headerRefreshV.hidden = YES;
-                // 恢复标题
-                self.headerRefreshV.selected = NO;
+                
             });
         
       }];
     
     // 4,开始任务（异步）
     [task resume];
+    
 }
 
 // 设置刷新转动动画
@@ -525,12 +478,7 @@ CGFloat const XMRrfreshHeight = 100;
     [[NSOperationQueue mainQueue] addOperationWithBlock:^{
         
         // 结束刷新
-        [UIView animateWithDuration:0.25 animations:^{
-            weakSelf.tableView.contentInset = UIEdgeInsetsMake(44 + XMStatusBarHeight, 0, 0, 0);
-        }completion:^(BOOL finished) {
-            // 滚到最顶部
-            [weakSelf upToTop];
-        }];
+        [weakSelf.headerRefreshV finishLoadingWithResult:XMFreshResultSuccess];
         
         // 提示用户刷新成功
         [weakSelf setRefreshCount:message];

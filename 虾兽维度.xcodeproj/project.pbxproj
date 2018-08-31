@@ -213,6 +213,7 @@
 		FD9854332122CE2C00C31D94 /* NSURLProtocol+WKWebview.m in Sources */ = {isa = PBXBuildFile; fileRef = FD9854322122CE2C00C31D94 /* NSURLProtocol+WKWebview.m */; };
 		FD98543B2122D46C00C31D94 /* XMWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FD9854392122D46C00C31D94 /* XMWebViewController.m */; };
 		FD9E34D62114041300FFBE3B /* webFilterList.plist in Resources */ = {isa = PBXBuildFile; fileRef = FD9E34D52114041300FFBE3B /* webFilterList.plist */; };
+		FDAAAA3F213934A0004CF0C7 /* XMFreshView.m in Sources */ = {isa = PBXBuildFile; fileRef = FDAAAA3E213934A0004CF0C7 /* XMFreshView.m */; };
 		FDB099F12112E71700148492 /* RSSwizzle.m in Sources */ = {isa = PBXBuildFile; fileRef = FDB099F02112E71700148492 /* RSSwizzle.m */; };
 		FDB099F52112E77300148492 /* UIScreenEdgePanGestureRecognizer+UIScreenEdgePanGestureRecognizer_hook.m in Sources */ = {isa = PBXBuildFile; fileRef = FDB099F42112E77300148492 /* UIScreenEdgePanGestureRecognizer+UIScreenEdgePanGestureRecognizer_hook.m */; };
 		FDB099FF2112F5AA00148492 /* UIViewController+hook.m in Sources */ = {isa = PBXBuildFile; fileRef = FDB099FE2112F5AA00148492 /* UIViewController+hook.m */; };
@@ -588,6 +589,8 @@
 		FD9854392122D46C00C31D94 /* XMWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMWebViewController.m; sourceTree = "<group>"; };
 		FD98543A2122D46C00C31D94 /* XMWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMWebViewController.h; sourceTree = "<group>"; };
 		FD9E34D52114041300FFBE3B /* webFilterList.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = webFilterList.plist; path = "虾兽维度/Config/webFilterList.plist"; sourceTree = SOURCE_ROOT; };
+		FDAAAA3D213934A0004CF0C7 /* XMFreshView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMFreshView.h; sourceTree = "<group>"; };
+		FDAAAA3E213934A0004CF0C7 /* XMFreshView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMFreshView.m; sourceTree = "<group>"; };
 		FDB099EF2112E71700148492 /* RSSwizzle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSSwizzle.h; sourceTree = "<group>"; };
 		FDB099F02112E71700148492 /* RSSwizzle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSSwizzle.m; sourceTree = "<group>"; };
 		FDB099F32112E77300148492 /* UIScreenEdgePanGestureRecognizer+UIScreenEdgePanGestureRecognizer_hook.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIScreenEdgePanGestureRecognizer+UIScreenEdgePanGestureRecognizer_hook.h"; sourceTree = "<group>"; };
@@ -720,6 +723,8 @@
 			children = (
 				203D2FF121031F48008788B6 /* XMRefreshHeaderView.h */,
 				203D2FF221031F48008788B6 /* XMRefreshHeaderView.m */,
+				FDAAAA3D213934A0004CF0C7 /* XMFreshView.h */,
+				FDAAAA3E213934A0004CF0C7 /* XMFreshView.m */,
 			);
 			path = XMPullRefreshHeader;
 			sourceTree = "<group>";
@@ -1694,6 +1699,7 @@
 				204D23DC209ED86800F17E2E /* XMWifiTransFileViewController.m in Sources */,
 				84D9ED061E656BC30046840E /* XMWebModel.m in Sources */,
 				204D2436209ED91A00F17E2E /* ContextFilterLogFormatter.m in Sources */,
+				FDAAAA3F213934A0004CF0C7 /* XMFreshView.m in Sources */,
 				204D2414209ED8E800F17E2E /* HTTPFileResponse.m in Sources */,
 				FD1EA08920A9A96A00658F18 /* XMGlobalConst.m in Sources */,
 				202C84F11F2624AD0055FD7D /* XMSaveWebsTableViewController.m in Sources */,
