@@ -24,6 +24,10 @@
 /** 提供一个类方法让外界打开webmodule */
 + (void)openWebmoduleWithModel:(XMWebModel *)model viewController:(UIViewController *)vc;
 
+/** 将webmodule关闭掉 */
+- (void)closeWebModule;
+
+
 /** 提供方法让外界滚动web页面到底部和顶部 */
 - (void)webViewDidScrollToBottom;
 - (void)webViewDidScrollToTop;

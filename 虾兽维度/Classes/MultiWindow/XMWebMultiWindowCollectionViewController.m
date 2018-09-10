@@ -75,6 +75,28 @@ static NSString * const reuseIdentifier = @"XMMultiWindowCellIdentify";
     [self setBottomToolBar];
     
     self.navigationController.navigationBar.hidden = YES;
+    
+    AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    if(app.webModuleStack.count > self.shotImageArr.count){
+        for (NSUInteger i = self.shotImageArr.count; i < app.webModuleStack.count; i++) {
+            XMWKWebViewController *webmodule = app.webModuleStack[i];
+            [self.shotImageArr addObject:[XMImageUtil screenShotWithView:webmodule.view]];
+        }
+        // 必须刷新
+        [self.collectionView reloadData];
+    }
+}
+
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+//    AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
+//    if(app.webModuleStack.count == self.shotImageArr.count){
+//        [self.shotImageArr removeLastObject];
+//        XMWKWebViewController *webmodule = [app.webModuleStack lastObject];
+//        [self.shotImageArr addObject:[XMImageUtil screenShotWithView:webmodule.view]];
+//        // 必须刷新
+//        [self.collectionView reloadData];
+//    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
@@ -255,6 +277,11 @@ static NSString * const reuseIdentifier = @"XMMultiWindowCellIdentify";
             NSIndexPath *delIndexP = [NSIndexPath indexPathForItem:layout.panCellIndex inSection:0];
             layout.panCellIndex = MAXFLOAT;
             
+            AppDelegate *app =(AppDelegate *) [UIApplication sharedApplication].delegate;
+            XMWKWebViewController *delVC =app.webModuleStack[delIndexP.item];
+            [delVC closeWebModule];
+            [app.webModuleStack removeObjectAtIndex:delIndexP.item];
+            delVC = nil;
             [self.shotImageArr removeObjectAtIndex:delIndexP.item];
             [self.collectionView deleteItemsAtIndexPaths:@[delIndexP]];
             

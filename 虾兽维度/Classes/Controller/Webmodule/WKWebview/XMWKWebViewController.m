@@ -414,8 +414,8 @@ static double backForwardSafeDistance = 80.0;
     // 记录即将显示
     self.isShow = YES;
     // 设置窗口数字
-    XMNavigationController *nav = (XMNavigationController *)self.navigationController;
-    self.multiWindowCountLab.text = [NSString stringWithFormat:@"%ld",nav.pushScreenShotArr.count];
+    AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    self.multiWindowCountLab.text = [NSString stringWithFormat:@"%ld",app.webModuleStack.count];
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -477,13 +477,13 @@ static double backForwardSafeDistance = 80.0;
     AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
     
     // 先判断是否和上一个pop掉的webmodule的url相同,相同的话就不必再去重复加载
-    if ([app.tempWebModuleVC.originURL.absoluteString isEqualToString:model.webURL.absoluteString]){
-        [vc.navigationController pushViewController:app.tempWebModuleVC animated:YES];
-    }else{
-        app.tempWebModuleVC = nil;
+//    if ([app.tempWebModuleVC.originURL.absoluteString isEqualToString:model.webURL.absoluteString]){
+//        [vc.navigationController pushViewController:app.tempWebModuleVC animated:YES];
+//    }else{
+//        app.tempWebModuleVC = nil;
         // 创建一个webmodule
         XMWKWebViewController *webVC = [[XMWKWebViewController alloc] init];
-        app.tempWebModuleVC = webVC;
+//        app.tempWebModuleVC = webVC;
         webVC.model = model;
         webVC.view.frame = vc.view.bounds;
         //-------------
@@ -493,7 +493,7 @@ static double backForwardSafeDistance = 80.0;
         //-------------
         // 压到导航控制器的栈顶
         [vc.navigationController pushViewController:webVC animated:YES];
-    }
+//    }
 }
 
 #pragma mark - toolbar和导航栏 点击事件
@@ -586,14 +586,28 @@ static double backForwardSafeDistance = 80.0;
     
     // 每次打开检查多窗口的截图和缓存栈的保存数目是否一致,否则需要更新多窗口的截图组
     AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    if(app.webModuleStack.count > multiVC.shotImageArr.count){
-        for (NSUInteger i = multiVC.shotImageArr.count; i < app.webModuleStack.count; i++) {
-            XMWKWebViewController *webmodule = app.webModuleStack[i];
-            [multiVC.shotImageArr addObject:[XMImageUtil screenShotWithView:webmodule.view]];
-        }
-        // 必须刷新
-        [multiVC.collectionView reloadData];
-    }
+//    if(app.webModuleStack.count > multiVC.shotImageArr.count){
+//        for (NSUInteger i = multiVC.shotImageArr.count; i < app.webModuleStack.count; i++) {
+//            XMWKWebViewController *webmodule = app.webModuleStack[i];
+//            [multiVC.shotImageArr addObject:[XMImageUtil screenShotWithView:webmodule.view]];
+//        }
+//        // 必须刷新
+//        [multiVC.collectionView reloadData];
+//    }
+//    if(app.webModuleStack.count > multiVC.shotImageArr.count){
+//        for (NSUInteger i = multiVC.shotImageArr.count; i < app.webModuleStack.count; i++) {
+//            XMWKWebViewController *webmodule = app.webModuleStack[i];
+//            [multiVC.shotImageArr addObject:[XMImageUtil screenShotWithView:webmodule.view]];
+//        }
+//        // 必须刷新
+//        [multiVC.collectionView reloadData];
+//    }else if(app.webModuleStack.count == multiVC.shotImageArr.count){
+//        [multiVC.shotImageArr removeLastObject];
+//        XMWKWebViewController *webmodule = [app.webModuleStack lastObject];
+//        [multiVC.shotImageArr addObject:[XMImageUtil screenShotWithView:webmodule.view]];
+//        // 必须刷新
+//        [multiVC.collectionView reloadData];
+//    }
     
     [self presentViewController:multiVC animated:YES completion:nil];
 }
@@ -1144,7 +1158,7 @@ static double backForwardSafeDistance = 80.0;
     }
 }
 
-#pragma mark - uigestureDelegate
+#pragma mark - UIGestureRecognizerDelegate
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
     // 当触发swipe手势时,可能会触发pan手势等手势
     if ([gestureRecognizer isKindOfClass:[UISwipeGestureRecognizer class]]){
@@ -1269,7 +1283,6 @@ static double backForwardSafeDistance = 80.0;
             break;
         }
         case UIGestureRecognizerStateEnded:{
-            
             CGFloat panShift = [gesture locationInView:self.wkWebview].x - self.starX;
             // 右划且滑动距离大于50,表示应该返回,反之左划并且距离大于50表示向前,并复位左右两个箭头
             if (panShift - backForwardSafeDistance > backForwardImagVWH){
