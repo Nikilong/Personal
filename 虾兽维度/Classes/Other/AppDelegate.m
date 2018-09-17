@@ -52,14 +52,16 @@
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
 #ifdef XMDebugHomeVC
         //模拟器
-    XMMutiWindowFlowLayout * layout = [[XMMutiWindowFlowLayout alloc]init];
-    XMWebMultiWindowCollectionViewController *photoVC = [[XMWebMultiWindowCollectionViewController alloc] initWithCollectionViewLayout:layout];
-                                                         
-//                                                         initWithCollectionViewLayout:layout];
-    self.mainVC = photoVC;
+    /*
+     // TODO:多窗口的创建不太一样
+     XMMutiWindowFlowLayout * layout = [[XMMutiWindowFlowLayout alloc]init];
+     XMWebMultiWindowCollectionViewController *photoVC = [[XMWebMultiWindowCollectionViewController alloc] initWithCollectionViewLayout:layout];
+     self.mainVC = photoVC;
+     */
+    self.mainVC = [[XMMainViewController alloc] init];
 #else
         //真机
-        self.mainVC = [[XMMainViewController alloc] init];
+    self.mainVC = [[XMMainViewController alloc] init];
 #endif
     
     XMNavigationController *nav = [[XMNavigationController alloc] initWithRootViewController:_mainVC];

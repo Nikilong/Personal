@@ -46,7 +46,7 @@ XMWebMultiWindowCollectionViewControllerDelegate>
 @property (weak, nonatomic)  UIButton *saveBtn;
 @property (weak, nonatomic)  UIButton *toolBarBackBtn;
 @property (weak, nonatomic)  UIButton *toolBarForwardBtn;
-@property (weak, nonatomic)  UILabel *multiWindowCountLab;
+@property (weak, nonatomic)  UILabel *multiWindowCountLab;  // TODO:多窗口功能
 
 
 /** 网页view */
@@ -289,12 +289,12 @@ static double backForwardSafeDistance = 80.0;
 
 - (UIView *)toolBar{
     if (!_toolBar){
-
+        // TODO:多窗口功能 @{@"image": @"webview_multiwindow",@"selectImage": @"",@"selector":@"openMultiWindowViewController"}
         NSArray *tabbarBtnData = @[
        @{@"image": @"webview_goback",@"selectImage": @"webview_goback_disable",@"selector":@"webViewDidGoBack"},
        @{@"image": @"webview_goforward",@"selectImage": 
              @"webview_goforward_disable",@"selector":@"webViewDidGoForward"},
-       @{@"image": @"webview_multiwindow",@"selectImage": @"",@"selector":@"openMultiWindowViewController"},
+       @{@"image": @"webview_new",@"selectImage": @"",@"selector":@"openNewModule:"},
        @{@"image": @"shuaxin",@"selectImage": @"",@"selector":@"webViewDidFresh"},
        @{@"image": @"save_normal",@"selectImage": @"save_selected",@"disableImage": @"",@"selector":@"saveWeb:"},
                                    ];
@@ -324,13 +324,17 @@ static double backForwardSafeDistance = 80.0;
             }else if (i == 1){
                 self.toolBarForwardBtn = btn;
                 self.toolBarForwardBtn.selected = YES;
-            }else if (i == 2){
-                UILabel *lab = [[UILabel alloc] initWithFrame:btn.bounds];
-                self.multiWindowCountLab = lab;
-                lab.textAlignment = NSTextAlignmentCenter;
-                lab.font = [UIFont systemFontOfSize:9];
-                lab.textColor = [UIColor grayColor];
-                [btn addSubview:lab];
+//            }else if (i == 2){  // TODO:多窗口功能
+//                UILabel *lab = [[UILabel alloc] initWithFrame:btn.bounds];
+//                self.multiWindowCountLab = lab;
+//                lab.textAlignment = NSTextAlignmentCenter;
+//                lab.font = [UIFont systemFontOfSize:9];
+//                lab.textColor = [UIColor grayColor];
+//                [btn addSubview:lab];
+//                
+//                // 添加长按手势
+//                UILongPressGestureRecognizer *longP = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(multipWindowDidLongPress:)];
+//                [btn addGestureRecognizer:longP];
             }else if (i == 4){
                 self.saveBtn = btn;
             }
@@ -413,9 +417,9 @@ static double backForwardSafeDistance = 80.0;
     self.statusCover.hidden = NO;
     // 记录即将显示
     self.isShow = YES;
-    // 设置窗口数字
-    AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    self.multiWindowCountLab.text = [NSString stringWithFormat:@"%ld",app.webModuleStack.count];
+//    // TODO:设置窗口数字
+//    AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
+//    self.multiWindowCountLab.text = [NSString stringWithFormat:@"%ld",app.webModuleStack.count];
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -477,23 +481,18 @@ static double backForwardSafeDistance = 80.0;
     AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
     
     // 先判断是否和上一个pop掉的webmodule的url相同,相同的话就不必再去重复加载
-//    if ([app.tempWebModuleVC.originURL.absoluteString isEqualToString:model.webURL.absoluteString]){
-//        [vc.navigationController pushViewController:app.tempWebModuleVC animated:YES];
-//    }else{
-//        app.tempWebModuleVC = nil;
+    if ([app.tempWebModuleVC.originURL.absoluteString isEqualToString:model.webURL.absoluteString]){
+        [vc.navigationController pushViewController:app.tempWebModuleVC animated:YES];
+    }else{
+        app.tempWebModuleVC = nil;
         // 创建一个webmodule
         XMWKWebViewController *webVC = [[XMWKWebViewController alloc] init];
-//        app.tempWebModuleVC = webVC;
+        app.tempWebModuleVC = webVC;
         webVC.model = model;
         webVC.view.frame = vc.view.bounds;
-        //-------------
-        NSLog(@"Init--saveToStack----%@",vc);
-        [app.webModuleStack addObject:webVC];
-
-        //-------------
         // 压到导航控制器的栈顶
         [vc.navigationController pushViewController:webVC animated:YES];
-//    }
+    }
 }
 
 #pragma mark - toolbar和导航栏 点击事件
@@ -610,6 +609,28 @@ static double backForwardSafeDistance = 80.0;
 //    }
     
     [self presentViewController:multiVC animated:YES completion:nil];
+}
+
+// 长按多窗口操作
+- (void)multipWindowDidLongPress:(UILongPressGestureRecognizer *)gest{
+    UIAlertController *tips = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    __weak typeof(self) weakSelf = self;
+    [tips addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    [tips addAction:[UIAlertAction actionWithTitle:@"关闭所有标签" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+        AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
+        app.webModuleStack = nil;
+        XMWebMultiWindowCollectionViewController *muliVC =[XMWebMultiWindowCollectionViewController shareWebMultiWindowCollectionViewController];
+        muliVC.shotImageArr = nil;
+        [muliVC.collectionView reloadData];
+    }]];
+    [tips addAction:[UIAlertAction actionWithTitle:@"新建一个标签" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
+        [weakSelf openNewModule:NO];
+    }]];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self presentViewController:tips animated:YES completion:nil];
+    });
+
 }
 
 #pragma mark 导航栏的点击事件
