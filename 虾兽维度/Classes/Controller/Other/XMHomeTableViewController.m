@@ -151,13 +151,15 @@ CGFloat const XMRrfreshHeight = 64;
     [UIView animateWithDuration:duration animations:^{
         countLabel.transform = CGAffineTransformMakeTranslation(0, countLabelH);
     } completion:^(BOOL finished) {
-        // 动画内嵌套动画
-        [UIView animateWithDuration:duration animations:^{
-            countLabel.transform = CGAffineTransformIdentity;
-        }completion:^(BOOL finished) {
-            // 完成后将横幅移除（销毁横幅）
-            [countLabel removeFromSuperview];
-        }];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            // 动画内嵌套动画
+            [UIView animateWithDuration:duration animations:^{
+                countLabel.transform = CGAffineTransformIdentity;
+            }completion:^(BOOL finished) {
+                // 完成后将横幅移除（销毁横幅）
+                [countLabel removeFromSuperview];
+            }];
+        });
     }];
 }
 

@@ -1216,7 +1216,7 @@ static double backForwardSafeDistance = 80.0;
     if(self.imageArr.count <= 0) return;
     
     // 滚动中不能点击
-    if(self.isScroller) return;
+    if(self.isScroller || self.wkWebview.scrollView.isDecelerating) return;
     
     CGPoint touchPoint = [tap locationInView:self.wkWebview];
     NSString *imgURL = [NSString stringWithFormat:@"document.elementFromPoint(%f, %f).src", touchPoint.x, touchPoint.y];
@@ -1226,7 +1226,7 @@ static double backForwardSafeDistance = 80.0;
         // 有地址证明长按了图片区域
         if (urlToSave.length > 0){
             // 找出点击的图片的序号
-            NSUInteger index = 0;
+            NSUInteger index = self.imageArr.count;
             for (NSUInteger i = 0; i < self.imageArr.count; i++) {
                 NSString *eleUrl = self.imageArr[i];
                 // 警告:目前发现uc点击得到的地址包含从网页提取的地址,此处可能有隐患
@@ -1235,7 +1235,9 @@ static double backForwardSafeDistance = 80.0;
                     break;
                 }
             }
-            [weakSelf callPhotoDisplayViewcontrollerWithIndex:index];
+            if(index != self.imageArr.count){
+                [weakSelf callPhotoDisplayViewcontrollerWithIndex:index];
+            }
         }
     }];
 }

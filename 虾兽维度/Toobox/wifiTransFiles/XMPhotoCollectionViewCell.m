@@ -77,6 +77,12 @@
     self.imgV.frame = CGRectMake(0, 0, XMScreenW, XMScreenH);
     [self.imgScroV addSubview:self.imgV];
     
+    // 添加加载指示
+    UIActivityIndicatorView *indiV = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    [self addSubview:indiV];
+    indiV.center = CGPointMake(XMScreenW * 0.5, XMScreenH * 0.5);
+    [indiV startAnimating];
+    
     // 区分gif图片和静态图片
     if([url.lowercaseString containsString:@".gif"]){
         // 以网址的后半截数值加.gif做结尾,放在library/cache/giftemp文件夹之下
@@ -85,12 +91,17 @@
 
         // 检查本地是否有gif图片缓存,防止重复下载
         if ([[NSFileManager defaultManager] fileExistsAtPath:path]){
+            // 移除加载指示
+            [indiV stopAnimating];
+            [indiV removeFromSuperview];
+            
             NSArray *imgArr = [XMImageUtil seprateGifAtPath:path];
             [self setImageViewWithGifArray:imgArr];
             // 调整图片框大小
             self.imgV.frame = [self setImage:self.imgV];
             //设置scroll的contentsize的frame
             self.imgScroV.contentSize = self.imgV.frame.size;
+            
         }else{
             // 异步下载,再缓存到本地,再分解展示
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -98,11 +109,16 @@
                 [imgData writeToFile:path atomically:YES];
                 NSArray *imgArr = [XMImageUtil seprateGifAtPath:path];
                 dispatch_async(dispatch_get_main_queue(), ^{
+                    // 移除加载指示
+                    [indiV stopAnimating];
+                    [indiV removeFromSuperview];
+                    
                     [self setImageViewWithGifArray:imgArr];
                     // 调整图片框大小
                     self.imgV.frame = [self setImage:self.imgV];
                     //设置scroll的contentsize的frame
                     self.imgScroV.contentSize = self.imgV.frame.size;
+                    
                 });
             });
         }
@@ -113,6 +129,10 @@
         self.imgV.frame = [self setImage:self.imgV];
         //设置scroll的contentsize的frame
         self.imgScroV.contentSize = self.imgV.frame.size;
+        
+        // 移除加载指示
+        [indiV stopAnimating];
+        [indiV removeFromSuperview];
     }
 }
 
