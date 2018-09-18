@@ -183,6 +183,7 @@ typedef enum{
     }else if (self.sourceType == XMSaveVCDataSourceHistory){
         model = self.historyWebsArr[indexPath.row];
     }
+    model.searchMode = YES;
     
     // 通知代理发送网络请求
     if ([self.delegate respondsToSelector:@selector(openWebmoduleRequest:)]){

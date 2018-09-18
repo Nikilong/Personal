@@ -15,7 +15,10 @@
 #import "XMNavigationController.h"
 
 
-@interface XMPhotoCollectionViewController ()<UIScrollViewDelegate,UICollectionViewDelegateFlowLayout,UIGestureRecognizerDelegate>
+@interface XMPhotoCollectionViewController ()<
+UIScrollViewDelegate,
+UICollectionViewDelegateFlowLayout,
+UIGestureRecognizerDelegate>
 
 @property (weak, nonatomic)  UILabel *titLab;
 @property (weak, nonatomic)  NSTimer *timer;
@@ -26,13 +29,18 @@
 @property (nonatomic, assign)  int imageIndex;
     
 /**拖拽图片退出浏览的相关变量**/
+@property (weak, nonatomic)  UIPanGestureRecognizer *cancelPan;
 @property (strong, nonatomic)  UIImageView *panBgImgV;    // 背景截图相框
 @property (weak, nonatomic)  XMPhotoCollectionViewCell *currentCell;  // 当前拖拽的cell
 @property (nonatomic, assign)  CGPoint starP;  // 拖拽图片开始的坐标点
 @property (nonatomic, assign)  CGSize startSize;  // 拖拽开始图片的尺寸
 @property (nonatomic, assign)  double starT;
+@property (nonatomic, assign)  BOOL isScroll;   // 标记是否在滚动
 
 /**拖拽图片退出浏览的相关变量**/
+
+@property (nonatomic, assign)  CGFloat scrollerStarX;  // 滚动开始的坐标
+
 
 @property (weak, nonatomic)  UIView *topToolBar;
 @property (weak, nonatomic)  UIView *bottomToolBar;
@@ -62,11 +70,12 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
     //设置collectionview的初始化属性,惯性,偏移
     self.collectionView.delegate = self;
     self.collectionView.decelerationRate = 0.1;
-    self.collectionView.contentOffset = CGPointMake(XMScreenW * self.selectImgIndex, self.collectionView.contentOffset.y);
+    [self.collectionView setContentOffset:CGPointMake(XMScreenW * self.selectImgIndex, self.collectionView.contentOffset.y) animated:YES];
     
     // 初始化参数
     self.timeInterval = 1.0f;
     self.gifTimeInterval = 1 / 12.5f;
+    self.isScroll = NO;
 
     // 添加图片手势
     [self addImageGesture];
@@ -81,6 +90,8 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
     self.navigationController.interactivePopGestureRecognizer.enabled = NO;
     self.navigationController.navigationBar.hidden = YES;
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    XMNavigationController *nav = (XMNavigationController *)self.navigationController;
+    nav.customerPopGestureRecognizer.enabled = NO;
     
     // 截图
     [self.panBgImgV setImage:[XMImageUtil screenShot]];
@@ -98,6 +109,8 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
     // 导航栏显示,采用黑色主题的状态栏
     self.navigationController.navigationBar.hidden = NO;
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
+    XMNavigationController *nav = (XMNavigationController *)self.navigationController;
+    nav.customerPopGestureRecognizer.enabled = YES;
     
     // 移除定时器
     [self stopTimer];
@@ -182,6 +195,8 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
     
     // 向下滑动,退出照片
     UIPanGestureRecognizer *cancelPan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panToDismiss:)];
+    cancelPan.delegate = self;
+    self.cancelPan = cancelPan;
     [self.collectionView addGestureRecognizer:cancelPan];
     
     // 向下轻扫,退出
@@ -190,21 +205,21 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
 //    swipeD.direction = UISwipeGestureRecognizerDirectionDown;
 //    [self.collectionView addGestureRecognizer:swipeD];
     
-    // 向右轻扫,上一张图片
-    UISwipeGestureRecognizer *swipeR = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(preImage:)];
-    swipeR.delegate = self;
-    swipeR.direction = UISwipeGestureRecognizerDirectionRight;
-    [self.collectionView addGestureRecognizer:swipeR];
-    
-    // 向左轻扫,下一张图片
-    UISwipeGestureRecognizer *swipeL = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(nextImage:)];
-    swipeL.delegate = self;
-    swipeL.direction = UISwipeGestureRecognizerDirectionLeft;
-    [self.collectionView addGestureRecognizer:swipeL];
-    
-    // 上一张,下一张手势的优先级高
-    [cancelPan requireGestureRecognizerToFail:swipeR];
-    [cancelPan requireGestureRecognizerToFail:swipeL];
+//    // 向右轻扫,上一张图片
+//    UISwipeGestureRecognizer *swipeR = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(preImage:)];
+//    swipeR.delegate = self;
+//    swipeR.direction = UISwipeGestureRecognizerDirectionRight;
+//    [self.collectionView addGestureRecognizer:swipeR];
+//    
+//    // 向左轻扫,下一张图片
+//    UISwipeGestureRecognizer *swipeL = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(nextImage:)];
+//    swipeL.delegate = self;
+//    swipeL.direction = UISwipeGestureRecognizerDirectionLeft;
+//    [self.collectionView addGestureRecognizer:swipeL];
+//    
+//    // 上一张,下一张手势的优先级高
+//    [cancelPan requireGestureRecognizerToFail:swipeR];
+//    [cancelPan requireGestureRecognizerToFail:swipeL];
 }
 
 #pragma mark - 工具按钮点击事件
@@ -321,26 +336,23 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
     
 /// 上一张图片,右滑
 - (void)preImage:(UISwipeGestureRecognizer *)gest{
-    if (gest.state == UIGestureRecognizerStateEnded){
-        if(self.imageIndex > 0){
-            self.imageIndex--;
-            [self.collectionView setContentOffset:CGPointMake(self.imageIndex * XMScreenW, self.collectionView.contentOffset.y) animated:YES];
-        }
+    if(self.imageIndex > 0){
+        self.imageIndex--;
+        [self.collectionView setContentOffset:CGPointMake(self.imageIndex * XMScreenW, self.collectionView.contentOffset.y) animated:YES];
     }
 }
 
 /// 下一张图片,左划
 - (void)nextImage:(UISwipeGestureRecognizer *)gest{
-    if (gest.state == UIGestureRecognizerStateEnded){
-        if(self.imageIndex < (self.photoModelArr.count - 1)){
-            self.imageIndex++;
-            [self.collectionView setContentOffset:CGPointMake(self.imageIndex * XMScreenW, self.collectionView.contentOffset.y) animated:YES];
-        }
+    if(self.imageIndex < (self.photoModelArr.count - 1)){
+        self.imageIndex++;
+        [self.collectionView setContentOffset:CGPointMake(self.imageIndex * XMScreenW, self.collectionView.contentOffset.y) animated:YES];
     }
 }
 
 /// 图片手势直接退出浏览
 - (void)gestureToDismiss:(UIGestureRecognizer *)gest{
+    if(self.isScroll && [gest isKindOfClass:[UITapGestureRecognizer class]]) return;
     
     CGFloat duration = 0.5f;
     // 当时swipe和tap手势触发的时候,需要设置背景相框位置/透明度/隐藏
@@ -394,10 +406,10 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
             self.panBgImgV.hidden = YES;
         }
         
-        // 图片则和截图的alpha相反,越接近底部,图片应该越小,即是1->0,因此取反得到实际的缩放系数,另外限制缩放比例在0.4-1之间
+        // 图片则和截图的alpha相反,越接近底部,图片应该越小,即是1->0,因此取反得到实际的缩放系数,另外限制缩放比例在0.25-1之间
         ratio = 1 - ratio;
-        if (ratio < 0.4){
-            ratio = 0.4;
+        if (ratio < 0.25){
+            ratio = 0.25;
         }else if (ratio > 1){
             ratio = 1;
         }
@@ -500,6 +512,7 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
     
 /// 双击事件
 - (void)didDoubleTapCollectionView:(UITapGestureRecognizer *)tap{
+    if(self.isScroll) return;
     if (tap.state == UIGestureRecognizerStateEnded){
         // 隐藏导航栏
         self.navigationController.navigationBar.hidden = YES;
@@ -619,32 +632,84 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
     return 0;
 }
 
+#pragma mark - UIGestureRecognizerDelegate
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
+    // 解决拖拽下滑和scrollerview的冲突
+    if([gestureRecognizer isEqual:self.cancelPan]){
+        CGPoint point = [self.cancelPan velocityInView:self.collectionView];
+        if(ABS(point.x) > ABS(point.y)){
+            return NO;
+        }
+    }
+    return YES;
+}
+
 #pragma mark - UIScrollerviewDelegate
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
+    self.scrollerStarX = scrollView.contentOffset.x;
+    // 停止幻灯片
+    [self stopTimer];
+}
 // 正在滚动
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    if(self.scrollerStarX){
+        // 初始化时候会调用该方法(scrollViewDidScroll),此时没有拖拽,为了能够点击退出,这时候不应该记录在内
+        self.isScroll = YES;
+    }
     NSUInteger currentP = scrollView.contentOffset.x / XMScreenW + 1.5;
     self.imageIndex = (int)currentP - 1;
     
     [self updatePageTitleWithIndex:currentP];
 }
 
- //拖拽滚动结束
+// 拖拽滚动结束
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
-    
-    NSUInteger currentP = scrollView.contentOffset.x / XMScreenW + 0.5;
-
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self.collectionView setContentOffset:CGPointMake(currentP * XMScreenW, self.collectionView.contentOffset.y) animated:YES];
-    });
+    [self adjustScrollerviewContentOffset:scrollView.contentOffset useNewAnimate:NO];
 
 }
 
-/// 惯性滚动结束
+// 惯性滚动结束
 //- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-//    
-//    NSUInteger currentP = scrollView.contentOffset.x / XMScreenW + 0.5;
-//    [self.collectionView setContentOffset:CGPointMake(currentP * XMScreenW, self.collectionView.contentOffset.y) animated:NO];
 //}
+
+// 监听setContentOffset/scrollRectVisible:animated:的动画结束
+- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView{
+    // 当执行setContentOffset的动画被中断时,此时需要判断是否切换到了页面的整数倍,需要利用UIView的动画来调整
+    if(scrollView.contentOffset.x / XMScreenW != (NSUInteger)(scrollView.contentOffset.x / XMScreenW)){
+        [self adjustScrollerviewContentOffset:scrollView.contentOffset useNewAnimate:YES];
+    }
+    self.isScroll = NO;
+}
+
+// 用户动作结束,调整页面的contentOffset为整数倍
+- (void)adjustScrollerviewContentOffset:(CGPoint )endContentOffet useNewAnimate:(BOOL)isNewAnimate{
+
+    CGFloat distance = 70;
+    NSUInteger currentP = endContentOffet.x / XMScreenW;
+
+    if(endContentOffet.x - self.scrollerStarX > distance){
+        if(currentP > self.photoModelArr.count - 2){
+            currentP = self.photoModelArr.count - 1;
+        }else{
+            currentP++;
+        }
+    }else if(self.scrollerStarX - endContentOffet.x > distance){
+        if(currentP <= 0){
+            currentP = 0;
+        }
+    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        // 用UIView的动画则不走scrollerview的
+        if(isNewAnimate){
+            [UIView animateWithDuration:0.25f animations:^{
+                self.collectionView.contentOffset = CGPointMake(currentP * XMScreenW, self.collectionView.contentOffset.y);
+            }];
+        }else{
+            [self.collectionView setContentOffset:CGPointMake(currentP * XMScreenW, self.collectionView.contentOffset.y) animated:YES];
+        }
+    });
+
+}
 
 
 @end
