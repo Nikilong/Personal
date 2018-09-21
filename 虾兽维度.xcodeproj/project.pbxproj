@@ -199,6 +199,24 @@
 		84BA255A1E65C7A800C8B204 /* XMWebTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84BA25581E65C7A800C8B204 /* XMWebTableViewCell.xib */; };
 		84D9ED061E656BC30046840E /* XMWebModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 84D9ED051E656BC30046840E /* XMWebModel.m */; };
 		FD04E861212C07A900EC3ED6 /* XMMutiWindowFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = FD04E860212C07A900EC3ED6 /* XMMutiWindowFlowLayout.m */; };
+		FD05F3C82154F609008EAD89 /* YYImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = FD05F3A02154F609008EAD89 /* YYImageCache.m */; };
+		FD05F3C92154F609008EAD89 /* YYDiskCache.m in Sources */ = {isa = PBXBuildFile; fileRef = FD05F3A22154F609008EAD89 /* YYDiskCache.m */; };
+		FD05F3CA2154F609008EAD89 /* YYCache.m in Sources */ = {isa = PBXBuildFile; fileRef = FD05F3A42154F609008EAD89 /* YYCache.m */; };
+		FD05F3CB2154F609008EAD89 /* YYKVStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = FD05F3A82154F609008EAD89 /* YYKVStorage.m */; };
+		FD05F3CC2154F609008EAD89 /* YYMemoryCache.m in Sources */ = {isa = PBXBuildFile; fileRef = FD05F3A92154F609008EAD89 /* YYMemoryCache.m */; };
+		FD05F3CD2154F609008EAD89 /* YYWebImageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FD05F3AA2154F609008EAD89 /* YYWebImageManager.m */; };
+		FD05F3CE2154F609008EAD89 /* YYSpriteSheetImage.m in Sources */ = {isa = PBXBuildFile; fileRef = FD05F3B02154F609008EAD89 /* YYSpriteSheetImage.m */; };
+		FD05F3CF2154F609008EAD89 /* YYImage.m in Sources */ = {isa = PBXBuildFile; fileRef = FD05F3B22154F609008EAD89 /* YYImage.m */; };
+		FD05F3D02154F609008EAD89 /* YYImageCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = FD05F3B32154F609008EAD89 /* YYImageCoder.m */; };
+		FD05F3D12154F609008EAD89 /* YYFrameImage.m in Sources */ = {isa = PBXBuildFile; fileRef = FD05F3B42154F609008EAD89 /* YYFrameImage.m */; };
+		FD05F3D22154F609008EAD89 /* YYAnimatedImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = FD05F3B52154F609008EAD89 /* YYAnimatedImageView.m */; };
+		FD05F3D32154F609008EAD89 /* _YYWebImageSetter.m in Sources */ = {isa = PBXBuildFile; fileRef = FD05F3BA2154F609008EAD89 /* _YYWebImageSetter.m */; };
+		FD05F3D42154F60A008EAD89 /* UIButton+YYWebImage.m in Sources */ = {isa = PBXBuildFile; fileRef = FD05F3C12154F609008EAD89 /* UIButton+YYWebImage.m */; };
+		FD05F3D52154F60A008EAD89 /* UIImageView+YYWebImage.m in Sources */ = {isa = PBXBuildFile; fileRef = FD05F3C22154F609008EAD89 /* UIImageView+YYWebImage.m */; };
+		FD05F3D62154F60A008EAD89 /* MKAnnotationView+YYWebImage.m in Sources */ = {isa = PBXBuildFile; fileRef = FD05F3C32154F609008EAD89 /* MKAnnotationView+YYWebImage.m */; };
+		FD05F3D72154F60A008EAD89 /* UIImage+YYWebImage.m in Sources */ = {isa = PBXBuildFile; fileRef = FD05F3C42154F609008EAD89 /* UIImage+YYWebImage.m */; };
+		FD05F3D82154F60A008EAD89 /* CALayer+YYWebImage.m in Sources */ = {isa = PBXBuildFile; fileRef = FD05F3C52154F609008EAD89 /* CALayer+YYWebImage.m */; };
+		FD05F3D92154F60A008EAD89 /* YYWebImageOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = FD05F3C72154F609008EAD89 /* YYWebImageOperation.m */; };
 		FD1EA08920A9A96A00658F18 /* XMGlobalConst.m in Sources */ = {isa = PBXBuildFile; fileRef = FD1EA08820A9A96A00658F18 /* XMGlobalConst.m */; };
 		FD1EA08B20A9B59B00658F18 /* clipIcon.py in Resources */ = {isa = PBXBuildFile; fileRef = FD1EA08A20A9B59A00658F18 /* clipIcon.py */; };
 		FD1EA0DA20AC52B300658F18 /* phone_documents_icon_update.png in Resources */ = {isa = PBXBuildFile; fileRef = FD1EA0D220AC52B200658F18 /* phone_documents_icon_update.png */; };
@@ -569,6 +587,43 @@
 		84D9ED051E656BC30046840E /* XMWebModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMWebModel.m; sourceTree = "<group>"; };
 		FD04E85F212C07A900EC3ED6 /* XMMutiWindowFlowLayout.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMMutiWindowFlowLayout.h; sourceTree = "<group>"; };
 		FD04E860212C07A900EC3ED6 /* XMMutiWindowFlowLayout.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMMutiWindowFlowLayout.m; sourceTree = "<group>"; };
+		FD05F3A02154F609008EAD89 /* YYImageCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YYImageCache.m; sourceTree = "<group>"; };
+		FD05F3A22154F609008EAD89 /* YYDiskCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YYDiskCache.m; sourceTree = "<group>"; };
+		FD05F3A32154F609008EAD89 /* YYKVStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YYKVStorage.h; sourceTree = "<group>"; };
+		FD05F3A42154F609008EAD89 /* YYCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YYCache.m; sourceTree = "<group>"; };
+		FD05F3A52154F609008EAD89 /* YYMemoryCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YYMemoryCache.h; sourceTree = "<group>"; };
+		FD05F3A62154F609008EAD89 /* YYDiskCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YYDiskCache.h; sourceTree = "<group>"; };
+		FD05F3A72154F609008EAD89 /* YYCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YYCache.h; sourceTree = "<group>"; };
+		FD05F3A82154F609008EAD89 /* YYKVStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YYKVStorage.m; sourceTree = "<group>"; };
+		FD05F3A92154F609008EAD89 /* YYMemoryCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YYMemoryCache.m; sourceTree = "<group>"; };
+		FD05F3AA2154F609008EAD89 /* YYWebImageManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YYWebImageManager.m; sourceTree = "<group>"; };
+		FD05F3AB2154F609008EAD89 /* YYWebImageOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YYWebImageOperation.h; sourceTree = "<group>"; };
+		FD05F3AD2154F609008EAD89 /* YYImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YYImage.h; sourceTree = "<group>"; };
+		FD05F3AE2154F609008EAD89 /* YYImageCoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YYImageCoder.h; sourceTree = "<group>"; };
+		FD05F3AF2154F609008EAD89 /* YYFrameImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YYFrameImage.h; sourceTree = "<group>"; };
+		FD05F3B02154F609008EAD89 /* YYSpriteSheetImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YYSpriteSheetImage.m; sourceTree = "<group>"; };
+		FD05F3B12154F609008EAD89 /* YYAnimatedImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YYAnimatedImageView.h; sourceTree = "<group>"; };
+		FD05F3B22154F609008EAD89 /* YYImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YYImage.m; sourceTree = "<group>"; };
+		FD05F3B32154F609008EAD89 /* YYImageCoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YYImageCoder.m; sourceTree = "<group>"; };
+		FD05F3B42154F609008EAD89 /* YYFrameImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YYFrameImage.m; sourceTree = "<group>"; };
+		FD05F3B52154F609008EAD89 /* YYAnimatedImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YYAnimatedImageView.m; sourceTree = "<group>"; };
+		FD05F3B62154F609008EAD89 /* YYSpriteSheetImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YYSpriteSheetImage.h; sourceTree = "<group>"; };
+		FD05F3B72154F609008EAD89 /* YYImageCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YYImageCache.h; sourceTree = "<group>"; };
+		FD05F3B82154F609008EAD89 /* YYWebImageManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YYWebImageManager.h; sourceTree = "<group>"; };
+		FD05F3BA2154F609008EAD89 /* _YYWebImageSetter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _YYWebImageSetter.m; sourceTree = "<group>"; };
+		FD05F3BB2154F609008EAD89 /* UIButton+YYWebImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIButton+YYWebImage.h"; sourceTree = "<group>"; };
+		FD05F3BC2154F609008EAD89 /* UIImageView+YYWebImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+YYWebImage.h"; sourceTree = "<group>"; };
+		FD05F3BD2154F609008EAD89 /* CALayer+YYWebImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CALayer+YYWebImage.h"; sourceTree = "<group>"; };
+		FD05F3BE2154F609008EAD89 /* UIImage+YYWebImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+YYWebImage.h"; sourceTree = "<group>"; };
+		FD05F3BF2154F609008EAD89 /* MKAnnotationView+YYWebImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MKAnnotationView+YYWebImage.h"; sourceTree = "<group>"; };
+		FD05F3C02154F609008EAD89 /* _YYWebImageSetter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _YYWebImageSetter.h; sourceTree = "<group>"; };
+		FD05F3C12154F609008EAD89 /* UIButton+YYWebImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+YYWebImage.m"; sourceTree = "<group>"; };
+		FD05F3C22154F609008EAD89 /* UIImageView+YYWebImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+YYWebImage.m"; sourceTree = "<group>"; };
+		FD05F3C32154F609008EAD89 /* MKAnnotationView+YYWebImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MKAnnotationView+YYWebImage.m"; sourceTree = "<group>"; };
+		FD05F3C42154F609008EAD89 /* UIImage+YYWebImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+YYWebImage.m"; sourceTree = "<group>"; };
+		FD05F3C52154F609008EAD89 /* CALayer+YYWebImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CALayer+YYWebImage.m"; sourceTree = "<group>"; };
+		FD05F3C62154F609008EAD89 /* YYWebImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YYWebImage.h; sourceTree = "<group>"; };
+		FD05F3C72154F609008EAD89 /* YYWebImageOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YYWebImageOperation.m; sourceTree = "<group>"; };
 		FD1EA08720A9A96A00658F18 /* XMGlobalConst.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = XMGlobalConst.h; path = "虾兽维度/Config/XMGlobalConst.h"; sourceTree = SOURCE_ROOT; };
 		FD1EA08820A9A96A00658F18 /* XMGlobalConst.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = XMGlobalConst.m; path = "虾兽维度/Config/XMGlobalConst.m"; sourceTree = SOURCE_ROOT; };
 		FD1EA08A20A9B59A00658F18 /* clipIcon.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = clipIcon.py; sourceTree = "<group>"; };
@@ -911,6 +966,7 @@
 				205CECAD1F48150E00821E38 /* MBProgressHUD */,
 				205CECB31F48150E00821E38 /* SDWebImage */,
 				FDB099EE2112E71700148492 /* RSSwizzle */,
+				FD05F39F2154F609008EAD89 /* YYWebImage */,
 			);
 			path = Framework;
 			sourceTree = "<group>";
@@ -1448,6 +1504,74 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		FD05F39F2154F609008EAD89 /* YYWebImage */ = {
+			isa = PBXGroup;
+			children = (
+				FD05F3A02154F609008EAD89 /* YYImageCache.m */,
+				FD05F3A12154F609008EAD89 /* Cache */,
+				FD05F3AA2154F609008EAD89 /* YYWebImageManager.m */,
+				FD05F3AB2154F609008EAD89 /* YYWebImageOperation.h */,
+				FD05F3AC2154F609008EAD89 /* Image */,
+				FD05F3B72154F609008EAD89 /* YYImageCache.h */,
+				FD05F3B82154F609008EAD89 /* YYWebImageManager.h */,
+				FD05F3B92154F609008EAD89 /* Categories */,
+				FD05F3C62154F609008EAD89 /* YYWebImage.h */,
+				FD05F3C72154F609008EAD89 /* YYWebImageOperation.m */,
+			);
+			path = YYWebImage;
+			sourceTree = "<group>";
+		};
+		FD05F3A12154F609008EAD89 /* Cache */ = {
+			isa = PBXGroup;
+			children = (
+				FD05F3A22154F609008EAD89 /* YYDiskCache.m */,
+				FD05F3A32154F609008EAD89 /* YYKVStorage.h */,
+				FD05F3A42154F609008EAD89 /* YYCache.m */,
+				FD05F3A52154F609008EAD89 /* YYMemoryCache.h */,
+				FD05F3A62154F609008EAD89 /* YYDiskCache.h */,
+				FD05F3A72154F609008EAD89 /* YYCache.h */,
+				FD05F3A82154F609008EAD89 /* YYKVStorage.m */,
+				FD05F3A92154F609008EAD89 /* YYMemoryCache.m */,
+			);
+			path = Cache;
+			sourceTree = "<group>";
+		};
+		FD05F3AC2154F609008EAD89 /* Image */ = {
+			isa = PBXGroup;
+			children = (
+				FD05F3AD2154F609008EAD89 /* YYImage.h */,
+				FD05F3AE2154F609008EAD89 /* YYImageCoder.h */,
+				FD05F3AF2154F609008EAD89 /* YYFrameImage.h */,
+				FD05F3B02154F609008EAD89 /* YYSpriteSheetImage.m */,
+				FD05F3B12154F609008EAD89 /* YYAnimatedImageView.h */,
+				FD05F3B22154F609008EAD89 /* YYImage.m */,
+				FD05F3B32154F609008EAD89 /* YYImageCoder.m */,
+				FD05F3B42154F609008EAD89 /* YYFrameImage.m */,
+				FD05F3B52154F609008EAD89 /* YYAnimatedImageView.m */,
+				FD05F3B62154F609008EAD89 /* YYSpriteSheetImage.h */,
+			);
+			path = Image;
+			sourceTree = "<group>";
+		};
+		FD05F3B92154F609008EAD89 /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				FD05F3BA2154F609008EAD89 /* _YYWebImageSetter.m */,
+				FD05F3BB2154F609008EAD89 /* UIButton+YYWebImage.h */,
+				FD05F3BC2154F609008EAD89 /* UIImageView+YYWebImage.h */,
+				FD05F3BD2154F609008EAD89 /* CALayer+YYWebImage.h */,
+				FD05F3BE2154F609008EAD89 /* UIImage+YYWebImage.h */,
+				FD05F3BF2154F609008EAD89 /* MKAnnotationView+YYWebImage.h */,
+				FD05F3C02154F609008EAD89 /* _YYWebImageSetter.h */,
+				FD05F3C12154F609008EAD89 /* UIButton+YYWebImage.m */,
+				FD05F3C22154F609008EAD89 /* UIImageView+YYWebImage.m */,
+				FD05F3C32154F609008EAD89 /* MKAnnotationView+YYWebImage.m */,
+				FD05F3C42154F609008EAD89 /* UIImage+YYWebImage.m */,
+				FD05F3C52154F609008EAD89 /* CALayer+YYWebImage.m */,
+			);
+			path = Categories;
+			sourceTree = "<group>";
+		};
 		FD3332E520A178690017655F /* wifiIcon */ = {
 			isa = PBXGroup;
 			children = (
@@ -1692,6 +1816,7 @@
 				20835AED21294AFE0009E17F /* XMWebModelLogic.m in Sources */,
 				FDFAEEC520FD900E00BEA442 /* XMNavigationController.m in Sources */,
 				2056D8731E8D67B200EB4BB5 /* XMConerAccessoryView.m in Sources */,
+				FD05F3CC2154F609008EAD89 /* YYMemoryCache.m in Sources */,
 				20E9E373204C4BEC007D442E /* XMClipImageViewController.m in Sources */,
 				20707E9C209F3E8400572604 /* XMWifiTransModel.m in Sources */,
 				20C85E6D2054313F0057F483 /* XMButton.m in Sources */,
@@ -1712,12 +1837,17 @@
 				20863CBC20CD422F00A0812C /* ZLPhotoPickerViewController.m in Sources */,
 				205CECE21F48150E00821E38 /* SDImageCacheConfig.m in Sources */,
 				205CECEB1F48150E00821E38 /* UIImage+MultiFormat.m in Sources */,
+				FD05F3D82154F60A008EAD89 /* CALayer+YYWebImage.m in Sources */,
 				202C84EF1F2624AD0055FD7D /* XMHomeTableViewController.m in Sources */,
+				FD05F3D12154F609008EAD89 /* YYFrameImage.m in Sources */,
 				2061C21B20C56F5F008C7424 /* HJBufferSlider.m in Sources */,
 				205CECF91F4898A600821E38 /* XMDropView.m in Sources */,
+				FD05F3CB2154F609008EAD89 /* YYKVStorage.m in Sources */,
 				20C85E7020551B800057F483 /* XMTouchIDKeyboardViewController.m in Sources */,
 				205CECEF1F48150E00821E38 /* UIView+WebCache.m in Sources */,
+				FD05F3CD2154F609008EAD89 /* YYWebImageManager.m in Sources */,
 				FD04E861212C07A900EC3ED6 /* XMMutiWindowFlowLayout.m in Sources */,
+				FD05F3D32154F609008EAD89 /* _YYWebImageSetter.m in Sources */,
 				205CECE41F48150E00821E38 /* SDWebImageDecoder.m in Sources */,
 				842971041E654644002BDBC0 /* AppDelegate.m in Sources */,
 				205CECEE1F48150E00821E38 /* UIImageView+WebCache.m in Sources */,
@@ -1747,6 +1877,7 @@
 				20707E9F209F446F00572604 /* XMFileDisplayWebViewViewController.m in Sources */,
 				2086642C20AB403D00D51CCB /* hmac.c in Sources */,
 				2061C22220C56F5F008C7424 /* HJVideoSettingView.m in Sources */,
+				FD05F3D72154F60A008EAD89 /* UIImage+YYWebImage.m in Sources */,
 				20707EA3209F551200572604 /* ZBTool.m in Sources */,
 				2061C21420C56F5F008C7424 /* HJVideoPlayManager.m in Sources */,
 				2061C21E20C56F5F008C7424 /* HJPlayerView.m in Sources */,
@@ -1762,11 +1893,15 @@
 				204D240C209ED8E800F17E2E /* HTTPServer.m in Sources */,
 				84BA25591E65C7A800C8B204 /* XMWebTableViewCell.m in Sources */,
 				2086FCE120EBC61400957207 /* XMImageUtil.m in Sources */,
+				FD05F3D62154F60A008EAD89 /* MKAnnotationView+YYWebImage.m in Sources */,
 				20863CBD20CD422F00A0812C /* ZLPhotoPickerCollectionView.m in Sources */,
 				FDB09A052113192A00148492 /* XMPopAnimation.m in Sources */,
+				FD05F3CE2154F609008EAD89 /* YYSpriteSheetImage.m in Sources */,
 				200A823420837B1300825E6E /* XMMetorMapViewController.swift in Sources */,
 				205CECDE1F48150E00821E38 /* MKAnnotationView+WebCache.m in Sources */,
+				FD05F3D02154F609008EAD89 /* YYImageCoder.m in Sources */,
 				2061C22020C56F5F008C7424 /* HJVideoMaskView.m in Sources */,
+				FD05F3D52154F60A008EAD89 /* UIImageView+YYWebImage.m in Sources */,
 				204D2407209ED8E800F17E2E /* DDNumber.m in Sources */,
 				2086642A20AB403D00D51CCB /* aestab.c in Sources */,
 				204D2433209ED91A00F17E2E /* DDFileLogger.m in Sources */,
@@ -1781,22 +1916,26 @@
 				20F1121B1E866F9C00E64A70 /* XMLeftViewUserCell.m in Sources */,
 				203D300321036AA7008788B6 /* XMWXVCFloatWindow.m in Sources */,
 				20021F8A21298B4800A2BA02 /* XMVisualView.m in Sources */,
+				FD05F3C82154F609008EAD89 /* YYImageCache.m in Sources */,
 				2086643320AB403D00D51CCB /* ioapi_mem.c in Sources */,
 				FD7407E820B4306D00A83979 /* XMPhotoCollectionViewController.m in Sources */,
 				20863CC020CD422F00A0812C /* ZLPhotoPickerGroupTableViewCell.m in Sources */,
 				204D2410209ED8E800F17E2E /* HTTPAsyncFileResponse.m in Sources */,
 				204D240B209ED8E800F17E2E /* HTTPMessage.m in Sources */,
+				FD05F3D92154F60A008EAD89 /* YYWebImageOperation.m in Sources */,
 				204D2415209ED8E800F17E2E /* HTTPRedirectResponse.m in Sources */,
 				207BBE8120B7078F00C86EAD /* XMPhotoCollectionViewCell.m in Sources */,
 				2061C21920C56F5F008C7424 /* UIImage+getImage.m in Sources */,
 				204D2437209ED91A00F17E2E /* DispatchQueueLogFormatter.m in Sources */,
 				202C84F21F2624AD0055FD7D /* XMSearchTableViewController.m in Sources */,
+				FD05F3D22154F609008EAD89 /* YYAnimatedImageView.m in Sources */,
 				20835AF0212956590009E17F /* XMChannelModelLogic.m in Sources */,
 				2061C21C20C56F5F008C7424 /* HJCircleLoading.m in Sources */,
 				2086643220AB403D00D51CCB /* ioapi_buf.c in Sources */,
 				205CED0B1F489F2B00821E38 /* XMMainViewController.m in Sources */,
 				2086642720AB403D00D51CCB /* aes_ni.c in Sources */,
 				204D2409209ED8E800F17E2E /* HTTPAuthenticationRequest.m in Sources */,
+				FD05F3CF2154F609008EAD89 /* YYImage.m in Sources */,
 				202C84F31F2624AD0055FD7D /* XMWKWebViewController.m in Sources */,
 				204D2434209ED91A00F17E2E /* DDLog.m in Sources */,
 				205CECE81F48150E00821E38 /* SDWebImagePrefetcher.m in Sources */,
@@ -1804,6 +1943,7 @@
 				2061C21820C56F5F008C7424 /* UIDevice+HJVideoRotation.m in Sources */,
 				20863CBF20CD422F00A0812C /* ZLPhotoPickerFooterCollectionReusableView.m in Sources */,
 				2086642F20AB403D00D51CCB /* sha1.c in Sources */,
+				FD05F3CA2154F609008EAD89 /* YYCache.m in Sources */,
 				2061C21D20C56F5F008C7424 /* HJFastForwardView.m in Sources */,
 				FDD895A7212BFF3200E2EDAD /* XMWebMultiWindowCollectionViewController.m in Sources */,
 				203D300221036AA7008788B6 /* XMRightBottomFloatView.m in Sources */,
@@ -1824,7 +1964,9 @@
 				FD3332EF20A181D40017655F /* XMWifiGroupTool.m in Sources */,
 				2061C21F20C56F5F008C7424 /* HJVideoBottomView.m in Sources */,
 				203D300421036AA7008788B6 /* XMWXFloatWindowIconConfig.m in Sources */,
+				FD05F3C92154F609008EAD89 /* YYDiskCache.m in Sources */,
 				FDB099F52112E77300148492 /* UIScreenEdgePanGestureRecognizer+UIScreenEdgePanGestureRecognizer_hook.m in Sources */,
+				FD05F3D42154F60A008EAD89 /* UIButton+YYWebImage.m in Sources */,
 				204D240F209ED8E800F17E2E /* MultipartMessageHeaderField.m in Sources */,
 				20C85E53205419C80057F483 /* XMToolBoxConfig.m in Sources */,
 				202C84F01F2624AD0055FD7D /* XMQRCodeViewController.m in Sources */,

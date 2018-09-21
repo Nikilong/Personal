@@ -23,7 +23,7 @@ UIGestureRecognizerDelegate>
 @property (weak, nonatomic)  UILabel *titLab;
 @property (weak, nonatomic)  NSTimer *timer;
 @property (nonatomic, assign)  double timeInterval;
-@property (nonatomic, assign)  double gifTimeInterval;
+//@property (nonatomic, assign)  double gifTimeInterval;
 @property (weak, nonatomic)  UIButton *timerBtn;
 
 @property (nonatomic, assign)  int imageIndex;
@@ -74,7 +74,7 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
     
     // 初始化参数
     self.timeInterval = 1.0f;
-    self.gifTimeInterval = 1 / 12.5f;
+//    self.gifTimeInterval = 1 / 12.5f;
     self.isScroll = NO;
 
     // 添加图片手势
@@ -90,8 +90,8 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
     self.navigationController.interactivePopGestureRecognizer.enabled = NO;
     self.navigationController.navigationBar.hidden = YES;
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
-    XMNavigationController *nav = (XMNavigationController *)self.navigationController;
-    nav.customerPopGestureRecognizer.enabled = NO;
+//    XMNavigationController *nav = (XMNavigationController *)self.navigationController;
+//    nav.customerPopGestureRecognizer.enabled = NO;
     
     // 截图
     [self.panBgImgV setImage:[XMImageUtil screenShot]];
@@ -108,9 +108,9 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
     [super viewWillDisappear:animated];
     // 导航栏显示,采用黑色主题的状态栏
     self.navigationController.navigationBar.hidden = NO;
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
-    XMNavigationController *nav = (XMNavigationController *)self.navigationController;
-    nav.customerPopGestureRecognizer.enabled = YES;
+//    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
+//    XMNavigationController *nav = (XMNavigationController *)self.navigationController;
+//    nav.customerPopGestureRecognizer.enabled = YES;
     
     // 移除定时器
     [self stopTimer];
@@ -156,14 +156,14 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
     lab.textAlignment = NSTextAlignmentLeft;
     lab.textColor = [UIColor whiteColor];
     
-    // gif帧数按钮(底部靠右)
-    UIButton *gifTimeBtn = [[UIButton alloc] initWithFrame:CGRectMake(XMScreenW - 60, 0, 60, btnWH)];
-    [gifTimeBtn setTitle:@"12.5帧" forState:UIControlStateNormal];
-    [gifTimeBtn addTarget:self action:@selector(changeGifTimeInterval:) forControlEvents:UIControlEventTouchUpInside];
-    [bottomToolV addSubview:gifTimeBtn];
+//    // gif帧数按钮(底部靠右)
+//    UIButton *gifTimeBtn = [[UIButton alloc] initWithFrame:CGRectMake(XMScreenW - 60, 0, 60, btnWH)];
+//    [gifTimeBtn setTitle:@"12.5帧" forState:UIControlStateNormal];
+//    [gifTimeBtn addTarget:self action:@selector(changeGifTimeInterval:) forControlEvents:UIControlEventTouchUpInside];
+//    [bottomToolV addSubview:gifTimeBtn];
     
     // 幻灯片间隔按钮(底部靠右)
-    UIButton *timeSettingBtn = [[UIButton alloc] initWithFrame:CGRectMake(XMScreenW - 120, 0, 60, btnWH)];
+    UIButton *timeSettingBtn = [[UIButton alloc] initWithFrame:CGRectMake(XMScreenW - 60, 0, 60, btnWH)];
     [timeSettingBtn setTitle:@"1.0s" forState:UIControlStateNormal];
     [timeSettingBtn addTarget:self action:@selector(changeTimeInterval:) forControlEvents:UIControlEventTouchUpInside];
     [bottomToolV addSubview:timeSettingBtn];
@@ -283,7 +283,7 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
         
         [self.collectionView setContentOffset:CGPointMake(XMScreenW * index, self.collectionView.contentOffset.y) animated:YES];
     }else{
-        [self.collectionView setContentOffset:CGPointMake(0, self.collectionView.contentOffset.y) animated:YES];
+        [self.collectionView setContentOffset:CGPointMake(0, self.collectionView.contentOffset.y) animated:NO];
     }
     
 }
@@ -300,28 +300,28 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
     self.titLab.attributedText = str;
 }
 
-/// 设置gif每秒播放的帧数
-- (void)changeGifTimeInterval:(UIButton *)btn{
-    [self stopTimer];
-    UIAlertController *tips = [UIAlertController alertControllerWithTitle:@"提示" message:@"每秒播放的帧数" preferredStyle:UIAlertControllerStyleAlert];
-    __weak typeof(self) weakSelf = self;
-    [tips addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
-    [tips addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        UITextField *textF = tips.textFields[0];
-        if(textF.text.integerValue > 0 ){
-
-            weakSelf.gifTimeInterval = 1.0 / textF.text.integerValue;
-            [btn setTitle:[NSString stringWithFormat:@"%ld帧",textF.text.integerValue] forState:UIControlStateNormal];
-            [weakSelf.collectionView reloadData];
-        }
-    }]];
-    [tips addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField){
-        textField.clearButtonMode = UITextFieldViewModeAlways;
-        textField.placeholder = @"默认每秒12.5帧";
-    }];
-    
-    [self presentViewController:tips animated:YES completion:nil];
-}
+///// 设置gif每秒播放的帧数
+//- (void)changeGifTimeInterval:(UIButton *)btn{
+//    [self stopTimer];
+//    UIAlertController *tips = [UIAlertController alertControllerWithTitle:@"提示" message:@"每秒播放的帧数" preferredStyle:UIAlertControllerStyleAlert];
+//    __weak typeof(self) weakSelf = self;
+//    [tips addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+//    [tips addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+//        UITextField *textF = tips.textFields[0];
+//        if(textF.text.integerValue > 0 ){
+//
+//            weakSelf.gifTimeInterval = 1.0 / textF.text.integerValue;
+//            [btn setTitle:[NSString stringWithFormat:@"%ld帧",textF.text.integerValue] forState:UIControlStateNormal];
+//            [weakSelf.collectionView reloadData];
+//        }
+//    }]];
+//    [tips addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField){
+//        textField.clearButtonMode = UITextFieldViewModeAlways;
+//        textField.placeholder = @"默认每秒12.5帧";
+//    }];
+//
+//    [self presentViewController:tips animated:YES completion:nil];
+//}
 
 /// 退出
 - (void)dismiss:(UIBarButtonItem *)btn{
@@ -377,7 +377,7 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
         }else{
             self.currentCell.imgV.frame = CGRectMake(CGRectGetMidX(self.currentCell.imgV.frame) - 50, XMScreenH, 100 , 100);
         }
-        
+        self.currentCell.imgV.alpha = 0;
         self.panBgImgV.alpha = 1;
     }completion:^(BOOL finished) {
         if(finished){
@@ -572,7 +572,7 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
     if(!cell){
         cell = [[XMPhotoCollectionViewCell alloc] init];
     }
-    cell.gifPerTime = self.gifTimeInterval;
+//    cell.gifPerTime = self.gifTimeInterval;
     // 区分从本地加载图片还是从网路加载图片
     if(self.sourceType == XMPhotoDisplayImageSourceTypeWebURL){
         [cell setDisplayImage:self.photoModelArr[indexPath.row]];

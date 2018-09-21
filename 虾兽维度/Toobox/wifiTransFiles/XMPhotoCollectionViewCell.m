@@ -8,9 +8,9 @@
 
 #import "XMPhotoCollectionViewCell.h"
 #import "XMWifiTransModel.h"
-#import "UIImageView+WebCache.h"
 #import "XMImageUtil.h"
 #import "XMSavePathUnit.h"
+#import "YYWebImage.h"
 
 
 @interface XMPhotoCollectionViewCell()<UIScrollViewDelegate>
@@ -35,7 +35,7 @@
         self.imgScroV.maximumZoomScale = 3.0;
         [self.contentView addSubview:self.imgScroV];
         
-        self.gifPerTime = 0.08;
+//        self.gifPerTime = 0.08;
     }
     return self;
 }
@@ -50,17 +50,14 @@
     UIImage *image = [UIImage imageWithContentsOfFile:wifiModle.fullPath];
     UIImageView *textimage = [[UIImageView alloc] initWithImage:image];
     
-    self.imgV = [[UIImageView alloc] init];
+    self.imgV = [[YYAnimatedImageView alloc] init];
     self.imgV.contentMode = UIViewContentModeScaleAspectFit;
     self.imgV.frame = [self setImage:textimage];
     [self.imgScroV addSubview:self.imgV];
     
-    // 区分gif和静态图片
-    if ([wifiModle.fullPath.pathExtension.lowercaseString isEqualToString:@"gif"]){
-        [self setImageViewWithGifArray:wifiModle.gifImageArr];
-    }else{
-        self.imgV.image = image;
-    }
+    // 该方法可以设置gif图片和静态图片
+    self.imgV.yy_imageURL = [NSURL fileURLWithPath:wifiModle.fullPath];
+
     //设置scroll的contentsize的frame
     self.imgScroV.contentSize = self.imgV.frame.size;
     
@@ -72,76 +69,26 @@
     //移除上一个imgV
     [self.imgV removeFromSuperview];
     
-    self.imgV = [[UIImageView alloc] init];
+    self.imgV = [[YYAnimatedImageView alloc] init];
+
     self.imgV.contentMode = UIViewContentModeScaleAspectFit;
     self.imgV.frame = CGRectMake(0, 0, XMScreenW, XMScreenH);
     [self.imgScroV addSubview:self.imgV];
     
-    // 添加加载指示
-    UIActivityIndicatorView *indiV = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-    [self addSubview:indiV];
-    indiV.center = CGPointMake(XMScreenW * 0.5, XMScreenH * 0.5);
-    [indiV startAnimating];
+    self.imgV.yy_imageURL = [NSURL URLWithString:url];
     
-    // 区分gif图片和静态图片
-    if([url.lowercaseString containsString:@".gif"]){
-        // 以网址的后半截数值加.gif做结尾,放在library/cache/giftemp文件夹之下
-        NSString *fileName = [url.pathComponents.lastObject stringByReplacingOccurrencesOfString:url.pathExtension withString:@".gif"];
-        NSString *path = [[XMSavePathUnit getWebmoduleGifTempDirectory] stringByAppendingPathComponent:fileName];
-
-        // 检查本地是否有gif图片缓存,防止重复下载
-        if ([[NSFileManager defaultManager] fileExistsAtPath:path]){
-            // 移除加载指示
-            [indiV stopAnimating];
-            [indiV removeFromSuperview];
-            
-            NSArray *imgArr = [XMImageUtil seprateGifAtPath:path];
-            [self setImageViewWithGifArray:imgArr];
-            // 调整图片框大小
-            self.imgV.frame = [self setImage:self.imgV];
-            //设置scroll的contentsize的frame
-            self.imgScroV.contentSize = self.imgV.frame.size;
-            
-        }else{
-            // 异步下载,再缓存到本地,再分解展示
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                NSData *imgData = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
-                [imgData writeToFile:path atomically:YES];
-                NSArray *imgArr = [XMImageUtil seprateGifAtPath:path];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    // 移除加载指示
-                    [indiV stopAnimating];
-                    [indiV removeFromSuperview];
-                    
-                    [self setImageViewWithGifArray:imgArr];
-                    // 调整图片框大小
-                    self.imgV.frame = [self setImage:self.imgV];
-                    //设置scroll的contentsize的frame
-                    self.imgScroV.contentSize = self.imgV.frame.size;
-                    
-                });
-            });
-        }
-        
-    }else{
-        [self.imgV sd_setImageWithURL:[NSURL URLWithString:url]];
-        // 调整图片框大小
-        self.imgV.frame = [self setImage:self.imgV];
-        //设置scroll的contentsize的frame
-        self.imgScroV.contentSize = self.imgV.frame.size;
-        
-        // 移除加载指示
-        [indiV stopAnimating];
-        [indiV removeFromSuperview];
-    }
+    // 调整图片框大小
+    self.imgV.frame = [self setImage:self.imgV];
+    //设置scroll的contentsize的frame
+    self.imgScroV.contentSize = self.imgV.frame.size;
 }
 
-// imageView播放本地gif图片的公用方法
+// imageView播放本地gif图片的公用方法(内存占用太高,已启用)
 - (void)setImageViewWithGifArray:(NSArray *)imgArr{
     self.imgV.animationImages = imgArr;
     
     //动画的总时长(1s播放12.5帧)
-    self.imgV.animationDuration = self.gifPerTime * imgArr.count;
+//    self.imgV.animationDuration = self.gifPerTime * imgArr.count;
     self.imgV.animationRepeatCount = 0;//动画进行几次结束
     [self.imgV startAnimating];//开始动画
     // [imageView stopAnimating];//停止动画

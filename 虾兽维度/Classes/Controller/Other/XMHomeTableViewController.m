@@ -151,7 +151,7 @@ CGFloat const XMRrfreshHeight = 64;
     [UIView animateWithDuration:duration animations:^{
         countLabel.transform = CGAffineTransformMakeTranslation(0, countLabelH);
     } completion:^(BOOL finished) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             // 动画内嵌套动画
             [UIView animateWithDuration:duration animations:^{
                 countLabel.transform = CGAffineTransformIdentity;

@@ -811,13 +811,31 @@ static double backForwardSafeDistance = 80.0;
     __weak typeof(self) weakSelf= self;
     UIAlertController *tips = [[UIAlertController alloc] init];
     [tips addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    
+    [tips addAction:[UIAlertAction actionWithTitle:@"分享图片" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
+        UIImage *shareImg = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:imageUrl]] scale:1.0f];
+        // 创建分享菜单,这里分享为全部平台,可通过设置excludedActivityTypes属性排除不要的平台
+        UIActivityViewController *actVC = [[UIActivityViewController alloc] initWithActivityItems:@[shareImg] applicationActivities:nil];
+        // 弹出分享菜单
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf presentViewController:actVC animated:YES completion:nil];
+        });
+    }]];
+    [tips addAction:[UIAlertAction actionWithTitle:@"新窗口打开" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
+        XMWebModel *model = [[XMWebModel alloc] init];
+        model.webURL = [NSURL URLWithString:imageUrl];
+        [weakSelf openWebmoduleRequest:model];
+    }]];
+    [tips addAction:[UIAlertAction actionWithTitle:@"复制图片地址" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
+        UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+        [pasteboard setString:imageUrl];
+    }]];
     [tips addAction:[UIAlertAction actionWithTitle:@"保存图片到系统相册" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
         [XMImageUtil savePictrue:imageUrl path:nil callBackViewController:weakSelf];
     }]];
     [tips addAction:[UIAlertAction actionWithTitle:@"保存图片到本地缓存" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
         [XMImageUtil saveToLocalTempDirPicture:imageUrl];
     }]];
-    
     // 判断是否含有二维码
     NSString *qrMsg = [XMImageUtil detectorQRCodeImage:[UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:imageUrl]]]];
     if(qrMsg){
@@ -1053,6 +1071,7 @@ static double backForwardSafeDistance = 80.0;
     return YES;
 }
 
+/// 移除广告节点
 - (void)webDidRemoveNode{
     
     // 必须样式执行,因为广告是要一段时间才动态加载出来
@@ -1072,16 +1091,103 @@ static double backForwardSafeDistance = 80.0;
     
 }
 
+/// 检查是否有图片组
 - (void)checkImagesMode{
     __weak typeof(self) weakSelf = self;
     [self.wkWebview evaluateJavaScript:@"function xmGetImagesUrl(){var imageList = xissJsonData.images;var imageURLList = new Array();for (i=0;i<imageList.length;i++){imageURLList.push(imageList[i].url);};return imageURLList;};xmGetImagesUrl();" completionHandler:^(id _Nullable result, NSError * _Nullable error) {
         NSArray  *imageArr = [NSArray arrayWithArray:result];
         if(imageArr.count > 0){
-            weakSelf.imageArr = imageArr;
+            weakSelf.imageArr = [imageArr copy];
+//        }else{
+            // TODO:正则表达式提取所有图片的url,效果不理想,先屏蔽
+//            [weakSelf.wkWebview evaluateJavaScript:@"document.documentElement.innerHTML" completionHandler:^(id _Nullable result, NSError * _Nullable error) {
+//                [weakSelf getImageurlFromHtml:result];
+//            }];
         }
     }];
     
 }
+
+
+/// 提取所有图片的url
+- (void)getImageurlFromHtml:(NSString *)webString{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        NSMutableArray * imageurlArray = [NSMutableArray array];
+        //标签匹配
+        NSString *parten = @"<img(.*?)>";
+        NSError* error = NULL;
+        NSRegularExpression *reg = [NSRegularExpression regularExpressionWithPattern:parten options:0 error:&error];
+        
+        NSArray* match = [reg matchesInString:webString options:0 range:NSMakeRange(0, [webString length] - 1)];
+        
+        for (NSTextCheckingResult * result in match) {
+            
+            //过去数组中的标签
+            NSRange range = [result range];
+            NSString * subString = [webString substringWithRange:range];
+            
+            
+            //从图片中的标签中提取ImageURL
+            NSRegularExpression *subReg = [NSRegularExpression regularExpressionWithPattern:@"(http|https)://(.*?)\"" options:0 error:NULL];
+            NSArray* match = [subReg matchesInString:subString options:0 range:NSMakeRange(0, [subString length] - 1)];
+            if(match.count > 0){
+                NSTextCheckingResult * subRes = match[0];
+                NSRange subRange = [subRes range];
+                subRange.length = subRange.length -1;
+                NSString * imagekUrl = [subString substringWithRange:subRange];
+                
+                CGSize imgSize = [self getImageSizeWithURL:imagekUrl];
+                if(imgSize.width > 50 && imgSize.height > 50){
+                    //将提取出的图片URL添加到图片数组中
+                    [imageurlArray addObject:imagekUrl];
+                }
+                
+            }
+        }
+        // 去重
+        imageurlArray = [imageurlArray valueForKeyPath:@"@distinctUnionOfObjects.self"];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.imageArr = [imageurlArray copy];
+        });
+    });
+}
+
+/**
+ *  根据图片url获取图片尺寸
+ */
+- (CGSize)getImageSizeWithURL:(id)URL{
+    NSURL * url = nil;
+    if ([URL isKindOfClass:[NSURL class]]) {
+        url = URL;
+    }
+    if ([URL isKindOfClass:[NSString class]]) {
+        url = [NSURL URLWithString:URL];
+    }
+    if (!URL) {
+        return CGSizeZero;
+    }
+    CGImageSourceRef imageSourceRef = CGImageSourceCreateWithURL((CFURLRef)url, NULL);
+    CGFloat width = 0, height = 0;
+    if (imageSourceRef) {
+        CFDictionaryRef imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSourceRef, 0, NULL);
+        if (imageProperties != NULL) {
+            CFNumberRef widthNumberRef = CFDictionaryGetValue(imageProperties, kCGImagePropertyPixelWidth);
+            if (widthNumberRef != NULL) {
+                CFNumberGetValue(widthNumberRef, kCFNumberFloat64Type, &width);
+            }
+            CFNumberRef heightNumberRef = CFDictionaryGetValue(imageProperties, kCGImagePropertyPixelHeight);
+            if (heightNumberRef != NULL) {
+                CFNumberGetValue(heightNumberRef, kCFNumberFloat64Type, &height);
+            }
+            CFRelease(imageProperties);
+        }
+        CFRelease(imageSourceRef);
+    }
+    return CGSizeMake(width, height);
+}
+
 
 #pragma mark - UIScrollViewDelegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{

@@ -93,10 +93,6 @@ NSString * const fileTypeZipName = @"zip";
                 model.fileType = fileTypeCodeName;
             }else if ([@"png|jpg|jpeg|gif|bmp|tiff|pcx|tga|exif|fpx|svg|psd|cdr|pcd|dxf|ufo|eps|ai|raw|wmf|webp|heic" containsString:exten]){
                 model.fileType = fileTypeImageName;
-                if ([exten isEqualToString:@"gif"]){
-                    model.gifImageArr = [XMImageUtil seprateGifAtPath:model.fullPath];
-                }
-                
             }else if ([@"avi|wmv|mpeg|mp4|mov|mkv|flv|f4v|m4v|rmvb|rm|3gp|dat|ts|mts|vob" containsString:exten]){
                 model.fileType = fileTypeVideoName;
                 model.mediaLengthStr = [XMTimeTool getMediaLengthString:model.fullPath];
