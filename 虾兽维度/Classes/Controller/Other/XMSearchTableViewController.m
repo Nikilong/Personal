@@ -8,6 +8,8 @@
 
 #import "XMSearchTableViewController.h"
 #import "XMWebModelLogic.h"
+#import "XMVisualView.h"
+#import "XMImageUtil.h"
 
 static NSString *const kImageName = @"imageName";
 static NSString *const kEngine = @"engine";
@@ -203,6 +205,8 @@ static NSString *const kEngine = @"engine";
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     if(section == 2){
         return self.searchResultArr.count;
+    }else if(section == 0){
+        return 3;
     }else{
         return 1;
     }
@@ -212,7 +216,13 @@ static NSString *const kEngine = @"engine";
     UITableViewCell *cell;
     if(indexPath.section == 0){
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"searchCellOne"];
-        cell.textLabel.text = [NSString stringWithFormat:@"前往URL: %@",self.searchF.text];
+        if(indexPath.row == 0){
+            cell.textLabel.text = [NSString stringWithFormat:@"前往URL: %@",self.searchF.text];
+        }else if(indexPath.row == 1){
+            cell.textLabel.text = @"生成二维码图片";
+        }else if(indexPath.row == 2){
+            cell.textLabel.text = @"生成二维码图片并分享";
+        }
     }else if(indexPath.section == 1){
         
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"searchCellTwo"];
@@ -223,6 +233,8 @@ static NSString *const kEngine = @"engine";
         cell = [tableView dequeueReusableCellWithIdentifier:ID];
         if (!cell){
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:ID];
+            cell.textLabel.font = [UIFont boldSystemFontOfSize:13];
+            cell.detailTextLabel.font = [UIFont systemFontOfSize:9];
         }
         XMWebModel *model = self.searchResultArr[indexPath.row];
         cell.textLabel.text = model.title;
@@ -235,9 +247,26 @@ static NSString *const kEngine = @"engine";
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     // 收起键盘
     [self.searchF resignFirstResponder];
+    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
     
     if(indexPath.section == 0){
-        [self goWithUrlFlag:YES];
+        if(indexPath.row == 0){
+            [self goWithUrlFlag:YES];
+        }else if(indexPath.row == 1){
+            CGFloat imageWH = XMScreenW * 0.7;
+            UIImage *image = [XMImageUtil creatQRCodeImageWithString:self.searchF.text size:imageWH];
+            [XMVisualView creatVisualImageViewWithImage:image imageSize:CGSizeMake(imageWH, imageWH) blurEffectStyle:0];
+        }else if(indexPath.row == 2){
+            CGFloat imageWH = XMScreenW * 0.7;
+            UIImage *image = [XMImageUtil creatQRCodeImageWithString:self.searchF.text size:imageWH];
+            // 创建分享菜单,这里分享为全部平台,可通过设置excludedActivityTypes属性排除不要的平台
+            UIActivityViewController *actVC = [[UIActivityViewController alloc] initWithActivityItems:@[image] applicationActivities:nil];
+            // 弹出分享菜单
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self presentViewController:actVC animated:YES completion:nil];
+            });
+            
+        }
     }else if(indexPath.section == 2){
         XMWebModel *model = self.searchResultArr[indexPath.row];
         BOOL canOpenNewWebmodule = ![model.webURL.absoluteString isEqualToString:self.passUrl];

@@ -103,6 +103,7 @@ XMWebMultiWindowCollectionViewControllerDelegate>
 
 /// 图片组
 @property (nonatomic, strong) NSArray *imageArr;
+@property (nonatomic, strong) NSArray *imageRegArr;
 
 @end
 
@@ -372,6 +373,13 @@ static double backForwardSafeDistance = 80.0;
         _imageArr = [NSArray array];
     }
     return _imageArr;
+}
+
+- (NSArray *)imageRegArr{
+    if (!_imageRegArr) {
+        _imageRegArr = [NSArray array];
+    }
+    return _imageRegArr;
 }
 
 - (void)setModel:(XMWebModel *)model{
@@ -812,6 +820,23 @@ static double backForwardSafeDistance = 80.0;
     UIAlertController *tips = [[UIAlertController alloc] init];
     [tips addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
     
+    if(self.imageRegArr.count > 0){
+        [tips addAction:[UIAlertAction actionWithTitle:@"图片模式" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
+            // 找出点击的图片的序号
+            NSUInteger index = weakSelf.imageRegArr.count;
+            for (NSUInteger i = 0; i < weakSelf.imageRegArr.count; i++) {
+                NSString *eleUrl = weakSelf.imageRegArr[i];
+                // 警告:目前发现uc点击得到的地址包含从网页提取的地址,此处可能有隐患
+                if([imageUrl containsString:eleUrl]){
+                    index = i;
+                    break;
+                }
+            }
+//            if(index != weakSelf.imageRegArr.count){
+                [weakSelf callPhotoDisplayViewcontrollerWithIndex:index];
+//            }
+        }]];
+    }
     [tips addAction:[UIAlertAction actionWithTitle:@"分享图片" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
         UIImage *shareImg = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:imageUrl]] scale:1.0f];
         // 创建分享菜单,这里分享为全部平台,可通过设置excludedActivityTypes属性排除不要的平台
@@ -1098,11 +1123,11 @@ static double backForwardSafeDistance = 80.0;
         NSArray  *imageArr = [NSArray arrayWithArray:result];
         if(imageArr.count > 0){
             weakSelf.imageArr = [imageArr copy];
-//        }else{
+        }else{
             // TODO:正则表达式提取所有图片的url,效果不理想,先屏蔽
-//            [weakSelf.wkWebview evaluateJavaScript:@"document.documentElement.innerHTML" completionHandler:^(id _Nullable result, NSError * _Nullable error) {
-//                [weakSelf getImageurlFromHtml:result];
-//            }];
+            [weakSelf.wkWebview evaluateJavaScript:@"document.documentElement.innerHTML" completionHandler:^(id _Nullable result, NSError * _Nullable error) {
+                [weakSelf getImageurlFromHtml:result];
+            }];
         }
     }];
     
@@ -1137,11 +1162,12 @@ static double backForwardSafeDistance = 80.0;
                 subRange.length = subRange.length -1;
                 NSString * imagekUrl = [subString substringWithRange:subRange];
                 
-                CGSize imgSize = [self getImageSizeWithURL:imagekUrl];
-                if(imgSize.width > 50 && imgSize.height > 50){
+//                NSLog(@"%@",imagekUrl);
+//                CGSize imgSize = [self getImageSizeWithURL:imagekUrl];
+//                if(imgSize.width > 50 && imgSize.height > 50){
                     //将提取出的图片URL添加到图片数组中
                     [imageurlArray addObject:imagekUrl];
-                }
+//                }
                 
             }
         }
@@ -1149,7 +1175,8 @@ static double backForwardSafeDistance = 80.0;
         imageurlArray = [imageurlArray valueForKeyPath:@"@distinctUnionOfObjects.self"];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            self.imageArr = [imageurlArray copy];
+            //NSLog(@"----图片模式开启");
+            self.imageRegArr = [imageurlArray copy];
         });
     });
 }
@@ -1353,7 +1380,11 @@ static double backForwardSafeDistance = 80.0;
     layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     XMPhotoCollectionViewController *photoVC = [[XMPhotoCollectionViewController alloc] initWithCollectionViewLayout:layout];
     photoVC.sourceType = XMPhotoDisplayImageSourceTypeWebURL;
-    photoVC.photoModelArr = self.imageArr;
+    if(self.imageArr.count > 0){
+        photoVC.photoModelArr = [self.imageArr copy];
+    }else if(self.imageRegArr.count > 0){
+        photoVC.photoModelArr = [self.imageRegArr copy];
+    }
     photoVC.selectImgIndex = index;
     photoVC.collectionView.contentSize = CGSizeMake(XMScreenW * self.imageArr.count, XMScreenH);
     [self.navigationController pushViewController:photoVC animated:YES];

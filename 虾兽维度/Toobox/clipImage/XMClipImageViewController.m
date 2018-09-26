@@ -9,10 +9,10 @@
 #import "XMClipImageViewController.h"
 #import "MBProgressHUD+NK.h"
 
-typedef enum : NSUInteger {
+typedef NS_ENUM(NSUInteger, BGReviewBtnType){
     BGReviewBtnTypeRing,
     BGReviewBtnTypeIMG,
-} BGReviewBtnType;
+};
 
 @interface XMClipImageViewController ()<UINavigationControllerDelegate,UIImagePickerControllerDelegate,UITextFieldDelegate>
 

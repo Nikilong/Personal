@@ -8,11 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
-typedef enum {
+typedef NS_ENUM(NSUInteger, XMCheckFolderResult) {
     XMCheckFolderResultClearSuccess,    // 超过最大容量并删除成功
     XMCheckFolderResultClearFailed,     // 超过最大容量但是删除失败
     XMCheckFolderResultUnless           // 没有达到最大容量
-}XMCheckFolderResult;
+};
 
 @interface XMFileManageTool : NSObject
 

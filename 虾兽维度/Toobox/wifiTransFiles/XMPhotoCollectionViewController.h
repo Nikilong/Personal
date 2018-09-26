@@ -9,10 +9,10 @@
 #import <UIKit/UIKit.h>
 
 /// 图片的来源
-typedef enum{
+typedef NS_ENUM(NSUInteger,XMPhotoDisplayImageSourceType){
     XMPhotoDisplayImageSourceTypeLocalPath,     // 本地文件
     XMPhotoDisplayImageSourceTypeWebURL,        // 网页url的string
-}XMPhotoDisplayImageSourceType;
+};
 
 @interface XMPhotoCollectionViewController : UICollectionViewController
 

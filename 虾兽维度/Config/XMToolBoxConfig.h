@@ -19,20 +19,20 @@ extern NSString *const ToolBox_kType;
 extern NSString *const ToolBox_kAuth;
 extern NSString *const touchIDKeyboardAuthenPassward;
 
-typedef enum : NSUInteger {
+typedef NS_ENUM(NSUInteger, XMToolBoxType){
     XMToolBoxTypeClipImg,           // 裁剪图片
     XMToolBoxTypeTaiji,             // 易数
     XMToolBoxTypeWifiTransFiles,    // wifi传输文件
     XMToolBoxTypeDDD,
     XMToolBoxTypeEEE,
-} XMToolBoxType;
+};
 
 
-typedef enum : NSUInteger {
+typedef NS_ENUM(NSUInteger, XMToolBoxAuthenType) {
     XMToolBoxAuthenTypeNeed,        // 需要指纹验证
     XMToolBoxAuthenTypeNone         // 不需要指纹验证
     
-} XMToolBoxAuthenType;
+};
 
 @interface XMToolBoxConfig : NSObject
 

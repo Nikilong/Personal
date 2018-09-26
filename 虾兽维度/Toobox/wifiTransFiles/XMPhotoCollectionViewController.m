@@ -90,8 +90,6 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
     self.navigationController.interactivePopGestureRecognizer.enabled = NO;
     self.navigationController.navigationBar.hidden = YES;
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
-//    XMNavigationController *nav = (XMNavigationController *)self.navigationController;
-//    nav.customerPopGestureRecognizer.enabled = NO;
     
     // 截图
     [self.panBgImgV setImage:[XMImageUtil screenShot]];
@@ -108,9 +106,7 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
     [super viewWillDisappear:animated];
     // 导航栏显示,采用黑色主题的状态栏
     self.navigationController.navigationBar.hidden = NO;
-//    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
-//    XMNavigationController *nav = (XMNavigationController *)self.navigationController;
-//    nav.customerPopGestureRecognizer.enabled = YES;
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
     
     // 移除定时器
     [self stopTimer];

@@ -19,11 +19,11 @@
 static NSString * const kAuthenCallBackNotificaiton = @"kAuthenCallBackNotificaiton";
 double const XMToolBoxViewAnimationTime = 0.2;
 
-typedef enum : NSUInteger {
+typedef NS_ENUM(NSUInteger, AuthenResultType) {
     AuthenResultTypeSuccess,    //验证成功
     AuthenResultTypeFail,       //验证失败
     AuthenResultTypeUnsupport   //touchID不可用或者被锁或者未设置
-} AuthenResultType;
+};
 
 
 @interface XMToolboxViewController ()<XMTouchIDKeyboardViewControllerDelegate>
