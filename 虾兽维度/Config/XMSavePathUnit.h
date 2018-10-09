@@ -20,6 +20,8 @@ extern NSString * const XMWifiGroupMarkZipFileName;
 
 /// web模块收藏网页的文件保存路径
 + (NSString *)getSaveWebModelArchicerPath;
+/// web模块收藏网页的文件保存路径(新)
++ (NSString *)getSaveWebModelNewArchicerPath;
 
 /// web模块浏览历史记录的文件保存路径
 + (NSString *)getWebModelHistoryUrlArchicerPath;

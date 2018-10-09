@@ -217,6 +217,7 @@
 		FD05F3D72154F60A008EAD89 /* UIImage+YYWebImage.m in Sources */ = {isa = PBXBuildFile; fileRef = FD05F3C42154F609008EAD89 /* UIImage+YYWebImage.m */; };
 		FD05F3D82154F60A008EAD89 /* CALayer+YYWebImage.m in Sources */ = {isa = PBXBuildFile; fileRef = FD05F3C52154F609008EAD89 /* CALayer+YYWebImage.m */; };
 		FD05F3D92154F60A008EAD89 /* YYWebImageOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = FD05F3C72154F609008EAD89 /* YYWebImageOperation.m */; };
+		FD147E2E21634DEA00E6F841 /* XMSaveGroupTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FD147E2D21634DEA00E6F841 /* XMSaveGroupTableViewController.m */; };
 		FD1EA08920A9A96A00658F18 /* XMGlobalConst.m in Sources */ = {isa = PBXBuildFile; fileRef = FD1EA08820A9A96A00658F18 /* XMGlobalConst.m */; };
 		FD1EA08B20A9B59B00658F18 /* clipIcon.py in Resources */ = {isa = PBXBuildFile; fileRef = FD1EA08A20A9B59A00658F18 /* clipIcon.py */; };
 		FD1EA0DA20AC52B300658F18 /* phone_documents_icon_update.png in Resources */ = {isa = PBXBuildFile; fileRef = FD1EA0D220AC52B200658F18 /* phone_documents_icon_update.png */; };
@@ -231,6 +232,8 @@
 		FD9854332122CE2C00C31D94 /* NSURLProtocol+WKWebview.m in Sources */ = {isa = PBXBuildFile; fileRef = FD9854322122CE2C00C31D94 /* NSURLProtocol+WKWebview.m */; };
 		FD98543B2122D46C00C31D94 /* XMWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FD9854392122D46C00C31D94 /* XMWebViewController.m */; };
 		FD9E34D62114041300FFBE3B /* webFilterList.plist in Resources */ = {isa = PBXBuildFile; fileRef = FD9E34D52114041300FFBE3B /* webFilterList.plist */; };
+		FDA621F6215CF7C20081356E /* XMSaveWebModel.m in Sources */ = {isa = PBXBuildFile; fileRef = FDA621F5215CF7C20081356E /* XMSaveWebModel.m */; };
+		FDA621F9215CF8EE0081356E /* XMSaveWebModelLogic.m in Sources */ = {isa = PBXBuildFile; fileRef = FDA621F8215CF8EE0081356E /* XMSaveWebModelLogic.m */; };
 		FDAAAA3F213934A0004CF0C7 /* XMFreshView.m in Sources */ = {isa = PBXBuildFile; fileRef = FDAAAA3E213934A0004CF0C7 /* XMFreshView.m */; };
 		FDB099F12112E71700148492 /* RSSwizzle.m in Sources */ = {isa = PBXBuildFile; fileRef = FDB099F02112E71700148492 /* RSSwizzle.m */; };
 		FDB099F52112E77300148492 /* UIScreenEdgePanGestureRecognizer+UIScreenEdgePanGestureRecognizer_hook.m in Sources */ = {isa = PBXBuildFile; fileRef = FDB099F42112E77300148492 /* UIScreenEdgePanGestureRecognizer+UIScreenEdgePanGestureRecognizer_hook.m */; };
@@ -624,6 +627,8 @@
 		FD05F3C52154F609008EAD89 /* CALayer+YYWebImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CALayer+YYWebImage.m"; sourceTree = "<group>"; };
 		FD05F3C62154F609008EAD89 /* YYWebImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YYWebImage.h; sourceTree = "<group>"; };
 		FD05F3C72154F609008EAD89 /* YYWebImageOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YYWebImageOperation.m; sourceTree = "<group>"; };
+		FD147E2C21634DEA00E6F841 /* XMSaveGroupTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMSaveGroupTableViewController.h; sourceTree = "<group>"; };
+		FD147E2D21634DEA00E6F841 /* XMSaveGroupTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMSaveGroupTableViewController.m; sourceTree = "<group>"; };
 		FD1EA08720A9A96A00658F18 /* XMGlobalConst.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = XMGlobalConst.h; path = "虾兽维度/Config/XMGlobalConst.h"; sourceTree = SOURCE_ROOT; };
 		FD1EA08820A9A96A00658F18 /* XMGlobalConst.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = XMGlobalConst.m; path = "虾兽维度/Config/XMGlobalConst.m"; sourceTree = SOURCE_ROOT; };
 		FD1EA08A20A9B59A00658F18 /* clipIcon.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = clipIcon.py; sourceTree = "<group>"; };
@@ -644,6 +649,10 @@
 		FD9854392122D46C00C31D94 /* XMWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMWebViewController.m; sourceTree = "<group>"; };
 		FD98543A2122D46C00C31D94 /* XMWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMWebViewController.h; sourceTree = "<group>"; };
 		FD9E34D52114041300FFBE3B /* webFilterList.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = webFilterList.plist; path = "虾兽维度/Config/webFilterList.plist"; sourceTree = SOURCE_ROOT; };
+		FDA621F4215CF7C20081356E /* XMSaveWebModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMSaveWebModel.h; sourceTree = "<group>"; };
+		FDA621F5215CF7C20081356E /* XMSaveWebModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMSaveWebModel.m; sourceTree = "<group>"; };
+		FDA621F7215CF8EE0081356E /* XMSaveWebModelLogic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMSaveWebModelLogic.h; sourceTree = "<group>"; };
+		FDA621F8215CF8EE0081356E /* XMSaveWebModelLogic.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMSaveWebModelLogic.m; sourceTree = "<group>"; };
 		FDAAAA3D213934A0004CF0C7 /* XMFreshView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMFreshView.h; sourceTree = "<group>"; };
 		FDAAAA3E213934A0004CF0C7 /* XMFreshView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMFreshView.m; sourceTree = "<group>"; };
 		FDB099EF2112E71700148492 /* RSSwizzle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSSwizzle.h; sourceTree = "<group>"; };
@@ -736,8 +745,6 @@
 				202C84E31F2624AD0055FD7D /* XMHomeTableViewController.m */,
 				202C84E41F2624AD0055FD7D /* XMQRCodeViewController.h */,
 				202C84E51F2624AD0055FD7D /* XMQRCodeViewController.m */,
-				202C84E61F2624AD0055FD7D /* XMSaveWebsTableViewController.h */,
-				202C84E71F2624AD0055FD7D /* XMSaveWebsTableViewController.m */,
 				202C84E81F2624AD0055FD7D /* XMSearchTableViewController.h */,
 				202C84E91F2624AD0055FD7D /* XMSearchTableViewController.m */,
 				200A823320837B1300825E6E /* XMMetorMapViewController.swift */,
@@ -1396,6 +1403,7 @@
 				842970FB1E654644002BDBC0 /* Other */,
 				20C85E5420541BD50057F483 /* Toolbox */,
 				FDD895A4212BFEC000E2EDAD /* MultiWindow */,
+				FD147E2421634C4D00E6F841 /* SaveAndHistory */,
 				203D2FF821036AA7008788B6 /* wxFloatUnit */,
 				20F112221E86BF1800E64A70 /* Tool */,
 			);
@@ -1570,6 +1578,53 @@
 				FD05F3C52154F609008EAD89 /* CALayer+YYWebImage.m */,
 			);
 			path = Categories;
+			sourceTree = "<group>";
+		};
+		FD147E2421634C4D00E6F841 /* SaveAndHistory */ = {
+			isa = PBXGroup;
+			children = (
+				FD147E2521634C7900E6F841 /* ViewController */,
+				FD147E2621634CB400E6F841 /* Model */,
+				FD147E2721634CB400E6F841 /* View */,
+				FD147E2821634CB400E6F841 /* VIewModle */,
+			);
+			path = SaveAndHistory;
+			sourceTree = "<group>";
+		};
+		FD147E2521634C7900E6F841 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				202C84E61F2624AD0055FD7D /* XMSaveWebsTableViewController.h */,
+				202C84E71F2624AD0055FD7D /* XMSaveWebsTableViewController.m */,
+				FD147E2C21634DEA00E6F841 /* XMSaveGroupTableViewController.h */,
+				FD147E2D21634DEA00E6F841 /* XMSaveGroupTableViewController.m */,
+			);
+			path = ViewController;
+			sourceTree = "<group>";
+		};
+		FD147E2621634CB400E6F841 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				FDA621F4215CF7C20081356E /* XMSaveWebModel.h */,
+				FDA621F5215CF7C20081356E /* XMSaveWebModel.m */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		FD147E2721634CB400E6F841 /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		FD147E2821634CB400E6F841 /* VIewModle */ = {
+			isa = PBXGroup;
+			children = (
+				FDA621F7215CF8EE0081356E /* XMSaveWebModelLogic.h */,
+				FDA621F8215CF8EE0081356E /* XMSaveWebModelLogic.m */,
+			);
+			path = VIewModle;
 			sourceTree = "<group>";
 		};
 		FD3332E520A178690017655F /* wifiIcon */ = {
@@ -1881,6 +1936,7 @@
 				20707EA3209F551200572604 /* ZBTool.m in Sources */,
 				2061C21420C56F5F008C7424 /* HJVideoPlayManager.m in Sources */,
 				2061C21E20C56F5F008C7424 /* HJPlayerView.m in Sources */,
+				FDA621F6215CF7C20081356E /* XMSaveWebModel.m in Sources */,
 				20863CBB20CD422F00A0812C /* ZLPhotoPickerGroupViewController.m in Sources */,
 				205CECED1F48150E00821E38 /* UIImageView+HighlightedWebCache.m in Sources */,
 				2066C307209F558600799A1E /* MyHTTPConnection.m in Sources */,
@@ -1964,6 +2020,7 @@
 				FD3332EF20A181D40017655F /* XMWifiGroupTool.m in Sources */,
 				2061C21F20C56F5F008C7424 /* HJVideoBottomView.m in Sources */,
 				203D300421036AA7008788B6 /* XMWXFloatWindowIconConfig.m in Sources */,
+				FDA621F9215CF8EE0081356E /* XMSaveWebModelLogic.m in Sources */,
 				FD05F3C92154F609008EAD89 /* YYDiskCache.m in Sources */,
 				FDB099F52112E77300148492 /* UIScreenEdgePanGestureRecognizer+UIScreenEdgePanGestureRecognizer_hook.m in Sources */,
 				FD05F3D42154F60A008EAD89 /* UIButton+YYWebImage.m in Sources */,
@@ -1971,6 +2028,7 @@
 				20C85E53205419C80057F483 /* XMToolBoxConfig.m in Sources */,
 				202C84F01F2624AD0055FD7D /* XMQRCodeViewController.m in Sources */,
 				204D2411209ED8E800F17E2E /* HTTPDataResponse.m in Sources */,
+				FD147E2E21634DEA00E6F841 /* XMSaveGroupTableViewController.m in Sources */,
 				849D26F31E640E3200F0CA5D /* main.m in Sources */,
 				20863CBE20CD422F00A0812C /* ZLPhotoPickerCollectionViewCell.m in Sources */,
 				2061C22120C56F5F008C7424 /* HJVideoPlayerController.m in Sources */,

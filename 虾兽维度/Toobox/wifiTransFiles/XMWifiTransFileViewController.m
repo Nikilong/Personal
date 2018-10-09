@@ -192,6 +192,7 @@ UIGestureRecognizerDelegate>
     self.connectServerFlag = NO;
     self.isScanConectQrcode = NO;
     self.tableView.allowsMultipleSelectionDuringEditing = YES;
+    self.tableView.tableFooterView = [[UIView alloc] init];
     self.isMoveFilesMode = NO;
     // 更新本地数据
 //    [self refreshDate:nil];

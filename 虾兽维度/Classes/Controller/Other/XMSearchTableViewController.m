@@ -7,7 +7,8 @@
 //
 
 #import "XMSearchTableViewController.h"
-#import "XMWebModelLogic.h"
+#import "XMWKWebViewController.h"
+#import "XMSaveWebModelLogic.h"
 #import "XMVisualView.h"
 #import "XMImageUtil.h"
 
@@ -236,9 +237,9 @@ static NSString *const kEngine = @"engine";
             cell.textLabel.font = [UIFont boldSystemFontOfSize:13];
             cell.detailTextLabel.font = [UIFont systemFontOfSize:9];
         }
-        XMWebModel *model = self.searchResultArr[indexPath.row];
+        XMSaveWebModel *model = self.searchResultArr[indexPath.row];
         cell.textLabel.text = model.title;
-        cell.detailTextLabel.text = model.webURL.absoluteString;
+        cell.detailTextLabel.text = model.url;
     }
     
     return cell;
@@ -268,11 +269,11 @@ static NSString *const kEngine = @"engine";
             
         }
     }else if(indexPath.section == 2){
-        XMWebModel *model = self.searchResultArr[indexPath.row];
-        BOOL canOpenNewWebmodule = ![model.webURL.absoluteString isEqualToString:self.passUrl];
+        XMSaveWebModel *model = self.searchResultArr[indexPath.row];
+        BOOL canOpenNewWebmodule = ![model.url isEqualToString:self.passUrl];
         [self dismissViewControllerAnimated:YES completion:^{
-            if (canOpenNewWebmodule && [self.delegate respondsToSelector:@selector(openWebmoduleRequest:)]){
-                [self.delegate openWebmoduleRequest:model];
+            if (canOpenNewWebmodule){
+                [XMWKWebViewController openWebmoduleWithURL:model.url isSearchMode:NO];
             }
         }];
     
@@ -321,7 +322,7 @@ static NSString *const kEngine = @"engine";
 #pragma mark - 监听textfield的输入
 - (void)textFieldDidChangeNotification:(NSNotification *)noti{
     
-    NSArray *result = [XMWebModelLogic searchForKeywordInWebData:self.searchF.text];
+    NSArray *result = [XMSaveWebModelLogic searchForKeywordInWebData:self.searchF.text];
     self.searchResultArr = nil;
     if(result.count > 0){
         self.searchResultArr = result;

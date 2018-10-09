@@ -434,7 +434,16 @@ static double leftViewAnimateTime = 0.25;
 
 #pragma mark - 代理方法
 #pragma 请求网络申请 delegate
-/**   请求网络申请*/
+
+///// 请求网络申请
+//- (void)openWebmoduleWithURL:(NSString *)url isSearchMode:(BOOL)searchMode{
+//    XMWebModel *model = [[XMWebModel alloc] init];
+//    model.webURL = [NSURL URLWithString:url];
+//    model.searchMode = searchMode;
+//    [self openWebmoduleRequest:model];
+//}
+
+/// 请求网络申请
 - (void)openWebmoduleRequest:(XMWebModel *)webModel{    
     // 标记第一个webmodule
     webModel.firstRequest = YES;

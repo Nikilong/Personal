@@ -23,6 +23,7 @@
 
 /** 提供一个类方法让外界打开webmodule */
 + (void)openWebmoduleWithModel:(XMWebModel *)model viewController:(UIViewController *)vc;
++ (void)openWebmoduleWithURL:(NSString *)url isSearchMode:(BOOL)searchMode;
 
 /** 将webmodule关闭掉 */
 - (void)closeWebModule;

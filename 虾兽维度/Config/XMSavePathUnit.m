@@ -31,6 +31,11 @@ NSString * const XMWifiGroupMarkZipFileName = @"XMWifiGroupZipMark.wifign";  // 
     return [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"webModel.archiver"];
 }
 
+/// web模块收藏网页的文件保存路径(新)
++ (NSString *)getSaveWebModelNewArchicerPath{
+    return [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"webSaveModel.archiver"];
+}
+
 /// web模块浏览历史记录的文件保存路径
 + (NSString *)getWebModelHistoryUrlArchicerPath{
     return [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"webHistory.archiver"];
@@ -97,7 +102,7 @@ NSString * const XMWifiGroupMarkZipFileName = @"XMWifiGroupZipMark.wifign";  // 
 
 /// 返回一个数组,包含所有配置类文件的全路径
 + (NSArray *)getSettingFilesPaths{
-    return @[[self getHiwebHomeUrlPath],[self getWifiGroupNameFilePath],[self getSaveWebModelArchicerPath],[self getWifiGroupMarkZipFilePath],[self getMainLeftSaveChannelPath]];
+    return @[[self getHiwebHomeUrlPath],[self getWifiGroupNameFilePath],[self getSaveWebModelArchicerPath],[self getWifiGroupMarkZipFilePath],[self getMainLeftSaveChannelPath],[self getSaveWebModelNewArchicerPath]];
 }
 
 @end

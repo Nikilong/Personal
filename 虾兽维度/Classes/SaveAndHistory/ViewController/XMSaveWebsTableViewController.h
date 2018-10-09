@@ -13,4 +13,8 @@
 
 @property (weak, nonatomic)  id<XMOpenWebmoduleProtocol> delegate;
 
+@property (nonatomic, copy) NSArray *passArr;
+@property (nonatomic, copy) NSString *groupName;
+
+
 @end

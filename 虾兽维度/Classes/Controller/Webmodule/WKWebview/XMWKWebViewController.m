@@ -8,6 +8,7 @@
 
 #import "XMWKWebViewController.h"
 #import "XMWebModelLogic.h"
+#import "XMSaveWebModelLogic.h"
 #import "UIView+getPointColor.h"
 #import "XMImageUtil.h"
 #import "MBProgressHUD+NK.h"
@@ -425,6 +426,9 @@ static double backForwardSafeDistance = 80.0;
     self.statusCover.hidden = NO;
     // 记录即将显示
     self.isShow = YES;
+    // 检查是否已经保存该网址(防止appdelte的直接打开时检测不到)
+    self.saveBtn.selected = [XMSaveWebModelLogic isWebURLHaveSave:self.wkWebview.URL.absoluteString];
+    
 //    // TODO:设置窗口数字
 //    AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
 //    self.multiWindowCountLab.text = [NSString stringWithFormat:@"%ld",app.webModuleStack.count];
@@ -503,6 +507,15 @@ static double backForwardSafeDistance = 80.0;
     }
 }
 
++ (void)openWebmoduleWithURL:(NSString *)url isSearchMode:(BOOL)searchMode{
+    XMWebModel *model = [[XMWebModel alloc] init];
+    model.searchMode = searchMode;
+    model.webURL = [NSURL URLWithString:url];
+    
+    UIViewController *navVC = [UIApplication sharedApplication].keyWindow.rootViewController.childViewControllers.firstObject;
+    [self openWebmoduleWithModel:model viewController:navVC];
+}
+
 #pragma mark - toolbar和导航栏 点击事件
 
 /** web滚到最底部*/
@@ -565,18 +578,13 @@ static double backForwardSafeDistance = 80.0;
 
     if (button.isSelected){
         // 取消保存网站到本地
-        [XMWebModelLogic deleteWebURL:self.wkWebview.URL.absoluteString];
+        [XMSaveWebModelLogic deleteWebURL:self.wkWebview.URL.absoluteString];
         // 提示用户取消保存网页成功
         [MBProgressHUD showSuccess:@"取消收藏成功"];
     }else{
         [self.wkWebview evaluateJavaScript:@"document.title" completionHandler:^(id _Nullable title, NSError * _Nullable error) {
-            XMWebModel *model = [[XMWebModel alloc] init];
-            // 保存的网站统一标记为searchMode
-            model.searchMode = YES;
-            model.webURL = [NSURL URLWithString:self.wkWebview.URL.absoluteString];
-            model.title = title;
             // 保存网站到本地
-            [XMWebModelLogic saveWebModel:model];
+            [XMSaveWebModelLogic saveWebUrl:self.wkWebview.URL.absoluteString title:title];
             // 提示用户保存网页成功
             [MBProgressHUD showSuccess:@"收藏成功"];
         }];
@@ -909,6 +917,13 @@ static double backForwardSafeDistance = 80.0;
     }];
 }
 
+#pragma mark - XMOpenWebmoduleProtocol
+- (void)openWebmoduleWithURL:(NSString *)url isSearchMode:(BOOL)searchMode{
+    XMWebModel *model = [[XMWebModel alloc] init];
+    model.webURL = [NSURL URLWithString:url];
+    model.searchMode = searchMode;
+    [self openWebmoduleRequest:model];
+}
 
 //XMSearchTableViewController的代理方法,必须实现
 - (void)openWebmoduleRequest:(XMWebModel *)webModel{
@@ -1013,7 +1028,7 @@ static double backForwardSafeDistance = 80.0;
     [self.wkWebview evaluateJavaScript:@"document.title" completionHandler:^(id _Nullable result, NSError * _Nullable error) {
         NSString *title = (NSString *)result;
         // 添加进浏览历史
-        [XMWebModelLogic saveHistoryUrl:weakSelf.wkWebview.URL.absoluteString title:title];
+        [XMSaveWebModelLogic saveHistoryUrl:weakSelf.wkWebview.URL.absoluteString title:title];
         // 设置标题
         if(title.length > 0 && ![title isEqualToString:weakSelf.navToolTitleLab.text]){
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -1022,7 +1037,7 @@ static double backForwardSafeDistance = 80.0;
         }
     }];
     // 判断该网页是否已经保存
-    self.saveBtn.selected = [XMWebModelLogic isWebURLHaveSave:self.wkWebview.URL.absoluteString];
+    self.saveBtn.selected = [XMSaveWebModelLogic isWebURLHaveSave:self.wkWebview.URL.absoluteString];
     
     
     // 记录网页高度
