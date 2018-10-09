@@ -240,6 +240,9 @@
 		FDB099FF2112F5AA00148492 /* UIViewController+hook.m in Sources */ = {isa = PBXBuildFile; fileRef = FDB099FE2112F5AA00148492 /* UIViewController+hook.m */; };
 		FDB09A02211317B800148492 /* XMNavigationInteractiveTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = FDB09A01211317B800148492 /* XMNavigationInteractiveTransition.m */; };
 		FDB09A052113192A00148492 /* XMPopAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = FDB09A042113192A00148492 /* XMPopAnimation.m */; };
+		FDC222AE216CFB0E0000C06B /* qr_scan_line@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FDC222AD216CFB0E0000C06B /* qr_scan_line@2x.png */; };
+		FDC222B2216D00F20000C06B /* XMQRUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = FDC222B1216D00F20000C06B /* XMQRUtil.m */; };
+		FDC222B5216D01390000C06B /* XMQRView.m in Sources */ = {isa = PBXBuildFile; fileRef = FDC222B4216D01390000C06B /* XMQRView.m */; };
 		FDD895A3212BAAE800E2EDAD /* XMFileManageTool.m in Sources */ = {isa = PBXBuildFile; fileRef = FDD895A2212BAAE800E2EDAD /* XMFileManageTool.m */; };
 		FDD895A7212BFF3200E2EDAD /* XMWebMultiWindowCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FDD895A6212BFF3200E2EDAD /* XMWebMultiWindowCollectionViewController.m */; };
 		FDD895AA212BFF5C00E2EDAD /* XMWebMultiWindowCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FDD895A9212BFF5C00E2EDAD /* XMWebMultiWindowCollectionViewCell.m */; };
@@ -665,6 +668,11 @@
 		FDB09A01211317B800148492 /* XMNavigationInteractiveTransition.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMNavigationInteractiveTransition.m; sourceTree = "<group>"; };
 		FDB09A032113192A00148492 /* XMPopAnimation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMPopAnimation.h; sourceTree = "<group>"; };
 		FDB09A042113192A00148492 /* XMPopAnimation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMPopAnimation.m; sourceTree = "<group>"; };
+		FDC222AD216CFB0E0000C06B /* qr_scan_line@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "qr_scan_line@2x.png"; sourceTree = "<group>"; };
+		FDC222B0216D00F20000C06B /* XMQRUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMQRUtil.h; sourceTree = "<group>"; };
+		FDC222B1216D00F20000C06B /* XMQRUtil.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMQRUtil.m; sourceTree = "<group>"; };
+		FDC222B3216D01390000C06B /* XMQRView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMQRView.h; sourceTree = "<group>"; };
+		FDC222B4216D01390000C06B /* XMQRView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMQRView.m; sourceTree = "<group>"; };
 		FDD895A0212BA62100E2EDAD /* XMDebugDefine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = XMDebugDefine.h; path = "虾兽维度/Config/XMDebugDefine.h"; sourceTree = SOURCE_ROOT; };
 		FDD895A1212BAAE800E2EDAD /* XMFileManageTool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMFileManageTool.h; sourceTree = "<group>"; };
 		FDD895A2212BAAE800E2EDAD /* XMFileManageTool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMFileManageTool.m; sourceTree = "<group>"; };
@@ -743,8 +751,6 @@
 			children = (
 				202C84E21F2624AD0055FD7D /* XMHomeTableViewController.h */,
 				202C84E31F2624AD0055FD7D /* XMHomeTableViewController.m */,
-				202C84E41F2624AD0055FD7D /* XMQRCodeViewController.h */,
-				202C84E51F2624AD0055FD7D /* XMQRCodeViewController.m */,
 				202C84E81F2624AD0055FD7D /* XMSearchTableViewController.h */,
 				202C84E91F2624AD0055FD7D /* XMSearchTableViewController.m */,
 				200A823320837B1300825E6E /* XMMetorMapViewController.swift */,
@@ -1403,6 +1409,7 @@
 				842970FB1E654644002BDBC0 /* Other */,
 				20C85E5420541BD50057F483 /* Toolbox */,
 				FDD895A4212BFEC000E2EDAD /* MultiWindow */,
+				FDC2229E216CF4A70000C06B /* QRScan */,
 				FD147E2421634C4D00E6F841 /* SaveAndHistory */,
 				203D2FF821036AA7008788B6 /* wxFloatUnit */,
 				20F112221E86BF1800E64A70 /* Tool */,
@@ -1704,6 +1711,44 @@
 			path = hook;
 			sourceTree = "<group>";
 		};
+		FDC2229E216CF4A70000C06B /* QRScan */ = {
+			isa = PBXGroup;
+			children = (
+				FDC222A0216CF4E40000C06B /* viewcontroller */,
+				FDC2229F216CF4E40000C06B /* view */,
+				FDC222AF216CFB330000C06B /* other */,
+			);
+			path = QRScan;
+			sourceTree = "<group>";
+		};
+		FDC2229F216CF4E40000C06B /* view */ = {
+			isa = PBXGroup;
+			children = (
+				FDC222B3216D01390000C06B /* XMQRView.h */,
+				FDC222B4216D01390000C06B /* XMQRView.m */,
+				FDC222B0216D00F20000C06B /* XMQRUtil.h */,
+				FDC222B1216D00F20000C06B /* XMQRUtil.m */,
+			);
+			path = view;
+			sourceTree = "<group>";
+		};
+		FDC222A0216CF4E40000C06B /* viewcontroller */ = {
+			isa = PBXGroup;
+			children = (
+				202C84E41F2624AD0055FD7D /* XMQRCodeViewController.h */,
+				202C84E51F2624AD0055FD7D /* XMQRCodeViewController.m */,
+			);
+			path = viewcontroller;
+			sourceTree = "<group>";
+		};
+		FDC222AF216CFB330000C06B /* other */ = {
+			isa = PBXGroup;
+			children = (
+				FDC222AD216CFB0E0000C06B /* qr_scan_line@2x.png */,
+			);
+			path = other;
+			sourceTree = "<group>";
+		};
 		FDD895A4212BFEC000E2EDAD /* MultiWindow */ = {
 			isa = PBXGroup;
 			children = (
@@ -1819,6 +1864,7 @@
 				2061C20F20C56F5F008C7424 /* HJVideoAssets.xcassets in Resources */,
 				20F1121C1E866F9C00E64A70 /* XMLeftViewUserCell.xib in Resources */,
 				20835AEA212025DD0009E17F /* dir_mark.png in Resources */,
+				FDC222AE216CFB0E0000C06B /* qr_scan_line@2x.png in Resources */,
 				20FB7DDC20C00F0A00011B5C /* btn_pause.png in Resources */,
 				2061C21A20C56F5F008C7424 /* videoImages.bundle in Resources */,
 				2086644020AC87DE00D51CCB /* dir_fresh.png in Resources */,
@@ -1918,6 +1964,7 @@
 				200B709C2111F04A0036502B /* XMWebURLProtocol.m in Sources */,
 				20A1273B2132F9FF009CF024 /* UIView+Extension.m in Sources */,
 				2086642E20AB403D00D51CCB /* pwd2key.c in Sources */,
+				FDC222B2216D00F20000C06B /* XMQRUtil.m in Sources */,
 				205CECE51F48150E00821E38 /* SDWebImageDownloader.m in Sources */,
 				204D2406209ED8E800F17E2E /* DDData.m in Sources */,
 				204D240A209ED8E800F17E2E /* HTTPConnection.m in Sources */,
@@ -1997,6 +2044,7 @@
 				205CECE81F48150E00821E38 /* SDWebImagePrefetcher.m in Sources */,
 				204D2413209ED8E800F17E2E /* HTTPErrorResponse.m in Sources */,
 				2061C21820C56F5F008C7424 /* UIDevice+HJVideoRotation.m in Sources */,
+				FDC222B5216D01390000C06B /* XMQRView.m in Sources */,
 				20863CBF20CD422F00A0812C /* ZLPhotoPickerFooterCollectionReusableView.m in Sources */,
 				2086642F20AB403D00D51CCB /* sha1.c in Sources */,
 				FD05F3CA2154F609008EAD89 /* YYCache.m in Sources */,

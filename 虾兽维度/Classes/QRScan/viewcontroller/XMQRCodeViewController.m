@@ -9,18 +9,40 @@
 #import "XMQRCodeViewController.h"
 #import <AVFoundation/AVFoundation.h>
 #import "XMImageUtil.h"
-//#import <Photos/Photos.h>
 #import "MBProgressHUD+NK.h"
 
-@interface XMQRCodeViewController ()<AVCaptureMetadataOutputObjectsDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate>
+#import "XMQRView.h"
+#import "XMQRUtil.h"
+
+
+@interface XMQRCodeViewController ()<
+AVCaptureMetadataOutputObjectsDelegate,
+UINavigationControllerDelegate,
+UIImagePickerControllerDelegate
+>
 
 /** 摄像头部件 */
-@property (nonatomic, strong) AVCaptureSession *session;
-@property (nonatomic, strong) AVCaptureVideoPreviewLayer *previewLayer;
+@property (nonatomic, strong) AVCaptureSession *session;                    // 拍摄会话
+@property (nonatomic, strong) AVCaptureDevice *device;                      // 实例化拍摄设备
+@property (nonatomic, strong) AVCaptureVideoPreviewLayer *previewLayer;     // 视频预览图层
+@property (nonatomic, strong) AVCaptureMetadataOutput * output;             // 拍摄元数据输出
+
+@property (nonatomic, strong) XMQRView *qrView;                             // 扫描半透明+扫描条
 
 @end
 
 @implementation XMQRCodeViewController
+
+
+- (XMQRView *)qrView {
+     if (!_qrView) {
+     CGRect screenRect = [XMQRUtil screenBounds];
+     _qrView = [[XMQRView alloc] initWithFrame:screenRect];
+     _qrView.transparentArea = CGSizeMake(200, 200);
+     _qrView.backgroundColor = [UIColor clearColor];
+     }
+     return _qrView;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -36,7 +58,14 @@
     [super viewWillAppear:animated];
     
     if ([self canUseCamera]){
+        // 开始扫描
         [self starScan];
+        // 添加半透明及扫描框(虽然加了半透明改造,但此时扫描的有效区域是全屏)
+        [self addQrView];
+        // 限定扫描区域(矩形框)
+        [self updateLayout];
+        // 设置手电筒按钮
+        [self setTorchButton];
     }else{
         UIAlertController *tips = [UIAlertController alertControllerWithTitle:@"错误" message:@"设备摄像头不可用" preferredStyle:UIAlertControllerStyleAlert];
         [tips addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action){
@@ -63,16 +92,16 @@
 - (void)starScan{
     
     // 1. 实例化拍摄设备
-    AVCaptureDevice *device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+    self.device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
     
     // 2. 设置输入设备
-    AVCaptureDeviceInput *input = [AVCaptureDeviceInput deviceInputWithDevice:device error:nil];
+    AVCaptureDeviceInput *input = [AVCaptureDeviceInput deviceInputWithDevice:self.device error:nil];
     
     // 3. 设置元数据输出
     // 3.1 实例化拍摄元数据输出
-    AVCaptureMetadataOutput *output = [[AVCaptureMetadataOutput alloc] init];
+    self.output = [[AVCaptureMetadataOutput alloc] init];
     // 3.3 设置输出数据代理
-    [output setMetadataObjectsDelegate:self queue:dispatch_get_main_queue()];
+    [self.output setMetadataObjectsDelegate:self queue:dispatch_get_main_queue()];
     
     // 4. 添加拍摄会话
     // 4.1 实例化拍摄会话
@@ -80,25 +109,24 @@
     // 4.2 添加会话输入
     [session addInput:input];
     // 4.3 添加会话输出
-    [session addOutput:output];
+    [session addOutput:self.output];
     // 4.3 设置输出数据类型，需要将元数据输出添加到会话后，才能指定元数据类型，否则会报错
-    [output setMetadataObjectTypes:@[AVMetadataObjectTypeQRCode,AVMetadataObjectTypeCode39Code]];
+    [self.output setMetadataObjectTypes:@[AVMetadataObjectTypeQRCode,AVMetadataObjectTypeCode39Code]];
     
     self.session = session;
     
     // 5. 视频预览图层
     // 5.1 实例化预览图层, 传递_session是为了告诉图层将来显示什么内容
     AVCaptureVideoPreviewLayer *preview = [AVCaptureVideoPreviewLayer layerWithSession:_session];
-    
     preview.videoGravity = AVLayerVideoGravityResizeAspectFill;
     preview.frame = self.view.bounds;
     // 5.2 将图层插入当前视图
     [self.view.layer insertSublayer:preview atIndex:100];
-    
     self.previewLayer = preview;
     
     // 6. 启动会话
     [_session startRunning];
+    
 }
 
 - (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputMetadataObjects:(NSArray *)metadataObjects fromConnection:(AVCaptureConnection *)connection{
@@ -109,7 +137,6 @@
     // 2. 删除预览图层
     [self.previewLayer removeFromSuperlayer];
     
-//    NSLog(@"%@", metadataObjects);
     // 3. 设置界面显示扫描结果
     
     if (metadataObjects.count > 0) {
@@ -128,6 +155,59 @@
         
     }else{
         [MBProgressHUD showMessage:@"未能识别二维码" toView:self.view];
+    }
+}
+
+/// 添加扫描框
+- (void)addQrView{
+    [self.view addSubview:self.qrView];
+}
+
+/// 限定扫描的有效区域
+- (void)updateLayout {
+    
+    self.qrView.center = CGPointMake([XMQRUtil screenBounds].size.width / 2, [XMQRUtil screenBounds].size.height / 2);
+    
+    //修正扫描区域
+    CGFloat screenHeight = self.view.frame.size.height;
+    CGFloat screenWidth = self.view.frame.size.width;
+    CGRect cropRect = CGRectMake((screenWidth - self.qrView.transparentArea.width) / 2,(screenHeight - self.qrView.transparentArea.height) / 2, self.qrView.transparentArea.width, self.qrView.transparentArea.height);
+    
+    [self.output setRectOfInterest:CGRectMake(cropRect.origin.y / screenHeight, cropRect.origin.x / screenWidth, cropRect.size.height / screenHeight, cropRect.size.width / screenWidth)];
+}
+
+/// 闪光灯按钮
+- (void)setTorchButton{
+    if(self.device.hasTorch){
+        CGFloat btnWH = 100;
+        UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+        button.frame = CGRectMake((XMScreenW - btnWH) * 0.5, XMScreenH - btnWH * 1.5, btnWH, btnWH);
+        [button setBackgroundColor:[UIColor clearColor]];
+        [button setImage:[UIImage imageNamed:@"light_off"] forState:UIControlStateNormal];
+        [button setImage:[UIImage imageNamed:@"light_on"] forState:UIControlStateSelected];
+        [button addTarget:self action:@selector(flashlight:) forControlEvents:UIControlEventTouchUpInside];
+        [self.view addSubview:button];
+    }
+}
+
+///闪光灯点击事件
+- (void)flashlight:(UIButton *)btn{
+    btn.selected = !btn.isSelected;
+    //如果闪光灯正在使用 则关闭
+    if (self.device.torchMode == AVCaptureTorchModeOn) {
+        
+        [self.device lockForConfiguration:nil];
+        [self.device setTorchMode:AVCaptureTorchModeOff];
+        [self.device unlockForConfiguration];
+        
+    }else if (self.device.torchMode == AVCaptureTorchModeOff){
+        
+        //锁定闪光灯
+        [self.device lockForConfiguration:nil];
+        //打开闪光灯
+        [self.device setTorchMode:AVCaptureTorchModeOn];
+        //解除锁定
+        [self.device unlockForConfiguration];
     }
 }
 
@@ -174,8 +254,6 @@
     // 先dismiss相册
     [picker dismissViewControllerAnimated:YES completion:nil];
 }
-
-
 
 
 @end

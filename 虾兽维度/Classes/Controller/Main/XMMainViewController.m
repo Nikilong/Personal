@@ -201,7 +201,7 @@ static double leftViewAnimateTime = 0.25;
 /** 设置导航栏扫描二维码和搜索按钮 */
 - (void)addNavButton{
     
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:self action:@selector(scanQRCode)];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"scan"] landscapeImagePhone:nil style:UIBarButtonItemStyleDone target:self action:@selector(scanQRCode)];
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:@selector(search:)];
 }
