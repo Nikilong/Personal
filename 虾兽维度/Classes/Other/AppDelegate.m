@@ -174,7 +174,8 @@
 //    UIApplicationShortcutIcon *iconShare = [UIApplicationShortcutIcon iconWithType:UIApplicationShortcutIconTypeShare];
     UIApplicationShortcutIcon *iconSearch = [UIApplicationShortcutIcon iconWithType:UIApplicationShortcutIconTypeSearch];
     UIApplicationShortcutIcon *iconSave = [UIApplicationShortcutIcon iconWithType:UIApplicationShortcutIconTypeLove];
-    UIApplicationShortcutIcon *iconScan = [UIApplicationShortcutIcon iconWithType:UIApplicationShortcutIconTypeCapturePhoto];
+    UIApplicationShortcutIcon *iconScan = [UIApplicationShortcutIcon iconWithTemplateImageName:@"scan"];
+
     
     //    //创建自定义图标的icon
     //    UIApplicationShortcutIcon *icon2 = [UIApplicationShortcutIcon iconWithTemplateImageName:@"分享.png"];

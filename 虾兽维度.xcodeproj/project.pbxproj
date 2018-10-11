@@ -243,6 +243,7 @@
 		FDC222AE216CFB0E0000C06B /* qr_scan_line@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FDC222AD216CFB0E0000C06B /* qr_scan_line@2x.png */; };
 		FDC222B2216D00F20000C06B /* XMQRUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = FDC222B1216D00F20000C06B /* XMQRUtil.m */; };
 		FDC222B5216D01390000C06B /* XMQRView.m in Sources */ = {isa = PBXBuildFile; fileRef = FDC222B4216D01390000C06B /* XMQRView.m */; };
+		FDC86A33216F85EC00F5CF19 /* XMProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = FDC86A32216F85EC00F5CF19 /* XMProgressView.m */; };
 		FDD895A3212BAAE800E2EDAD /* XMFileManageTool.m in Sources */ = {isa = PBXBuildFile; fileRef = FDD895A2212BAAE800E2EDAD /* XMFileManageTool.m */; };
 		FDD895A7212BFF3200E2EDAD /* XMWebMultiWindowCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FDD895A6212BFF3200E2EDAD /* XMWebMultiWindowCollectionViewController.m */; };
 		FDD895AA212BFF5C00E2EDAD /* XMWebMultiWindowCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FDD895A9212BFF5C00E2EDAD /* XMWebMultiWindowCollectionViewCell.m */; };
@@ -673,6 +674,8 @@
 		FDC222B1216D00F20000C06B /* XMQRUtil.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMQRUtil.m; sourceTree = "<group>"; };
 		FDC222B3216D01390000C06B /* XMQRView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMQRView.h; sourceTree = "<group>"; };
 		FDC222B4216D01390000C06B /* XMQRView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMQRView.m; sourceTree = "<group>"; };
+		FDC86A31216F85EB00F5CF19 /* XMProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMProgressView.h; sourceTree = "<group>"; };
+		FDC86A32216F85EC00F5CF19 /* XMProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMProgressView.m; sourceTree = "<group>"; };
 		FDD895A0212BA62100E2EDAD /* XMDebugDefine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = XMDebugDefine.h; path = "虾兽维度/Config/XMDebugDefine.h"; sourceTree = SOURCE_ROOT; };
 		FDD895A1212BAAE800E2EDAD /* XMFileManageTool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMFileManageTool.h; sourceTree = "<group>"; };
 		FDD895A2212BAAE800E2EDAD /* XMFileManageTool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMFileManageTool.m; sourceTree = "<group>"; };
@@ -1455,6 +1458,8 @@
 		842970FE1E654644002BDBC0 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				FDC86A31216F85EB00F5CF19 /* XMProgressView.h */,
+				FDC86A32216F85EC00F5CF19 /* XMProgressView.m */,
 				2056D8711E8D67B200EB4BB5 /* XMConerAccessoryView.h */,
 				2056D8721E8D67B200EB4BB5 /* XMConerAccessoryView.m */,
 				84BA25561E65C7A800C8B204 /* XMWebTableViewCell.h */,
@@ -1922,6 +1927,7 @@
 				20707E9C209F3E8400572604 /* XMWifiTransModel.m in Sources */,
 				20C85E6D2054313F0057F483 /* XMButton.m in Sources */,
 				20863CC220CD422F00A0812C /* ZLPhotoPickerImageView.m in Sources */,
+				FDC86A33216F85EC00F5CF19 /* XMProgressView.m in Sources */,
 				204D23DC209ED86800F17E2E /* XMWifiTransFileViewController.m in Sources */,
 				84D9ED061E656BC30046840E /* XMWebModel.m in Sources */,
 				204D2436209ED91A00F17E2E /* ContextFilterLogFormatter.m in Sources */,

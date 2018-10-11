@@ -11,11 +11,13 @@
 #import "XMImageUtil.h"
 #import "XMSavePathUnit.h"
 #import "YYWebImage.h"
+#import "XMProgressView.h"
 
 
 @interface XMPhotoCollectionViewCell()<UIScrollViewDelegate>
 
 @property (nonatomic, assign)  CGSize imgOriSize;     // 图片拉升适应之后的size
+@property (weak, nonatomic)   XMProgressView *progressV;      // 加载指示
 
 @end
 
@@ -34,6 +36,11 @@
         self.imgScroV.minimumZoomScale = 0.5;
         self.imgScroV.maximumZoomScale = 3.0;
         [self.contentView addSubview:self.imgScroV];
+        
+        
+        XMProgressView *progressV = [XMProgressView createProgressViewWithCenter:CGPointMake(XMScreenW * 0.5, XMScreenH * 0.5)];
+        self.progressV = progressV;
+        [self.contentView addSubview:progressV];
         
 //        self.gifPerTime = 0.08;
     }
@@ -75,7 +82,21 @@
     self.imgV.frame = CGRectMake(0, 0, XMScreenW, XMScreenH);
     [self.imgScroV addSubview:self.imgV];
     
-    self.imgV.yy_imageURL = [NSURL URLWithString:url];
+    // 显示加载指示
+    [self.progressV startAnimating];
+    
+    __weak typeof(self) weakSelf = self;
+    [self.imgV yy_setImageWithURL:[NSURL URLWithString:url]
+                      placeholder:nil
+                          options:YYWebImageOptionSetImageWithFadeAnimation
+                         progress:^(NSInteger receivedSize, NSInteger expectedSize){
+                             NSLog(@"%.2f",(float)receivedSize / expectedSize);
+                             [weakSelf.progressV updateProgress:(float)receivedSize / expectedSize];
+                         }
+                        transform:nil
+                       completion:^(UIImage * _Nullable image, NSURL *url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error){
+                           [weakSelf.progressV stopAnimating];
+                       }];
     
     // 调整图片框大小
     self.imgV.frame = [self setImage:self.imgV];

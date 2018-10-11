@@ -35,13 +35,13 @@ UIImagePickerControllerDelegate
 
 
 - (XMQRView *)qrView {
-     if (!_qrView) {
-     CGRect screenRect = [XMQRUtil screenBounds];
-     _qrView = [[XMQRView alloc] initWithFrame:screenRect];
-     _qrView.transparentArea = CGSizeMake(200, 200);
-     _qrView.backgroundColor = [UIColor clearColor];
-     }
-     return _qrView;
+    if (!_qrView) {
+        CGRect screenRect = [XMQRUtil screenBounds];
+        _qrView = [[XMQRView alloc] initWithFrame:screenRect];
+        _qrView.transparentArea = CGSizeMake(250, 250);
+        _qrView.backgroundColor = [UIColor clearColor];
+    }
+    return _qrView;
 }
 
 - (void)viewDidLoad {
