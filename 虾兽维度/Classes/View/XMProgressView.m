@@ -27,25 +27,26 @@
 }
 
 + (XMProgressView *)createProgressViewWithCenter:(CGPoint)center{
-    // 因为UIActivityIndicatorViewStyleWhiteLarge时,指示动画是一个37 * 37的view,所以progressV也是固定大小
+    // 因为UIActivityIndicatorViewStyleWhiteLarge时,指示动画是一个37 * 37的view,只能通过transform来放大,但是这是虚的,实际上frame并没有变大
     XMProgressView *progressV = [[XMProgressView alloc] initWithFrame:CGRectMake(center.x - 38.5, center.y - 37, 77, 74)];
     progressV.hidden = YES;
     
     // 指示在上面
     UIActivityIndicatorView *actV = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
     actV.center = CGPointMake(38.5, 18.5);
+    actV.transform = CGAffineTransformMakeScale(2.4, 2.4);
     progressV.actV = actV;
     [progressV addSubview:actV];
     [actV startAnimating];
     
-    // 进度在下面
+    // 进度数字在中间
     UILabel *progressLab = [[UILabel alloc] init];
     progressV.progressLab = progressLab;
     progressLab.text = @"0%";
-    progressLab.frame = CGRectMake(0, 37, 77, 37);
+    progressLab.frame = CGRectMake(0, 0, 77, 37);
     progressLab.textAlignment = NSTextAlignmentCenter;
     progressLab.textColor = [UIColor whiteColor];
-    progressLab.font = [UIFont systemFontOfSize:13];
+    progressLab.font = [UIFont systemFontOfSize:11];
     [progressV addSubview:progressLab];
     return progressV;
 }
@@ -74,7 +75,7 @@
 }
 
 - (void)updateProgress:(float)progress{
-    self.progressLab.text = [NSString stringWithFormat:@"%.1f%%",progress * 100];
+    self.progressLab.text = [NSString stringWithFormat:@"%d%%",(int)(progress * 100)];
 }
 /*
 // Only override drawRect: if you perform custom drawing.

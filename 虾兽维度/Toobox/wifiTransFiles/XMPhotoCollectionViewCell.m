@@ -90,7 +90,6 @@
                       placeholder:nil
                           options:YYWebImageOptionSetImageWithFadeAnimation
                          progress:^(NSInteger receivedSize, NSInteger expectedSize){
-                             NSLog(@"%.2f",(float)receivedSize / expectedSize);
                              [weakSelf.progressV updateProgress:(float)receivedSize / expectedSize];
                          }
                         transform:nil
