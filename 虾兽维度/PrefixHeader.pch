@@ -15,6 +15,10 @@
 #import "XMGlobalConst.h"
 #import "XMSavePathUnit.h"
 
+// 是否去检查和创建浮窗
+#define kCheckCreateFloatwindow  @"checkCreateFloatwindow"
+
+// 颜色宏
 #define RGB(R,G,B) ([UIColor colorWithRed:R/255.0 green:G/255.0 blue:B/255.0 alpha:1])
 #define RGBA(R,G,B,A) ([UIColor colorWithRed:R/255.0 green:G/255.0 blue:B/255.0 alpha:A])
 

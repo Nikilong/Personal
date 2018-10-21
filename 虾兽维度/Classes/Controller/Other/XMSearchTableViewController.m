@@ -273,7 +273,8 @@ static NSString *const kEngine = @"engine";
         BOOL canOpenNewWebmodule = ![model.url isEqualToString:self.passUrl];
         [self dismissViewControllerAnimated:YES completion:^{
             if (canOpenNewWebmodule){
-                [XMWKWebViewController openWebmoduleWithURL:model.url isSearchMode:NO];
+                XMWKWebViewController *webmodule = (XMWKWebViewController *)[XMWKWebViewController webmoduleWithURL:model.url isSearchMode:NO];
+                [self.navigationController pushViewController:webmodule animated:YES];
             }
         }];
     

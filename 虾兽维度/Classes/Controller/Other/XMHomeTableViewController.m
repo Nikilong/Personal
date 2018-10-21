@@ -21,7 +21,11 @@
 CGFloat const XMRowHeight = 100;
 CGFloat const XMRrfreshHeight = 64;
 
-@interface XMHomeTableViewController () <UITableViewDataSource,UITableViewDelegate,NSURLSessionDelegate>
+@interface XMHomeTableViewController () <
+UITableViewDataSource,
+UITableViewDelegate,
+NSURLSessionDelegate,
+UITabBarControllerDelegate>
 
 // 保存每一条cell的新闻的url
 @property (nonatomic, strong) NSMutableArray *webs;
@@ -46,6 +50,9 @@ CGFloat const XMRrfreshHeight = 64;
 
 // 加载次数,防止多次连续加载
 @property (nonatomic, assign)  NSUInteger loadCount;
+
+@property (nonatomic, assign)  double preTabitemClickT;     // 上一次tabbar点击事件
+
 
 @end
 
@@ -113,6 +120,12 @@ CGFloat const XMRrfreshHeight = 64;
     // 已改为加载在contentView,所以打开webmodule时不会disappear
     [UIApplication sharedApplication].applicationSupportsShakeToEdit = NO;
     [self resignFirstResponder];
+}
+
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    // 监听tabbar的点击事件,以便于双击刷新
+     self.navigationController.tabBarController.delegate = self;
 }
 
 
@@ -194,21 +207,33 @@ CGFloat const XMRrfreshHeight = 64;
     
 }
 
+#pragma mark - 监听tabbarItem的点击事件
+- (BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController{
+    if(viewController.childViewControllers.count > 0 && [viewController.childViewControllers[0] isKindOfClass:[XMMainViewController class]]){
+        // 0.5s内连续点击当做是刷新事件,否则滚到最顶部
+        double currentT = [NSDate date].timeIntervalSince1970;
+        if(currentT - self.preTabitemClickT < 0.5){
+            [self refresh];
+        }else{
+            [self upToTop];
+        }
+        self.preTabitemClickT = currentT;
+    }
+    return YES;
+}
+
 #pragma mark 监听scroller的滚动
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
     
     [self.headerRefreshV tableViewDidScroller];
 }
 
-/**
- 开始拖拽,做标记
- */
+/// 开始拖拽,做标记
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
     [self.headerRefreshV tableViewWillBeginDragging];
 }
-/**
- 结束拖拽,处理事件
- */
+
+/// 结束拖拽,处理事件
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
     [self.headerRefreshV tableViewDidEndDraggingWillDecelerate:decelerate];
 }
@@ -300,7 +325,7 @@ CGFloat const XMRrfreshHeight = 64;
     return cell;
 }
 
-// 根据选中哪一行播放相关的新闻
+/// 根据选中哪一行播放相关的新闻
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     // 取出对应的模型
     XMWebModel *model;
@@ -318,7 +343,7 @@ CGFloat const XMRrfreshHeight = 64;
 
 #pragma mark - 刷新表格数据
 
-// 非手动下拉刷新触发的刷新
+/// 非手动下拉刷新触发的刷新
 - (void)nonePullFresh{
     // 先模拟下拉一个高度
     [self.tableView setContentOffset:CGPointMake(0, -(XMStatusBarHeight + 44 + self.headerRefreshV.frame.size.height)) animated:YES];
@@ -326,10 +351,12 @@ CGFloat const XMRrfreshHeight = 64;
     [self refresh];
 }
 
+/// 刷新
 - (void)refresh{
     
     // 当前正在刷新则返回避免连续刷新
     if(self.isRefreshing) return;
+    self.isRefreshing = YES;
     // 开启网络加载
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     
@@ -344,6 +371,7 @@ CGFloat const XMRrfreshHeight = 64;
     XMChannelModel *model = [XMChannelModelLogic channels][self.currentChannel];
     NSURL *idUrl = [NSURL URLWithString:model.url];
     
+    __weak typeof(self) weakSelf = self;
     // 3,创建一个下载任务，类型为NSURLSessionDataTask
     NSURLSessionDataTask *task = [session dataTaskWithURL:idUrl  completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error){
         
@@ -352,16 +380,15 @@ CGFloat const XMRrfreshHeight = 64;
                 // 解析json数据
                 NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:nil];
                 // 根据dict更新数据
-                [self dealJsonDataWithDict:dict];
+                [weakSelf dealJsonDataWithDict:dict];
             }else{
                 
                 // 6，回到主线程设置cell的信息
-                [self backToMainQueueWithMessage:@"加载失败"];
+                [weakSelf backToMainQueueWithMessage:@"加载失败"];
             }
             dispatch_async(dispatch_get_main_queue(), ^{
                 // 关闭网络加载
                 [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-                
             });
         
       }];
@@ -395,7 +422,7 @@ CGFloat const XMRrfreshHeight = 64;
     // 先保存上一次刷新时间
     self.headerVTitle = [XMWebModelLogic getHistoryNewUpdateTimeWithChannel:model.channel];
     // 先清空并加载历史数据,防止最新加载的数据同时在第0组和第1组展示
-    NSUInteger oldHisNewsCount = self.historyNewsArr.count;
+//    NSUInteger oldHisNewsCount = self.historyNewsArr.count;
     self.historyNewsArr = nil;
     [self historyNewsArr];
     
@@ -488,6 +515,9 @@ CGFloat const XMRrfreshHeight = 64;
         // 刷新表格
         [weakSelf.tableView reloadData];
 //        [weakSelf.tableView reloadSections:[[NSIndexSet alloc] initWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
+        
+        // 标记刷新结束
+        weakSelf.isRefreshing = NO;
     }];
 }
 

@@ -67,6 +67,9 @@ class XMMetorMapViewController: UIViewController,UIImagePickerControllerDelegate
         let saveBtn = UIBarButtonItem(title: "保存", style: .plain, target: self , action: #selector(saveToAlbum))
         self.navigationItem.rightBarButtonItems = [addBtn, updateBtn,saveBtn]
         
+        let backBtn = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(back))
+        self.navigationItem.leftBarButtonItem = backBtn
+        
     }
 
     //MARK:- 手势类方法
@@ -182,6 +185,14 @@ class XMMetorMapViewController: UIViewController,UIImagePickerControllerDelegate
     }
     
     // MARK:导航栏按钮事件
+    /// 返回
+    func back() {
+        self.navigationController?.popViewController(animated: true)
+        self.dismiss(animated: true, completion: nil)
+//        if(self.navigationController != nil){
+//        }else{
+//        }
+    }
     /// 打开相册
     func openAlbum(){
         if ((UIImagePickerController.availableMediaTypes(for:.photoLibrary)) != nil){

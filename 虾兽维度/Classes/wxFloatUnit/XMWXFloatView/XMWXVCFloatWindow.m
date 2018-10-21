@@ -11,6 +11,7 @@
 
 #import "AppDelegate.h"
 #import "XMNavigationController.h"
+#import "XMTabBarController.h"
 
 #import "MBProgressHUD+NK.h"
 #import "XMWXFloatWindowIconConfig.h"
@@ -148,9 +149,13 @@ static double padding = 10.0f;
 - (void)openFloatViewController:(UIButton *)btn{
     // push保存的页面
     AppDelegate *dele = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    if([[UIApplication sharedApplication].keyWindow.rootViewController isKindOfClass:[XMNavigationController class]]){
+    if([[UIApplication sharedApplication].keyWindow.rootViewController isKindOfClass:[XMTabBarController class]]){
         dispatch_async(dispatch_get_main_queue(), ^{
-            XMNavigationController *nav = (XMNavigationController *)[UIApplication sharedApplication].keyWindow.rootViewController;
+            // 层级结构是XMTabBarController(父)->多个XMNavigationController
+            XMTabBarController *tabVC = (XMTabBarController *)[UIApplication sharedApplication].keyWindow.rootViewController;
+            // 找出当前选中的XMNavigationController
+            XMNavigationController *nav = (XMNavigationController *)tabVC.selectedViewController;
+
             if ([nav.childViewControllers.lastObject isEqual:dele.floadVC]){
                 [MBProgressHUD showFailed:@"当前浮窗已显示"];
             }else{

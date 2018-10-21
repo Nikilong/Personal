@@ -27,6 +27,7 @@
 #import "XMPhotoCollectionViewController.h"
 #import "XMWebMultiWindowCollectionViewController.h"
 #import "XMMutiWindowFlowLayout.h"
+#import "XMTabBarController.h"
 
 
 @interface XMWKWebViewController ()<
@@ -488,32 +489,27 @@ static double backForwardSafeDistance = 80.0;
 }
 
 
-#pragma mark - 提供一个类方法让外界打开webmodule
-+ (void)openWebmoduleWithModel:(XMWebModel *)model viewController:(UIViewController *)vc{
+#pragma mark - 提供一个类方法让外界创建webmodule
++ (UIViewController *)webmoduleWithModel:(XMWebModel *)model{
     AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    
     // 先判断是否和上一个pop掉的webmodule的url相同,相同的话就不必再去重复加载
     if ([app.tempWebModuleVC.originURL.absoluteString isEqualToString:model.webURL.absoluteString]){
-        [vc.navigationController pushViewController:app.tempWebModuleVC animated:YES];
+        return app.tempWebModuleVC;
     }else{
         app.tempWebModuleVC = nil;
         // 创建一个webmodule
         XMWKWebViewController *webVC = [[XMWKWebViewController alloc] init];
         app.tempWebModuleVC = webVC;
         webVC.model = model;
-        webVC.view.frame = vc.view.bounds;
-        // 压到导航控制器的栈顶
-        [vc.navigationController pushViewController:webVC animated:YES];
+        //        webVC.view.frame = vc.view.bounds;
+        return webVC;
     }
 }
-
-+ (void)openWebmoduleWithURL:(NSString *)url isSearchMode:(BOOL)searchMode{
++ (UIViewController *)webmoduleWithURL:(NSString *)url isSearchMode:(BOOL)searchMode{
     XMWebModel *model = [[XMWebModel alloc] init];
     model.searchMode = searchMode;
     model.webURL = [NSURL URLWithString:url];
-    
-    UIViewController *navVC = [UIApplication sharedApplication].keyWindow.rootViewController.childViewControllers.firstObject;
-    [self openWebmoduleWithModel:model viewController:navVC];
+    return [self webmoduleWithModel:model];
 }
 
 #pragma mark - toolbar和导航栏 点击事件
@@ -874,12 +870,13 @@ static double backForwardSafeDistance = 80.0;
     if(qrMsg){
         [tips addAction:[UIAlertAction actionWithTitle:@"识别图中二维码" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action){
             // 当点击确定执行的块代码
-            XMWebModel *model = [[XMWebModel alloc] init];
-            model.webURL = [NSURL URLWithString:qrMsg];
             if(self.navigationController){
                 [self.navigationController popViewControllerAnimated:YES];
             }else{
-                [XMWKWebViewController openWebmoduleWithModel:model viewController:self];
+                XMWebModel *model = [[XMWebModel alloc] init];
+                model.webURL = [NSURL URLWithString:qrMsg];
+                XMWKWebViewController *webmodule = (XMWKWebViewController *)[XMWKWebViewController webmoduleWithModel:model];
+                [self.navigationController pushViewController:webmodule animated:YES];
             }
             
         }]];
@@ -927,7 +924,8 @@ static double backForwardSafeDistance = 80.0;
 
 //XMSearchTableViewController的代理方法,必须实现
 - (void)openWebmoduleRequest:(XMWebModel *)webModel{
-    [XMWKWebViewController openWebmoduleWithModel:webModel viewController:self];
+    XMWKWebViewController *webmodule = (XMWKWebViewController *)[XMWKWebViewController webmoduleWithModel:webModel];
+    [self.navigationController pushViewController:webmodule animated:YES];
 }
 
 #pragma mark - WKUIDelegate
@@ -985,7 +983,8 @@ static double backForwardSafeDistance = 80.0;
             
             // NSLog(@"webmodule====%@",navigationAction.request.URL.absoluteString);
             // 调用方法打开新的webmodule
-            [XMWKWebViewController openWebmoduleWithModel:model viewController:self];
+            XMWKWebViewController *webmodule = (XMWKWebViewController *)[XMWKWebViewController webmoduleWithModel:model];
+            [self.navigationController pushViewController:webmodule animated:YES];
             // 当网页完成加载之后,禁止再重新加载
             decisionHandler(WKNavigationActionPolicyCancel);
             return;

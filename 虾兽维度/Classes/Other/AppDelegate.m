@@ -16,21 +16,12 @@
 //#import "XMWebViewController.h"
 #import "XMWKWebViewController.h"
 #import "XMWebURLProtocol.h"
-#import "XMDebugDefine.h"
-#import "XMSavePathUnit.h"
 #import "XMFileManageTool.h"
+#import "XMTabBarController.h"
 
-/// 试验区头文件,可随时删除
-#import "XMTouchIDKeyboardViewController.h"
-#import "XMClipImageViewController.h"
-#import "XMWifiTransFileViewController.h"
-#import "XMSaveWebsTableViewController.h"
-#import "XMWebMultiWindowCollectionViewController.h"
-#import "XMMutiWindowFlowLayout.h"
 
 @interface AppDelegate ()<UITraitEnvironment>
 
-@property (nonatomic, strong) XMMainViewController *mainVC;
 
 @end
 
@@ -49,24 +40,12 @@
     // 监听所有网络请求
 //    [NSURLProtocol registerClass:[XMWebURLProtocol class]];
     
+    // 标记能否检查浮窗
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kCheckCreateFloatwindow];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-#ifdef XMDebugHomeVC
-        //模拟器
-    /*
-     // TODO:多窗口的创建不太一样
-     XMMutiWindowFlowLayout * layout = [[XMMutiWindowFlowLayout alloc]init];
-     XMWebMultiWindowCollectionViewController *photoVC = [[XMWebMultiWindowCollectionViewController alloc] initWithCollectionViewLayout:layout];
-     self.mainVC = photoVC;
-     */
-    self.mainVC = [[XMMainViewController alloc] init];
-#else
-        //真机
-    self.mainVC = [[XMMainViewController alloc] init];
-#endif
-    
-    XMNavigationController *nav = [[XMNavigationController alloc] initWithRootViewController:_mainVC];
-    
-    self.window.rootViewController = nav;
+    self.window.rootViewController =  [[XMTabBarController alloc] init];
     
     [self.window makeKeyAndVisible];
     
@@ -78,12 +57,13 @@
             }
         }
     }
+//    [self creatShortcutItem];
     
     // 创建悬浮窗口
     [self recoverFloatVC];
     
     //注册本地通知
-//    [self registerLocalNotification];
+    [self registerLocalNotification];
     
     // 检查是否需要清理缓存文件
     [self checkToClearCache];
@@ -171,46 +151,41 @@
 /** 用代码创建应用图标上的3D touch快捷选项  */
 - (void)creatShortcutItem {
     //创建系统风格的icon
-//    UIApplicationShortcutIcon *iconShare = [UIApplicationShortcutIcon iconWithType:UIApplicationShortcutIconTypeShare];
     UIApplicationShortcutIcon *iconSearch = [UIApplicationShortcutIcon iconWithType:UIApplicationShortcutIconTypeSearch];
     UIApplicationShortcutIcon *iconSave = [UIApplicationShortcutIcon iconWithType:UIApplicationShortcutIconTypeLove];
     UIApplicationShortcutIcon *iconScan = [UIApplicationShortcutIcon iconWithTemplateImageName:@"scan"];
+    UIApplicationShortcutIcon *iconToolbox = [UIApplicationShortcutIcon iconWithTemplateImageName:@"tabbar_icon_toolbox_normal"];
 
     
-    //    //创建自定义图标的icon
-    //    UIApplicationShortcutIcon *icon2 = [UIApplicationShortcutIcon iconWithTemplateImageName:@"分享.png"];
     //创建快捷选项
     UIApplicationShortcutItem * itemSave = [[UIApplicationShortcutItem alloc]initWithType:@"save" localizedTitle:@"珍藏" localizedSubtitle:nil icon:iconSave userInfo:nil];
-    UIApplicationShortcutItem * itemToolbox = [[UIApplicationShortcutItem alloc]initWithType:@"toolbox" localizedTitle:@"工具箱" localizedSubtitle:nil icon:iconSave userInfo:nil];
+    UIApplicationShortcutItem * itemToolbox = [[UIApplicationShortcutItem alloc]initWithType:@"toolbox" localizedTitle:@"工具箱" localizedSubtitle:nil icon:iconToolbox userInfo:nil];
     UIApplicationShortcutItem * itemSearch = [[UIApplicationShortcutItem alloc]initWithType:@"search" localizedTitle:@"搜索" localizedSubtitle:nil icon:iconSearch userInfo:nil];
     UIApplicationShortcutItem * itemScan = [[UIApplicationShortcutItem alloc]initWithType:@"scan" localizedTitle:@"扫描二维码" localizedSubtitle:nil icon:iconScan userInfo:nil];
     
     //添加到快捷选项数组
-    [UIApplication sharedApplication].shortcutItems = @[itemToolbox,itemSearch,itemSave,itemScan];
+    [UIApplication sharedApplication].shortcutItems = @[itemSearch,itemSave,itemToolbox,itemScan];
 }
 
 /** 3D touch快捷选项触发事件 */
 - (void)application:(UIApplication *)application performActionForShortcutItem:(UIApplicationShortcutItem *)shortcutItem completionHandler:(void (^)(BOOL))completionHandler{
+    XMTabBarController *tabVC = (XMTabBarController *)self.window.rootViewController;
     if([shortcutItem.type isEqualToString:@"one"]){
         // 这个分享的3D touch快捷选项是从plist里面创建的
-        NSArray *arr = @[@"hello 3D Touch--分享"];
+        NSArray *arr = @[@"Hello 3D Touch--分享"];
         UIActivityViewController *vc = [[UIActivityViewController alloc]initWithActivityItems:arr applicationActivities:nil];
         [self.window.rootViewController presentViewController:vc animated:YES completion:^{
         }];
     } else if ([shortcutItem.type isEqualToString:@"save"]) {//进入珍藏界面
-        
-        [_mainVC callSaveViewController];
+        [tabVC callSave];
     }else if ([shortcutItem.type isEqualToString:@"search"]) {//进入搜索界面
-        
-        [_mainVC search:nil];
+        [tabVC callSearch];
     }
     else if ([shortcutItem.type isEqualToString:@"scan"]) {//进入扫描二维码界面
-        
-        [_mainVC scanQRCode];
+        [tabVC callScanQRCode];
     }
     else if ([shortcutItem.type isEqualToString:@"toolbox"]) {//进入工具箱
-        
-        [_mainVC callToolBox];
+        [tabVC callToolbox];
     }
 }
 
@@ -239,6 +214,5 @@
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
-
 
 @end

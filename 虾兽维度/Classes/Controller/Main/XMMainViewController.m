@@ -15,7 +15,6 @@
 #import "XMChannelModelLogic.h"
 #import "XMLeftViewUserCell.h"
 #import "XMConerAccessoryView.h"
-#import "XMSaveWebsTableViewController.h"
 #import "XMQRCodeViewController.h"
 #import "XMSearchTableViewController.h"
 #import "XMDropView.h"
@@ -26,22 +25,11 @@
 #import "MBProgressHUD+NK.h"
 
 
-// 工具箱模块
-#import "XMToolboxViewController.h"
-#import "XMClipImageViewController.h"
-#import "XMWifiTransFileViewController.h"
-
-// swift
-//#import "虾兽维度-XMMetorMapViewController.swift"
-#import "虾兽维度-Bridging-Header.h"
-#import "虾兽维度-Swift.h"
-
 @interface XMMainViewController ()<
 XMLeftTableViewControllerDelegate,
 XMNavTitleTableViewControllerDelegate,
 XMConerAccessoryViewDelegate,
 XMDropViewDelegate,
-XMToolBoxViewControllerDelegate,
 UIGestureRecognizerDelegate,
 UITraitEnvironment>
 
@@ -112,7 +100,7 @@ static double leftViewAnimateTime = 0.25;
     [self setNavTitle:@"推荐"];
     
     // 创建左下角辅助按钮
-    [self addCornerAccessoryView];
+//    [self addCornerAccessoryView];
     
     // 创建导航栏按钮
     [self addNavButton];
@@ -128,8 +116,7 @@ static double leftViewAnimateTime = 0.25;
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-    
-//    [self callSaveViewController]; // 测试用
+    self.tabBarController.tabBar.hidden = NO;
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
@@ -139,12 +126,6 @@ static double leftViewAnimateTime = 0.25;
 
 - (void)dealloc{
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
-- (void)test{
-    if([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"xmweb://"]]){
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"xmweb://"]];
-    }
 }
 
 - (void)addCornerAccessoryView{
@@ -166,36 +147,6 @@ static double leftViewAnimateTime = 0.25;
     UISwipeGestureRecognizer *swip = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(showLeftView)];
     [self.view addGestureRecognizer:swip];
     
-    // 2指下滑快捷搜索手势
-    UISwipeGestureRecognizer *searchSwip = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(search:)];
-    searchSwip.numberOfTouchesRequired = 2;  // 设置需要2个手指向下滑
-    // 必须要实现一个代理方法支持多手势,这时候3指下滑同时也会触发单指滚动tableview
-    searchSwip.delegate = self;
-    searchSwip.direction = UISwipeGestureRecognizerDirectionDown;
-    [self.view addGestureRecognizer:searchSwip];
-    // 3指下滑快捷打开地铁图手势
-    UISwipeGestureRecognizer *mapSwip = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(openMetorMap)];
-    mapSwip.numberOfTouchesRequired = 3;  // 设置需要2个手指向下滑
-    // 必须要实现一个代理方法支持多手势,这时候3指下滑同时也会触发单指滚动tableview
-    mapSwip.delegate = self;
-    mapSwip.direction = UISwipeGestureRecognizerDirectionDown;
-    [self.view addGestureRecognizer:mapSwip];
-    
-    // 3指上划快捷打开工具箱手势
-    UISwipeGestureRecognizer *toolboxSwip = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(callToolBox)];
-    toolboxSwip.numberOfTouchesRequired = 3;
-    // 必须要实现一个代理方法支持多手势,这时候3指下滑同时也会触发单指滚动tableview
-    toolboxSwip.delegate = self;
-    toolboxSwip.direction = UISwipeGestureRecognizerDirectionUp;
-    [self.view addGestureRecognizer:toolboxSwip];
-    
-    // 2指上划打开收藏快捷手势
-    UISwipeGestureRecognizer *saveSwip = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(callSaveViewController)];
-    saveSwip.numberOfTouchesRequired = 2;  // 设置需要2个手指向下滑
-    // 必须要实现一个代理方法支持多手势,这时候2指下滑同时也会触发单指滚动tableview
-    saveSwip.delegate = self;
-    saveSwip.direction = UISwipeGestureRecognizerDirectionUp;
-    [self.view addGestureRecognizer:saveSwip];
 }
 
 /** 设置导航栏扫描二维码和搜索按钮 */
@@ -203,7 +154,7 @@ static double leftViewAnimateTime = 0.25;
     
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"scan"] landscapeImagePhone:nil style:UIBarButtonItemStyleDone target:self action:@selector(scanQRCode)];
     
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:@selector(search:)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:@selector(callSearchView)];
 }
 
 /** 设置导航栏标题 */
@@ -245,8 +196,6 @@ static double leftViewAnimateTime = 0.25;
     // homevc成为self的childviewcontroller
     [self.view addSubview:homeContentView];
     [self addChildViewController:_homeVC];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(test) name:@"test" object:nil];
 }
 
 /**  添加左侧边栏*/
@@ -313,7 +262,7 @@ static double leftViewAnimateTime = 0.25;
 }
 
 /** 搜索框 */
-- (void)search:(UISwipeGestureRecognizer *)swip{
+- (void)callSearchView{
     
     XMSearchTableViewController *searchVC = [[XMSearchTableViewController alloc] init];
     searchVC.delegate = self;
@@ -322,16 +271,6 @@ static double leftViewAnimateTime = 0.25;
     [self presentViewController:nav animated:YES completion:^{
         self.homeVC.tableView.scrollEnabled = YES;
     }];
-}
-
-
-/** 打开地铁图*/
-- (void)openMetorMap{
-    //
-    XMMetorMapViewController *maVC  = [[XMMetorMapViewController alloc] init];
-    [self.navigationController pushViewController:maVC animated:YES];
-    
-    self.homeVC.tableView.scrollEnabled = YES;
 }
 
 /** 导航栏titleview的dropview*/
@@ -448,7 +387,9 @@ static double leftViewAnimateTime = 0.25;
     // 标记第一个webmodule
     webModel.firstRequest = YES;
     // 调用webmodule的类方法
-    [XMWKWebViewController openWebmoduleWithModel:webModel viewController:self];
+//    [XMWKWebViewController openWebmoduleWithModel:webModel viewController:self];
+    XMWKWebViewController *webmodule = (XMWKWebViewController *)[XMWKWebViewController webmoduleWithModel:webModel];
+    [self.navigationController pushViewController:webmodule animated:YES];
 }
 
 #pragma mark leftTableViewController delegate
@@ -470,46 +411,10 @@ static double leftViewAnimateTime = 0.25;
             model.searchMode = YES;
             model.webURL = [NSURL URLWithString:specialModel.url];
             [self openWebmoduleRequest:model];
-            
-        }else if ( indexPath.section == 2){
-            // 打开工具箱
-            [self callToolBox];
         }
     });
     
 }
-
-/** 打开工具箱 */
-- (void)callToolBox{
-    // 工具箱的九宫格界面控制器
-    XMToolboxViewController *toolboxVC = [[XMToolboxViewController alloc] init];
-    toolboxVC.delegate = self;
-    toolboxVC.modalPresentationStyle = UIModalPresentationCustom;
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-        
-        // webModule添加蒙板
-        UIView *cover = [[UIView alloc] initWithFrame:CGRectMake(0, - XMStatusBarHeight, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)];
-        // 采用原生导航栏时cover添加到导航条上面,否则直接添加到callerVC.view
-        [self.navigationController.navigationBar addSubview:cover];
-        
-        cover.alpha = 0.0;
-        cover.backgroundColor = [UIColor blackColor];
-        [UIView animateWithDuration:XMToolBoxViewAnimationTime animations:^{
-            // 蒙板透明度渐变
-            cover.alpha = 0.3;
-        }];
-        
-        toolboxVC.toolBoxViewCover = cover;
-        // 用导航控制器推出分享控制器
-        [self.navigationController presentViewController:toolboxVC animated:YES completion:^{
-            self.homeVC.tableView.scrollEnabled = YES;
-            // 设置父视图透明,否则看不到webmodule
-            toolboxVC.view.superview.backgroundColor = [UIColor clearColor];
-        }];
-    });
-}
-
 
 /**
  创建说明书
@@ -563,62 +468,50 @@ static double leftViewAnimateTime = 0.25;
 
 
 #pragma mark conerAccessoryView - delegate
-- (void)conerAccessoryViewDidClickPlantedButton:(UIButton *)button{
-    switch (button.tag) {
-        case 1: // 打开珍藏
-            
-            [self callSaveViewController];
-            break;
-            
-        case 2: // 删除缓存
-            
-            [self clearCache];
-            break;
-            
-        case 3: // searchmode
-            self.searchMode = !self.searchMode;
-            if(self.searchMode){
-                [MBProgressHUD showMessage:@"已打开searchMode" toView:self.view];
-            }else{
-                [MBProgressHUD showMessage:@"已关闭searchMode" toView:self.view];
-            }
-            break;
-            
-        default:
-            break;
-    }
-}
-
-/**  清除缓存*/
-- (void)clearCache{
-    // 清除用sd下载的cell头像（主要）  Library/Caches/default/com.hackemist.SDWebImageCache.default
-    [[[SDWebImageManager sharedManager] imageCache] clearDiskOnCompletion:nil];
-    
-    // 可有可无
-    [[[SDWebImageManager sharedManager] imageCache] clearMemory];
-    
-    // 不过这里要特别注意一下，在IOS7中你会发现使用这两个方法缓存总清除不干净，即使断网下还是会有数据。这是因为在IOS7中，缓存机制做了修改，使用上述两个方法只清除了SDWebImage的缓存，没有清除系统的缓存，所以我们可以在清除缓存的代理中额外添加以下：
-    
-    // 清除uiwebview的图片缓存（系统方法） Library/Caches/Apple.343--------
-    [[NSURLCache sharedURLCache] removeAllCachedResponses];
-    
-    // 显示清理进度条
-    [MBProgressHUD showProgressInView:self.navigationController.view mode:MBProgressHUDModeDeterminateHorizontalBar duration:2 title:@"正在清理缓存中。。。。"];
-   
-}
-
-/**  打开珍藏VC*/
-- (void)callSaveViewController{
-//    self.homeVC.tableView.scrollEnabled  = NO;
-    // 隐藏左侧边栏
-    [self hideLeftView];
-    
-    XMSaveWebsTableViewController *saveVC = [[XMSaveWebsTableViewController alloc] init];
-    saveVC.delegate = self;
-    [self.navigationController pushViewController:saveVC animated:YES];
-    self.navigationItem.title = @"首页";
-    self.homeVC.tableView.scrollEnabled  = YES;
-}
+//- (void)conerAccessoryViewDidClickPlantedButton:(UIButton *)button{
+//    switch (button.tag) {
+//        case 1: // 打开珍藏
+//
+//            [self callSaveViewController];
+//            break;
+//
+//        case 2: // 删除缓存
+//
+//            [self clearCache];
+//            break;
+//
+//        case 3: // searchmode
+//            self.searchMode = !self.searchMode;
+//            if(self.searchMode){
+//                [MBProgressHUD showMessage:@"已打开searchMode" toView:self.view];
+//            }else{
+//                [MBProgressHUD showMessage:@"已关闭searchMode" toView:self.view];
+//            }
+//            break;
+//
+//        default:
+//            break;
+//    }
+//}
+//
+/////**  清除缓存*/
+////- (void)clearCache{
+////    // 清除用sd下载的cell头像（主要）  Library/Caches/default/com.hackemist.SDWebImageCache.default
+////    [[[SDWebImageManager sharedManager] imageCache] clearDiskOnCompletion:nil];
+////
+////    // 可有可无
+////    [[[SDWebImageManager sharedManager] imageCache] clearMemory];
+////
+////    // 不过这里要特别注意一下，在IOS7中你会发现使用这两个方法缓存总清除不干净，即使断网下还是会有数据。这是因为在IOS7中，缓存机制做了修改，使用上述两个方法只清除了SDWebImage的缓存，没有清除系统的缓存，所以我们可以在清除缓存的代理中额外添加以下：
+////
+////    // 清除uiwebview的图片缓存（系统方法） Library/Caches/Apple.343--------
+////    [[NSURLCache sharedURLCache] removeAllCachedResponses];
+////
+////    // 显示清理进度条
+////    [MBProgressHUD showProgressInView:self.navigationController.view mode:MBProgressHUDModeDeterminateHorizontalBar duration:2 title:@"正在清理缓存中。。。。"];
+////
+////}
+//
 
 #pragma mark UIGestureRecognizer delegate
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
@@ -626,35 +519,7 @@ static double leftViewAnimateTime = 0.25;
 }
 
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
-    if([gestureRecognizer isKindOfClass:[UISwipeGestureRecognizer class]]){
-        UISwipeGestureRecognizer *swip = (UISwipeGestureRecognizer *)gestureRecognizer;
-        if(swip.numberOfTouchesRequired >= 2){
-            self.homeVC.tableView.scrollEnabled = NO;
-        }
-    }
     return YES;
 }
 
-#pragma mark XMToolBoxViewControllerDelegate delegate
-- (void)toolboxButtonDidClick:(UIButton *)btn{
-    switch (btn.tag) {
-        case XMToolBoxTypeClipImg:{
-            // 裁剪图片
-            XMClipImageViewController *clipVC = [[XMClipImageViewController alloc] init];
-            clipVC.view.backgroundColor = [UIColor whiteColor];
-            [self.navigationController pushViewController:clipVC animated:YES];
-
-            break;
-        }
-        case XMToolBoxTypeWifiTransFiles:{
-            // wifi传输文件模块
-            XMWifiTransFileViewController *wifiTransVC = [[XMWifiTransFileViewController alloc] init];
-            [self.navigationController pushViewController:wifiTransVC animated:YES];
-            
-            break;
-        }
-        default:
-            break;
-    }
-}
 @end

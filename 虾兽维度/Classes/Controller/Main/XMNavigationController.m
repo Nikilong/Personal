@@ -74,24 +74,23 @@ UINavigationControllerDelegate>
     
     [super pushViewController:viewController animated:animated];
 
-    if (isHomeVC){
-        // 主页,不需要作任何处理,防止浮窗被遮挡
-        return;
-    }
+    // 隐藏tabbar
+    self.tabBarController.tabBar.hidden = YES;
     
     // 根据偏好设置是否有缓存,以及是否应该在该控制器显示,这两个因素去考虑是否显示浮窗
-    if([XMWXFloatWindowIconConfig isSaveFloatVCInUserDefaults]){
-        if ([self shoudHideFloatWindowInViewController:viewController]){
-            [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = YES;
-        }else{
-            [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = NO;
+    if([[NSUserDefaults standardUserDefaults] boolForKey:kCheckCreateFloatwindow]){
+        if([XMWXFloatWindowIconConfig isSaveFloatVCInUserDefaults]){
+            if ([self shoudHideFloatWindowInViewController:viewController]){
+                [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = YES;
+            }else{
+                [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = NO;
+            }
         }
     }
 }
 
 - (UIViewController *)popViewControllerAnimated:(BOOL)animated{
     UIViewController *viewController = [super popViewControllerAnimated:animated];
-   
     // 默认pop掉之后,如果存有浮窗,都应该显示浮窗
     if([XMWXFloatWindowIconConfig isSaveFloatVCInUserDefaults]){
         [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = NO;

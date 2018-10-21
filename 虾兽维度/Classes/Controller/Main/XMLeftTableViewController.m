@@ -53,7 +53,7 @@
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 3;
+    return 2;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
@@ -86,8 +86,6 @@
         if (indexPath.section == 1){
             XMChannelModel *model = self.specialChannelArr[indexPath.row];
             cell.textLabel.text = model.channel;
-        }else if (indexPath.section == 2){
-            cell.textLabel.text = @"工具箱";
         }
         
         return cell;

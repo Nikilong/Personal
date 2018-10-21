@@ -11,10 +11,7 @@
 
 @interface XMMainViewController : UIViewController <XMOpenWebmoduleProtocol>
 
-/** 公开让3Dtouch快速打开 */
-- (void)callSaveViewController;
-- (void)search:(UISwipeGestureRecognizer *)swip;
-- (void)scanQRCode;
-- (void)callToolBox;
+/// 搜索框
+- (void)callSearchView;
 
 @end

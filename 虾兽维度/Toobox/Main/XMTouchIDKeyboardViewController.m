@@ -7,7 +7,8 @@
 //
 
 #import "XMTouchIDKeyboardViewController.h"
-#import "XMToolBoxConfig.h"
+#import "XMToolboxModel.h"
+
 
 @interface XMTouchIDKeyboardViewController ()
 
@@ -212,7 +213,7 @@
         if (self.inputIndex == 4){
             NSString *password = @"";
             for (UIButton *clickBtn in self.clickBtnArr) {
-                password = [password stringByAppendingString:[NSString stringWithFormat:@"%zd",clickBtn.tag]];
+                password = [password stringByAppendingString:[NSString stringWithFormat:@"%ld",(long)clickBtn.tag]];
             }
 //            NSLog(@"-----%@",password);
             //此时需要验证密码,延迟执行
@@ -221,6 +222,7 @@
                     if ([self.delegate respondsToSelector:@selector(touchIDKeyboardViewAuthenSuccess)]){
                         
                         [self.delegate touchIDKeyboardViewAuthenSuccess];
+                        [self dismissViewControllerAnimated:YES completion:nil];
                     }
                 }else{
                     // 密码错误时清空选择数组,显示错误

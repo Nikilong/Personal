@@ -217,6 +217,12 @@ XMSaveGroupTableViewControllerDelegate
     [seg addTarget:self action:@selector(segmentedButtonDidClick:) forControlEvents:UIControlEventValueChanged];
     self.navigationItem.titleView = seg;
     
+    UIButton *leftBarBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 60, 30)];
+    [leftBarBtn setTitle:@"返回" forState:UIControlStateNormal];
+    [leftBarBtn setTitleColor:RGB(42, 122, 252) forState:UIControlStateNormal];
+    [leftBarBtn addTarget:self action:@selector(dismiss) forControlEvents:UIControlEventTouchUpInside];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:leftBarBtn];
+    
     UIButton *rightBarBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 60, 30)];
     [rightBarBtn setTitle:@"编辑" forState:UIControlStateNormal];
     [rightBarBtn setTitleColor:RGB(42, 122, 252) forState:UIControlStateNormal];
@@ -240,6 +246,14 @@ XMSaveGroupTableViewControllerDelegate
         [self.rightBarBtn setTitle:@"清除" forState:UIControlStateNormal];
     }
     [self.tableView reloadData];
+}
+
+/// 退出按钮
+- (void)dismiss{
+    if(self.navigationController){
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 /// 编辑/清理浏览记录
@@ -470,9 +484,9 @@ XMSaveGroupTableViewControllerDelegate
         }else if (self.sourceType == XMSaveVCDataSourceHistory){
             model = self.historyWebsArr[indexPath.row];
         }
-        
         // 打开一个webmodule
-        [XMWKWebViewController openWebmoduleWithURL:model.url isSearchMode:YES];
+        XMWKWebViewController *webmodule = (XMWKWebViewController *)[XMWKWebViewController webmoduleWithURL:model.url isSearchMode:YES];
+        [self.navigationController pushViewController:webmodule animated:YES];
     }
 }
 

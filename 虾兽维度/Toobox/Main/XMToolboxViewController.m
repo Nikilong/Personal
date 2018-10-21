@@ -10,11 +10,16 @@
 
 #import <LocalAuthentication/LocalAuthentication.h>
 #import "XMMainViewController.h"
-#import "XMButton.h"
+#import "XMToolboxModel.h"
 
 #import "XMTouchIDKeyboardViewController.h"
 #import "MBProgressHUD+NK.h"
 #import "XMDebugDefine.h"
+#import "XMImageUtil.h"
+
+
+#import "XMClipImageViewController.h"
+#import "XMWifiTransFileViewController.h"
 
 static NSString * const kAuthenCallBackNotificaiton = @"kAuthenCallBackNotificaiton";
 double const XMToolBoxViewAnimationTime = 0.2;
@@ -26,54 +31,66 @@ typedef NS_ENUM(NSUInteger, AuthenResultType) {
 };
 
 
-@interface XMToolboxViewController ()<XMTouchIDKeyboardViewControllerDelegate>
-
-// 工具箱面板整体
-@property (strong, nonatomic)  UIView *toolView;
-
-// 标记工具箱面板是否弹出
-@property (nonatomic, assign)  BOOL flat;
+@interface XMToolboxViewController ()<
+XMTouchIDKeyboardViewControllerDelegate,
+UIGestureRecognizerDelegate
+>
 
 // 记录当前点击的toolBox按钮
-@property (weak, nonatomic)  XMButton *clickBtn;
+@property (assign, nonatomic)  NSInteger clickIndex;
+
+@property (nonatomic, strong) NSArray *dataArr;
 
 @end
 
 @implementation XMToolboxViewController
 
+- (NSArray *)dataArr{
+    if (!_dataArr){
+        _dataArr = [XMToolboxModel toolboxModels];
+    }
+    return _dataArr;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    // 添加toolView,并且传递按钮的点击方法
-    [self initToolView];
-
+    self.tableView.rowHeight = 70;
+    self.navigationItem.title = @"工具箱";
+    
     // 观察指纹登录通知
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(authenticationCallBack:) name:kAuthenCallBackNotificaiton object:self];
+    
+    // 3指上划快捷打开工具箱手势
+    UISwipeGestureRecognizer *toolboxSwip = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(test)];
+    toolboxSwip.numberOfTouchesRequired = 3;
+    // 必须要实现一个代理方法支持多手势,这时候3指下滑同时也会触发单指滚动tableview
+    toolboxSwip.delegate = self;
+    toolboxSwip.direction = UISwipeGestureRecognizerDirectionUp;
+    [self.view addGestureRecognizer:toolboxSwip];
 
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
+- (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-      
-    // 显示工具箱菜单整体
-    [self showToolView:YES caller:nil dismiss:NO];
     
 }
 
-- (void)viewDidAppear:(BOOL)animated
-{
+- (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
+    self.tabBarController.tabBar.hidden = NO;
     
+}
+
+- (void)viewDidDisappear:(BOOL)animated{
+    [super viewDidDisappear:animated];
     
-    // 添加点击取消手势
-    UITapGestureRecognizer *tapToCancel = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(cancelTool)];
-    [self.view addGestureRecognizer:tapToCancel];
-    UISwipeGestureRecognizer *swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(aaa)];
-    swipe.direction = UISwipeGestureRecognizerDirectionUp;
-    swipe.numberOfTouchesRequired = 3;
-    [self.view addGestureRecognizer:swipe];
-    [tapToCancel requireGestureRecognizerToFail:swipe];
+}
+
+- (void)test{
+    if([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"xmweb://"]]){
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"xmweb://"]];
+    }
 }
 
 - (void)dealloc{
@@ -81,145 +98,60 @@ typedef NS_ENUM(NSUInteger, AuthenResultType) {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kAuthenCallBackNotificaiton object:self];
 }
 
-#pragma mark - 工具箱面板整体
-#pragma mark 创建工具箱面板
-/** 初始化工具箱面板 */
-- (void)initToolView
-{
-    CGFloat btnWH = 58;         // 工具箱按钮宽高,根据bundle下toolBixIcons文件夹的图标确定
-    CGFloat btnLabelH = 20;     // 工具箱按钮标签高度
-    CGFloat padding = 10;       // 间隙
-    NSUInteger colMaxNum = 4;   // 每行允许排列的图标个数
-    
-    // 工具箱菜单栏整体
-    UIView *toolView = [[UIView alloc] init];
-    [self.view addSubview:toolView];
-    toolView.backgroundColor = [UIColor clearColor];
-    self.toolView = toolView;
-    
-    // 工具箱按钮参数
-    NSArray *btnParams = [XMToolBoxConfig toolBoxs];
-    NSUInteger btnNum = btnParams.count;
-    
-    // 工具箱按钮菜单栏,ipad限制为宽度为400
-    CGFloat toolMenuVW = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) ? [UIScreen mainScreen].bounds.size.width : 400;
-    CGFloat toolBtnMarginX;
-    CGFloat toolBtnMarginY;
-    if (btnNum < colMaxNum)  // 图标小于每行最大数时居中显示
-    {
-        toolBtnMarginX = (toolMenuVW - btnNum * btnWH) / (btnNum + 1);
-        toolBtnMarginY = 2 * padding;
-    }else
-    {
-        toolBtnMarginX = (toolMenuVW - colMaxNum * btnWH) / (colMaxNum + 1);
-        toolBtnMarginY = toolBtnMarginX;
+#pragma mark - 
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+    return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    return self.dataArr.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    static NSString *ID = @"toolboxCell";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ID];
+    if (!cell){
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:ID];
     }
-    CGFloat toolMenuVH = (btnWH + btnLabelH + padding) * ((btnNum + colMaxNum - 1) / colMaxNum) + 2 * toolBtnMarginY - padding;
-    CGFloat toolMenuX = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) ? 0 : ([UIScreen mainScreen].bounds.size.width - toolMenuVW) * 0.5;
-    
-    UIView *toolMenuV = [[UIView alloc] initWithFrame:CGRectMake(toolMenuX, 0, toolMenuVW, toolMenuVH)];
-    [toolView addSubview:toolMenuV];
-    toolMenuV.backgroundColor = [UIColor whiteColor];
-    
-    // 添加按钮
-    CGFloat btnX;
-    CGFloat btnY;
-    for (int i = 0; i < btnNum; i++)
-    {
-        NSDictionary *dict = btnParams[i];
-        btnX = toolBtnMarginX + (btnWH + toolBtnMarginX) * (i % colMaxNum);
-        btnY = toolBtnMarginY + (btnWH + btnLabelH + padding) * (i / colMaxNum);
-        // 工具箱按钮
-        XMButton *btn = [[XMButton alloc] initWithFrame:CGRectMake(btnX, btnY, btnWH, btnWH)];
-        [toolMenuV addSubview:btn];
-    
-        btn.tag = [dict[ToolBox_kType] integerValue];
-        btn.authentication = ([dict[ToolBox_kAuth] integerValue] == XMToolBoxAuthenTypeNeed) ? YES : NO;
-        UIImage *iconImage = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"tool_icon_%zd.png",btn.tag] ofType:nil]];
-        [btn setImage:iconImage forState:UIControlStateNormal];
-        [btn addTarget:self action:@selector(toolButtonDidClick:) forControlEvents:UIControlEventTouchDown];
-        
-        // 按钮下标签
-        UILabel *btnL = [[UILabel alloc] initWithFrame:CGRectMake(btnX - 0.5 * toolBtnMarginX, CGRectGetMaxY(btn.frame), btnWH + toolBtnMarginX, btnLabelH)];
-        btnL.numberOfLines = 0;
-        btnL.lineBreakMode = NSLineBreakByWordWrapping;
-        btnL.text = dict[ToolBox_kName];
-        btnL.tintColor = [UIColor blackColor];
-        btnL.textAlignment = NSTextAlignmentCenter;
-        btnL.font = [UIFont systemFontOfSize:11];
-        [toolMenuV addSubview:btnL];
-    }
-    
-    CGFloat toolViewH = CGRectGetMaxY(toolMenuV.frame) - CGRectGetMinY(toolMenuV.frame);
-    toolView.frame = CGRectMake(0, [UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width, toolViewH);
+    XMToolboxModel *model = self.dataArr[indexPath.row];
+    cell.textLabel.text = model.title;
+    cell.imageView.image = [UIImage imageNamed:model.image];
+    return cell;
 }
 
-- (void)aaa{
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"test" object:nil];
-    [self cancelTool];
-}
-
-#pragma mark 弹出或隐藏
-/** 隐藏或者隐藏工具箱面板整体 */
-- (void)showToolView:(BOOL)result caller:(UIButton *)button dismiss:(BOOL)flag{
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    XMToolboxModel *model = self.dataArr[indexPath.row];
+    self.clickIndex = indexPath.row;
     
-    if(result){
-        // 显示工具箱菜单
-        // 菜单栏整体上升
-        [UIView animateWithDuration:XMToolBoxViewAnimationTime animations:^{
-    
-            if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){
-                // iphone在最底下显示工具箱菜单
-                self.toolView.transform = CGAffineTransformMakeTranslation(0, -self.toolView.frame.size.height);
-            }else if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
-                
-                // ipad显示在屏幕中央
-                self.toolView.transform = CGAffineTransformMakeTranslation(0, -( [UIScreen mainScreen].bounds.size.height + self.toolView.frame.size.height ) * 0.5);
-            }
-        }];
-        
-    }else{ // 隐藏工具箱菜单
-        [UIView animateWithDuration:XMToolBoxViewAnimationTime animations:^{
-            self.toolBoxViewCover.alpha = 0.0;
-            self.toolView.transform = CGAffineTransformIdentity;
-        }completion:^(BOOL finished) {
-            // 移除蒙板
-            [self.toolBoxViewCover removeFromSuperview];
-            if (flag){
-            
-                [self dismissViewControllerAnimated:YES completion:nil];
-            }
-        }];
-        
-    }
-}
-#pragma mark 点击事件
-
-/**  取消工具箱 */
-- (void)cancelTool
-{
-    [self showToolView:NO caller:nil dismiss:YES];
-}
-
-// toolbox上面的按钮的点击事件
-- (void)toolButtonDidClick:(XMButton *)btn{
-    // 标记当前被点击的按钮
-    self.clickBtn = btn;
-    // 该工具是否需要指纹验证
-    if (btn.authentication){
-
+    if (model.authenType == XMToolBoxAuthenTypeNeed){
         [self loadAuthentication];
-        
     }else{
-    
-        if ([self.delegate respondsToSelector:@selector(toolboxButtonDidClick:)]){
-            [self.delegate toolboxButtonDidClick:btn];
-        }
-        [self showToolView:NO caller:btn dismiss:YES];
+        [self cellDidClickWithIndex:model.tag];
     }
-
 }
 
+- (void)cellDidClickWithIndex:(NSInteger )index{
+    XMToolboxModel *model = self.dataArr[index];
+    switch (model.type) {
+        case XMToolBoxTypeClipImg:{
+            // 裁剪图片
+            XMClipImageViewController *clipVC = [[XMClipImageViewController alloc] init];
+            clipVC.view.backgroundColor = [UIColor whiteColor];
+            [self.navigationController pushViewController:clipVC animated:YES];
+            
+            break;
+        }
+        case XMToolBoxTypeWifiTransFiles:{
+            // wifi传输文件模块
+            XMWifiTransFileViewController *wifiTransVC = [[XMWifiTransFileViewController alloc] init];
+            [self.navigationController pushViewController:wifiTransVC animated:YES];
+            
+            break;
+        }
+        default:
+            break;
+    }
+}
 
 #pragma mark - 指纹验证
 
@@ -235,19 +167,13 @@ typedef NS_ENUM(NSUInteger, AuthenResultType) {
     switch (result) {
         case AuthenResultTypeSuccess:{ //验证成功
             dispatch_async(dispatch_get_main_queue(), ^{
-                
-                [self dismissViewControllerAnimated:YES completion:^{
-                    
-                    if([self.delegate respondsToSelector:@selector(toolboxButtonDidClick:)]){
-                        [self.delegate toolboxButtonDidClick:self.clickBtn];
-                    }
-                }];
+                [self cellDidClickWithIndex:self.clickIndex];
             });
             break;
         }
         case AuthenResultTypeFail:{ // 验证失败,3次错误,按下home键,点击"取消",点击'键盘输入'
             NSError *error = noti.userInfo[@"error"];
-            NSLog(@"~~~fail---code:%zd  text:%@",error.code,error.localizedDescription);
+            NSLog(@"~~~fail---code:%ld  text:%@",(long)error.code,error.localizedDescription);
             switch (error.code) {
                 case LAErrorSystemCancel:{
                     NSLog(@"Authentication was cancelled by the system");
@@ -287,7 +213,7 @@ typedef NS_ENUM(NSUInteger, AuthenResultType) {
         }
         case AuthenResultTypeUnsupport:{ // 不支持指纹验证或者未设置指纹或者5次错误touchID被锁
             NSError *error = noti.userInfo[@"error"];
-            NSLog(@"~~~unsupp---code:%zd  text:%@",error.code,error.localizedDescription);
+            NSLog(@"~~~unsupp---code:%ld  text:%@",(long)error.code,error.localizedDescription);
             // 是否应该显示指纹登录按钮
             BOOL showTouchIDBtn = NO;
             //不支持指纹识别，LOG出错误详情
@@ -338,18 +264,13 @@ typedef NS_ENUM(NSUInteger, AuthenResultType) {
             UIAlertView *ale = [[UIAlertView alloc] initWithTitle:@"提醒" message:msg delegate:self cancelButtonTitle:@"取消" otherButtonTitles:nil, nil];
             [ale show];
         }
-        
-        [self showToolView:NO caller:self.clickBtn dismiss:!touchIDKeyboardFlag];
     });
 
 }
 
 
-/**
- * 指纹登录验证
- */
-- (void)loadAuthentication
-{
+/// 指纹登录验证
+- (void)loadAuthentication{
     LAContext *context = [[LAContext alloc] init]; //这个属性是设置指纹输入失败之后的弹出框的选项
     context.localizedFallbackTitle = @"输入密码";
     NSError *error = nil;
@@ -383,11 +304,14 @@ typedef NS_ENUM(NSUInteger, AuthenResultType) {
     
 }
 
+#pragma mark - UIGestureRecognizerDelegate
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+    return YES;
+}
+
 #pragma mark - XMTouchIDKeyboardViewControllerDelegate
 - (void)touchIDKeyboardViewControllerDidDismiss{
-
     [self dismissViewControllerAnimated:YES completion:nil];
-
 }
 
 // 验证成功

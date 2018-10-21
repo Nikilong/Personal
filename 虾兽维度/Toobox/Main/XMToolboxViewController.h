@@ -7,23 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "XMToolBoxConfig.h"
 
 extern double const XMToolBoxViewAnimationTime;
 
 typedef void(^touchIDCallbackBlock)(BOOL);
-@protocol XMToolBoxViewControllerDelegate <NSObject>
 
-- (void)toolboxButtonDidClick:(UIButton *)btn;
-
-@end
-
-@interface XMToolboxViewController : UIViewController
-
-// 蒙板
-@property (weak, nonatomic)  UIView *toolBoxViewCover;
-
-@property (weak, nonatomic)  id<XMToolBoxViewControllerDelegate> delegate;
+@interface XMToolboxViewController : UITableViewController
 
 @property (nonatomic, copy) touchIDCallbackBlock callbackBlock;
 

@@ -49,7 +49,7 @@ UIImagePickerControllerDelegate
     
     // 添加从相册中识别二维码
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"相册" style:UIBarButtonItemStylePlain target:self action:@selector(dealAlbumPicture)];
-    
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStylePlain target:self action:@selector(dismiss)];
 }
 
 
@@ -225,6 +225,14 @@ UIImagePickerControllerDelegate
     [self presentViewController:ipc animated:YES completion:nil];
 
     
+}
+
+/// 退出按钮
+- (void)dismiss{
+    if(self.navigationController){
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark -- <UIImagePickerControllerDelegate>
