@@ -249,7 +249,7 @@
 
 /// 将图片(UIImage)保存到设备相册
 + (void)saveToAlbumWithImage:(UIImage *)image{
-    UIViewController *vc = [UIApplication sharedApplication].keyWindow.rootViewController;
+    UIViewController *vc = [UIApplication sharedApplication].keyWindow.rootViewController.childViewControllers[0];
     
     //要保存到本地相册,控制器必须实现@selector(image:didFinishSavingWithError:contextInfo:),目前指定到XMNavigationController
     if([vc isKindOfClass:NSClassFromString(@"XMNavigationController")]){

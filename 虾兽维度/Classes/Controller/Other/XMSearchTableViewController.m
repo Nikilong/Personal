@@ -96,7 +96,8 @@ static NSString *const kEngine = @"engine";
     // 设置导航栏
     [self setNavItem];
     // 默认初始搜索引擎为必应
-    self.selectEngine = @"http://cn.bing.com/search?q=";
+    self.selectEngine = @"https://www.baidu.com/s?ie=UTF-8&wd=";
+//    self.selectEngine = @"http://cn.bing.com/search?q=";
     // 添加右划dismiss手势
     UISwipeGestureRecognizer *swip = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(cancel)];
     swip.delegate = self;

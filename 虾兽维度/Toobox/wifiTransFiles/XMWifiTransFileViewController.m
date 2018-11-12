@@ -1188,6 +1188,17 @@ UIGestureRecognizerDelegate>
                 }]];
             }
         }
+        if([model.fileType isEqualToString:fileTypeImageName]){
+            [tips addAction:[UIAlertAction actionWithTitle:@"保存" style: UIAlertActionStyleDefault  handler:^(UIAlertAction * _Nonnull action){
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if([model.fileName.pathExtension.lowercaseString isEqualToString:@"gif"]){
+                        [XMImageUtil saveGifToAlbumWithURL:model.fullPath];
+                    }else{
+                        [XMImageUtil saveToAlbumWithImage:[UIImage imageWithContentsOfFile:model.fullPath]];
+                    }
+                });
+            }]];
+        }
         
         [self presentViewController:tips animated:YES completion:nil];
     
