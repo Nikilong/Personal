@@ -54,6 +54,7 @@ UIGestureRecognizerDelegate>
 @property (nonatomic, assign)  BOOL connectServerFlag;      // 是否与电脑端服务器连接
 @property (nonatomic, copy)  NSString *serverURL;      // 电脑端服务器地址
 @property (weak, nonatomic)  UIButton *navWifiBtn;     // 导航栏wifi按钮
+@property (nonatomic, assign)  NSUInteger uploadCount;      // 上传的文件数的统计
 
 @property (weak, nonatomic)  UIView *toolBar;                // 批量编辑下的工具条
 @property (weak, nonatomic)  UIButton *toolBarDeleBtn;       // 工具条删除按钮
@@ -292,7 +293,7 @@ UIGestureRecognizerDelegate>
     UIBarButtonItem *wifiBarBtn = [[UIBarButtonItem alloc] initWithCustomView:wifiBtn];
     // 从相册添加图片
     UIBarButtonItem *addBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addImageFromAlbum)];
-    // 排序
+    // 排序 file_sort
     UIBarButtonItem *sortBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(sortFiles)];
     self.navigationItem.rightBarButtonItems = @[wifiBarBtn,addBtn,sortBtn];
     
@@ -464,6 +465,7 @@ UIGestureRecognizerDelegate>
     
 /// 上传动画开始
 - (void)startUploadAnimate{
+    [self.navWifiBtn.imageView.layer removeAllAnimations];
     [self.navWifiBtn setImage:[UIImage imageNamed:@"wifiopen_upload"] forState:UIControlStateSelected];
     CABasicAnimation* rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
     rotationAnimation.toValue = [NSNumber numberWithFloat: M_PI * 2.0];
@@ -628,9 +630,15 @@ UIGestureRecognizerDelegate>
     // 先对数组进行降序处理,将indexPath.row最大(即最底下的数据先删除),防止序号紊乱
     NSArray *sortArr = [self sortArray:seleArr];
     if (seleArr.count > 0){
+        self.uploadCount = seleArr.count;
+        [self startUploadAnimate];
+        // 另开队列,因为要sleep,否则主线程sleep那么animate不执行
+        dispatch_queue_t queT = dispatch_queue_create("upload", DISPATCH_QUEUE_SERIAL);
         for (NSIndexPath *indexPath in sortArr){
-            [self sendFileToServer:indexPath];
-            sleep(2);
+            dispatch_async(queT, ^{
+                [self sendFileToServer:indexPath];
+                [NSThread sleepForTimeInterval:2.0];
+            });
         }
     }
     [self cancelEdit:nil];
@@ -1163,6 +1171,8 @@ UIGestureRecognizerDelegate>
             [weakSelf shareFileAtIndexPath:indexPath];
         }]];
         [tips addAction:[UIAlertAction actionWithTitle:@"上传" style: UIAlertActionStyleDefault  handler:^(UIAlertAction * _Nonnull action){
+            weakSelf.uploadCount = 1;
+            [weakSelf startUploadAnimate];
             [weakSelf sendFileToServer:indexPath];
         }]];
         
@@ -1303,7 +1313,10 @@ UIGestureRecognizerDelegate>
         __weak typeof(self) weakSelf = self;
         NSURLSessionUploadTask *task = [session uploadTaskWithRequest:mutableRequest fromData:nil completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                [weakSelf stopUploadAnimate];
+                weakSelf.uploadCount--;
+                if(weakSelf.uploadCount == 0){
+                    [weakSelf stopUploadAnimate];
+                }
                 if(error){
                     [MBProgressHUD showFailed:nil];
                 }else{
@@ -1312,8 +1325,6 @@ UIGestureRecognizerDelegate>
             });
         }];
         [task resume];
-        // 开始上传动画
-        [self startUploadAnimate];
     }else{
         [self connnectToServer];
     }
