@@ -175,7 +175,7 @@ static double leftViewAnimateTime = 0.25;
     // 设置频道的样式
     NSMutableDictionary *dictChannel = [NSMutableDictionary dictionary];
     dictChannel[NSFontAttributeName] = [UIFont systemFontOfSize:13];
-    dictChannel[NSForegroundColorAttributeName] = [UIColor orangeColor];
+    dictChannel[NSForegroundColorAttributeName] = [UIColor lightGrayColor];
     [str setAttributes:dictChannel range:NSMakeRange(titleCount + 1, channel.length)];
     label.attributedText = str;
     self.navigationItem.titleView = label;

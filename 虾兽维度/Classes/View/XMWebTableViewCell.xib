@@ -32,7 +32,7 @@
                             <constraint firstAttribute="width" constant="62" id="PTh-y0-RXA"/>
                         </constraints>
                         <fontDescription key="fontDescription" type="system" pointSize="9"/>
-                        <color key="textColor" red="1" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="placehoder" translatesAutoresizingMaskIntoConstraints="NO" id="vGR-pz-o7w">
@@ -48,7 +48,7 @@
                             <constraint firstAttribute="height" constant="14" id="w0U-Wu-M50"/>
                         </constraints>
                         <fontDescription key="fontDescription" type="system" pointSize="9"/>
-                        <color key="textColor" red="0.058823529409999999" green="0.36862745099999999" blue="0.96078431369999995" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="奔跑的猪~~~~~~~~" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RUr-gx-qDO">
@@ -63,7 +63,7 @@
                             <constraint firstAttribute="height" constant="14" id="EEW-Fh-zTg"/>
                         </constraints>
                         <fontDescription key="fontDescription" type="system" pointSize="9"/>
-                        <color key="textColor" red="1" green="0.5" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <nil key="highlightedColor"/>
                     </label>
                 </subviews>
