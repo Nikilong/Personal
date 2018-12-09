@@ -12,7 +12,7 @@
 /** 以下的宏定义用来做测试,正式环境需要全部注释掉 */
 
 /// 打开app自动刷新新闻关闭
-#define XMLauchAutoRefrehFobiden
+//#define XMLauchAutoRefrehFobiden
 
 /// 首页的控制器
 //#define XMDebugHomeVC

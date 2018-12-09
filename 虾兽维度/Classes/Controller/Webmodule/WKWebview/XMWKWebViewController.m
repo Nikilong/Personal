@@ -22,6 +22,7 @@
 #import "XMDropView.h"
 #import "XMSearchTableViewController.h"
 #import <WebKit/WebKit.h>
+#import <ImageIO/ImageIO.h>
 #import "NSURLProtocol+WKWebview.h"
 #import "XMVisualView.h"
 #import "XMPhotoCollectionViewController.h"
