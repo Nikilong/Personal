@@ -119,9 +119,10 @@ XMOpenWebmoduleProtocol
     
 }
 - (void)callScanQRCode{
-    XMQRCodeViewController *qrVC  = [[XMQRCodeViewController alloc] init];
-    XMNavigationController *nav = [[XMNavigationController alloc] initWithRootViewController:qrVC];
-    [self presentViewController:nav animated:YES completion:nil];
+    
+    self.selectedIndex = 0;
+    XMMainViewController *mainVC = (XMMainViewController *)self.selectedViewController.childViewControllers[0];
+    [mainVC scanQRCode];
 
 }
 - (void)callToolbox{

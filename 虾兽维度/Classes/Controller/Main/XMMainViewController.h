@@ -13,5 +13,6 @@
 
 /// 搜索框
 - (void)callSearchView;
+- (void)scanQRCode;
 
 @end

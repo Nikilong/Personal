@@ -210,7 +210,7 @@ static double leftViewAnimateTime = 0.25;
     // 创建左侧边栏
     self.leftVC = [[XMLeftTableViewController alloc] initWithStyle:UITableViewStyleGrouped];
     self.leftVC.delegate = self;
-    self.leftVC.view.frame = CGRectMake(XMLeftViewPadding, 40, XMLeftViewTotalW - 2 *XMLeftViewPadding, XMScreenH - XMLeftViewPadding - XMStatusBarHeight);
+    self.leftVC.view.frame = CGRectMake(XMLeftViewPadding, 40, XMLeftViewTotalW - 2 *XMLeftViewPadding, XMScreenH - XMLeftViewPadding - XMStatusBarHeight - (isIphoneX ? 83 : 49));
     [self.leftContentView addSubview:self.leftVC.view];
     
     // 添加到导航条之上
@@ -252,7 +252,9 @@ static double leftViewAnimateTime = 0.25;
             [weakSelf openWebmoduleRequest:model];
         }]];
         
-        [weakSelf presentViewController:tips animated:YES completion:nil];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf presentViewController:tips animated:YES completion:nil];
+        });
 
     };
     UILabel *titleLab = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 60, 44)];
