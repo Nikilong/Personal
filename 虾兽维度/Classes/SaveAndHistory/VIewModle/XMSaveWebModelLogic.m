@@ -182,7 +182,7 @@ NSString *const XMSavewebsDefaultGroupName = @"收藏";
 + (void)saveHistoryUrl:(NSString *)url title:(NSString *)title{
     // 读取旧数据
     NSMutableArray *oldArr = [NSMutableArray arrayWithArray:[self getHistoryUrlArray]];
-    [oldArr insertObject:@{@"url":url,@"title":title} atIndex:0];
+    [oldArr insertObject:@{@"url":url,@"title":title ? title : @"无标题"} atIndex:0];
     // 暂时设定为保存100条记录
     if(oldArr.count > 100){
         [oldArr removeLastObject];

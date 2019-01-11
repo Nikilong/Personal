@@ -493,6 +493,15 @@ static double backForwardSafeDistance = 80.0;
 #pragma mark - 提供一个类方法让外界创建webmodule
 + (UIViewController *)webmoduleWithModel:(XMWebModel *)model{
     AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    
+    // 如果module为空,则返回上一个缓存的webmodule
+    if(model == nil){
+        if(app.tempWebModuleVC){
+            return app.tempWebModuleVC;
+        }
+        return  nil;
+    }
+    
     // 先判断是否和上一个pop掉的webmodule的url相同,相同的话就不必再去重复加载
     if ([app.tempWebModuleVC.originURL.absoluteString isEqualToString:model.webURL.absoluteString]){
         return app.tempWebModuleVC;
@@ -1151,6 +1160,9 @@ static double backForwardSafeDistance = 80.0;
 
 /// 提取所有图片的url
 - (void)getImageurlFromHtml:(NSString *)webString{
+    // 网页内容为空时返回
+    if(webString == nil) return;
+    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
         NSMutableArray * imageurlArray = [NSMutableArray array];

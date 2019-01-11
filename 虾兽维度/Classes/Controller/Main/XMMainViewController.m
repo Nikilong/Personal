@@ -144,9 +144,14 @@ static double leftViewAnimateTime = 0.25;
 /** 添加手势*/
 - (void)addGesture{
     // 左侧抽屉手势
-    UISwipeGestureRecognizer *swip = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(showLeftView)];
-    [self.view addGestureRecognizer:swip];
+    UISwipeGestureRecognizer *swipR = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(showLeftView)];
+    swipR.direction = UISwipeGestureRecognizerDirectionRight;
+    [self.view addGestureRecognizer:swipR];
     
+    // 左滑返回上一个缓存页面
+    UISwipeGestureRecognizer *swipL = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(showPreWkmodule)];
+    swipL.direction = UISwipeGestureRecognizerDirectionLeft;
+    [self.view addGestureRecognizer:swipL];
 }
 
 /** 设置导航栏扫描二维码和搜索按钮 */
@@ -342,6 +347,11 @@ static double leftViewAnimateTime = 0.25;
     }
 }
 
+#pragma mark 左滑返回上一个缓存webmodule
+- (void)showPreWkmodule{
+    [self openWebmoduleRequest:nil];
+}
+
 #pragma mark 左侧栏
 #warning note 1，这里用到navigationController，若这时候leftVC是self的childviewcontroller，则会冲突，系统建议navigationController是leftVC的父控制器。2，在这里插入蒙板最准确，在init里面可能不准确
 /** 显示左侧边栏 */
@@ -391,7 +401,9 @@ static double leftViewAnimateTime = 0.25;
     // 调用webmodule的类方法
 //    [XMWKWebViewController openWebmoduleWithModel:webModel viewController:self];
     XMWKWebViewController *webmodule = (XMWKWebViewController *)[XMWKWebViewController webmoduleWithModel:webModel];
-    [self.navigationController pushViewController:webmodule animated:YES];
+    if(webmodule){
+        [self.navigationController pushViewController:webmodule animated:YES];
+    }
 }
 
 #pragma mark leftTableViewController delegate
