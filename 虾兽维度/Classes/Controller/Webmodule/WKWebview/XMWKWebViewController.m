@@ -1140,17 +1140,22 @@ static double backForwardSafeDistance = 80.0;
     
 }
 
-/// 检查是否有图片组
+/// 检查是否有图片组,有图片组禁用网页原生弹框
 - (void)checkImagesMode{
     __weak typeof(self) weakSelf = self;
     [self.wkWebview evaluateJavaScript:@"function xmGetImagesUrl(){var imageList = xissJsonData.images;var imageURLList = new Array();for (i=0;i<imageList.length;i++){imageURLList.push(imageList[i].url);};return imageURLList;};xmGetImagesUrl();" completionHandler:^(id _Nullable result, NSError * _Nullable error) {
         NSArray  *imageArr = [NSArray arrayWithArray:result];
         if(imageArr.count > 0){
             weakSelf.imageArr = [imageArr copy];
+            [weakSelf.wkWebview evaluateJavaScript:@"document.documentElement.style.webkitTouchCallout='none';" completionHandler:nil];
         }else{
             // TODO:正则表达式提取所有图片的url,效果不理想,先屏蔽
             [weakSelf.wkWebview evaluateJavaScript:@"document.documentElement.innerHTML" completionHandler:^(id _Nullable result, NSError * _Nullable error) {
-                [weakSelf getImageurlFromHtml:result];
+                
+                if(result){
+                    [weakSelf.wkWebview evaluateJavaScript:@"document.documentElement.style.webkitTouchCallout='none';" completionHandler:nil];
+                    [weakSelf getImageurlFromHtml:result];
+                }
             }];
         }
     }];
