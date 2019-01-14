@@ -134,6 +134,7 @@ UIImagePickerControllerDelegate
     // 会频繁的扫描，调用代理方法
     // 1. 如果扫描完成，停止会话
     [self.session stopRunning];
+    self.session = nil;
     // 2. 删除预览图层
     [self.previewLayer removeFromSuperlayer];
     

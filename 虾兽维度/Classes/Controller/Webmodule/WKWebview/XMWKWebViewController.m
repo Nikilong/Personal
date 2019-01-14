@@ -153,7 +153,7 @@ static double backForwardSafeDistance = 80.0;
         
         NSMutableString*javascript = [NSMutableString string];
         //禁止长按弹出
-        [javascript appendString:@"document.documentElement.style.webkitTouchCallout='none';"];
+//        [javascript appendString:@"document.documentElement.style.webkitTouchCallout='none';"];
         //javascript 注入
         WKUserScript *noneSelectScript = [[WKUserScript alloc] initWithSource:javascript injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:YES];
         
@@ -175,12 +175,6 @@ static double backForwardSafeDistance = 80.0;
 //        _wkWebview.allowsBackForwardNavigationGestures = YES;
         // 初始化标记,能够加载
         self.canLoad = YES;
-
-        // 添加长按手势
-        UILongPressGestureRecognizer *longP = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
-        longP.delegate = self;
-//        longP.minimumPressDuration = 0.25;
-        [_wkWebview addGestureRecognizer:longP];
 
         // 添加双击恢复缩放大小
         UITapGestureRecognizer *tapDouble = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTapToScaleIdentity)];
@@ -1147,19 +1141,28 @@ static double backForwardSafeDistance = 80.0;
         NSArray  *imageArr = [NSArray arrayWithArray:result];
         if(imageArr.count > 0){
             weakSelf.imageArr = [imageArr copy];
-            [weakSelf.wkWebview evaluateJavaScript:@"document.documentElement.style.webkitTouchCallout='none';" completionHandler:nil];
+            [self addCustomerLongPress];
         }else{
             // TODO:正则表达式提取所有图片的url,效果不理想,先屏蔽
             [weakSelf.wkWebview evaluateJavaScript:@"document.documentElement.innerHTML" completionHandler:^(id _Nullable result, NSError * _Nullable error) {
-                
                 if(result){
-                    [weakSelf.wkWebview evaluateJavaScript:@"document.documentElement.style.webkitTouchCallout='none';" completionHandler:nil];
+                    [self addCustomerLongPress];
                     [weakSelf getImageurlFromHtml:result];
                 }
             }];
         }
     }];
     
+}
+
+/// 添加自定义弹框
+- (void)addCustomerLongPress{
+    [self.wkWebview evaluateJavaScript:@"document.documentElement.style.webkitTouchCallout='none';" completionHandler:nil];
+    // 添加长按手势
+    UILongPressGestureRecognizer *longP = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
+    longP.delegate = self;
+    //        longP.minimumPressDuration = 0.25;
+    [self.wkWebview addGestureRecognizer:longP];
 }
 
 
