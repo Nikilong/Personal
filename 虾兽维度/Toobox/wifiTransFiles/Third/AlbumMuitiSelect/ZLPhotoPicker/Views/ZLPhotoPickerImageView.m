@@ -12,6 +12,7 @@
 
 @property (nonatomic , weak) UIView *maskView;
 @property (nonatomic , weak) UIImageView *tickImageView;
+@property (nonatomic , weak) UIImageView *gifIcon;
 
 @end
 
@@ -21,6 +22,15 @@
     if (self = [super initWithFrame:frame]) {
         self.contentMode = UIViewContentModeScaleAspectFill;
         self.clipsToBounds = YES;
+        
+        CGFloat gifIconW = 30;
+        CGFloat gifIconH = 14;
+        CGFloat padding = 3;
+        UIImageView *gifImagV = [[UIImageView alloc] initWithFrame:CGRectMake(frame.size.width - gifIconW - padding, frame.size.height - gifIconH - padding, gifIconW, gifIconH)];
+        self.gifIcon = gifImagV;
+        gifImagV.image = [UIImage imageNamed:@"AssetsPickerGifIcon"];
+        gifImagV.hidden = YES;
+        [self addSubview:gifImagV];
     }
     return self;
 }
@@ -74,7 +84,11 @@
     _animationRightTick = animationRightTick;
     self.tickImageView.hidden = !animationRightTick;
 }
+
+- (void)setIsGif:(BOOL)isGif{
+    _isGif = isGif;
+    if(isGif){
+        self.gifIcon.hidden = NO;
+    }
+}
 @end
-// 版权属于原作者
-// http://code4app.com (cn) http://code4app.net (en)
-// 发布代码于最专业的源码分享网站: Code4App.com

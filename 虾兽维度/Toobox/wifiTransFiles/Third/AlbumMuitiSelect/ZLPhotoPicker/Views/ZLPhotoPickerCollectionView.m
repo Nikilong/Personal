@@ -98,6 +98,7 @@
     ZLPhotoAssets *asset = self.dataArray[indexPath.item];
     if ([asset isKindOfClass:[ZLPhotoAssets class]]) {
         cellImgView.image = asset.aspectRatioThumbnail;
+        cellImgView.isGif = asset.isGif;
     }
     
     return cell;

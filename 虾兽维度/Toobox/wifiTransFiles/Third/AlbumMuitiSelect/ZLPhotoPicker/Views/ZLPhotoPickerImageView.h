@@ -27,6 +27,10 @@
  */
 @property (nonatomic , assign) BOOL animationRightTick;
 
+/// 是否是gif
+@property (nonatomic, assign)  BOOL isGif;
+
+
 @end
 // 版权属于原作者
 // http://code4app.com (cn) http://code4app.net (en)
