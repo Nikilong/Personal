@@ -16,5 +16,6 @@ extern NSString *const XMSwitchFloatButtonNotification;
 
 + (instancetype)cellWithTableView:(UITableView *)tableView;
 @property (weak, nonatomic) IBOutlet UIButton *addLeftNewChannelBtn;
+@property (weak, nonatomic) IBOutlet UILabel *stepCountLab;
 
 @end

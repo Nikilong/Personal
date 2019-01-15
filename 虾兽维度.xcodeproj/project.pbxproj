@@ -217,6 +217,8 @@
 		FD05F3D72154F60A008EAD89 /* UIImage+YYWebImage.m in Sources */ = {isa = PBXBuildFile; fileRef = FD05F3C42154F609008EAD89 /* UIImage+YYWebImage.m */; };
 		FD05F3D82154F60A008EAD89 /* CALayer+YYWebImage.m in Sources */ = {isa = PBXBuildFile; fileRef = FD05F3C52154F609008EAD89 /* CALayer+YYWebImage.m */; };
 		FD05F3D92154F60A008EAD89 /* YYWebImageOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = FD05F3C72154F609008EAD89 /* YYWebImageOperation.m */; };
+		FD0E485C21EDC10D009BCEAD /* XMHealthTool.m in Sources */ = {isa = PBXBuildFile; fileRef = FD0E485B21EDC10D009BCEAD /* XMHealthTool.m */; };
+		FD0E485F21EDC414009BCEAD /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD0E485E21EDC414009BCEAD /* HealthKit.framework */; };
 		FD147E2E21634DEA00E6F841 /* XMSaveGroupTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FD147E2D21634DEA00E6F841 /* XMSaveGroupTableViewController.m */; };
 		FD1EA08920A9A96A00658F18 /* XMGlobalConst.m in Sources */ = {isa = PBXBuildFile; fileRef = FD1EA08820A9A96A00658F18 /* XMGlobalConst.m */; };
 		FD1EA08B20A9B59B00658F18 /* clipIcon.py in Resources */ = {isa = PBXBuildFile; fileRef = FD1EA08A20A9B59A00658F18 /* clipIcon.py */; };
@@ -634,6 +636,10 @@
 		FD05F3C52154F609008EAD89 /* CALayer+YYWebImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CALayer+YYWebImage.m"; sourceTree = "<group>"; };
 		FD05F3C62154F609008EAD89 /* YYWebImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YYWebImage.h; sourceTree = "<group>"; };
 		FD05F3C72154F609008EAD89 /* YYWebImageOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YYWebImageOperation.m; sourceTree = "<group>"; };
+		FD0E485A21EDC10D009BCEAD /* XMHealthTool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMHealthTool.h; sourceTree = "<group>"; };
+		FD0E485B21EDC10D009BCEAD /* XMHealthTool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMHealthTool.m; sourceTree = "<group>"; };
+		FD0E485D21EDC414009BCEAD /* 虾兽维度.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "虾兽维度.entitlements"; sourceTree = "<group>"; };
+		FD0E485E21EDC414009BCEAD /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		FD147E2C21634DEA00E6F841 /* XMSaveGroupTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMSaveGroupTableViewController.h; sourceTree = "<group>"; };
 		FD147E2D21634DEA00E6F841 /* XMSaveGroupTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMSaveGroupTableViewController.m; sourceTree = "<group>"; };
 		FD1EA08720A9A96A00658F18 /* XMGlobalConst.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = XMGlobalConst.h; path = "虾兽维度/Config/XMGlobalConst.h"; sourceTree = SOURCE_ROOT; };
@@ -705,6 +711,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FD0E485F21EDC414009BCEAD /* HealthKit.framework in Frameworks */,
 				203702B721BCE9450066D068 /* libsqlite3.0.tbd in Frameworks */,
 				2086643A20AB404B00D51CCB /* libz.tbd in Frameworks */,
 			);
@@ -1353,6 +1360,7 @@
 		2086643820AB404A00D51CCB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				FD0E485E21EDC414009BCEAD /* HealthKit.framework */,
 				203702B621BCE9450066D068 /* libsqlite3.0.tbd */,
 				2086643920AB404B00D51CCB /* libz.tbd */,
 			);
@@ -1412,6 +1420,8 @@
 				FDE985402126CB1D003D2FE2 /* XMTimeTool.m */,
 				FDD895A1212BAAE800E2EDAD /* XMFileManageTool.h */,
 				FDD895A2212BAAE800E2EDAD /* XMFileManageTool.m */,
+				FD0E485A21EDC10D009BCEAD /* XMHealthTool.h */,
+				FD0E485B21EDC10D009BCEAD /* XMHealthTool.m */,
 			);
 			name = Tool;
 			path = Other/Tool;
@@ -1519,6 +1529,7 @@
 		849D26F01E640E3200F0CA5D /* 虾兽维度 */ = {
 			isa = PBXGroup;
 			children = (
+				FD0E485D21EDC414009BCEAD /* 虾兽维度.entitlements */,
 				842970ED1E654644002BDBC0 /* Classes */,
 				849D26FD1E640E3200F0CA5D /* Assets.xcassets */,
 				200A823520837BBC00825E6E /* 虾兽维度-Bridging-Header.h */,
@@ -1840,6 +1851,11 @@
 						DevelopmentTeam = S3RSD3BB8U;
 						LastSwiftMigration = 0810;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.HealthKit = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -1962,6 +1978,7 @@
 				204D2414209ED8E800F17E2E /* HTTPFileResponse.m in Sources */,
 				FD1EA08920A9A96A00658F18 /* XMGlobalConst.m in Sources */,
 				202C84F11F2624AD0055FD7D /* XMSaveWebsTableViewController.m in Sources */,
+				FD0E485C21EDC10D009BCEAD /* XMHealthTool.m in Sources */,
 				FD38A9D8217877D400416973 /* XMMyTableViewController.m in Sources */,
 				20863CBA20CD422F00A0812C /* ZLPhotoPickerAssetsViewController.m in Sources */,
 				FD38A9DB2178E65200416973 /* XMToolboxModel.m in Sources */,
@@ -2230,6 +2247,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = "虾兽维度/虾兽维度.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = YES;
@@ -2255,6 +2273,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = "虾兽维度/虾兽维度.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = YES;

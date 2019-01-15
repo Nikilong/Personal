@@ -19,7 +19,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>1.7.8</string>
 	<key>CFBundleVersion</key>
-	<string>1.7.8.5</string>
+	<string>1.7.8.10</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>ucbrowser</string>
@@ -34,6 +34,10 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>允许访问手机摄像头</string>
+	<key>NSHealthShareUsageDescription</key>
+	<string>允许获取"健康"的数据</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>允许获取"健康"的数据</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>需要访问本地相册</string>
 	<key>NSPhotoLibraryUsageDescription</key>

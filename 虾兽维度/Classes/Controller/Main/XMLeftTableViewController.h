@@ -19,4 +19,9 @@
 
 @property (weak, nonatomic)  id<XMLeftTableViewControllerDelegate> delegate;
 
+- (void)leftTableViewControllerWillShow;
+- (void)leftTableViewControllerDidShow;
+- (void)leftTableViewControllerWillHide;
+- (void)leftTableViewControllerDidHide;
+
 @end

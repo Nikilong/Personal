@@ -11,6 +11,7 @@
 #import "XMChannelModelLogic.h"
 #import "XMLeftViewUserCell.h"
 #import "MBProgressHUD+NK.h"
+#import "XMHealthTool.h"
 
 @interface XMLeftTableViewController ()
 
@@ -32,7 +33,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 }
-
 
 #pragma mark - Table view data source
 // xcode9和ios11需要实现这个才能设置footer高度
@@ -189,5 +189,33 @@
     if ([self.delegate respondsToSelector:@selector(leftTableViewControllerDidSelectChannel:)]){
         [self.delegate leftTableViewControllerDidSelectChannel:indexPath];
     }
+}
+
+#pragma mark - 父类的通知方法
+- (void)leftTableViewControllerWillShow{
+    
+    // 更新步数
+    [[XMHealthTool shareHealthTool] getStepCountWithCompleteBlock:^(NSString *stepCountStr){
+        dispatch_async(dispatch_get_main_queue(), ^{
+            XMLeftViewUserCell *userCell = (XMLeftViewUserCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+            userCell.stepCountLab.text = stepCountStr;
+        });
+    }];
+    
+    [UIView animateWithDuration:0.5 animations:^{
+        
+    }];
+    
+}
+
+- (void)leftTableViewControllerDidShow{
+    
+}
+
+- (void)leftTableViewControllerWillHide{
+    
+}
+- (void)leftTableViewControllerDidHide{
+    
 }
 @end

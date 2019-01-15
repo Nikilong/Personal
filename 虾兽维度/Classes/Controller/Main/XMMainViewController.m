@@ -356,6 +356,9 @@ static double leftViewAnimateTime = 0.25;
 #warning note 1，这里用到navigationController，若这时候leftVC是self的childviewcontroller，则会冲突，系统建议navigationController是leftVC的父控制器。2，在这里插入蒙板最准确，在init里面可能不准确
 /** 显示左侧边栏 */
 - (void)showLeftView{
+    // 通知leftVC
+    [self.leftVC leftTableViewControllerWillShow];
+    
     // 显示蒙板
     self.cover.hidden = NO;
     
@@ -367,18 +370,24 @@ static double leftViewAnimateTime = 0.25;
     // 设置动画弹出左侧边栏
     [UIView animateWithDuration:0.5 animations:^{
         self.leftContentView.transform = CGAffineTransformMakeTranslation(XMLeftViewTotalW, 0);
+    }completion:^(BOOL finished) {
+        [self.leftVC leftTableViewControllerDidShow];
     }];
 
 }
 
 /** 隐藏左侧边栏 */
 - (void)hideLeftView{
+    // 通知leftVC
+    [self.leftVC leftTableViewControllerWillHide];
     // 隐藏蒙板
     self.cover.hidden = YES;
     
     [UIView animateWithDuration:leftViewAnimateTime animations:^{
         // 恢复到最左边的位置
         self.leftContentView.transform = CGAffineTransformIdentity;
+    }completion:^(BOOL finished) {
+        [self.leftVC leftTableViewControllerDidHide];
         
     }];
 }
