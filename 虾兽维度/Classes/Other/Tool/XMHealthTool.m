@@ -8,7 +8,6 @@
 
 #import "XMHealthTool.h"
 #import <HealthKit/HealthKit.h>
-#import "MBProgressHUD+NK.h"
 
 @interface XMHealthTool()
 
@@ -30,24 +29,34 @@
     return healthTool;
 }
 
+// 检查healthkit是否可用
+- (BOOL)checkHealthStore{
+    return [HKHealthStore isHealthDataAvailable];
+}
+
 - (void)getStepCountWithCompleteBlock:(void (^)(NSString *))block{
-    //获取权限
-    HKObjectType *setpCount = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierStepCount];
-    
-    NSSet *healthSet = [NSSet setWithObjects:setpCount, nil];
-    
-    //健康中获取权限
-    [self.healthStore requestAuthorizationToShareTypes:nil readTypes:healthSet completion:^(BOOL success, NSError * _Nullable error) {
-        if (success) {
-            //权限获取成功 调用获取步数的方法
-            [self queryStepCountWithBlock:block];
-        }else{
-            dispatch_async(dispatch_get_main_queue(), ^{
+    if([self checkHealthStore]){
+        //获取权限
+        HKObjectType *setpCount = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierStepCount];
+        
+        NSSet *healthSet = [NSSet setWithObjects:setpCount, nil];
+        
+        //健康中获取权限
+        [self.healthStore requestAuthorizationToShareTypes:nil readTypes:healthSet completion:^(BOOL success, NSError * _Nullable error) {
+            if (success) {
+                // 清空上一次查询的数据
+                block(@"👣");
+                //权限获取成功 调用获取步数的方法
+                [self queryStepCountWithBlock:block];
+            }else{
+                block(@"👣-无权限-");
                 NSLog(@"获取步数权限失败");
-                [MBProgressHUD showFailed:@"获取步数权限失败"];
-            });
-        }
-    }];
+            }
+        }];
+    
+    }else{
+        block(@"👣-不支持-");
+    }
     
 }
 
@@ -71,13 +80,15 @@
 //         }
 //    }];
     
-    
+    // 获取步数
     HKQuantityType *quantityType = [HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierStepCount];
+    // 按天分组
     NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
     dateComponents.day = 1;
     HKStatisticsCollectionQuery *collectionQuery = [[HKStatisticsCollectionQuery alloc] initWithQuantityType:quantityType quantitySamplePredicate:nil options: HKStatisticsOptionCumulativeSum | HKStatisticsOptionSeparateBySource anchorDate:[NSDate dateWithTimeIntervalSince1970:0] intervalComponents:dateComponents];
     collectionQuery.initialResultsHandler = ^(HKStatisticsCollectionQuery *query, HKStatisticsCollection * __nullable result, NSError * __nullable error) {
         // result.statistics 是所有天数的数据
+        NSLog(@"%zd",result.statistics.count);
         if(result.statistics.count > 0){
             HKStatistics *statistic  = result.statistics.lastObject;
             for (HKSource *source in statistic.sources) {
@@ -87,6 +98,8 @@
                     block(stepStr);
                 }
             }
+        }else{
+            block(@"👣-0-");
         }
     };
     //执行查询
