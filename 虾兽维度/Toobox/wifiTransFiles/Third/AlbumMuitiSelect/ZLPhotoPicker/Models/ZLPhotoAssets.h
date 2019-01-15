@@ -18,6 +18,11 @@
 - (UIImage *)thumbImage;
 
 /**
+ *  缩略图(高清版)
+ */
+- (UIImage *)aspectRatioThumbnail;
+
+/**
  *  原图
  */
 - (UIImage *)originImage;

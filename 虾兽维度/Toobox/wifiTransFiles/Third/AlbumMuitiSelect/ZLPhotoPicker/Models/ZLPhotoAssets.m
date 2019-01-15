@@ -15,6 +15,10 @@
     return [UIImage imageWithCGImage:[self.asset thumbnail]];
 }
 
+- (UIImage *)aspectRatioThumbnail{
+    return [UIImage imageWithCGImage:[self.asset aspectRatioThumbnail]];
+}
+
 - (UIImage *)originImage{
     return [UIImage imageWithCGImage:[[self.asset defaultRepresentation] fullScreenImage]];
 }

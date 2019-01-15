@@ -62,6 +62,9 @@
     
     self.title = @"选择相册";
     
+    // 无数据的时候取消cell之间的分割线
+    self.tableView.tableFooterView = [[UIView alloc] init];
+    
 }
 
 - (void) setupButtons{

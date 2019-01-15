@@ -97,7 +97,7 @@
     
     ZLPhotoAssets *asset = self.dataArray[indexPath.item];
     if ([asset isKindOfClass:[ZLPhotoAssets class]]) {
-        cellImgView.image = asset.thumbImage;
+        cellImgView.image = asset.aspectRatioThumbnail;
     }
     
     return cell;
