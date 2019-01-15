@@ -44,8 +44,12 @@ NSString *const XMNewsSaveTimeDictKey = @"XMNewsSaveTimeDictKey";
         XMWebModel *model = [[XMWebModel alloc] init];
         
         model.ID = dict[@"data"][@"items"][i][@"id"];
-        // 广告的id都是8位,通过id来过滤掉广告
-        if (model.ID.integerValue < 99999999) continue;
+        
+        model.source = dict[@"data"][@"articles"][model.ID][@"source_name"];
+        //model.source = model.ID;
+        
+        // 过滤广告
+        if([self checkAdvertisement:model.ID source:model.source]) continue;
         
         // 这个tag是分类,可用于过滤
         model.tags = dict[@"data"][@"articles"][model.ID][@"tags"];
@@ -57,8 +61,6 @@ NSString *const XMNewsSaveTimeDictKey = @"XMNewsSaveTimeDictKey";
         model.webURL = [NSURL URLWithString:[self appendWebURLByName:model.ID]];
         model.author_icon = [NSURL URLWithString:dict[@"data"][@"articles"][model.ID][@"wm_author"][@"author_icon"][@"url"]];
         model.cmt_cnt = [dict[@"data"][@"articles"][model.ID][@"cmt_cnt"] unsignedIntegerValue];
-        model.source = dict[@"data"][@"articles"][model.ID][@"source_name"];
-        //model.source = model.ID;
         //        NSLog(@"%@",dict[@"data"][@"articles"][model.ID][@"dislike_infos"]);
         model.title =  dict[@"data"][@"articles"][model.ID][@"title"];
         // 过滤掉标题为空的新闻
@@ -79,6 +81,13 @@ NSString *const XMNewsSaveTimeDictKey = @"XMNewsSaveTimeDictKey";
     [self saveNewDatasArr:arrM channel:channel];
     
     return arrM;
+}
+
++ (BOOL)checkAdvertisement:(NSString *)ID  source:(NSString *)source{
+    // 广告的id都是8位,通过id来过滤掉广告
+    if (ID.integerValue < 99999999) return YES;
+    if ([source isEqualToString:@"淘宝精选"]) return YES;
+    return NO;
 }
 
 /** 对新闻关键词过滤 */
