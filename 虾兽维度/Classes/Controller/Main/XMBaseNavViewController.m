@@ -21,6 +21,10 @@
     self.navigationBar.translucent = NO;
     [self.navigationBar setBackgroundImage:[UIImage imageNamed:@"navBgGray"] forBarMetrics:UIBarMetricsDefault];
     [self.navigationBar setTintColor:[UIColor whiteColor]];
+    
+    
+    // 导航栏标题栏样式
+    self.navigationBar.titleTextAttributes = @{NSFontAttributeName : [UIFont boldSystemFontOfSize:19],NSForegroundColorAttributeName:[UIColor whiteColor]};
 }
 
 - (void)didReceiveMemoryWarning {

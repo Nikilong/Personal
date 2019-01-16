@@ -105,7 +105,7 @@ CGFloat const XMPullRrfreshHeight = 64;
 - (void)tableViewDidEndDraggingWillDecelerate:(BOOL)decelerate{
     self.isDragging = NO;// 标记拖拽完毕
     // 判断是否触发刷新
-    if (-self.sourceTableView.contentOffset.y > XMPullRrfreshHeight + 44 + XMStatusBarHeight){
+    if (-self.sourceTableView.contentOffset.y > XMPullRrfreshHeight){
         // 刷新数据
         if(self.freshBlock){
             self.freshBlock();
@@ -117,7 +117,7 @@ CGFloat const XMPullRrfreshHeight = 64;
     if (self.isRefreshing) return;
     
     // 如果下拉到固定值修改标题提示用户
-    if (-self.sourceTableView.contentOffset.y > XMPullRrfreshHeight + 44 + XMStatusBarHeight  && self.isDragging){
+    if (-self.sourceTableView.contentOffset.y > XMPullRrfreshHeight && self.isDragging){
         self.tipBtn.enabled = NO;
     }else{
         self.tipBtn.enabled = YES;

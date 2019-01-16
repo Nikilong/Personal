@@ -266,20 +266,20 @@ UITabBarControllerDelegate>
         
         UILabel *titleLab = [[UILabel alloc] initWithFrame:headerV.bounds];
         titleLab.textAlignment = NSTextAlignmentCenter;
-        titleLab.textColor = [UIColor grayColor];
+        titleLab.textColor = [UIColor darkGrayColor];
         [headerV addSubview:titleLab];
         
         // 设置字体样式
         NSMutableAttributedString *str = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@看到了这里，点击刷新",self.headerVTitle]];
         // 设置第一行样式
         NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-        dict[NSFontAttributeName] = [UIFont boldSystemFontOfSize:11];
+        dict[NSFontAttributeName] = [UIFont boldSystemFontOfSize:15];
         [str setAttributes:dict range:NSMakeRange(0, str.length - 5)];
         
         // 设置"点击刷新"的样式
         NSMutableDictionary *dictChannel = [NSMutableDictionary dictionary];
-        dictChannel[NSFontAttributeName] = [UIFont boldSystemFontOfSize:11];
-        dictChannel[NSForegroundColorAttributeName] = RGB(48, 107, 255);
+        dictChannel[NSFontAttributeName] = [UIFont boldSystemFontOfSize:15];
+        dictChannel[NSForegroundColorAttributeName] = [UIColor darkGrayColor];
         [str setAttributes:dictChannel range:NSMakeRange(str.length - 4, 4)];
         titleLab.attributedText = str;
         
@@ -346,7 +346,7 @@ UITabBarControllerDelegate>
 /// 非手动下拉刷新触发的刷新
 - (void)nonePullFresh{
     // 先模拟下拉一个高度
-    [self.tableView setContentOffset:CGPointMake(0, -(XMStatusBarHeight + 44 + self.headerRefreshV.frame.size.height)) animated:YES];
+    [self.tableView setContentOffset:CGPointMake(0, -self.headerRefreshV.frame.size.height) animated:YES];
     // 在强制刷新
     [self refresh];
 }

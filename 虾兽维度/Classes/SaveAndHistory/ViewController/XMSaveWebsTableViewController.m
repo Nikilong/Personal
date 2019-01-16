@@ -87,6 +87,7 @@ XMSaveGroupTableViewControllerDelegate
         [allSelectBtn addTarget:self action:@selector(selectAllCell:) forControlEvents:UIControlEventTouchUpInside];
         [allSelectBtn setTitle:@"全选所有" forState:UIControlStateNormal];
         [allSelectBtn setTitle:@"取消全选" forState:UIControlStateSelected];
+        [allSelectBtn setTintColor:[UIColor grayColor]];
         
         // 退出编辑
         UIButton *cancelBtn = [UIButton buttonWithType:UIButtonTypeSystem];
@@ -94,6 +95,7 @@ XMSaveGroupTableViewControllerDelegate
         [editV addSubview:cancelBtn];
         [cancelBtn addTarget:self action:@selector(cancelEdit) forControlEvents:UIControlEventTouchUpInside];
         [cancelBtn setTitle:@"取消" forState:UIControlStateNormal];
+        [cancelBtn setTintColor:[UIColor grayColor]];
         
         // 删除按钮
         UIButton *deleBtn = [[UIButton alloc] initWithFrame:CGRectMake(margin, btnY, btnWH, btnWH)];
@@ -121,6 +123,7 @@ XMSaveGroupTableViewControllerDelegate
         [toolBar addSubview:newGroup];
         [newGroup addTarget:self action:@selector(addNewSaveGroup) forControlEvents:UIControlEventTouchUpInside];
         [newGroup setTitle:@"新建分组" forState:UIControlStateNormal];
+        [newGroup setTintColor:[UIColor grayColor]];
     }
     return _toolBar;
 }
@@ -220,13 +223,13 @@ XMSaveGroupTableViewControllerDelegate
     
     UIButton *leftBarBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 60, 30)];
     [leftBarBtn setTitle:@"返回" forState:UIControlStateNormal];
-    [leftBarBtn setTitleColor:RGB(42, 122, 252) forState:UIControlStateNormal];
+    [leftBarBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [leftBarBtn addTarget:self action:@selector(dismiss) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:leftBarBtn];
     
     UIButton *rightBarBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 60, 30)];
     [rightBarBtn setTitle:@"编辑" forState:UIControlStateNormal];
-    [rightBarBtn setTitleColor:RGB(42, 122, 252) forState:UIControlStateNormal];
+    [rightBarBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [rightBarBtn addTarget:self action:@selector(rightBarbuttonDidClick) forControlEvents:UIControlEventTouchUpInside];
     self.rightBarBtn = rightBarBtn;
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightBarBtn];

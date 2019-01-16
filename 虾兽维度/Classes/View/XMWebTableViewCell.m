@@ -116,7 +116,12 @@
 /// 展示大图
 - (void)tapToShowBigImage{
     if (self.model){
-        [XMVisualView creatVisualImageViewWithImage:self.model.imageURL];
+        XMVisualView *viV = [XMVisualView creatVisualImageViewWithImage:self.model.imageURL];
+        // 添加一个动画效果
+        viV.alpha = 0;
+        [UIView animateWithDuration:0.25 animations:^{
+            viV.alpha = 1;
+        }];
     }
 }
 

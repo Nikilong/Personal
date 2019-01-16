@@ -49,9 +49,6 @@ static NSString *const _identifier = @"toolBarThumbCollectionViewCell";
 // 记录选中的assets
 @property (nonatomic , strong) NSMutableArray *selectAssets;
 
-// 导航栏标题按钮
-@property (nonatomic , weak) UILabel *navTitleLab;
-
 @end
 
 @implementation ZLPhotoPickerAssetsViewController
@@ -205,13 +202,6 @@ static NSString *const _identifier = @"toolBarThumbCollectionViewCell";
 #pragma mark 初始化按钮
 - (void) setupButtons{
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStyleDone target:self action:@selector(back)];
-    
-    UILabel *titleLab = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 150, 44)];
-    titleLab.textColor = [UIColor whiteColor];
-    titleLab.textAlignment = NSTextAlignmentCenter;
-    titleLab.font = [UIFont boldSystemFontOfSize:19];
-    self.navTitleLab = titleLab;
-    self.navigationItem.titleView = titleLab;
 }
 
 #pragma mark 初始化所有的组
@@ -274,7 +264,7 @@ static NSString *const _identifier = @"toolBarThumbCollectionViewCell";
     
     _assetsGroup = assetsGroup;
     
-    self.navTitleLab.text = assetsGroup.groupName;
+    self.title = assetsGroup.groupName;
     
     // 获取Assets
     [self setupAssets];

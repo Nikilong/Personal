@@ -108,6 +108,7 @@ UIGestureRecognizerDelegate>
         [allSelectBtn addTarget:self action:@selector(selectAllCell:) forControlEvents:UIControlEventTouchUpInside];
         [allSelectBtn setTitle:@"全选所有" forState:UIControlStateNormal];
         [allSelectBtn setTitle:@"取消全选" forState:UIControlStateSelected];
+        [allSelectBtn setTintColor:[UIColor grayColor]];
         
         // 退出编辑
         UIButton *cancelBtn = [UIButton buttonWithType:UIButtonTypeSystem];
@@ -115,6 +116,7 @@ UIGestureRecognizerDelegate>
         [toolBar addSubview:cancelBtn];
         [cancelBtn addTarget:self action:@selector(cancelEdit:) forControlEvents:UIControlEventTouchUpInside];
         [cancelBtn setTitle:@"取消" forState:UIControlStateNormal];
+        [cancelBtn setTintColor:[UIColor grayColor]];
         
         // 删除按钮
         UIButton *deleBtn = [[UIButton alloc] initWithFrame:CGRectMake(margin, btnY, btnWH, btnWH)];
@@ -217,7 +219,7 @@ UIGestureRecognizerDelegate>
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-    self.tableView.frame = CGRectMake(0, 0, XMScreenW, XMScreenH);
+//    self.tableView.frame = CGRectMake(0, 0, XMScreenW, XMScreenH);
 }
 
 - (void)viewDidDisappear:(BOOL)animated{

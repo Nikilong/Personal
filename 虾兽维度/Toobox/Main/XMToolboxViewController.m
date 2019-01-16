@@ -56,7 +56,7 @@ UIGestureRecognizerDelegate
     [super viewDidLoad];
     
     self.tableView.rowHeight = 70;
-    self.navigationItem.title = @"工具箱";
+    self.title = @"工具箱";
     
     // 观察指纹登录通知
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(authenticationCallBack:) name:kAuthenCallBackNotificaiton object:self];

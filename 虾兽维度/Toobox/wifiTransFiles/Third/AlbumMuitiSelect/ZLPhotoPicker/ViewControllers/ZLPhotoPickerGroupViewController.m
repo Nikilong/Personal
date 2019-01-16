@@ -69,12 +69,7 @@
     
     self.navigationItem.rightBarButtonItem = barItem;
     
-    UILabel *titleLab = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 150, 44)];
-    titleLab.textColor = [UIColor whiteColor];
-    titleLab.font = [UIFont boldSystemFontOfSize:19];
-    titleLab.textAlignment = NSTextAlignmentCenter;
-    titleLab.text = @"选择相册";
-    self.navigationItem.titleView = titleLab;
+    self.title = @"选择相册";
 }
 
 #pragma mark - <UITableViewDataSource>
