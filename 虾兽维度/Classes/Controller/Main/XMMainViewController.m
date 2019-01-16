@@ -10,6 +10,7 @@
 #import "XMHomeTableViewController.h"
 #import "XMLeftTableViewController.h"
 #import "XMNavTitleTableViewController.h"
+#import "XMBaseNavViewController.h"
 //#import "XMWebViewController.h"
 #import "XMWKWebViewController.h"
 #import "XMChannelModelLogic.h"
@@ -169,18 +170,19 @@ static double leftViewAnimateTime = 0.25;
     label.numberOfLines = 0;
     label.textAlignment = NSTextAlignmentCenter;
     
-    // 注意:标题决定了下面的两个range需要同步调整,这里说的标题统计指"虾兽新闻端",共5个字,当有改动时需要同步调整titleCount
-    int titleCount = 5;
-    NSMutableAttributedString *str = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"虾兽新闻端\n%@",channel]];
+    // 注意:标题决定了下面的两个range需要同步调整,这里说的标题统计指"新维度",共3个字,当有改动时需要同步调整titleCount
+    int titleCount = 3;
+    NSMutableAttributedString *str = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"新维度\n%@",channel]];
     // 设置第一行样式
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     dict[NSFontAttributeName] = [UIFont boldSystemFontOfSize:17];
+    dict[NSForegroundColorAttributeName] = [UIColor whiteColor];
     [str setAttributes:dict range:NSMakeRange(0, titleCount)];
     
     // 设置频道的样式
     NSMutableDictionary *dictChannel = [NSMutableDictionary dictionary];
     dictChannel[NSFontAttributeName] = [UIFont systemFontOfSize:13];
-    dictChannel[NSForegroundColorAttributeName] = [UIColor lightGrayColor];
+    dictChannel[NSForegroundColorAttributeName] = [UIColor colorWithRed:0.95 green:0.95 blue:0.95 alpha:1];
     [str setAttributes:dictChannel range:NSMakeRange(titleCount + 1, channel.length)];
     label.attributedText = str;
     self.navigationItem.titleView = label;
@@ -273,7 +275,7 @@ static double leftViewAnimateTime = 0.25;
     
     XMSearchTableViewController *searchVC = [[XMSearchTableViewController alloc] init];
     searchVC.delegate = self;
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:searchVC];
+    XMBaseNavViewController *nav = [[XMBaseNavViewController alloc] initWithRootViewController:searchVC];
     // 导航控制器只能present另外一个导航控制器,不能push
     [self presentViewController:nav animated:YES completion:^{
         self.homeVC.tableView.scrollEnabled = YES;

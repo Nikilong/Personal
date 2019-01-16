@@ -186,7 +186,7 @@ UITabBarControllerDelegate>
 
 // 悬浮按钮的方法实现(滚到最顶部)
 - (void)upToTop{
-    [self.tableView setContentOffset:CGPointMake(0, -(XMStatusBarHeight + 44)) animated:YES];
+    [self.tableView setContentOffset:CGPointZero animated:YES];
 }
 
 
@@ -261,7 +261,7 @@ UITabBarControllerDelegate>
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
     if(section == 1){
         // 标题栏
-        UIView *headerV  = [[UIView alloc] initWithFrame:CGRectMake(0, 0, XMScreenW, 25)];
+        UIView *headerV  = [[UIView alloc] initWithFrame:CGRectMake(0, 0, XMScreenW, 35)];
         headerV.backgroundColor = RGB(242, 242, 242);
         
         UILabel *titleLab = [[UILabel alloc] initWithFrame:headerV.bounds];

@@ -36,17 +36,17 @@
     _pureTitle.hidden = YES;
     
     // 显示创建时间
-    _commitCount.text = wifiModel.createDateStr;
+    _sourceLabel.text = wifiModel.createDateStr;
     // 显示大小标签
     _publishTime.text = wifiModel.sizeStr;
     
     // 视频音频显示时长
     if(wifiModel.fileType == fileTypeAudioName || wifiModel.fileType == fileTypeVideoName){
-        _sourceLabel.hidden = NO;
-        _sourceLabel.text = [NSString stringWithFormat:@"时长:%@",wifiModel.mediaLengthStr];
+        _commitCount.hidden = NO;
+        _commitCount.text = [NSString stringWithFormat:@"时长:%@",wifiModel.mediaLengthStr];
     }else{
-        _sourceLabel.text = @"";
-        _sourceLabel.hidden = YES;
+        _commitCount.text = @"";
+        _commitCount.hidden = YES;
     }
     
     // 设置标题
@@ -73,8 +73,13 @@
 - (void)setModel:(XMWebModel *)model{
     _model = model;
     _publishTime.text = model.publishTime;
-    _commitCount.text = [NSString stringWithFormat:@"评论：%zd",model.cmt_cnt];
-    _sourceLabel.text = [NSString stringWithFormat:@"来自：%@", model.source];
+    if(model.cmt_cnt == 0){
+        _commitCount.hidden = YES;
+    }else{
+        _commitCount.hidden = NO;
+        _commitCount.text = [NSString stringWithFormat:@"%zd评论",model.cmt_cnt];
+    }
+    _sourceLabel.text = [NSString stringWithFormat:@"%@", model.source];
     
     if (model.imageURL.absoluteString){
         _title.hidden = NO;
@@ -90,7 +95,6 @@
         _pureTitle.hidden = NO;
         _pureTitle.text = model.title;
     }
-    
 }
 
 + (instancetype)cellWithTableView:(UITableView *)tableView{

@@ -29,6 +29,7 @@
 #import "XMWebMultiWindowCollectionViewController.h"
 #import "XMMutiWindowFlowLayout.h"
 #import "XMTabBarController.h"
+#import "XMBaseNavViewController.h"
 
 
 @interface XMWKWebViewController ()<
@@ -910,7 +911,7 @@ static double backForwardSafeDistance = 80.0;
 
     XMSearchTableViewController *searchVC = [[XMSearchTableViewController alloc] init];
     searchVC.delegate = self;
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:searchVC];
+    XMBaseNavViewController *nav = [[XMBaseNavViewController alloc] initWithRootViewController:searchVC];
     [self presentViewController:nav animated:YES completion:^{
         if(isPassUrl){
             searchVC.passUrl = self.wkWebview.URL.absoluteString;

@@ -55,7 +55,7 @@ XMOpenWebmoduleProtocol
     // 首页
     XMMainViewController *mainVC = [[XMMainViewController alloc] init];
     XMNavigationController *navMain = [[XMNavigationController alloc] initWithRootViewController:mainVC];
-    [self setTabBarItem:mainVC.tabBarItem title:@"新闻" titleSize:13 titleFontName:@"HeiTi SC" selectedImage:@"tabbar_icon_news_highlight" selectedTitleColor:[UIColor redColor] normalImage:@"tabbar_icon_news_normal" normalTitleColor:[UIColor grayColor]];
+    [self setTabBarItem:mainVC.tabBarItem title:@"新闻" titleSize:13 titleFontName:@"HeiTi SC" selectedImage:@"tabbar_icon_news_highlight" selectedTitleColor:[UIColor darkGrayColor] normalImage:@"tabbar_icon_news_normal" normalTitleColor:[UIColor lightGrayColor]];
 
     // 视频
     
@@ -64,7 +64,7 @@ XMOpenWebmoduleProtocol
     // 工具箱
     XMToolboxViewController *toolVC = [[XMToolboxViewController alloc] init];
     XMNavigationController *navTool = [[XMNavigationController alloc] initWithRootViewController:toolVC];
-     [self setTabBarItem:toolVC.tabBarItem title:@"工具箱" titleSize:13 titleFontName:@"HeiTi SC" selectedImage:@"tabbar_icon_toolbox_highlight" selectedTitleColor:[UIColor redColor] normalImage:@"tabbar_icon_toolbox_normal" normalTitleColor:[UIColor grayColor]];
+     [self setTabBarItem:toolVC.tabBarItem title:@"工具箱" titleSize:13 titleFontName:@"HeiTi SC" selectedImage:@"tabbar_icon_toolbox_highlight" selectedTitleColor:[UIColor darkGrayColor] normalImage:@"tabbar_icon_toolbox_normal" normalTitleColor:[UIColor lightGrayColor]];
 
 
     // 我
@@ -234,6 +234,7 @@ XMOpenWebmoduleProtocol
             btn.tag = i;
             [btn setImage:[UIImage imageNamed:dict[@"image"]] forState:UIControlStateNormal];
             [btn addTarget:self action:@selector(toolButtonDidClick:) forControlEvents:UIControlEventTouchDown];
+            [btn setTintColor:[UIColor darkGrayColor]];
             
             // 按钮下标签
             UILabel *btnL = [[UILabel alloc] initWithFrame:CGRectMake(btnX - 0.5 * toolBtnMarginX, CGRectGetMaxY(btn.frame), btnWH + toolBtnMarginX, btnLabelH)];

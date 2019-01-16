@@ -301,7 +301,7 @@ UIGestureRecognizerDelegate>
     UILabel *titleLab = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 44)];
     self.navTitleLab = titleLab;
     titleLab.font = [UIFont systemFontOfSize:17];
-    titleLab.textColor = [UIColor blackColor];
+    titleLab.textColor = [UIColor whiteColor];
     titleLab.textAlignment = NSTextAlignmentCenter;
     titleLab.text = defaultGroupName;
     // 添加双击刷新手势

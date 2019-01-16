@@ -11,6 +11,7 @@
 #import "XMSaveGroupTableViewController.h"
 #import "XMWKWebViewController.h"
 #import "MBProgressHUD+NK.h"
+#import "XMBaseNavViewController.h"
 
 typedef NS_ENUM(NSUInteger,XMSaveVCDataSource){
     XMSaveVCDataSourceSave,         // 收藏网页
@@ -349,7 +350,7 @@ XMSaveGroupTableViewControllerDelegate
     groVC.fromGroName = self.groupName;
     groVC.seleIndexArr = [seleArr copy];
     groVC.delegate = self;
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:groVC];
+    XMBaseNavViewController *nav = [[XMBaseNavViewController alloc] initWithRootViewController:groVC];
     [self presentViewController:nav animated:YES completion:nil];
 }
 

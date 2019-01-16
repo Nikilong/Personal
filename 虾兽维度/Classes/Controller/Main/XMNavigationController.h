@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "XMBaseNavViewController.h"
 
-@interface XMNavigationController : UINavigationController
+@interface XMNavigationController : XMBaseNavViewController
 
 /// 暴露自定义的手势,用于处理手势冲突问题
 @property (weak, nonatomic)  UIGestureRecognizer *customerPopGestureRecognizer;

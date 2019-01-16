@@ -49,6 +49,8 @@ static NSString *const _identifier = @"toolBarThumbCollectionViewCell";
 // 记录选中的assets
 @property (nonatomic , strong) NSMutableArray *selectAssets;
 
+// 导航栏标题按钮
+@property (nonatomic , weak) UILabel *navTitleLab;
 
 @end
 
@@ -59,8 +61,9 @@ static NSString *const _identifier = @"toolBarThumbCollectionViewCell";
     if (!_doneBtn) {
         
         UIButton *rightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        [rightBtn setTitleColor:[UIColor colorWithRed:0/255.0 green:91/255.0 blue:255/255.0 alpha:1.0] forState:UIControlStateNormal];
-        [rightBtn setTitleColor:[UIColor grayColor] forState:UIControlStateDisabled];
+//        [rightBtn setTitleColor:[UIColor colorWithRed:0/255.0 green:91/255.0 blue:255/255.0 alpha:1.0] forState:UIControlStateNormal];
+        [rightBtn setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
+        [rightBtn setTitleColor:[UIColor lightGrayColor] forState:UIControlStateDisabled];
         rightBtn.enabled = YES;
         rightBtn.titleLabel.font = [UIFont systemFontOfSize:17];
         rightBtn.frame = CGRectMake(0, 0, 45, 45);
@@ -202,6 +205,13 @@ static NSString *const _identifier = @"toolBarThumbCollectionViewCell";
 #pragma mark 初始化按钮
 - (void) setupButtons{
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStyleDone target:self action:@selector(back)];
+    
+    UILabel *titleLab = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 150, 44)];
+    titleLab.textColor = [UIColor whiteColor];
+    titleLab.textAlignment = NSTextAlignmentCenter;
+    titleLab.font = [UIFont boldSystemFontOfSize:19];
+    self.navTitleLab = titleLab;
+    self.navigationItem.titleView = titleLab;
 }
 
 #pragma mark 初始化所有的组
@@ -264,7 +274,7 @@ static NSString *const _identifier = @"toolBarThumbCollectionViewCell";
     
     _assetsGroup = assetsGroup;
     
-    self.title = assetsGroup.groupName;
+    self.navTitleLab.text = assetsGroup.groupName;
     
     // 获取Assets
     [self setupAssets];

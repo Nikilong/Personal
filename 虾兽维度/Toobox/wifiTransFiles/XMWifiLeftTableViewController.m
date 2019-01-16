@@ -186,21 +186,22 @@
     UIView *contentV = [[UIView alloc] init];
     // 每一行排3个按钮,加上2条分割线
     NSUInteger colMax = 3;
-    CGFloat btnWH = ( XMWifiLeftViewTotalW - 2 * XMLeftViewPadding ) / colMax - 2;
+    CGFloat btnW = ( XMWifiLeftViewTotalW - 2 * XMLeftViewPadding ) / colMax;
+    CGFloat btnH = 44;
     
     NSArray *groupNames = [XMWifiGroupTool nonDeleteGroupNames];
     for (NSUInteger i = 0; i< groupNames.count; i++) {
         UIButton *btn = [self addButtonWithTitle:groupNames[i] selector:@selector(sectionTwoBtnDidClick:) parentView:contentV];
         btn.tag = i;
-        btn.frame = CGRectMake(i * btnWH + i, 0, btnWH, btnWH);
+        btn.frame = CGRectMake(i * btnW + i, 0, btnW, btnH);
         // 添加分割线
         if(i < groupNames.count - 1){
-            UIView *lineV = [[UIView alloc] initWithFrame:CGRectMake(CGRectGetMaxX(btn.frame), 0, 1, btnWH)];
+            UIView *lineV = [[UIView alloc] initWithFrame:CGRectMake(CGRectGetMaxX(btn.frame), 0, 1, btnH)];
             lineV.backgroundColor = [UIColor grayColor];
             [contentV addSubview:lineV];
         }
     }
-    contentV.frame = CGRectMake(0, 0, XMWifiLeftViewTotalW, btnWH + 2 * XMLeftViewPadding);
+    contentV.frame = CGRectMake(0, 0, XMWifiLeftViewTotalW, btnH);
     return contentV;
 }
 
@@ -289,11 +290,12 @@
 }
 
 - (UIButton *)addButtonWithTitle:(NSString *)title selector:(SEL)selctror parentView:(UIView *)parentView{
-    UIButton *btn = [[UIButton alloc] init];
+    UIButton *btn = [UIButton buttonWithType:UIButtonTypeSystem];
     [parentView addSubview:btn];
     [btn addTarget:self action:selctror forControlEvents:UIControlEventTouchUpInside];
     [btn setTitle:title forState:UIControlStateNormal];
-    [btn setTitleColor:[UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0] forState:UIControlStateNormal];
+//    [btn setTitleColor:[UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0] forState:UIControlStateNormal];
+    [btn setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
     return btn;
 }
 
@@ -302,6 +304,7 @@
     [parentView addSubview:btn];
     [btn addTarget:self action:selctror forControlEvents:UIControlEventTouchUpInside];
     [btn setImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
+    [btn setTintColor:[UIColor darkGrayColor]];
     return btn;
 }
 
