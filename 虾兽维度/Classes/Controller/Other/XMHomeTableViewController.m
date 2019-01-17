@@ -273,12 +273,12 @@ UITabBarControllerDelegate>
         NSMutableAttributedString *str = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@看到了这里，点击刷新",self.headerVTitle]];
         // 设置第一行样式
         NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-        dict[NSFontAttributeName] = [UIFont boldSystemFontOfSize:15];
+        dict[NSFontAttributeName] = [UIFont boldSystemFontOfSize:13];
         [str setAttributes:dict range:NSMakeRange(0, str.length - 5)];
         
         // 设置"点击刷新"的样式
         NSMutableDictionary *dictChannel = [NSMutableDictionary dictionary];
-        dictChannel[NSFontAttributeName] = [UIFont boldSystemFontOfSize:15];
+        dictChannel[NSFontAttributeName] = [UIFont boldSystemFontOfSize:13];
         dictChannel[NSForegroundColorAttributeName] = [UIColor darkGrayColor];
         [str setAttributes:dictChannel range:NSMakeRange(str.length - 4, 4)];
         titleLab.attributedText = str;

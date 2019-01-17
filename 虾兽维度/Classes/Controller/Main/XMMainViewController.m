@@ -264,9 +264,6 @@ static double leftViewAnimateTime = 0.25;
         });
 
     };
-    UILabel *titleLab = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 60, 44)];
-    titleLab.text = @"扫描二维码";
-    qrVC.navigationItem.titleView = titleLab;
     [self.navigationController pushViewController:qrVC animated:YES];
 }
 

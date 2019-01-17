@@ -61,7 +61,7 @@
     [super viewWillAppear:animated];
     if(self.isCodeMode){
         // 隐藏导航栏
-        self.navigationController.navigationBarHidden = YES;
+        [self.navigationController setNavigationBarHidden:YES animated:YES];
         // 横屏
         //允许屏幕旋转
         AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
@@ -74,7 +74,7 @@
 
 - (void)viewDidDisappear:(BOOL)animated{
     [super viewDidDisappear:animated];
-    self.navigationController.navigationBarHidden = NO;
+    [self.navigationController setNavigationBarHidden:NO animated:YES];
     [self.displayWebview loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@""]]];
 //    [self.wkdisplayWebview loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@""]]];
     
@@ -105,7 +105,7 @@
 /// 隐藏或显示导航栏
 - (void)showNavBar:(UITapGestureRecognizer *)gest{
     if (gest.state == UIGestureRecognizerStateEnded){
-        self.navigationController.navigationBarHidden = !self.navigationController.navigationBarHidden;
+        [self.navigationController setNavigationBarHidden:!self.navigationController.navigationBarHidden animated:YES];
     }
 }
 

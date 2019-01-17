@@ -418,7 +418,7 @@ static double backForwardSafeDistance = 80.0;
     
     [super viewWillAppear:animated];
     // 隐藏导航条
-    self.navigationController.navigationBarHidden = YES;
+    [self.navigationController setNavigationBarHidden:YES animated:YES];
     // 显示状态栏盖罩
     self.statusCover.hidden = NO;
     // 记录即将显示
@@ -440,7 +440,7 @@ static double backForwardSafeDistance = 80.0;
     // 当导航控制器栈顶控制器不是webmodule时,即将回到main界面或者save界面,恢复导航栏可见(此时self已经从导航控制器的栈中移除)
     if(![self.navigationController.childViewControllers.lastObject isKindOfClass:[XMWKWebViewController class]]){
         
-        self.navigationController.navigationBarHidden = NO;
+        [self.navigationController setNavigationBarHidden:NO animated:YES];
         // 恢复状态栏颜色,原来的为空 
         self.statusBar.backgroundColor = nil;
         [self.statusCover removeFromSuperview];
@@ -674,7 +674,7 @@ static double backForwardSafeDistance = 80.0;
 /** 将webmodule关闭掉 */
 - (void)closeWebModule{
     
-    self.navigationController.navigationBarHidden = NO;
+    [self.navigationController setNavigationBarHidden:NO animated:YES];
     // 恢复状态栏颜色,原来的为空
     self.statusBar.backgroundColor = nil;
     [self.statusCover removeFromSuperview];

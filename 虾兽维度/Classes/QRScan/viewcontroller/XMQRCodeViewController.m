@@ -47,6 +47,8 @@ UIImagePickerControllerDelegate
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.title = @"扫描二维码";
+    
     // 添加从相册中识别二维码
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"相册" style:UIBarButtonItemStylePlain target:self action:@selector(dealAlbumPicture)];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStylePlain target:self action:@selector(dismiss)];
@@ -167,7 +169,7 @@ UIImagePickerControllerDelegate
 /// 限定扫描的有效区域
 - (void)updateLayout {
     
-    self.qrView.center = CGPointMake([XMQRUtil screenBounds].size.width / 2, [XMQRUtil screenBounds].size.height / 2);
+    self.qrView.center = CGPointMake([XMQRUtil screenBounds].size.width / 2, [XMQRUtil screenBounds].size.height / 2 - 100);
     
     //修正扫描区域
     CGFloat screenHeight = self.view.frame.size.height;
@@ -180,9 +182,9 @@ UIImagePickerControllerDelegate
 /// 闪光灯按钮
 - (void)setTorchButton{
     if(self.device.hasTorch){
-        CGFloat btnWH = 100;
+        CGFloat btnWH = 80;
         UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-        button.frame = CGRectMake((XMScreenW - btnWH) * 0.5, XMScreenH - btnWH * 1.5, btnWH, btnWH);
+        button.frame = CGRectMake((XMScreenW - btnWH) * 0.5, XMScreenH - btnWH * 2.5, btnWH, btnWH);
         [button setBackgroundColor:[UIColor clearColor]];
         [button setImage:[UIImage imageNamed:@"light_off"] forState:UIControlStateNormal];
         [button setImage:[UIImage imageNamed:@"light_on"] forState:UIControlStateSelected];
