@@ -20,6 +20,11 @@ NSString * const settingZipFilePre = @"config";
 
 static NSString *currentGroupName = @"默认";
 
++ (void)initialize{
+    // 初始化创建文件夹
+    [self groupNameDirsModels];
+}
+
 #pragma mark - 压缩解压类,备份类
 #pragma mark 压缩
 /// 压缩系统配置类文件,例如收藏网页文件,文件组名文件等
