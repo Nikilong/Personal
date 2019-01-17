@@ -119,8 +119,11 @@
     if([self.delegate respondsToSelector:@selector(visualViewWillRemoveFromSuperView)]){
         [self.delegate visualViewWillRemoveFromSuperView];
     }
-    
-    [tap.view removeFromSuperview];
+    [UIView animateWithDuration:0.25 animations:^{
+        tap.view.alpha = 0;
+    }completion:^(BOOL finished) {
+        [tap.view removeFromSuperview];
+    }];
 }
 
 /// 长按图片
