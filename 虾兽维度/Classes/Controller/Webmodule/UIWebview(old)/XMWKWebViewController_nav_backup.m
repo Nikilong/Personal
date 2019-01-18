@@ -165,12 +165,12 @@ static double backForwardSafeDistance = 80.0;
         configuration.userContentController = userContentController;
         
         // y方向距离为导航栏初始高度44+状态栏高度
-        _wkWebview = [[WKWebView alloc] initWithFrame:CGRectMake(0, 0, XMScreenW, XMScreenH - XMStatusBarHeight - 44) configuration:configuration];
+        _wkWebview = [[WKWebView alloc] initWithFrame:CGRectMake(0, 44 + XMStatusBarHeight, XMScreenW, XMScreenH - 24) configuration:configuration];
         _wkWebview.UIDelegate = self;
-        _wkWebview.scrollView.delegate = self;
         _wkWebview.navigationDelegate = self;
+        _wkWebview.scrollView.delegate = self;
         _wkWebview.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-        [self.containerV insertSubview:_wkWebview belowSubview:self.navToolV];
+        [self.containerV addSubview:_wkWebview];
         
 //        // 开启左划右划返回
 //        _wkWebview.allowsBackForwardNavigationGestures = YES;
@@ -211,10 +211,19 @@ static double backForwardSafeDistance = 80.0;
         [self.view addSubview:containerV];
         
         // 沉浸式导航栏
-        UIView *navToolV = [[UIView alloc] initWithFrame:CGRectMake(0, 0, XMScreenW, 2)];
+        UIView *navToolV = [[UIView alloc] initWithFrame:CGRectMake(0, XMStatusBarHeight, XMScreenW, 44)];
         self.navToolV = navToolV;
         [_containerV addSubview:navToolV];
-        navToolV.backgroundColor = [UIColor clearColor];
+        navToolV.backgroundColor = [self getNavColor];
+        // 点击事件
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(naVTitleLabDidClick)];
+        [navToolV addGestureRecognizer:tap];
+        
+        // 添加顶部的view,防止系统进入后台时隐藏statusbar造成的空隙
+        UIView *topCover = [[UIView alloc] initWithFrame:CGRectMake(0, -XMStatusBarHeight, XMScreenW, XMStatusBarHeight)];
+        [navToolV addSubview:topCover];
+        topCover.backgroundColor = [self getNavColor];
+        topCover.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         
         // 进度条
         UIProgressView *progressV = [[UIProgressView alloc] init];
@@ -228,32 +237,51 @@ static double backForwardSafeDistance = 80.0;
         [navToolV addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-0-[progressV(>=0)]-0-|" options:0 metrics:nil views:@{@"progressV":progressV}]];
 
         // 标题栏
-        UILabel *titleLab = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, XMScreenW - 88, 44)];
+        UILabel *titleLab = [[UILabel alloc] init];
+        [navToolV addSubview:titleLab];
         self.navToolTitleLab = titleLab;
         titleLab.textAlignment = NSTextAlignmentCenter;
-        titleLab.font = [UIFont systemFontOfSize:15];
-        titleLab.textColor = [UIColor whiteColor];
-        self.navigationItem.titleView = titleLab;
-        titleLab.userInteractionEnabled = YES;
-        self.navigationItem.titleView.userInteractionEnabled = YES;
-        // 点击事件
-        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(naVTitleLabDidClick)];
-        [titleLab addGestureRecognizer:tap];
+        titleLab.textColor = [UIColor blackColor];
+        // 要想用autolayout这个属性必须设置为NO
+        titleLab.translatesAutoresizingMaskIntoConstraints = NO;
+        // 垂直方向约束
+        [_containerV addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[titleLab(>=0)]-0-|" options:0 metrics:nil views:@{@"titleLab":titleLab}]];
+        // 水平方向约束
+        [_containerV addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-44-[titleLab(>=0)]-44-|" options:0 metrics:nil views:@{@"titleLab":titleLab}]];
         
+        UIView *btnContentV = [[UIView alloc] init];
+        self.navToolBtnContentV = btnContentV;
+        [navToolV addSubview:btnContentV];
+        btnContentV.translatesAutoresizingMaskIntoConstraints = NO;
+        // 垂直方向约束
+        [navToolV addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[btnContentV(>=0)]-0-|" options:0 metrics:nil views:@{@"btnContentV":btnContentV}]];
+        // 水平方向约束
+        [navToolV addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-0-[btnContentV(>=0)]-0-|" options:0 metrics:nil views:@{@"btnContentV":btnContentV}]];
         
         // 左边按钮
         UIButton *leftBtn = [[UIButton alloc] init];
+        [btnContentV addSubview:leftBtn];
         self.navToolLeftBtn = leftBtn;
-        [leftBtn setImage:[UIImage imageNamed:@"navTool_close_white"] forState:UIControlStateNormal];
+        [leftBtn setImage:[UIImage imageNamed:@"navTool_close"] forState:UIControlStateNormal];
         [leftBtn addTarget:self action:@selector(closeWebModule) forControlEvents:UIControlEventTouchUpInside];
-        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:leftBtn];
+        leftBtn.translatesAutoresizingMaskIntoConstraints = NO;
+        // 垂直方向约束
+        [btnContentV addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[leftBtn(>=0)]-0-|" options:0 metrics:nil views:@{@"leftBtn":leftBtn}]];
+        // 水平方向约束
+        [btnContentV addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-10-[leftBtn(>=0)]" options:0 metrics:nil views:@{@"leftBtn":leftBtn}]];
         
         // 右边按钮
         UIButton *rightBtn = [[UIButton alloc] init];
+        [btnContentV addSubview:rightBtn];
         self.navToolRightBtn = rightBtn;
-        [rightBtn setImage:[UIImage imageNamed:@"navTool_more_white"] forState:UIControlStateNormal];
+        [rightBtn setImage:[UIImage imageNamed:@"navTool_more"] forState:UIControlStateNormal];
         [rightBtn addTarget:self action:@selector(callNavRightDropView) forControlEvents:UIControlEventTouchUpInside];
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightBtn];
+        rightBtn.translatesAutoresizingMaskIntoConstraints = NO;
+        // 垂直方向约束
+        [btnContentV addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[rightBtn(>=0)]-0-|" options:0 metrics:nil views:@{@"rightBtn":rightBtn}]];
+        // 水平方向约束
+        [btnContentV addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"[rightBtn(>=0)]-10-|" options:0 metrics:nil views:@{@"rightBtn":rightBtn}]];
+        
     }
     return _containerV;
 }
@@ -275,7 +303,7 @@ static double backForwardSafeDistance = 80.0;
         CGFloat margin = (XMScreenW - btnNumber * btnWH) / ( btnNumber + 1);
 
 
-        UIView *toolBar = [[UIView alloc] initWithFrame: CGRectMake(0, XMScreenH - toolbarW - XMStatusBarHeight - 44, XMScreenW, toolbarW)];
+        UIView *toolBar = [[UIView alloc] initWithFrame: CGRectMake(0, XMScreenH - toolbarW, XMScreenW, toolbarW)];
         toolBar.backgroundColor = [self getNavColor];
         _toolBar = toolBar;
         _toolBar.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
@@ -332,7 +360,7 @@ static double backForwardSafeDistance = 80.0;
         _statusCover = statusCover;
         
         // 点击事件
-        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(webViewDidScrollToTop)];
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(naVTitleLabDidClick)];
         [statusCover addGestureRecognizer:tap];
     }
     return _statusCover;
@@ -389,7 +417,8 @@ static double backForwardSafeDistance = 80.0;
 - (void)viewWillAppear:(BOOL)animated{
     
     [super viewWillAppear:animated];
-
+    // 隐藏导航条
+    [self.navigationController setNavigationBarHidden:YES animated:YES];
     // 显示状态栏盖罩
     self.statusCover.hidden = NO;
     // 记录即将显示
@@ -411,7 +440,8 @@ static double backForwardSafeDistance = 80.0;
     // 当导航控制器栈顶控制器不是webmodule时,即将回到main界面或者save界面,恢复导航栏可见(此时self已经从导航控制器的栈中移除)
     if(![self.navigationController.childViewControllers.lastObject isKindOfClass:[XMWKWebViewController class]]){
         
-        // 恢复状态栏颜色,原来的为空
+        [self.navigationController setNavigationBarHidden:NO animated:YES];
+        // 恢复状态栏颜色,原来的为空 
         self.statusBar.backgroundColor = nil;
         [self.statusCover removeFromSuperview];
     }
@@ -505,8 +535,16 @@ static double backForwardSafeDistance = 80.0;
 
 /** web滚到顶部 */
 - (void)webViewDidScrollToTop{
-    [self toggleBottomBar:YES];
-    [self.wkWebview.scrollView setContentOffset:CGPointZero animated:YES];
+    
+    // 滚动到顶部并且回复导航栏原来的样式,发生frame改变的自动加入到animate中,有动画效果
+    [UIView animateWithDuration:0.25f animations:^{
+        [self.wkWebview evaluateJavaScript:@"window.scrollTo(0,0);" completionHandler:nil];
+        self.navToolV.frame = CGRectMake(0, XMStatusBarHeight, XMScreenW, 44);
+        self.wkWebview.frame = CGRectMake(0, 44 + XMStatusBarHeight, XMScreenW, XMScreenH);
+        self.navToolTitleLab.font = [UIFont systemFontOfSize:17];
+    }completion:^(BOOL finished) {
+        self.navToolBtnContentV.hidden = NO;
+    }];
 }
 
 /** web重新加载 */
@@ -533,19 +571,6 @@ static double backForwardSafeDistance = 80.0;
             self.toolBarForwardBtn.selected = !self.wkWebview.canGoForward;
             self.toolBarBackBtn.selected = !self.wkWebview.canGoBack;
         });
-    }
-}
-
-/// 底部tabbar显示隐藏切换
-- (void)toggleBottomBar:(BOOL)show{
-    if(show &&  CGRectGetMaxY(self.toolBar.frame) == XMScreenH + [self getBottomToolBarHeight] - XMStatusBarHeight - 44){ //显示toolbar
-        [UIView animateWithDuration:0.25f animations:^{
-            self.toolBar.frame = CGRectMake(0, CGRectGetMinY(self.toolBar.frame) - [self getBottomToolBarHeight], XMScreenW, [self getBottomToolBarHeight]);
-        }];
-    }else if(show == NO && CGRectGetMaxY(self.toolBar.frame) == XMScreenH - XMStatusBarHeight - 44){
-        [UIView animateWithDuration:0.25f animations:^{
-            self.toolBar.frame = CGRectMake(0, CGRectGetMinY(self.toolBar.frame) + [self getBottomToolBarHeight], XMScreenW, [self getBottomToolBarHeight]);
-        }];
     }
 }
 
@@ -626,14 +651,30 @@ static double backForwardSafeDistance = 80.0;
 }
 
 #pragma mark 导航栏的点击事件
-/// 标题点击事件
+/**
+ 重设沉浸式导航栏原来的尺寸
+ */
 - (void)naVTitleLabDidClick{
-    [self openNewModule:YES];
+    if(self.navToolV.frame.size.height < 44){
+        [UIView animateWithDuration:0.25f animations:^{
+            self.navToolV.frame = CGRectMake(0, XMStatusBarHeight, XMScreenW, 44);
+            self.wkWebview.frame = CGRectMake(0, 44 + XMStatusBarHeight, XMScreenW, XMScreenH);
+            self.navToolTitleLab.font = [UIFont systemFontOfSize:17];
+            self.toolBar.frame = CGRectMake(0, XMScreenH - [self getBottomToolBarHeight], XMScreenW, [self getBottomToolBarHeight]);
+        }completion:^(BOOL finished) {
+            self.navToolBtnContentV.hidden = NO;
+            // 恢复导航栏盖罩
+            self.statusCover.hidden = YES;
+        }];
+    }else{
+        [self openNewModule:YES];
+    }
 }
 
 /** 将webmodule关闭掉 */
 - (void)closeWebModule{
     
+    [self.navigationController setNavigationBarHidden:NO animated:YES];
     // 恢复状态栏颜色,原来的为空
     self.statusBar.backgroundColor = nil;
     [self.statusCover removeFromSuperview];
@@ -1213,20 +1254,74 @@ static double backForwardSafeDistance = 80.0;
 
 #pragma mark - UIScrollViewDelegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+
     if (scrollView.contentOffset.y < 0 || self.isDrag == NO){
         // 到达最顶部和最底部,触发弹簧效果时,需要实时更新最后的y偏移,但是不能改变view的frame
         self.lastContentY = scrollView.contentOffset.y;
         return;
     }
     
-    //toobar移动方案二,避免一直修改toolbar的frame,减少性能损耗
-    if(scrollView.contentOffset.y > self.lastContentY){
-        // 上滑隐藏toolbar
-        [self toggleBottomBar:NO];
-    }else if(scrollView.contentOffset.y < self.lastContentY){
-        // 下滑显示toolbar
-        [self toggleBottomBar:YES];
+    // 向上滚动contentOffset.y为正数且增大
+    CGRect tarF = self.navToolV.frame;
+    tarF.size.height -= scrollView.contentOffset.y - self.lastContentY;
+    // 控制导航栏的最大高度和最小高度,20和44修改要慎重,因为多处地方耦合,需要修改其他地方
+    if (tarF.size.height < 20){
+        tarF.size.height = 20;
     }
+    if (tarF.size.height > 44){
+        tarF.size.height = 44;
+        
+        // 导航栏最大化的时候移除导航栏盖罩
+        if(self.statusCover.hidden == NO){
+            self.statusCover.hidden = YES;
+        }
+    }else{
+        // 导航栏非最大化的时候添加状态栏盖罩
+        if(self.statusCover.hidden){
+            self.statusCover.hidden = NO;
+        }
+    }
+    // 根据导航栏高度决定是否显示两侧按钮
+    if (tarF.size.height > 30){
+        self.navToolBtnContentV.hidden = NO;
+    }else{
+        self.navToolBtnContentV.hidden = YES;
+    }
+
+    // 调整导航条高度
+    self.navToolV.frame = tarF;
+    /**
+     //toobar移动方案一
+     // 底部toobar联动,根据导航条的变化范围(20 ~ 44)去等比例调整伸出的高度([self getBottomToolBarHeight])
+     CGFloat toolBarY = XMScreenH - [self getBottomToolBarHeight] * ( tarF.size.height - 20) / 24;
+     self.toolBar.frame = CGRectMake(0, toolBarY, XMScreenW, [self getBottomToolBarHeight]);
+     
+     */
+    //toobar移动方案二,避免一直修改toolbar的frame,减少性能损耗
+    if(scrollView.contentOffset.y > self.lastContentY && CGRectGetMaxY(self.toolBar.frame) == XMScreenH){
+        // 上滑隐藏toolbar
+        [UIView animateWithDuration:0.25f animations:^{
+            self.toolBar.frame = CGRectMake(0, XMScreenH, XMScreenW, [self getBottomToolBarHeight]);
+        }];
+    }else if(scrollView.contentOffset.y < self.lastContentY && CGRectGetMaxY(self.toolBar.frame) == XMScreenH + [self getBottomToolBarHeight]){
+        // 下滑显示toolbar
+        [UIView animateWithDuration:0.25f animations:^{
+            self.toolBar.frame = CGRectMake(0, XMScreenH - [self getBottomToolBarHeight], XMScreenW, [self getBottomToolBarHeight]);
+        }];
+    }
+    
+    // 调整web的y
+    CGRect webF = self.wkWebview.frame;
+    webF.origin.y = CGRectGetMaxY(tarF);
+    webF.size.height = XMScreenH - CGRectGetMaxY(tarF);
+    self.wkWebview.frame = webF;
+    
+    // 调整字体大小
+    CGFloat fontSize = (17.0 * tarF.size.height / 44.0 > 10 ) ? 17.0 * tarF.size.height / 44.0 : 10;
+    self.navToolTitleLab.font = [UIFont systemFontOfSize:fontSize];
+
+    // 更新lastContentY
+    self.lastContentY = scrollView.contentOffset.y;
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{

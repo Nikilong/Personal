@@ -86,10 +86,9 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
     
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    // 禁用左侧返回手势,导航栏隐藏,采用白色主题的状态栏
+    // 禁用左侧返回手势,导航栏隐藏
     self.navigationController.interactivePopGestureRecognizer.enabled = NO;
     self.navigationController.navigationBar.hidden = YES;
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     
     // 截图
     [self.panBgImgV setImage:[XMImageUtil screenShot]];
@@ -104,9 +103,8 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
 
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
-    // 导航栏显示,采用黑色主题的状态栏
+    // 导航栏显示
     self.navigationController.navigationBar.hidden = NO;
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
     
     // 移除定时器
     [self stopTimer];

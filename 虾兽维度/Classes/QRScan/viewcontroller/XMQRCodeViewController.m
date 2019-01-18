@@ -169,7 +169,7 @@ UIImagePickerControllerDelegate
 /// 限定扫描的有效区域
 - (void)updateLayout {
     
-    self.qrView.center = CGPointMake([XMQRUtil screenBounds].size.width / 2, [XMQRUtil screenBounds].size.height / 2 - 100);
+    self.qrView.center = CGPointMake([XMQRUtil screenBounds].size.width / 2, [XMQRUtil screenBounds].size.height / 2 - 44);
     
     //修正扫描区域
     CGFloat screenHeight = self.view.frame.size.height;

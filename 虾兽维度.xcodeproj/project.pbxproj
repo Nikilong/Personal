@@ -681,6 +681,7 @@
 		FDA621F8215CF8EE0081356E /* XMSaveWebModelLogic.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMSaveWebModelLogic.m; sourceTree = "<group>"; };
 		FDAAAA3D213934A0004CF0C7 /* XMFreshView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMFreshView.h; sourceTree = "<group>"; };
 		FDAAAA3E213934A0004CF0C7 /* XMFreshView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMFreshView.m; sourceTree = "<group>"; };
+		FDAD87D321F171C10030792C /* XMWKWebViewController_nav_backup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMWKWebViewController_nav_backup.m; sourceTree = "<group>"; };
 		FDB099EF2112E71700148492 /* RSSwizzle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSSwizzle.h; sourceTree = "<group>"; };
 		FDB099F02112E71700148492 /* RSSwizzle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSSwizzle.m; sourceTree = "<group>"; };
 		FDB099F32112E77300148492 /* UIScreenEdgePanGestureRecognizer+UIScreenEdgePanGestureRecognizer_hook.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIScreenEdgePanGestureRecognizer+UIScreenEdgePanGestureRecognizer_hook.h"; sourceTree = "<group>"; };
@@ -1713,6 +1714,7 @@
 		FD9854342122D11500C31D94 /* UIWebview(old) */ = {
 			isa = PBXGroup;
 			children = (
+				FDAD87D321F171C10030792C /* XMWKWebViewController_nav_backup.m */,
 				FD98543A2122D46C00C31D94 /* XMWebViewController.h */,
 				FD9854392122D46C00C31D94 /* XMWebViewController.m */,
 			);

@@ -127,6 +127,7 @@ static NSString *const kEngine = @"engine";
     searchF.delegate = self;
     searchF.placeholder = @"请输入要搜索的条件";
     searchF.background = [UIImage imageNamed:@"searchbar_textfield_background"];
+    searchF.tintColor = [UIColor grayColor];
     // 添加右边全部清除按钮
     searchF.clearButtonMode = UITextFieldViewModeWhileEditing;
     // 添加左边搜索框图片
