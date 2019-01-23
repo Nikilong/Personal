@@ -71,6 +71,15 @@
     return YES;
 }
 
+/// 添加支持横屏播放视频
+- (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window {
+    
+    if ([NSStringFromClass([[[window subviews] lastObject] class]) isEqualToString:@"UITransitionView"]) {
+        return UIInterfaceOrientationMaskAll;
+    }
+    return UIInterfaceOrientationMaskPortrait;
+}
+
 /// 检查是否需要清理缓存文件
 - (void)checkToClearCache{
     NSString *gifFolder = [XMSavePathUnit getWebmoduleGifTempDirectory];

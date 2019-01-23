@@ -30,6 +30,7 @@
 #import "XMMutiWindowFlowLayout.h"
 #import "XMTabBarController.h"
 #import "XMBaseNavViewController.h"
+#import <AVKit/AVKit.h>
 
 
 @interface XMWKWebViewController ()<
@@ -380,7 +381,10 @@ static double backForwardSafeDistance = 80.0;
     /// wkwebview注册scheme,实现NSURLProtocol监听
 //    [NSURLProtocol wk_registerScheme:@"http"];
 //    [NSURLProtocol wk_registerScheme:@"https"];
-
+    
+    // 播放视频不受静音按键控制
+    AVAudioSession *session = [AVAudioSession sharedInstance];
+    [session setCategory:AVAudioSessionCategoryPlayback error:nil];
     
     // 观察进度条
     [self.wkWebview addObserver:self forKeyPath:@"estimatedProgress" options:NSKeyValueObservingOptionNew context:nil];
@@ -400,6 +404,9 @@ static double backForwardSafeDistance = 80.0;
 //    // TODO:设置窗口数字
 //    AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
 //    self.multiWindowCountLab.text = [NSString stringWithFormat:@"%ld",app.webModuleStack.count];
+    
+    // 监听退出全屏
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(exitFullScreen:) name:UIWindowDidBecomeHiddenNotification object:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -420,6 +427,9 @@ static double backForwardSafeDistance = 80.0;
     
     // 记录即将隐藏
     self.isShow = NO;
+    
+    // 移除全屏监听
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIWindowDidBecomeHiddenNotification object:nil];
 }
 
 
@@ -429,7 +439,7 @@ static double backForwardSafeDistance = 80.0;
     self.wkWebview.scrollView.delegate = nil;
     
     [self.wkWebview removeObserver:self forKeyPath:@"estimatedProgress"];
-    
+
     // 取消加载指示
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     NSLog(@"XMWebViewController-----------dealloc");
@@ -1251,6 +1261,12 @@ static double backForwardSafeDistance = 80.0;
     if([XMWXFloatWindowIconConfig isSaveFloatVCInUserDefaults]){
         [XMWXVCFloatWindow shareXMWXVCFloatWindow].hidden = NO;
     }
+}
+
+#pragma mark - 横竖全屏退出视频
+- (void)exitFullScreen:(NSNotification *)noti{
+    /// 退出横屏时需要保持状态栏可见
+    [UIApplication sharedApplication].statusBarHidden = NO;
 }
 
 #pragma mark - UIGestureRecognizerDelegate
