@@ -234,7 +234,7 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
 }
 /// 开启定时器
 - (void)beginTimer{
-    if (!self.timer){
+    if (!self.timer && self.photoModelArr.count > 1){
         self.timerBtn.selected = YES;
         NSTimer *timer = [NSTimer timerWithTimeInterval:self.timeInterval target:self selector:@selector(displayImages) userInfo:nil repeats:YES];
         [[NSRunLoop mainRunLoop] addTimer:timer forMode:NSDefaultRunLoopMode];
@@ -324,6 +324,16 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
     }else{
         [self dismissViewControllerAnimated:YES completion:nil];
     }
+}
+
+#pragma mark - peek预览的按钮事件
+- (NSArray<id<UIPreviewActionItem>> *)previewActionItems{
+    __weak typeof(self) weakSelf = self;
+    // 退出按钮
+    UIPreviewAction * backAct = [UIPreviewAction actionWithTitle:@"退出" style:UIPreviewActionStyleDestructive handler:^(UIPreviewAction * _Nonnull action, UIViewController * _Nonnull previewViewController) {
+            [weakSelf dismiss:nil];
+        }];
+    return @[backAct];
 }
 
 #pragma mark - 手势

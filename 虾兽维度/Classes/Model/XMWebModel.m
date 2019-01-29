@@ -19,6 +19,7 @@
 - (instancetype)initWithCoder:(NSCoder *)aDecoder{
     if (self = [super init]){
         self.imageURL = [aDecoder decodeObjectForKey:@"imageURL"];
+        self.images = [aDecoder decodeObjectForKey:@"images"];
         self.ID = [aDecoder decodeObjectForKey:@"ID"];
         self.title = [aDecoder decodeObjectForKey:@"title"];
         self.webURL = [aDecoder decodeObjectForKey:@"webURL"];
@@ -34,6 +35,7 @@
 /** 存档 */
 - (void)encodeWithCoder:(NSCoder *)aCoder{
     [aCoder encodeObject:self.imageURL forKey:@"imageURL"];
+    [aCoder encodeObject:self.images forKey:@"images"];
     [aCoder encodeObject:self.ID forKey:@"ID"];
     [aCoder encodeObject:self.title forKey:@"title"];
     [aCoder encodeObject:self.webURL forKey:@"webURL"];

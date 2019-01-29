@@ -68,10 +68,20 @@ NSString *const XMNewsSaveTimeDictKey = @"XMNewsSaveTimeDictKey";
             continue;
         }
         model.publishTime = [XMTimeTool getNewsPublishTime];
+        // 新闻封面,没有图片的新闻要做一个判断
         NSArray *arr = dict[@"data"][@"articles"][model.ID][@"thumbnails"];
-        // 没有图片的新闻要做一个判断
         if (arr.count){
             model.imageURL = [NSURL URLWithString:dict[@"data"][@"articles"][model.ID][@"thumbnails"][0][@"url"]];
+        }
+        
+        // 新闻图片组
+        NSArray *imgsArr = dict[@"data"][@"articles"][model.ID][@"images"];
+        if (imgsArr.count) {
+            NSMutableArray *imgArrM = [NSMutableArray array];
+            for (NSUInteger i = 0; i < imgsArr.count; i++) {
+                [imgArrM addObject:imgsArr[i][@"url"]];
+            }
+            model.images = [imgArrM copy];
         }
         
         [arrM addObject:model];

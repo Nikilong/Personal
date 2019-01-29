@@ -32,7 +32,8 @@ XMNavTitleTableViewControllerDelegate,
 XMConerAccessoryViewDelegate,
 XMDropViewDelegate,
 UIGestureRecognizerDelegate,
-UITraitEnvironment>
+UITraitEnvironment,
+UIViewControllerPreviewingDelegate>
 
 /** 强引用左侧边栏窗口 */
 @property (nonatomic, strong) XMLeftTableViewController *leftVC;
@@ -108,6 +109,13 @@ static double leftViewAnimateTime = 0.25;
     
     // 添加手势
     [self addGesture];
+    
+    // 添加3dtouch预览
+    if([UIDevice currentDevice].systemVersion.integerValue >= 9){
+        if(self.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable){
+            [self registerForPreviewingWithDelegate:self sourceView: self.view];
+        }
+    }
     
 }
 
@@ -534,6 +542,14 @@ static double leftViewAnimateTime = 0.25;
 ////
 ////}
 //
+
+#pragma mark UIViewControllerPreviewingDelegate
+- (UIViewController *)previewingContext:(id <UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location{
+    return [self.homeVC webmoduleWithTouchPoint:location];
+}
+- (void)previewingContext:(id <UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit{
+    [self showViewController:viewControllerToCommit sender:self];
+}
 
 #pragma mark UIGestureRecognizer delegate
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{

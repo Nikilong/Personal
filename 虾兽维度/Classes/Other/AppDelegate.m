@@ -50,14 +50,13 @@
     [self.window makeKeyAndVisible];
     
     //创建应用图标上的3D touch快捷选项,需要遵守UITraitEnvironment协议,才能判断方法
-    if([self respondsToSelector:@selector(traitCollection)]){
+    if([self respondsToSelector:@selector(traitCollection)] && [UIDevice currentDevice].systemVersion.integerValue >= 9){
         if ([self.traitCollection respondsToSelector:@selector(forceTouchCapability)]){
             if(self.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable){
                 [self creatShortcutItem];
             }
         }
     }
-//    [self creatShortcutItem];
     
     // 创建悬浮窗口
     [self recoverFloatVC];

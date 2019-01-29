@@ -20,6 +20,8 @@
 @interface XMWKWebViewController : UIViewController
 
 @property (nonatomic, strong) XMWebModel *model;
+@property (nonatomic, assign)  BOOL peekMode;  // 是否peek预览,peek预览隐藏底部toolbar
+
 
 /** 提供一个类方法创建webmodule */
 + (UIViewController *)webmoduleWithModel:(XMWebModel *)model;

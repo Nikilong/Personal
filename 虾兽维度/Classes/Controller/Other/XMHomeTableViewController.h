@@ -15,6 +15,9 @@
 
 @property (weak, nonatomic)  id<XMOpenWebmoduleProtocol> delegate;
 
+/// 通过peek点,创建一个3d预览界面
+- (instancetype)webmoduleWithTouchPoint:(CGPoint )point;
+
 - (void)downToBottom;
 - (void)upToTop;
 - (void)refresh;

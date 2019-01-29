@@ -17,6 +17,8 @@
 #import "XMFreshView.h"
 #import "XMWebModelLogic.h"
 #import "XMDebugDefine.h"
+#import "XMWKWebViewController.h"
+#import "XMPhotoCollectionViewController.h"
 
 CGFloat const XMRowHeight = 100;
 CGFloat const XMRrfreshHeight = 64;
@@ -245,6 +247,47 @@ UITabBarControllerDelegate>
     
     // 刷新一波新闻
     [self nonePullFresh];
+}
+
+#pragma mark - peek 预览
+/// 通过peek点,创建一个3d预览界面
+- (instancetype)webmoduleWithTouchPoint:(CGPoint )point{
+    // 这里面有两组数据,所以需要加上tableview的contentOffset
+    NSIndexPath *indexP = [self.tableView indexPathForRowAtPoint:CGPointMake(point.x, point.y  + self.tableView.contentOffset.y)];
+    XMWebModel *model;
+    if(indexP){
+        if(indexP.section == 0){
+            model = self.webs[indexP.row];
+        }else{
+            model = self.historyNewsArr[indexP.row];
+        }
+        XMWebTableViewCell *cell = (XMWebTableViewCell *)[self.tableView cellForRowAtIndexPath:indexP];
+        
+        // 转换坐标系
+        CGPoint touchP = [self.tableView convertPoint:point toView:nil];
+        touchP.y += self.tableView.contentOffset.y;
+        CGRect imgR = [cell.imageV convertRect:cell.imageV.bounds toView:nil];
+
+        BOOL inImgV = CGRectContainsPoint(imgR, touchP);
+        // 打开图片预览或者新闻预览
+        if(inImgV && model.images.count > 0){
+            UICollectionViewFlowLayout * layout = [[UICollectionViewFlowLayout alloc] init];
+            layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+            XMPhotoCollectionViewController *photoVC = [[XMPhotoCollectionViewController alloc] initWithCollectionViewLayout:layout];
+            photoVC.sourceType = XMPhotoDisplayImageSourceTypeWebURL;
+            photoVC.photoModelArr = [model.images copy];
+            photoVC.collectionView.contentSize = CGSizeMake(XMScreenW * model.images.count, XMScreenH);
+            [photoVC beginTimer];
+            return photoVC;
+        }else{
+            XMWKWebViewController *webmodule = (XMWKWebViewController *)[XMWKWebViewController webmoduleWithURL:model.webURL.absoluteString isSearchMode:YES];
+            webmodule.peekMode = YES;
+            return webmodule;
+        }
+    }else{
+        return nil;
+    }
+    
 }
 
 #pragma mark - uitableview 的基本实现

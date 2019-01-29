@@ -275,8 +275,7 @@ static double backForwardSafeDistance = 80.0;
         NSUInteger btnNumber = tabbarBtnData.count;
         CGFloat margin = (XMScreenW - btnNumber * btnWH) / ( btnNumber + 1);
 
-
-        UIView *toolBar = [[UIView alloc] initWithFrame: CGRectMake(0, XMScreenH - toolbarW - XMStatusBarHeight - 44, XMScreenW, toolbarW)];
+        UIView *toolBar = [[UIView alloc] initWithFrame: CGRectMake(0,XMScreenH - toolbarW - XMStatusBarHeight - 44, XMScreenW, toolbarW)];
         toolBar.backgroundColor = [self getNavColor];
         _toolBar = toolBar;
         _toolBar.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
@@ -376,6 +375,7 @@ static double backForwardSafeDistance = 80.0;
     // 初始化参数
     self.lastContentY = 0;
     self.isShow = NO;
+    self.peekMode = NO;
 //    [self initlizeContainerView];
     
     /// wkwebview注册scheme,实现NSURLProtocol监听
@@ -407,6 +407,9 @@ static double backForwardSafeDistance = 80.0;
     
     // 监听退出全屏
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(exitFullScreen:) name:UIWindowDidBecomeHiddenNotification object:nil];
+    
+    // 设置peek模式的toolbar位置
+    self.toolBar.hidden = self.peekMode;
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -472,6 +475,7 @@ static double backForwardSafeDistance = 80.0;
     // 如果module为空,则返回上一个缓存的webmodule
     if(model == nil){
         if(app.tempWebModuleVC){
+            app.tempWebModuleVC.peekMode = NO;
             return app.tempWebModuleVC;
         }
         return  nil;
@@ -479,6 +483,7 @@ static double backForwardSafeDistance = 80.0;
     
     // 先判断是否和上一个pop掉的webmodule的url相同,相同的话就不必再去重复加载
     if ([app.tempWebModuleVC.originURL.absoluteString isEqualToString:model.webURL.absoluteString]){
+        app.tempWebModuleVC.peekMode = NO;
         return app.tempWebModuleVC;
     }else{
         app.tempWebModuleVC = nil;
@@ -495,6 +500,26 @@ static double backForwardSafeDistance = 80.0;
     model.searchMode = searchMode;
     model.webURL = [NSURL URLWithString:url];
     return [self webmoduleWithModel:model];
+}
+
+#pragma mark - peek预览的按钮事件
+- (NSArray<id<UIPreviewActionItem>> *)previewActionItems{
+    __weak typeof(self) weakSelf = self;
+    // 收藏/取消收藏按钮
+    BOOL isSave = [XMSaveWebModelLogic isWebURLHaveSave:self.model.webURL.absoluteString];
+    UIPreviewAction * saveAct = [[UIPreviewAction alloc] init];
+    if(isSave){
+        saveAct = [UIPreviewAction actionWithTitle:@"取消收藏" style:UIPreviewActionStyleDestructive handler:^(UIPreviewAction * _Nonnull action, UIViewController * _Nonnull previewViewController) {
+            UIButton *btn = [UIButton buttonWithType:UIButtonTypeSystem];
+            btn.selected = YES;
+            [weakSelf saveWeb:btn];
+        }];
+    }else{
+        saveAct = [UIPreviewAction actionWithTitle:@"收藏" style:UIPreviewActionStyleDefault handler:^(UIPreviewAction * _Nonnull action, UIViewController * _Nonnull previewViewController) {
+            [weakSelf saveWeb:nil];
+        }];
+    }
+    return @[saveAct];
 }
 
 #pragma mark - toolbar和导航栏 点击事件

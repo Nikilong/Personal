@@ -27,6 +27,7 @@ typedef NS_ENUM(NSUInteger,XMPhotoDisplayImageSourceType){
 // 图片来源
 @property (nonatomic, assign)  XMPhotoDisplayImageSourceType sourceType;
 
-
+/// 开启自动播放
+- (void)beginTimer;
 
 @end
