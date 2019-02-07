@@ -275,8 +275,13 @@ static NSString *const kEngine = @"engine";
         BOOL canOpenNewWebmodule = ![model.url isEqualToString:self.passUrl];
         [self dismissViewControllerAnimated:YES completion:^{
             if (canOpenNewWebmodule){
-                XMWKWebViewController *webmodule = (XMWKWebViewController *)[XMWKWebViewController webmoduleWithURL:model.url isSearchMode:NO];
-                [self.navigationController pushViewController:webmodule animated:YES];
+                if ([self.delegate respondsToSelector:@selector(openWebmoduleRequest:)]){
+                    // 传递web数据给webmodule
+                    XMWebModel *webModel = [[XMWebModel alloc] init];
+                    webModel.webURL = [NSURL URLWithString:model.url];
+                    webModel.searchMode = YES;
+                    [self.delegate openWebmoduleRequest:webModel];
+                }
             }
         }];
     
