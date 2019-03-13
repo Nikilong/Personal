@@ -739,8 +739,13 @@ static double backForwardSafeDistance = 80.0;
             break;
         }
         case 1:{  // 生成当前网页的二维码
-            // 将当前的url的字符串转为二维码图片
-            [self showQrImage:[XMImageUtil creatQRCodeImageWithString:self.wkWebview.URL.absoluteString size:XMScreenW * 0.7]];
+            NSString *url = self.wkWebview.URL.absoluteString ? self.wkWebview.URL.absoluteString : self.model.webURL.absoluteString;
+            if(url){
+                // 将当前的url的字符串转为二维码图片
+                [self showQrImage:[XMImageUtil creatQRCodeImageWithString:url size:XMScreenW * 0.7]];
+            }else{
+                [MBProgressHUD showFailed:@"网址为空"];
+            }
             break;
         }
         case 2:{ // Safari
