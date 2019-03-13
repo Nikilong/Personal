@@ -573,14 +573,21 @@ XMSaveGroupTableViewControllerDelegate
             return @[deleAct,editAct];
             
         }else{
-            return @[[UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDestructive title:@"删除" handler:^(UITableViewRowAction * _Nonnull action, NSIndexPath * _Nonnull indexPath) {
+            
+            UITableViewRowAction *deleA = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDestructive title:@"删除" handler:^(UITableViewRowAction * _Nonnull action, NSIndexPath * _Nonnull indexPath) {
                 XMSaveWebModel *model = weakSelf.saveWebsArr[indexPath.row];
                 [XMSaveWebModelLogic deleteWebURL:model.url];
                 weakSelf.saveWebsArr = nil;
                 // 重新加载数据
                 [weakSelf.tableView reloadData];
-
-            }]];
+                
+            }];
+            UITableViewRowAction *copyA = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleNormal title:@"复制" handler:^(UITableViewRowAction * _Nonnull action, NSIndexPath * _Nonnull indexPath) {
+                XMSaveWebModel *model = weakSelf.saveWebsArr[indexPath.row];
+                UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+                [pasteboard setString:model.url];
+            }];
+            return @[deleA,copyA];
         }
     }else{ // 历史
         UITableViewRowAction *deleAct = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDestructive title:@"删除" handler:^(UITableViewRowAction * _Nonnull action, NSIndexPath * _Nonnull indexPath) {
