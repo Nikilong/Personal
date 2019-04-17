@@ -357,7 +357,7 @@ static double panToDismissDistance = 130.0f;  // 向下滑动退出图片预览�
 /// 图片手势直接退出浏览
 - (void)gestureToDismiss:(UIGestureRecognizer *)gest{
     if(self.isScroll && [gest isKindOfClass:[UITapGestureRecognizer class]]) return;
-    
+    self.collectionView.userInteractionEnabled = NO;
     CGFloat duration = 0.5f;
     // 当时swipe和tap手势触发的时候,需要设置背景相框位置/透明度/隐藏
     NSIndexPath *index = [self prepareToResponeGesture:gest];
