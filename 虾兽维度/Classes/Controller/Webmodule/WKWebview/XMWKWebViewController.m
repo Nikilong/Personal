@@ -1253,6 +1253,7 @@ static double backForwardSafeDistance = 80.0;
 
 #pragma mark - UIScrollViewDelegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    self.isScroller = YES;
     if (scrollView.contentOffset.y < 0 || self.isDrag == NO){
         // 到达最顶部和最底部,触发弹簧效果时,需要实时更新最后的y偏移,但是不能改变view的frame
         self.lastContentY = scrollView.contentOffset.y;
@@ -1278,7 +1279,7 @@ static double backForwardSafeDistance = 80.0;
 }
 
 - (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView{
-    self.isScroller = YES;
+    
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
@@ -1336,7 +1337,7 @@ static double backForwardSafeDistance = 80.0;
     if(self.imageArr.count <= 0) return;
     
     // 滚动中不能点击
-    if(self.isScroller || self.wkWebview.scrollView.isDecelerating) return;
+    if(self.isScroller) return;
     
     CGPoint touchPoint = [tap locationInView:self.wkWebview];
     NSString *imgURL = [NSString stringWithFormat:@"document.elementFromPoint(%f, %f).src", touchPoint.x, touchPoint.y];
@@ -1363,6 +1364,7 @@ static double backForwardSafeDistance = 80.0;
 }
 
 - (void)callPhotoDisplayViewcontrollerWithIndex:(NSUInteger)index{
+    if(self.isScroller) return;
     UICollectionViewFlowLayout * layout = [[UICollectionViewFlowLayout alloc] init];
     layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     XMPhotoCollectionViewController *photoVC = [[XMPhotoCollectionViewController alloc] initWithCollectionViewLayout:layout];
