@@ -215,7 +215,7 @@ UITabBarControllerDelegate>
         // 0.5s内连续点击当做是刷新事件,否则滚到最顶部
         double currentT = [NSDate date].timeIntervalSince1970;
         if(currentT - self.preTabitemClickT < 0.5){
-            [self refresh];
+            [self nonePullFresh];
         }else{
             [self upToTop];
         }
