@@ -1276,6 +1276,10 @@ static double backForwardSafeDistance = 80.0;
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
     self.isDrag = NO;
+    if(!decelerate){
+        // 如果decelerate==NO,那么不走这个方法 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+        [self markScrollDidEnd];
+    }
 }
 
 - (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView{
@@ -1283,9 +1287,14 @@ static double backForwardSafeDistance = 80.0;
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
+    [self markScrollDidEnd];
+}
+    
+/// 标记滚动结束
+- (void)markScrollDidEnd{
     self.isScroller = NO;
 }
-
+    
 #pragma mark - XMVisualViewDelegate
 - (void)visualViewWillRemoveFromSuperView{
     // 显示浮窗
