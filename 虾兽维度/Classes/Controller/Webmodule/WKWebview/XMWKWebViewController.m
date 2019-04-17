@@ -90,6 +90,9 @@ XMWebMultiWindowCollectionViewControllerDelegate>
 @property (nonatomic, strong)  UIPanGestureRecognizer *panSearchMode;
 @property (weak, nonatomic)  UIView *backForIconContainV;
 
+// 记录图片点击手势
+@property (weak, nonatomic)  UITapGestureRecognizer *tap;
+
 
 // 防止多次加载
 @property (nonatomic, assign)  BOOL canLoad;
@@ -199,6 +202,7 @@ static double backForwardSafeDistance = 80.0;
         // 图片点击手势
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(webviewDidTap:)];
         tap.delegate = self;
+        self.tap = tap;
         [_wkWebview addGestureRecognizer:tap];
         
     }
@@ -414,6 +418,7 @@ static double backForwardSafeDistance = 80.0;
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
+    [self markScrollDidEnd];
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
@@ -1163,6 +1168,8 @@ static double backForwardSafeDistance = 80.0;
     longP.delegate = self;
     //        longP.minimumPressDuration = 0.25;
     [self.wkWebview addGestureRecognizer:longP];
+    
+    [self.tap requireGestureRecognizerToFail:longP];
 }
 
 
@@ -1253,12 +1260,12 @@ static double backForwardSafeDistance = 80.0;
 
 #pragma mark - UIScrollViewDelegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    self.isScroller = YES;
     if (scrollView.contentOffset.y < 0 || self.isDrag == NO){
         // 到达最顶部和最底部,触发弹簧效果时,需要实时更新最后的y偏移,但是不能改变view的frame
         self.lastContentY = scrollView.contentOffset.y;
         return;
     }
+    self.isScroller = YES;
     
     //toobar移动方案二,避免一直修改toolbar的frame,减少性能损耗
     if(scrollView.contentOffset.y > self.lastContentY){
