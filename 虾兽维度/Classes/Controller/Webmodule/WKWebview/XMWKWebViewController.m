@@ -696,8 +696,8 @@ static double backForwardSafeDistance = 80.0;
         NSUInteger colMaxNum = 1;      // 每行允许排列的图标个数
         
         // 工具箱按钮参数
-        NSArray *moreBtnArr = @[@"分享",@"二维码",@"Safari",@"护眼模式"];
-        NSArray *moreBtnImgArr = @[@"navMoreBtn_share",@"navMoreBtn_code",@"navMoreBtn_safari",@"navMoreBtn_mode"];
+        NSArray *moreBtnArr = @[@"分享",@"二维码",@"Safari",@"护眼模式",@"浏览模式"];
+        NSArray *moreBtnImgArr = @[@"navMoreBtn_share",@"navMoreBtn_code",@"navMoreBtn_safari",@"navMoreBtn_mode",@"navMoreBtn_searchMode"];
         NSUInteger btnNum = moreBtnArr.count;
         
         // 添加按钮
@@ -755,6 +755,16 @@ static double backForwardSafeDistance = 80.0;
         }
         case 2:{ // Safari
             [[UIApplication sharedApplication] openURL:self.wkWebview.URL];
+            break;
+        }
+        case 4:{ // 浏览模式切换
+            self.searchMode = !self.searchMode;
+            if (self.searchMode){
+                [self initSearchMode];
+            }else{
+                [self removeSearchMode];
+            }
+            [MBProgressHUD showMessage:self.searchMode ? @"已关闭新窗口模式" : @"已打开新窗口模式" ];
             break;
         }
         case 99:{ //
@@ -1507,6 +1517,12 @@ static double backForwardSafeDistance = 80.0;
     self.panSearchMode = pan;
     [self.wkWebview addGestureRecognizer:pan];
 
+}
+    
+/// 取消searchMode
+- (void)removeSearchMode{
+    [self.wkWebview removeGestureRecognizer:self.panSearchMode];
+    [self.backForIconContainV removeFromSuperview];
 }
 
 @end
