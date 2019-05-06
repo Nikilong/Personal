@@ -174,8 +174,7 @@ static double leftViewAnimateTime = 0.25;
     [leftBtn dk_setTintColorPicker:DKColorPickerWithColors(RGB(242, 242, 242), XMNavDarkBG)];
     self.navigationItem.leftBarButtonItem = leftBtn;
     
-//    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:@selector(callSearchView)];
-    UIBarButtonItem *rightBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:@selector(tes)];
+    UIBarButtonItem *rightBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:@selector(callSearchView)];
     [rightBtn dk_setTintColorPicker:DKColorPickerWithColors(RGB(242, 242, 242), XMNavDarkBG)];
     self.navigationItem.rightBarButtonItem = rightBtn;
 
