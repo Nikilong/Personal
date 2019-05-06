@@ -7,10 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "XMDarkNightCell.h"
 
 @class XMWebModel, XMWifiTransModel;
 
-@interface XMWebTableViewCell : UITableViewCell
+@interface XMWebTableViewCell : XMDarkNightCell
 
 @property (nonatomic, strong) XMWebModel *model;
 @property (nonatomic, strong) XMWifiTransModel *wifiModel;

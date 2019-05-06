@@ -9,6 +9,8 @@
 #import "XMSaveGroupTableViewController.h"
 #import "XMSaveWebModel.h"
 #import "XMSaveWebModelLogic.h"
+#import <DKNightVersion/DKNightVersion.h>
+#import "XMDarkNightCell.h"
 
 @interface XMSaveGroupTableViewController ()
 
@@ -48,6 +50,12 @@
     // 分割线偏移设置
     self.tableView.separatorInset = UIEdgeInsetsMake(0, -100, 0, 0);
     self.tableView.tableFooterView = [[UIView alloc] init];
+    
+    // 去掉cell之间的间隔线
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    
+    self.tableView.dk_backgroundColorPicker = DKColorPickerWithColors(RGB(242, 242, 242), XMNavDarkBG);
+    self.tableView.dk_separatorColorPicker = DKColorPickerWithKey(SEP);
 }
 
 - (void)setNav{
@@ -61,7 +69,9 @@
     
     self.navigationItem.title = @"移动至";
     
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStylePlain target:self action:@selector(dismiss)];
+    UIBarButtonItem *leftBtn = [[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStylePlain target:self action:@selector(dismiss)];
+    [leftBtn dk_setTintColorPicker:DKColorPickerWithColors(RGB(242, 242, 242), XMNavDarkBG)];
+    self.navigationItem.leftBarButtonItem = leftBtn;
 }
 
 - (void)dismiss{
@@ -81,9 +91,9 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *ID = @"saveGroupCell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ID];
+    XMDarkNightCell *cell = [tableView dequeueReusableCellWithIdentifier:ID];
     if (!cell){
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:ID];
+        cell = [[XMDarkNightCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:ID];
         cell.textLabel.font = [UIFont boldSystemFontOfSize:15];
     }
     XMSaveWebModel *model = self.dataArr[indexPath.row];

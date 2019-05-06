@@ -14,6 +14,7 @@
 #import "XMQRView.h"
 #import "XMQRUtil.h"
 
+#import <DKNightVersion/DKNightVersion.h>
 
 @interface XMQRCodeViewController ()<
 AVCaptureMetadataOutputObjectsDelegate,
@@ -49,9 +50,13 @@ UIImagePickerControllerDelegate
     
     self.title = @"扫描二维码";
     
+    UIBarButtonItem *leftBtn = [[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStylePlain target:self action:@selector(dismiss)];
+    UIBarButtonItem *rightBtn = [[UIBarButtonItem alloc] initWithTitle:@"相册" style:UIBarButtonItemStylePlain target:self action:@selector(dealAlbumPicture)];
+    [leftBtn dk_setTintColorPicker:DKColorPickerWithColors(RGB(242, 242, 242), XMNavDarkBG)];
+    [rightBtn dk_setTintColorPicker:DKColorPickerWithColors(RGB(242, 242, 242), XMNavDarkBG)];
     // 添加从相册中识别二维码
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"相册" style:UIBarButtonItemStylePlain target:self action:@selector(dealAlbumPicture)];
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStylePlain target:self action:@selector(dismiss)];
+    self.navigationItem.rightBarButtonItem = rightBtn;
+    self.navigationItem.leftBarButtonItem = leftBtn;
 }
 
 

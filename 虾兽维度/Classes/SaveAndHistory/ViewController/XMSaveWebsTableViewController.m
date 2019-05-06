@@ -12,6 +12,9 @@
 #import "XMWKWebViewController.h"
 #import "MBProgressHUD+NK.h"
 #import "XMBaseNavViewController.h"
+#import "XMDarkNightCell.h"
+
+#import <DKNightVersion/DKNightVersion.h>
 
 typedef NS_ENUM(NSUInteger,XMSaveVCDataSource){
     XMSaveVCDataSourceSave,         // 收藏网页
@@ -68,7 +71,8 @@ XMSaveGroupTableViewControllerDelegate
         CGFloat btnWH = 30;
         CGFloat btnY = (toolH - btnWH) * 0.5;
         UIView *toolBar = [[UIView alloc] initWithFrame:CGRectMake(0, XMScreenH - toolH + (isIphoneX ? -24 : 0), XMScreenW, toolH + (isIphoneX ? 24 : 0))];
-        toolBar.backgroundColor = [UIColor colorWithRed:249/255.0 green:249/255.0 blue:249/255.0 alpha:1.0f];
+//        toolBar.backgroundColor = [UIColor colorWithRed:249/255.0 green:249/255.0 blue:249/255.0 alpha:1.0f];
+        toolBar.dk_backgroundColorPicker = DKColorPickerWithColors([UIColor colorWithRed:249/255.0 green:249/255.0 blue:249/255.0 alpha:1.0f], [UIColor blackColor]);
         _toolBar = toolBar;
         [self.view.superview addSubview:toolBar];
         
@@ -147,6 +151,8 @@ XMSaveGroupTableViewControllerDelegate
     
     self.tableView.separatorInset = UIEdgeInsetsMake(0, -100, 0, 0);
     self.tableView.tableFooterView = [[UIView alloc] init];
+    self.tableView.dk_backgroundColorPicker = DKColorPickerWithColors(RGB(242, 242, 242), XMNavDarkBG);
+    self.tableView.dk_separatorColorPicker = DKColorPickerWithKey(SEP);
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -219,18 +225,21 @@ XMSaveGroupTableViewControllerDelegate
     seg.frame = CGRectMake(0, 0, 150, 30);
     seg.selectedSegmentIndex = 0;
     [seg addTarget:self action:@selector(segmentedButtonDidClick:) forControlEvents:UIControlEventValueChanged];
+    [seg dk_setTintColorPicker: DKColorPickerWithColors(RGB(242, 242, 242), [UIColor whiteColor])];
     self.navigationItem.titleView = seg;
     
     UIButton *leftBarBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 60, 30)];
     [leftBarBtn setTitle:@"返回" forState:UIControlStateNormal];
-    [leftBarBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [leftBarBtn addTarget:self action:@selector(dismiss) forControlEvents:UIControlEventTouchUpInside];
+    //    [leftBarBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [leftBarBtn dk_setTitleColorPicker:DKColorPickerWithColors([UIColor whiteColor], XMNavDarkBG) forState:UIControlStateNormal];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:leftBarBtn];
     
     UIButton *rightBarBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 60, 30)];
     [rightBarBtn setTitle:@"编辑" forState:UIControlStateNormal];
-    [rightBarBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [rightBarBtn addTarget:self action:@selector(rightBarbuttonDidClick) forControlEvents:UIControlEventTouchUpInside];
+    //    [rightBarBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [rightBarBtn dk_setTitleColorPicker:DKColorPickerWithColors([UIColor whiteColor], XMNavDarkBG) forState:UIControlStateNormal];
     self.rightBarBtn = rightBarBtn;
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightBarBtn];
 }
@@ -432,9 +441,9 @@ XMSaveGroupTableViewControllerDelegate
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *ID = @"saveCell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ID];
+    XMDarkNightCell *cell = [tableView dequeueReusableCellWithIdentifier:ID];
     if (!cell){
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:ID];
+        cell = [[XMDarkNightCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:ID];
         cell.textLabel.font = [UIFont boldSystemFontOfSize:13];
         cell.detailTextLabel.font = [UIFont systemFontOfSize:9];
     }

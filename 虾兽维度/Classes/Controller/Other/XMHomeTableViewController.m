@@ -20,6 +20,8 @@
 #import "XMWKWebViewController.h"
 #import "XMPhotoCollectionViewController.h"
 
+#import <DKNightVersion/DKNightVersion.h>
+
 CGFloat const XMRowHeight = 100;
 CGFloat const XMRrfreshHeight = 64;
 
@@ -105,6 +107,11 @@ UITabBarControllerDelegate>
     self.tableView.rowHeight = XMRowHeight;
     self.tableView.estimatedSectionFooterHeight = 0;
     self.tableView.estimatedSectionHeaderHeight = 0;
+    // 去掉cell之间的间隔线
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    
+    self.tableView.dk_backgroundColorPicker = DKColorPickerWithColors(RGB(242, 242, 242), XMNavDarkBG);
+    self.tableView.dk_separatorColorPicker = DKColorPickerWithKey(SEP);
     
     // 设置下拉刷新
 #ifndef XMLauchAutoRefrehFobiden
@@ -313,7 +320,8 @@ UITabBarControllerDelegate>
     if(section == 1){
         // 标题栏
         UIView *headerV  = [[UIView alloc] initWithFrame:CGRectMake(0, 0, XMScreenW, 35)];
-        headerV.backgroundColor = RGB(242, 242, 242);
+        headerV.dk_backgroundColorPicker = DKColorPickerWithColors(RGB(242, 242, 242), XMNavDarkBG);
+
         
         UILabel *titleLab = [[UILabel alloc] initWithFrame:headerV.bounds];
         titleLab.textAlignment = NSTextAlignmentCenter;
@@ -363,7 +371,6 @@ UITabBarControllerDelegate>
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     //取得cell
     XMWebTableViewCell *cell = [XMWebTableViewCell cellWithTableView:tableView];
-    
     //设置cell的其他信息
     XMWebModel *model;
     if(indexPath.section == 0){

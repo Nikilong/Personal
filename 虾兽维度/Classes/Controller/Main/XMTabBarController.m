@@ -29,6 +29,8 @@
 #import "虾兽维度-Bridging-Header.h"
 #import "虾兽维度-Swift.h"
 
+#import <DKNightVersion/DKNightVersion.h>
+
 @interface XMTabBarController ()<
 XMTabBarDelegate,
 XMOpenWebmoduleProtocol
@@ -39,7 +41,7 @@ XMOpenWebmoduleProtocol
 @property (weak, nonatomic)  UIView *toolViewCover;  // 蒙板
 @property (nonatomic, assign)  NSInteger toolBtnClickIndex;  // 更多工具栏点击的按钮的tag
 
-
+@property (weak, nonatomic)  UILabel *darkModeLab;  // 底部模式按钮
 
 
 @end
@@ -73,7 +75,18 @@ XMOpenWebmoduleProtocol
 //    [self setTabBarItem:toolVC.tabBarItem title:@"我" titleSize:13 titleFontName:@"HeiTi SC" selectedImage:@"tabbar_icon_me_highlight" selectedTitleColor:[UIColor redColor] normalImage:@"tabbar_icon_me_normal" normalTitleColor:[UIColor grayColor]];
 
     self.viewControllers = @[navMain,navTool];
+    
+    // 监听切换黑夜模式
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeDrakModeTabbarStyle) name:DKNightVersionThemeChangingNotification object:nil];
+    
 }
+
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    [self changeDrakModeTabbarStyle];
+}
+
+
 
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
@@ -84,6 +97,10 @@ XMOpenWebmoduleProtocol
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kCheckCreateFloatwindow];
     [[NSUserDefaults standardUserDefaults] synchronize];
     [XMWXVCFloatWindow shareXMWXVCFloatWindow];
+}
+
+- (void)dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)setTabBarItem:(UITabBarItem *)tabbarItem
@@ -104,6 +121,16 @@ XMOpenWebmoduleProtocol
     // 选中字体颜色
     [[UITabBarItem appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName:selectColor,NSFontAttributeName:[UIFont fontWithName:fontName size:size]} forState:UIControlStateSelected];
 }
+
+/// 切换tabbar的黑夜模式
+- (void)changeDrakModeTabbarStyle{
+    if ([self.dk_manager.themeVersion isEqualToString:DKThemeVersionNight]) {  // 黑夜
+        [self.tabBar setBarTintColor:[UIColor blackColor]];
+    }else{ // 白天
+        [self.tabBar setBarTintColor:[UIColor whiteColor]];
+    }
+}
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -218,7 +245,8 @@ XMOpenWebmoduleProtocol
         
         UIView *toolMenuV = [[UIView alloc] initWithFrame:CGRectMake(toolMenuX, 0, toolMenuVW, toolMenuVH)];
         [toolView addSubview:toolMenuV];
-        toolMenuV.backgroundColor = [UIColor whiteColor];
+//        toolMenuV.backgroundColor = [UIColor whiteColor];
+        toolMenuV.dk_backgroundColorPicker = DKColorPickerWithColors([UIColor whiteColor], [UIColor blackColor]);
         
         // 添加按钮
         CGFloat btnX;
@@ -233,15 +261,20 @@ XMOpenWebmoduleProtocol
             
             btn.tag = i;
             [btn setImage:[UIImage imageNamed:dict[@"image"]] forState:UIControlStateNormal];
-            [btn addTarget:self action:@selector(toolButtonDidClick:) forControlEvents:UIControlEventTouchDown];
             [btn setTintColor:[UIColor darkGrayColor]];
+            [btn addTarget:self action:@selector(toolButtonDidClick:) forControlEvents:UIControlEventTouchDown];
             
             // 按钮下标签
             UILabel *btnL = [[UILabel alloc] initWithFrame:CGRectMake(btnX - 0.5 * toolBtnMarginX, CGRectGetMaxY(btn.frame), btnWH + toolBtnMarginX, btnLabelH)];
             btnL.numberOfLines = 0;
             btnL.lineBreakMode = NSLineBreakByWordWrapping;
             btnL.text = dict[@"title"];
-            btnL.tintColor = [UIColor blackColor];
+            if(i==1){
+                self.darkModeLab = btnL;
+                [self changeDrakModeLableText];
+            }
+            [btnL dk_setTextColorPicker: DKColorPickerWithColors([UIColor blackColor], [UIColor grayColor])];
+//            btnL.tintColor = [UIColor blackColor];
             btnL.textAlignment = NSTextAlignmentCenter;
             btnL.font = [UIFont systemFontOfSize:11];
             [toolMenuV addSubview:btnL];
@@ -249,6 +282,7 @@ XMOpenWebmoduleProtocol
         
         CGFloat toolViewH = CGRectGetMaxY(toolMenuV.frame) - CGRectGetMinY(toolMenuV.frame);
         toolView.frame = CGRectMake(0, XMScreenH, XMScreenW, toolViewH);
+        
     }
     return _toolV;
 }
@@ -271,7 +305,12 @@ XMOpenWebmoduleProtocol
             
             break;
         }case 1:{ // 夜间模式
-            
+            if ([self.dk_manager.themeVersion isEqualToString:DKThemeVersionNight]) {
+                [self.dk_manager dawnComing];
+            } else {
+                [self.dk_manager nightFalling];
+            }
+            [self changeDrakModeLableText];
             break;
         }case 2:{ // 清理缓存
             [self clearCache];
@@ -288,6 +327,16 @@ XMOpenWebmoduleProtocol
     }
     // 复位点击按钮索引
     self.toolBtnClickIndex = -1;
+}
+
+/// 底部更多中护眼模式按钮的文字
+- (void)changeDrakModeLableText{
+    if ([self.dk_manager.themeVersion isEqualToString:DKThemeVersionNight]) {
+        self.darkModeLab.text = @"白天模式";
+    }else{
+        self.darkModeLab.text = @"夜间模式";
+    }
+    
 }
 
 /// 清除缓存

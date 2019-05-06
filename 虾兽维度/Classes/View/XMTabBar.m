@@ -7,6 +7,8 @@
 //
 
 #import "XMTabBar.h"
+#import <DKNightVersion/DKNightVersion.h>
+
 @interface XMTabBar()
 
 @property (weak, nonatomic)  UIButton *midBtn;  // 中心按钮

@@ -20,6 +20,9 @@
 
 #import "XMClipImageViewController.h"
 #import "XMWifiTransFileViewController.h"
+#import "XMDarkNightCell.h"
+
+#import <DKNightVersion/DKNightVersion.h>
 
 static NSString * const kAuthenCallBackNotificaiton = @"kAuthenCallBackNotificaiton";
 double const XMToolBoxViewAnimationTime = 0.2;
@@ -57,6 +60,12 @@ UIGestureRecognizerDelegate
     
     self.tableView.rowHeight = 70;
     self.title = @"工具箱";
+    
+    // 去掉cell之间的间隔线
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    
+    self.tableView.dk_backgroundColorPicker = DKColorPickerWithColors(RGB(242, 242, 242), XMNavDarkBG);
+    self.tableView.dk_separatorColorPicker = DKColorPickerWithKey(SEP);
     
     // 观察指纹登录通知
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(authenticationCallBack:) name:kAuthenCallBackNotificaiton object:self];
@@ -109,9 +118,9 @@ UIGestureRecognizerDelegate
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *ID = @"toolboxCell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ID];
+    XMDarkNightCell *cell = [tableView dequeueReusableCellWithIdentifier:ID];
     if (!cell){
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:ID];
+        cell = [[XMDarkNightCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:ID];
     }
     XMToolboxModel *model = self.dataArr[indexPath.row];
     cell.textLabel.text = model.title;

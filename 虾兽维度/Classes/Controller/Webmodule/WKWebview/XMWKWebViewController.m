@@ -32,6 +32,7 @@
 #import "XMBaseNavViewController.h"
 #import <AVKit/AVKit.h>
 
+#import <DKNightVersion/DKNightVersion.h>
 
 @interface XMWKWebViewController ()<
 NSURLSessionDelegate,
@@ -102,6 +103,7 @@ XMWebMultiWindowCollectionViewControllerDelegate>
 
 // 导航栏右边功能栏
 @property (nonatomic, strong) XMDropView *navRightDropV;
+@property (weak, nonatomic)  UIButton *darkModeBtn;  // 更多护眼模式按钮
 
 /** statusBar相关*/
 // 状态栏
@@ -280,7 +282,8 @@ static double backForwardSafeDistance = 80.0;
         CGFloat margin = (XMScreenW - btnNumber * btnWH) / ( btnNumber + 1);
 
         UIView *toolBar = [[UIView alloc] initWithFrame: CGRectMake(0,XMScreenH - toolbarW - XMStatusBarHeight - 44, XMScreenW, toolbarW)];
-        toolBar.backgroundColor = [self getNavColor];
+//        toolBar.backgroundColor = [self getNavColor];
+        toolBar.dk_backgroundColorPicker = DKColorPickerWithColors([self getNavColor], XMNavDarkBG);
         _toolBar = toolBar;
         _toolBar.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
 
@@ -685,6 +688,7 @@ static double backForwardSafeDistance = 80.0;
 /** 导航栏右边更多的dropview*/
 - (void)callNavRightDropView{
     if (self.navRightDropV){
+        [self changeDrakModeButtonStyle];   // 转换按钮图标和文字
         self.navRightDropV.hidden = NO;
     }else{
         
@@ -696,7 +700,7 @@ static double backForwardSafeDistance = 80.0;
         NSUInteger colMaxNum = 1;      // 每行允许排列的图标个数
         
         // 工具箱按钮参数
-        NSArray *moreBtnArr = @[@"分享",@"二维码",@"Safari",@"护眼模式",@"浏览模式"];
+        NSArray *moreBtnArr = @[@"分享",@"二维码",@"Safari",@"白天模式",@"浏览模式"];
         NSArray *moreBtnImgArr = @[@"navMoreBtn_share",@"navMoreBtn_code",@"navMoreBtn_safari",@"navMoreBtn_mode",@"navMoreBtn_searchMode"];
         NSUInteger btnNum = moreBtnArr.count;
         
@@ -714,8 +718,13 @@ static double backForwardSafeDistance = 80.0;
             btn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;  // 左对齐
             btn.titleEdgeInsets = UIEdgeInsetsMake(0, 7, 0, 0);
             [btn setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
-            [btn setTitle:moreBtnArr[i] forState:UIControlStateNormal];
-            [btn setImage:[UIImage imageNamed:moreBtnImgArr[i]] forState:UIControlStateNormal];
+            if(i != 3){
+                [btn setTitle:moreBtnArr[i] forState:UIControlStateNormal];
+                [btn setImage:[UIImage imageNamed:moreBtnImgArr[i]] forState:UIControlStateNormal];
+            }else{
+                self.darkModeBtn = btn;
+                [self changeDrakModeButtonStyle];
+            }
             [btn addTarget:self action:@selector(navRightMoreBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
             // 添加分割线
             if(i < btnNum - 1){
@@ -726,10 +735,12 @@ static double backForwardSafeDistance = 80.0;
         }
         // 计算总的尺寸,x方向有间距,y方向无间距
         containerV.frame = CGRectMake(0, 0, padding + (padding + btnW) * (colMaxNum - 0),  btnH * ( (btnNum + colMaxNum - 1) / colMaxNum ));
+        containerV.dk_backgroundColorPicker = DKColorPickerWithColors([UIColor whiteColor], XMNavDarkBG);
         
         // 创建dropview
         self.navRightDropV = [XMDropView dropView];
         self.navRightDropV.content = containerV;
+        containerV.superview.dk_backgroundColorPicker = DKColorPickerWithColors([UIColor whiteColor], XMNavDarkBG);
         // 新创建的dropview指向titleview
         [self.navRightDropV showFrom:self.navToolRightBtn];
     }
@@ -757,6 +768,15 @@ static double backForwardSafeDistance = 80.0;
             [[UIApplication sharedApplication] openURL:self.wkWebview.URL];
             break;
         }
+        case 3:{ // 护眼模式
+            if ([self.dk_manager.themeVersion isEqualToString:DKThemeVersionNight]) {
+                [self.dk_manager dawnComing];
+            } else {
+                [self.dk_manager nightFalling];
+            }
+            [self changeDrakModeButtonStyle];   // 转换按钮图标和文字
+            break;
+        }
         case 4:{ // 浏览模式切换
             self.searchMode = !self.searchMode;
             if (self.searchMode){
@@ -774,6 +794,21 @@ static double backForwardSafeDistance = 80.0;
             break;
     }
 }
+
+
+/// 切换更多中护眼模式按钮的文字和图片
+- (void)changeDrakModeButtonStyle{
+    if ([self.dk_manager.themeVersion isEqualToString:DKThemeVersionNight]) {
+        [self.darkModeBtn setTitle:@"白天模式" forState:UIControlStateNormal];
+        [self.darkModeBtn setImage:[UIImage imageNamed:@"navMoreBtn_mode_sun"] forState:UIControlStateNormal];
+        
+    }else{
+        [self.darkModeBtn setTitle:@"夜间模式" forState:UIControlStateNormal];
+        [self.darkModeBtn setImage:[UIImage imageNamed:@"navMoreBtn_mode"] forState:UIControlStateNormal];
+    }
+    
+}
+
 
 /// 展示二维码图片
 - (void)showQrImage:(UIImage *)image{

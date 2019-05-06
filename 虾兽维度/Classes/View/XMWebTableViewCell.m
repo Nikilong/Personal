@@ -12,6 +12,8 @@
 #import "UIImageView+WebCache.h"
 #import "XMVisualView.h"
 
+#import <DKNightVersion/DKNightVersion.h>
+
 @interface XMWebTableViewCell()
 
 @property (weak, nonatomic) IBOutlet UILabel *title;
@@ -24,6 +26,13 @@
 @end
 
 @implementation XMWebTableViewCell
+
+
+- (void)setFrame:(CGRect)frame{
+    frame.origin.y += 1;
+    frame.size.height -= 1;
+    [super setFrame:frame];
+}
 
 
 - (void)setWifiModel:(XMWifiTransModel *)wifiModel{
@@ -104,6 +113,7 @@
     
     if (cell == nil) {
         cell = [[[NSBundle mainBundle] loadNibNamed:@"XMWebTableViewCell" owner:nil options:nil] lastObject];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:cell action:@selector(tapToShowBigImage)];
         [cell.imageV addGestureRecognizer:tap];
         cell.imageV.userInteractionEnabled = YES;

@@ -26,6 +26,8 @@
 #import "MBProgressHUD+NK.h"
 
 
+#import <DKNightVersion/DKNightVersion.h>
+
 @interface XMMainViewController ()<
 XMLeftTableViewControllerDelegate,
 XMNavTitleTableViewControllerDelegate,
@@ -94,7 +96,7 @@ static double leftViewAnimateTime = 0.25;
     
     // 添加主新闻窗口
     [self addHomeVC];
-    
+
     // 添加左侧边栏
     [self addLeftVC];
     
@@ -109,6 +111,9 @@ static double leftViewAnimateTime = 0.25;
     
     // 添加手势
     [self addGesture];
+    
+    // 添加黑夜模式
+    self.view.dk_backgroundColorPicker = DKColorPickerWithKey(BG);
     
     // 添加3dtouch预览
     if([UIDevice currentDevice].systemVersion.integerValue >= 9){
@@ -165,11 +170,28 @@ static double leftViewAnimateTime = 0.25;
 
 /** 设置导航栏扫描二维码和搜索按钮 */
 - (void)addNavButton{
+    UIBarButtonItem *leftBtn = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"scan"] landscapeImagePhone:nil style:UIBarButtonItemStyleDone target:self action:@selector(scanQRCode)];
+    [leftBtn dk_setTintColorPicker:DKColorPickerWithColors(RGB(242, 242, 242), XMNavDarkBG)];
+    self.navigationItem.leftBarButtonItem = leftBtn;
     
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"scan"] landscapeImagePhone:nil style:UIBarButtonItemStyleDone target:self action:@selector(scanQRCode)];
-    
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:@selector(callSearchView)];
+//    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:@selector(callSearchView)];
+    UIBarButtonItem *rightBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:@selector(tes)];
+    [rightBtn dk_setTintColorPicker:DKColorPickerWithColors(RGB(242, 242, 242), XMNavDarkBG)];
+    self.navigationItem.rightBarButtonItem = rightBtn;
+
 }
+
+- (void)tes{
+    if ([self.dk_manager.themeVersion isEqualToString:DKThemeVersionNight]) {
+        [self.dk_manager dawnComing];
+    } else {
+        [self.dk_manager nightFalling];
+    }
+//    PresentingViewController *pre = [[PresentingViewController alloc] init];
+//    [self presentViewController:pre animated:YES completion: nil];
+    
+}
+
 
 /** 设置导航栏标题 */
 - (void)setNavTitle:(NSString *)channel{
@@ -338,16 +360,19 @@ static double leftViewAnimateTime = 0.25;
             [containerV addSubview:btn];
             btn.tag = i;
             btn.titleLabel.font = [UIFont systemFontOfSize:13];
-            [btn setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
+//            [btn setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
+            [btn dk_setTitleColorPicker:DKColorPickerWithColors([UIColor darkGrayColor], [UIColor lightTextColor]) forState:UIControlStateNormal];
             [btn setTitle:model.channel forState:UIControlStateNormal];
             [btn addTarget:self action:@selector(channelBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
         }
         // 计算总的尺寸,x方向有间距,y方向无间距
         containerV.frame = CGRectMake(0, 0, padding + (padding + btnW) * (colMaxNum - 0),  btnH * ( (btnNum + colMaxNum - 1) / colMaxNum ));
+        containerV.dk_backgroundColorPicker = DKColorPickerWithColors([UIColor whiteColor], XMNavDarkBG);
         
         // 创建dropview
         self.dropView = [XMDropView dropView];
         self.dropView.content = containerV;
+        containerV.superview.dk_backgroundColorPicker = DKColorPickerWithColors([UIColor whiteColor], XMNavDarkBG);
         self.dropView.delegate = self;
         // 新创建的dropview指向titleview
         [self.dropView showFrom:self.navigationItem.titleView];
