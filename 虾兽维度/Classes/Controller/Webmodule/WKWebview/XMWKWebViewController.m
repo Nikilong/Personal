@@ -31,6 +31,7 @@
 #import "XMTabBarController.h"
 #import "XMBaseNavViewController.h"
 #import <AVKit/AVKit.h>
+#import <AVFoundation/AVFoundation.h>
 
 #import <DKNightVersion/DKNightVersion.h>
 
