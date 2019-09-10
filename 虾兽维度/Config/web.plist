@@ -8,6 +8,12 @@
 		<key>url</key>
 		<string>http://iflow.uczzd.cn/iflow/api/v1/channel/100?app=uc-iflow&amp;sp_gz=1&amp;recoid=4780413596505591035&amp;ftime=1488170672207&amp;method=new&amp;count=20&amp;no_op=0&amp;auto=0&amp;content_ratio=0&amp;_tm=1488170686131&amp;sign=bTkwBf9iQB%2F%2B%2F%2BHW3ogpeRxXTASXxQkcussc021pvCbY8PhRcDeSzLbM&amp;sc=&amp;uc_param_str=dnnivebichfrmintcpgieiwidsudsvli&amp;dn=20151536891-fdd83270&amp;ni=bTkwBTRiltTM%2FB%2BoM9%2BSzKFTH%2Fw9my2pBssWYs9s4gujq%2F0%3D&amp;ve=10.9.6.755&amp;bi=997&amp;fr=iphone&amp;mi=iPhone8%2C1&amp;nt=2&amp;cp=isp%3A%E7%94%B5%E4%BF%A1%3Bprov%3A%E5%B9%BF%E4%B8%9C%3Bcity%3A%3Bna%3A%E4%B8%AD%E5%9B%BD%3Bcc%3ACN%3Bac%3A&amp;ei=bTkwBcdiqTSojXfM8KyHGJdaY7Z1jg5t1b9yZ4hg%2B347oiyKCUxxdgEfSBZKXw%3D%3D&amp;ds=bTkwBepirf3loQ6QrJ76djgUEWU26yiBFIsxt2oP%2FNcXoQ%3D%3D&amp;ud=bTkwBQ1isdG7gH35p53uwnMKCofF7Sj45ZQil%2B8I6hf4tQ%3D%3D&amp;sv=app&amp;li=g9qKibW4p5yD14qJsbysy4%2Fa04ji5%2FOd7ui%2F</string>
 	</dict>
+    <dict>
+        <key>channel</key>
+        <string>热点</string>
+        <key>url</key>
+        <string>http://iflow.uczzd.cn/iflow/api/v1/channel/51830095?app=uc-iflow&amp;sp_gz=1&amp;recoid=4780413596505591035&amp;ftime=1488170672207&amp;method=new&amp;count=20&amp;no_op=0&amp;auto=0&amp;content_ratio=0&amp;_tm=1488170686131&amp;sign=bTkwBf9iQB%2F%2B%2F%2BHW3ogpeRxXTASXxQkcussc021pvCbY8PhRcDeSzLbM&amp;sc=&amp;uc_param_str=dnnivebichfrmintcpgieiwidsudsvli&amp;dn=20151536891-fdd83270&amp;ni=bTkwBTRiltTM%2FB%2BoM9%2BSzKFTH%2Fw9my2pBssWYs9s4gujq%2F0%3D&amp;ve=10.9.6.755&amp;bi=997&amp;fr=iphone&amp;mi=iPhone8%2C1&amp;nt=2&amp;cp=isp%3A%E7%94%B5%E4%BF%A1%3Bprov%3A%E5%B9%BF%E4%B8%9C%3Bcity%3A%3Bna%3A%E4%B8%AD%E5%9B%BD%3Bcc%3ACN%3Bac%3A&amp;ei=bTkwBcdiqTSojXfM8KyHGJdaY7Z1jg5t1b9yZ4hg%2B347oiyKCUxxdgEfSBZKXw%3D%3D&amp;ds=bTkwBepirf3loQ6QrJ76djgUEWU26yiBFIsxt2oP%2FNcXoQ%3D%3D&amp;ud=bTkwBQ1isdG7gH35p53uwnMKCofF7Sj45ZQil%2B8I6hf4tQ%3D%3D&amp;sv=app&amp;li=g9qKibW4p5yD14qJsbysy4%2Fa04ji5%2FOd7ui%2F</string>
+    </dict>
 	<dict>
 		<key>channel</key>
 		<string>体育</string>
@@ -38,12 +44,18 @@
 		<key>url</key>
 		<string>http://iflow.uczzd.cn/iflow/api/v1/channel/26325229?app=uc-iflow&amp;sp_gz=1&amp;recoid=17194663704260850404&amp;ftime=1488425944677&amp;method=new&amp;count=20&amp;no_op=0&amp;auto=0&amp;content_ratio=0&amp;_tm=1488426027552&amp;sign=bTkwBS6dJe2WPYyCexAEJ%2B29KjmbKgavKp%2BxadU8BE6Y42iTqMNRAPTe&amp;sc=&amp;uc_param_str=dnnivebichfrmintcpgieiwidsudsvli&amp;dn=20151536891-fdd83270&amp;ni=bTkwBdKdWi6qMcPCkRpWZuXph7BxIaV9KJxCcOU%2FtnlbU%2Bk%3D&amp;ve=10.9.6.755&amp;bi=997&amp;fr=iphone&amp;mi=iPhone8%2C1&amp;nt=2&amp;cp=isp%3A%E7%94%B5%E4%BF%A1%3Bprov%3A%E5%B9%BF%E4%B8%9C%3Bcity%3A%3Bna%3A%E4%B8%AD%E5%9B%BD%3Bcc%3ACN%3Bac%3A&amp;ei=bTkwBSadZXnXQMsJUWlD51Xg%2ByCrNIbXMOi%2BtPcztw%2B%2FthzmlbgBWipmHO9hJg%3D%3D&amp;ds=bTkwBcKdaOvdbEv%2B1Fs3RIiuh7lmUdKtjNzGfdJcywGP9g%3D%3D&amp;ud=bTkwBdeda5nNTTcxkVgk%2Bu%2BwvhcpV9xIR8PwP41bOL9a4g%3D%3D&amp;sv=app&amp;li=g9qKibW4p5yD14qJsbysy4%2Fa04ji5%2FOd7ui%2F</string>
 	</dict>
-	<dict>
-		<key>channel</key>
-		<string>军事</string>
-		<key>url</key>
-		<string>http://iflow.uczzd.cn/iflow/api/v1/channel/1105405272?app=uc-iflow&amp;sp_gz=1&amp;recoid=5504300911325205892&amp;ftime=1468450165804&amp;method=new&amp;count=20&amp;no_op=0&amp;auto=1&amp;content_ratio=0&amp;_tm=1488426061698&amp;sign=bTkwBQ8KMiW6Q6jRnKINfX3UURenlS8P3ZCfm75gYx8XAaDiYclaIi40&amp;sc=&amp;uc_param_str=dnnivebichfrmintcpgieiwidsudsvli&amp;dn=20151536891-fdd83270&amp;ni=bTkwBQsKUbrlRNhO2Kdt0neDlaiPy7NVncNn3Epk091%2Fd10%3D&amp;ve=10.9.6.755&amp;bi=997&amp;fr=iphone&amp;mi=iPhone8%2C1&amp;nt=2&amp;cp=isp%3A%E7%94%B5%E4%BF%A1%3Bprov%3A%E5%B9%BF%E4%B8%9C%3Bcity%3A%3Bna%3A%E4%B8%AD%E5%9B%BD%3Bcc%3ACN%3Bac%3A&amp;ei=bTkwBcMKWJ60NcZW7NRWgp%2BKnVpt3qwZ6bdBJZxoiLzLAmhSGew1zh1H3SRWBw%3D%3D&amp;ds=bTkwBdEKWojMGbkdw%2BYl4fbE%2B3MEu%2FZrW4MoFL8H5TZYqQ%3D%3D&amp;ud=bTkwBd8KXEHFOMBpmeU7Ut%2Fa3OcZvcIYf5wtJ5UA5UdivQ%3D%3D&amp;sv=app&amp;li=g9qKibW4p5yD14qJsbysy4%2Fa04ji5%2FOd7ui%2F</string>
-	</dict>
+    <dict>
+        <key>channel</key>
+        <string>视频</string>
+        <key>url</key>
+        <string>http://iflow.uczzd.cn/iflow/api/v1/channel/10016?app=uc-iflow&amp;sp_gz=1&amp;recoid=4780413596505591035&amp;ftime=1488170672207&amp;method=new&amp;count=20&amp;no_op=0&amp;auto=0&amp;content_ratio=0&amp;_tm=1488170686131&amp;sign=bTkwBf9iQB%2F%2B%2F%2BHW3ogpeRxXTASXxQkcussc021pvCbY8PhRcDeSzLbM&amp;sc=&amp;uc_param_str=dnnivebichfrmintcpgieiwidsudsvli&amp;dn=20151536891-fdd83270&amp;ni=bTkwBTRiltTM%2FB%2BoM9%2BSzKFTH%2Fw9my2pBssWYs9s4gujq%2F0%3D&amp;ve=10.9.6.755&amp;bi=997&amp;fr=iphone&amp;mi=iPhone8%2C1&amp;nt=2&amp;cp=isp%3A%E7%94%B5%E4%BF%A1%3Bprov%3A%E5%B9%BF%E4%B8%9C%3Bcity%3A%3Bna%3A%E4%B8%AD%E5%9B%BD%3Bcc%3ACN%3Bac%3A&amp;ei=bTkwBcdiqTSojXfM8KyHGJdaY7Z1jg5t1b9yZ4hg%2B347oiyKCUxxdgEfSBZKXw%3D%3D&amp;ds=bTkwBepirf3loQ6QrJ76djgUEWU26yiBFIsxt2oP%2FNcXoQ%3D%3D&amp;ud=bTkwBQ1isdG7gH35p53uwnMKCofF7Sj45ZQil%2B8I6hf4tQ%3D%3D&amp;sv=app&amp;li=g9qKibW4p5yD14qJsbysy4%2Fa04ji5%2FOd7ui%2F</string>
+    </dict>
+    <dict>
+        <key>channel</key>
+        <string>军事</string>
+        <key>url</key>
+        <string>http://iflow.uczzd.cn/iflow/api/v1/channel/1105405272?app=uc-iflow&amp;sp_gz=1&amp;recoid=5504300911325205892&amp;ftime=1468450165804&amp;method=new&amp;count=20&amp;no_op=0&amp;auto=1&amp;content_ratio=0&amp;_tm=1488426061698&amp;sign=bTkwBQ8KMiW6Q6jRnKINfX3UURenlS8P3ZCfm75gYx8XAaDiYclaIi40&amp;sc=&amp;uc_param_str=dnnivebichfrmintcpgieiwidsudsvli&amp;dn=20151536891-fdd83270&amp;ni=bTkwBQsKUbrlRNhO2Kdt0neDlaiPy7NVncNn3Epk091%2Fd10%3D&amp;ve=10.9.6.755&amp;bi=997&amp;fr=iphone&amp;mi=iPhone8%2C1&amp;nt=2&amp;cp=isp%3A%E7%94%B5%E4%BF%A1%3Bprov%3A%E5%B9%BF%E4%B8%9C%3Bcity%3A%3Bna%3A%E4%B8%AD%E5%9B%BD%3Bcc%3ACN%3Bac%3A&amp;ei=bTkwBcMKWJ60NcZW7NRWgp%2BKnVpt3qwZ6bdBJZxoiLzLAmhSGew1zh1H3SRWBw%3D%3D&amp;ds=bTkwBdEKWojMGbkdw%2BYl4fbE%2B3MEu%2FZrW4MoFL8H5TZYqQ%3D%3D&amp;ud=bTkwBd8KXEHFOMBpmeU7Ut%2Fa3OcZvcIYf5wtJ5UA5UdivQ%3D%3D&amp;sv=app&amp;li=g9qKibW4p5yD14qJsbysy4%2Fa04ji5%2FOd7ui%2F</string>
+    </dict>
 	<dict>
 		<key>channel</key>
 		<string>历史</string>
@@ -71,21 +83,131 @@
 	</dict>
     <dict>
         <key>channel</key>
+        <string>街拍</string>
+        <key>url</key>
+        <string>http://iflow.uczzd.cn/iflow/api/v1/channel/10453?app=uc-iflow&amp;sp_gz=1&amp;recoid=4780413596505591035&amp;ftime=1488170672207&amp;method=new&amp;count=20&amp;no_op=0&amp;auto=0&amp;content_ratio=0&amp;_tm=1488170686131&amp;sign=bTkwBf9iQB%2F%2B%2F%2BHW3ogpeRxXTASXxQkcussc021pvCbY8PhRcDeSzLbM&amp;sc=&amp;uc_param_str=dnnivebichfrmintcpgieiwidsudsvli&amp;dn=20151536891-fdd83270&amp;ni=bTkwBTRiltTM%2FB%2BoM9%2BSzKFTH%2Fw9my2pBssWYs9s4gujq%2F0%3D&amp;ve=10.9.6.755&amp;bi=997&amp;fr=iphone&amp;mi=iPhone8%2C1&amp;nt=2&amp;cp=isp%3A%E7%94%B5%E4%BF%A1%3Bprov%3A%E5%B9%BF%E4%B8%9C%3Bcity%3A%3Bna%3A%E4%B8%AD%E5%9B%BD%3Bcc%3ACN%3Bac%3A&amp;ei=bTkwBcdiqTSojXfM8KyHGJdaY7Z1jg5t1b9yZ4hg%2B347oiyKCUxxdgEfSBZKXw%3D%3D&amp;ds=bTkwBepirf3loQ6QrJ76djgUEWU26yiBFIsxt2oP%2FNcXoQ%3D%3D&amp;ud=bTkwBQ1isdG7gH35p53uwnMKCofF7Sj45ZQil%2B8I6hf4tQ%3D%3D&amp;sv=app&amp;li=g9qKibW4p5yD14qJsbysy4%2Fa04ji5%2FOd7ui%2F</string>
+    </dict>
+    <dict>
+        <key>channel</key>
         <string>数码</string>
         <key>url</key>
         <string>http://iflow.uczzd.cn/iflow/api/v1/channel/835729?app=uc-iflow&amp;sp_gz=1&amp;recoid=4780413596505591035&amp;ftime=1488170672207&amp;method=new&amp;count=20&amp;no_op=0&amp;auto=0&amp;content_ratio=0&amp;_tm=1488170686131&amp;sign=bTkwBf9iQB%2F%2B%2F%2BHW3ogpeRxXTASXxQkcussc021pvCbY8PhRcDeSzLbM&amp;sc=&amp;uc_param_str=dnnivebichfrmintcpgieiwidsudsvli&amp;dn=20151536891-fdd83270&amp;ni=bTkwBTRiltTM%2FB%2BoM9%2BSzKFTH%2Fw9my2pBssWYs9s4gujq%2F0%3D&amp;ve=10.9.6.755&amp;bi=997&amp;fr=iphone&amp;mi=iPhone8%2C1&amp;nt=2&amp;cp=isp%3A%E7%94%B5%E4%BF%A1%3Bprov%3A%E5%B9%BF%E4%B8%9C%3Bcity%3A%3Bna%3A%E4%B8%AD%E5%9B%BD%3Bcc%3ACN%3Bac%3A&amp;ei=bTkwBcdiqTSojXfM8KyHGJdaY7Z1jg5t1b9yZ4hg%2B347oiyKCUxxdgEfSBZKXw%3D%3D&amp;ds=bTkwBepirf3loQ6QrJ76djgUEWU26yiBFIsxt2oP%2FNcXoQ%3D%3D&amp;ud=bTkwBQ1isdG7gH35p53uwnMKCofF7Sj45ZQil%2B8I6hf4tQ%3D%3D&amp;sv=app&amp;li=g9qKibW4p5yD14qJsbysy4%2Fa04ji5%2FOd7ui%2F</string>
     </dict>
-<!--    <dict>-->
-<!--        <key>channel</key>-->
-<!--        <string>广州</string>-->
-<!--        <key>url</key>-->
-<!--        <string>http://iflow.uczzd.cn/iflow/api/v1/channel/200?app=uc-iflow&amp;sp_gz=1&amp;recoid=4780413596505591035&amp;ftime=1488170672207&amp;method=new&amp;count=20&amp;no_op=0&amp;auto=0&amp;content_ratio=0&amp;_tm=1488170686131&amp;sign=bTkwBf9iQB%2F%2B%2F%2BHW3ogpeRxXTASXxQkcussc021pvCbY8PhRcDeSzLbM&amp;sc=&amp;uc_param_str=dnnivebichfrmintcpgieiwidsudsvli&amp;dn=20151536891-fdd83270&amp;ni=bTkwBTRiltTM%2FB%2BoM9%2BSzKFTH%2Fw9my2pBssWYs9s4gujq%2F0%3D&amp;ve=10.9.6.755&amp;bi=997&amp;fr=iphone&amp;mi=iPhone8%2C1&amp;nt=2&amp;cp=isp%3A%E7%94%B5%E4%BF%A1%3Bprov%3A%E5%B9%BF%E4%B8%9C%3Bcity%3A%3Bna%3A%E4%B8%AD%E5%9B%BD%3Bcc%3ACN%3Bac%3A&amp;ei=bTkwBcdiqTSojXfM8KyHGJdaY7Z1jg5t1b9yZ4hg%2B347oiyKCUxxdgEfSBZKXw%3D%3D&amp;ds=bTkwBepirf3loQ6QrJ76djgUEWU26yiBFIsxt2oP%2FNcXoQ%3D%3D&amp;ud=bTkwBQ1isdG7gH35p53uwnMKCofF7Sj45ZQil%2B8I6hf4tQ%3D%3D&amp;sv=app&amp;li=g9qKibW4p5yD14qJsbysy4%2Fa04ji5%2FOd7ui%2F</string>-->
-<!--    </dict>-->
     <dict>
         <key>channel</key>
-        <string>视频</string>
+        <string>广州</string>
         <key>url</key>
-        <string>http://iflow.uczzd.cn/iflow/api/v1/channel/10016?app=uc-iflow&amp;sp_gz=1&amp;recoid=4780413596505591035&amp;ftime=1488170672207&amp;method=new&amp;count=20&amp;no_op=0&amp;auto=0&amp;content_ratio=0&amp;_tm=1488170686131&amp;sign=bTkwBf9iQB%2F%2B%2F%2BHW3ogpeRxXTASXxQkcussc021pvCbY8PhRcDeSzLbM&amp;sc=&amp;uc_param_str=dnnivebichfrmintcpgieiwidsudsvli&amp;dn=20151536891-fdd83270&amp;ni=bTkwBTRiltTM%2FB%2BoM9%2BSzKFTH%2Fw9my2pBssWYs9s4gujq%2F0%3D&amp;ve=10.9.6.755&amp;bi=997&amp;fr=iphone&amp;mi=iPhone8%2C1&amp;nt=2&amp;cp=isp%3A%E7%94%B5%E4%BF%A1%3Bprov%3A%E5%B9%BF%E4%B8%9C%3Bcity%3A%3Bna%3A%E4%B8%AD%E5%9B%BD%3Bcc%3ACN%3Bac%3A&amp;ei=bTkwBcdiqTSojXfM8KyHGJdaY7Z1jg5t1b9yZ4hg%2B347oiyKCUxxdgEfSBZKXw%3D%3D&amp;ds=bTkwBepirf3loQ6QrJ76djgUEWU26yiBFIsxt2oP%2FNcXoQ%3D%3D&amp;ud=bTkwBQ1isdG7gH35p53uwnMKCofF7Sj45ZQil%2B8I6hf4tQ%3D%3D&amp;sv=app&amp;li=g9qKibW4p5yD14qJsbysy4%2Fa04ji5%2FOd7ui%2F</string>
+        <string>http://iflow.uczzd.cn/iflow/api/v1/channel/200?app=uc-iflow&amp;sp_gz=1&amp;city_name=%E5%B9%BF%E5%B7%9E&amp;recoid=4780413596505591035&amp;ftime=1488170672207&amp;method=new&amp;count=20&amp;no_op=0&amp;auto=0&amp;content_ratio=0&amp;_tm=1488170686131&amp;sign=bTkwBf9iQB%2F%2B%2F%2BHW3ogpeRxXTASXxQkcussc021pvCbY8PhRcDeSzLbM&amp;sc=&amp;uc_param_str=dnnivebichfrmintcpgieiwidsudsvli&amp;dn=20151536891-fdd83270&amp;ni=bTkwBTRiltTM%2FB%2BoM9%2BSzKFTH%2Fw9my2pBssWYs9s4gujq%2F0%3D&amp;ve=10.9.6.755&amp;bi=997&amp;fr=iphone&amp;mi=iPhone8%2C1&amp;nt=2&amp;cp=isp%3A%E7%94%B5%E4%BF%A1%3Bprov%3A%E5%B9%BF%E4%B8%9C%3Bcity%3A%3Bna%3A%E4%B8%AD%E5%9B%BD%3Bcc%3ACN%3Bac%3A&amp;ei=bTkwBcdiqTSojXfM8KyHGJdaY7Z1jg5t1b9yZ4hg%2B347oiyKCUxxdgEfSBZKXw%3D%3D&amp;ds=bTkwBepirf3loQ6QrJ76djgUEWU26yiBFIsxt2oP%2FNcXoQ%3D%3D&amp;ud=bTkwBQ1isdG7gH35p53uwnMKCofF7Sj45ZQil%2B8I6hf4tQ%3D%3D&amp;sv=app&amp;li=g9qKibW4p5yD14qJsbysy4%2Fa04ji5%2FOd7ui%2F</string>
     </dict>
+    <dict>
+        <key>channel</key>
+        <string>美食</string>
+        <key>url</key>
+        <string>http://iflow.uczzd.cn/iflow/api/v1/channel/10000?app=uc-iflow&amp;sp_gz=1&amp;recoid=4780413596505591035&amp;ftime=1488170672207&amp;method=new&amp;count=20&amp;no_op=0&amp;auto=0&amp;content_ratio=0&amp;_tm=1488170686131&amp;sign=bTkwBf9iQB%2F%2B%2F%2BHW3ogpeRxXTASXxQkcussc021pvCbY8PhRcDeSzLbM&amp;sc=&amp;uc_param_str=dnnivebichfrmintcpgieiwidsudsvli&amp;dn=20151536891-fdd83270&amp;ni=bTkwBTRiltTM%2FB%2BoM9%2BSzKFTH%2Fw9my2pBssWYs9s4gujq%2F0%3D&amp;ve=10.9.6.755&amp;bi=997&amp;fr=iphone&amp;mi=iPhone8%2C1&amp;nt=2&amp;cp=isp%3A%E7%94%B5%E4%BF%A1%3Bprov%3A%E5%B9%BF%E4%B8%9C%3Bcity%3A%3Bna%3A%E4%B8%AD%E5%9B%BD%3Bcc%3ACN%3Bac%3A&amp;ei=bTkwBcdiqTSojXfM8KyHGJdaY7Z1jg5t1b9yZ4hg%2B347oiyKCUxxdgEfSBZKXw%3D%3D&amp;ds=bTkwBepirf3loQ6QrJ76djgUEWU26yiBFIsxt2oP%2FNcXoQ%3D%3D&amp;ud=bTkwBQ1isdG7gH35p53uwnMKCofF7Sj45ZQil%2B8I6hf4tQ%3D%3D&amp;sv=app&amp;li=g9qKibW4p5yD14qJsbysy4%2Fa04ji5%2FOd7ui%2F</string>
+    </dict>
+    <dict>
+        <key>channel</key>
+        <string>综艺</string>
+        <key>url</key>
+        <string>http://iflow.uczzd.cn/iflow/api/v1/channel/10465?app=uc-iflow&amp;sp_gz=1&amp;recoid=4780413596505591035&amp;ftime=1488170672207&amp;method=new&amp;count=20&amp;no_op=0&amp;auto=0&amp;content_ratio=0&amp;_tm=1488170686131&amp;sign=bTkwBf9iQB%2F%2B%2F%2BHW3ogpeRxXTASXxQkcussc021pvCbY8PhRcDeSzLbM&amp;sc=&amp;uc_param_str=dnnivebichfrmintcpgieiwidsudsvli&amp;dn=20151536891-fdd83270&amp;ni=bTkwBTRiltTM%2FB%2BoM9%2BSzKFTH%2Fw9my2pBssWYs9s4gujq%2F0%3D&amp;ve=10.9.6.755&amp;bi=997&amp;fr=iphone&amp;mi=iPhone8%2C1&amp;nt=2&amp;cp=isp%3A%E7%94%B5%E4%BF%A1%3Bprov%3A%E5%B9%BF%E4%B8%9C%3Bcity%3A%3Bna%3A%E4%B8%AD%E5%9B%BD%3Bcc%3ACN%3Bac%3A&amp;ei=bTkwBcdiqTSojXfM8KyHGJdaY7Z1jg5t1b9yZ4hg%2B347oiyKCUxxdgEfSBZKXw%3D%3D&amp;ds=bTkwBepirf3loQ6QrJ76djgUEWU26yiBFIsxt2oP%2FNcXoQ%3D%3D&amp;ud=bTkwBQ1isdG7gH35p53uwnMKCofF7Sj45ZQil%2B8I6hf4tQ%3D%3D&amp;sv=app&amp;li=g9qKibW4p5yD14qJsbysy4%2Fa04ji5%2FOd7ui%2F</string>
+    </dict>
+    <dict>
+        <key>channel</key>
+        <string>电影</string>
+        <key>url</key>
+        <string>http://iflow.uczzd.cn/iflow/api/v1/channel/1404457531635?app=uc-iflow&amp;sp_gz=1&amp;recoid=4780413596505591035&amp;ftime=1488170672207&amp;method=new&amp;count=20&amp;no_op=0&amp;auto=0&amp;content_ratio=0&amp;_tm=1488170686131&amp;sign=bTkwBf9iQB%2F%2B%2F%2BHW3ogpeRxXTASXxQkcussc021pvCbY8PhRcDeSzLbM&amp;sc=&amp;uc_param_str=dnnivebichfrmintcpgieiwidsudsvli&amp;dn=20151536891-fdd83270&amp;ni=bTkwBTRiltTM%2FB%2BoM9%2BSzKFTH%2Fw9my2pBssWYs9s4gujq%2F0%3D&amp;ve=10.9.6.755&amp;bi=997&amp;fr=iphone&amp;mi=iPhone8%2C1&amp;nt=2&amp;cp=isp%3A%E7%94%B5%E4%BF%A1%3Bprov%3A%E5%B9%BF%E4%B8%9C%3Bcity%3A%3Bna%3A%E4%B8%AD%E5%9B%BD%3Bcc%3ACN%3Bac%3A&amp;ei=bTkwBcdiqTSojXfM8KyHGJdaY7Z1jg5t1b9yZ4hg%2B347oiyKCUxxdgEfSBZKXw%3D%3D&amp;ds=bTkwBepirf3loQ6QrJ76djgUEWU26yiBFIsxt2oP%2FNcXoQ%3D%3D&amp;ud=bTkwBQ1isdG7gH35p53uwnMKCofF7Sj45ZQil%2B8I6hf4tQ%3D%3D&amp;sv=app&amp;li=g9qKibW4p5yD14qJsbysy4%2Fa04ji5%2FOd7ui%2F</string>
+    </dict>
+    <dict>
+        <key>channel</key>
+        <string>动漫</string>
+        <key>url</key>
+        <string>http://iflow.uczzd.cn/iflow/api/v1/channel/10012?app=uc-iflow&amp;sp_gz=1&amp;recoid=4780413596505591035&amp;ftime=1488170672207&amp;method=new&amp;count=20&amp;no_op=0&amp;auto=0&amp;content_ratio=0&amp;_tm=1488170686131&amp;sign=bTkwBf9iQB%2F%2B%2F%2BHW3ogpeRxXTASXxQkcussc021pvCbY8PhRcDeSzLbM&amp;sc=&amp;uc_param_str=dnnivebichfrmintcpgieiwidsudsvli&amp;dn=20151536891-fdd83270&amp;ni=bTkwBTRiltTM%2FB%2BoM9%2BSzKFTH%2Fw9my2pBssWYs9s4gujq%2F0%3D&amp;ve=10.9.6.755&amp;bi=997&amp;fr=iphone&amp;mi=iPhone8%2C1&amp;nt=2&amp;cp=isp%3A%E7%94%B5%E4%BF%A1%3Bprov%3A%E5%B9%BF%E4%B8%9C%3Bcity%3A%3Bna%3A%E4%B8%AD%E5%9B%BD%3Bcc%3ACN%3Bac%3A&amp;ei=bTkwBcdiqTSojXfM8KyHGJdaY7Z1jg5t1b9yZ4hg%2B347oiyKCUxxdgEfSBZKXw%3D%3D&amp;ds=bTkwBepirf3loQ6QrJ76djgUEWU26yiBFIsxt2oP%2FNcXoQ%3D%3D&amp;ud=bTkwBQ1isdG7gH35p53uwnMKCofF7Sj45ZQil%2B8I6hf4tQ%3D%3D&amp;sv=app&amp;li=g9qKibW4p5yD14qJsbysy4%2Fa04ji5%2FOd7ui%2F</string>
+    </dict>
+    <dict>
+        <key>channel</key>
+        <string>足球</string>
+        <key>url</key>
+        <string>http://iflow.uczzd.cn/iflow/api/v1/channel/794794774?app=uc-iflow&amp;sp_gz=1&amp;recoid=4780413596505591035&amp;ftime=1488170672207&amp;method=new&amp;count=20&amp;no_op=0&amp;auto=0&amp;content_ratio=0&amp;_tm=1488170686131&amp;sign=bTkwBf9iQB%2F%2B%2F%2BHW3ogpeRxXTASXxQkcussc021pvCbY8PhRcDeSzLbM&amp;sc=&amp;uc_param_str=dnnivebichfrmintcpgieiwidsudsvli&amp;dn=20151536891-fdd83270&amp;ni=bTkwBTRiltTM%2FB%2BoM9%2BSzKFTH%2Fw9my2pBssWYs9s4gujq%2F0%3D&amp;ve=10.9.6.755&amp;bi=997&amp;fr=iphone&amp;mi=iPhone8%2C1&amp;nt=2&amp;cp=isp%3A%E7%94%B5%E4%BF%A1%3Bprov%3A%E5%B9%BF%E4%B8%9C%3Bcity%3A%3Bna%3A%E4%B8%AD%E5%9B%BD%3Bcc%3ACN%3Bac%3A&amp;ei=bTkwBcdiqTSojXfM8KyHGJdaY7Z1jg5t1b9yZ4hg%2B347oiyKCUxxdgEfSBZKXw%3D%3D&amp;ds=bTkwBepirf3loQ6QrJ76djgUEWU26yiBFIsxt2oP%2FNcXoQ%3D%3D&amp;ud=bTkwBQ1isdG7gH35p53uwnMKCofF7Sj45ZQil%2B8I6hf4tQ%3D%3D&amp;sv=app&amp;li=g9qKibW4p5yD14qJsbysy4%2Fa04ji5%2FOd7ui%2F</string>
+    </dict>
+    <dict>
+        <key>channel</key>
+        <string>英超</string>
+        <key>url</key>
+        <string>http://iflow.uczzd.cn/iflow/api/v1/channel/10469?app=uc-iflow&amp;sp_gz=1&amp;recoid=4780413596505591035&amp;ftime=1488170672207&amp;method=new&amp;count=20&amp;no_op=0&amp;auto=0&amp;content_ratio=0&amp;_tm=1488170686131&amp;sign=bTkwBf9iQB%2F%2B%2F%2BHW3ogpeRxXTASXxQkcussc021pvCbY8PhRcDeSzLbM&amp;sc=&amp;uc_param_str=dnnivebichfrmintcpgieiwidsudsvli&amp;dn=20151536891-fdd83270&amp;ni=bTkwBTRiltTM%2FB%2BoM9%2BSzKFTH%2Fw9my2pBssWYs9s4gujq%2F0%3D&amp;ve=10.9.6.755&amp;bi=997&amp;fr=iphone&amp;mi=iPhone8%2C1&amp;nt=2&amp;cp=isp%3A%E7%94%B5%E4%BF%A1%3Bprov%3A%E5%B9%BF%E4%B8%9C%3Bcity%3A%3Bna%3A%E4%B8%AD%E5%9B%BD%3Bcc%3ACN%3Bac%3A&amp;ei=bTkwBcdiqTSojXfM8KyHGJdaY7Z1jg5t1b9yZ4hg%2B347oiyKCUxxdgEfSBZKXw%3D%3D&amp;ds=bTkwBepirf3loQ6QrJ76djgUEWU26yiBFIsxt2oP%2FNcXoQ%3D%3D&amp;ud=bTkwBQ1isdG7gH35p53uwnMKCofF7Sj45ZQil%2B8I6hf4tQ%3D%3D&amp;sv=app&amp;li=g9qKibW4p5yD14qJsbysy4%2Fa04ji5%2FOd7ui%2F</string>
+    </dict>
+    <dict>
+        <key>channel</key>
+        <string>NBA</string>
+        <key>url</key>
+        <string>http://iflow.uczzd.cn/iflow/api/v1/channel/10306?app=uc-iflow&amp;sp_gz=1&amp;recoid=4780413596505591035&amp;ftime=1488170672207&amp;method=new&amp;count=20&amp;no_op=0&amp;auto=0&amp;content_ratio=0&amp;_tm=1488170686131&amp;sign=bTkwBf9iQB%2F%2B%2F%2BHW3ogpeRxXTASXxQkcussc021pvCbY8PhRcDeSzLbM&amp;sc=&amp;uc_param_str=dnnivebichfrmintcpgieiwidsudsvli&amp;dn=20151536891-fdd83270&amp;ni=bTkwBTRiltTM%2FB%2BoM9%2BSzKFTH%2Fw9my2pBssWYs9s4gujq%2F0%3D&amp;ve=10.9.6.755&amp;bi=997&amp;fr=iphone&amp;mi=iPhone8%2C1&amp;nt=2&amp;cp=isp%3A%E7%94%B5%E4%BF%A1%3Bprov%3A%E5%B9%BF%E4%B8%9C%3Bcity%3A%3Bna%3A%E4%B8%AD%E5%9B%BD%3Bcc%3ACN%3Bac%3A&amp;ei=bTkwBcdiqTSojXfM8KyHGJdaY7Z1jg5t1b9yZ4hg%2B347oiyKCUxxdgEfSBZKXw%3D%3D&amp;ds=bTkwBepirf3loQ6QrJ76djgUEWU26yiBFIsxt2oP%2FNcXoQ%3D%3D&amp;ud=bTkwBQ1isdG7gH35p53uwnMKCofF7Sj45ZQil%2B8I6hf4tQ%3D%3D&amp;sv=app&amp;li=g9qKibW4p5yD14qJsbysy4%2Fa04ji5%2FOd7ui%2F</string>
+    </dict>
+    <dict>
+        <key>channel</key>
+        <string>图片</string>
+        <key>url</key>
+        <string>http://iflow.uczzd.cn/iflow/api/v1/channel/1964289243?app=uc-iflow&amp;sp_gz=1&amp;recoid=4780413596505591035&amp;ftime=1488170672207&amp;method=new&amp;count=20&amp;no_op=0&amp;auto=0&amp;content_ratio=0&amp;_tm=1488170686131&amp;sign=bTkwBf9iQB%2F%2B%2F%2BHW3ogpeRxXTASXxQkcussc021pvCbY8PhRcDeSzLbM&amp;sc=&amp;uc_param_str=dnnivebichfrmintcpgieiwidsudsvli&amp;dn=20151536891-fdd83270&amp;ni=bTkwBTRiltTM%2FB%2BoM9%2BSzKFTH%2Fw9my2pBssWYs9s4gujq%2F0%3D&amp;ve=10.9.6.755&amp;bi=997&amp;fr=iphone&amp;mi=iPhone8%2C1&amp;nt=2&amp;cp=isp%3A%E7%94%B5%E4%BF%A1%3Bprov%3A%E5%B9%BF%E4%B8%9C%3Bcity%3A%3Bna%3A%E4%B8%AD%E5%9B%BD%3Bcc%3ACN%3Bac%3A&amp;ei=bTkwBcdiqTSojXfM8KyHGJdaY7Z1jg5t1b9yZ4hg%2B347oiyKCUxxdgEfSBZKXw%3D%3D&amp;ds=bTkwBepirf3loQ6QrJ76djgUEWU26yiBFIsxt2oP%2FNcXoQ%3D%3D&amp;ud=bTkwBQ1isdG7gH35p53uwnMKCofF7Sj45ZQil%2B8I6hf4tQ%3D%3D&amp;sv=app&amp;li=g9qKibW4p5yD14qJsbysy4%2Fa04ji5%2FOd7ui%2F</string>
+    </dict>
+    <dict>
+        <key>channel</key>
+        <string>情感</string>
+        <key>url</key>
+        <string>http://iflow.uczzd.cn/iflow/api/v1/channel/1099189934?app=uc-iflow&amp;sp_gz=1&amp;recoid=4780413596505591035&amp;ftime=1488170672207&amp;method=new&amp;count=20&amp;no_op=0&amp;auto=0&amp;content_ratio=0&amp;_tm=1488170686131&amp;sign=bTkwBf9iQB%2F%2B%2F%2BHW3ogpeRxXTASXxQkcussc021pvCbY8PhRcDeSzLbM&amp;sc=&amp;uc_param_str=dnnivebichfrmintcpgieiwidsudsvli&amp;dn=20151536891-fdd83270&amp;ni=bTkwBTRiltTM%2FB%2BoM9%2BSzKFTH%2Fw9my2pBssWYs9s4gujq%2F0%3D&amp;ve=10.9.6.755&amp;bi=997&amp;fr=iphone&amp;mi=iPhone8%2C1&amp;nt=2&amp;cp=isp%3A%E7%94%B5%E4%BF%A1%3Bprov%3A%E5%B9%BF%E4%B8%9C%3Bcity%3A%3Bna%3A%E4%B8%AD%E5%9B%BD%3Bcc%3ACN%3Bac%3A&amp;ei=bTkwBcdiqTSojXfM8KyHGJdaY7Z1jg5t1b9yZ4hg%2B347oiyKCUxxdgEfSBZKXw%3D%3D&amp;ds=bTkwBepirf3loQ6QrJ76djgUEWU26yiBFIsxt2oP%2FNcXoQ%3D%3D&amp;ud=bTkwBQ1isdG7gH35p53uwnMKCofF7Sj45ZQil%2B8I6hf4tQ%3D%3D&amp;sv=app&amp;li=g9qKibW4p5yD14qJsbysy4%2Fa04ji5%2FOd7ui%2F</string>
+    </dict>
+    <dict>
+        <key>channel</key>
+        <string>股票</string>
+        <key>url</key>
+        <string>http://iflow.uczzd.cn/iflow/api/v1/channel/90001?app=uc-iflow&amp;sp_gz=1&amp;recoid=4780413596505591035&amp;ftime=1488170672207&amp;method=new&amp;count=20&amp;no_op=0&amp;auto=0&amp;content_ratio=0&amp;_tm=1488170686131&amp;sign=bTkwBf9iQB%2F%2B%2F%2BHW3ogpeRxXTASXxQkcussc021pvCbY8PhRcDeSzLbM&amp;sc=&amp;uc_param_str=dnnivebichfrmintcpgieiwidsudsvli&amp;dn=20151536891-fdd83270&amp;ni=bTkwBTRiltTM%2FB%2BoM9%2BSzKFTH%2Fw9my2pBssWYs9s4gujq%2F0%3D&amp;ve=10.9.6.755&amp;bi=997&amp;fr=iphone&amp;mi=iPhone8%2C1&amp;nt=2&amp;cp=isp%3A%E7%94%B5%E4%BF%A1%3Bprov%3A%E5%B9%BF%E4%B8%9C%3Bcity%3A%3Bna%3A%E4%B8%AD%E5%9B%BD%3Bcc%3ACN%3Bac%3A&amp;ei=bTkwBcdiqTSojXfM8KyHGJdaY7Z1jg5t1b9yZ4hg%2B347oiyKCUxxdgEfSBZKXw%3D%3D&amp;ds=bTkwBepirf3loQ6QrJ76djgUEWU26yiBFIsxt2oP%2FNcXoQ%3D%3D&amp;ud=bTkwBQ1isdG7gH35p53uwnMKCofF7Sj45ZQil%2B8I6hf4tQ%3D%3D&amp;sv=app&amp;li=g9qKibW4p5yD14qJsbysy4%2Fa04ji5%2FOd7ui%2F</string>
+    </dict>
+    <dict>
+        <key>channel</key>
+        <string>健康</string>
+        <key>url</key>
+        <string>http://iflow.uczzd.cn/iflow/api/v1/channel/472933935?app=uc-iflow&amp;sp_gz=1&amp;recoid=4780413596505591035&amp;ftime=1488170672207&amp;method=new&amp;count=20&amp;no_op=0&amp;auto=0&amp;content_ratio=0&amp;_tm=1488170686131&amp;sign=bTkwBf9iQB%2F%2B%2F%2BHW3ogpeRxXTASXxQkcussc021pvCbY8PhRcDeSzLbM&amp;sc=&amp;uc_param_str=dnnivebichfrmintcpgieiwidsudsvli&amp;dn=20151536891-fdd83270&amp;ni=bTkwBTRiltTM%2FB%2BoM9%2BSzKFTH%2Fw9my2pBssWYs9s4gujq%2F0%3D&amp;ve=10.9.6.755&amp;bi=997&amp;fr=iphone&amp;mi=iPhone8%2C1&amp;nt=2&amp;cp=isp%3A%E7%94%B5%E4%BF%A1%3Bprov%3A%E5%B9%BF%E4%B8%9C%3Bcity%3A%3Bna%3A%E4%B8%AD%E5%9B%BD%3Bcc%3ACN%3Bac%3A&amp;ei=bTkwBcdiqTSojXfM8KyHGJdaY7Z1jg5t1b9yZ4hg%2B347oiyKCUxxdgEfSBZKXw%3D%3D&amp;ds=bTkwBepirf3loQ6QrJ76djgUEWU26yiBFIsxt2oP%2FNcXoQ%3D%3D&amp;ud=bTkwBQ1isdG7gH35p53uwnMKCofF7Sj45ZQil%2B8I6hf4tQ%3D%3D&amp;sv=app&amp;li=g9qKibW4p5yD14qJsbysy4%2Fa04ji5%2FOd7ui%2F</string>
+    </dict>
+    <dict>
+        <key>channel</key>
+        <string>星座</string>
+        <key>url</key>
+        <string>http://iflow.uczzd.cn/iflow/api/v1/channel/10008?app=uc-iflow&amp;sp_gz=1&amp;recoid=4780413596505591035&amp;ftime=1488170672207&amp;method=new&amp;count=20&amp;no_op=0&amp;auto=0&amp;content_ratio=0&amp;_tm=1488170686131&amp;sign=bTkwBf9iQB%2F%2B%2F%2BHW3ogpeRxXTASXxQkcussc021pvCbY8PhRcDeSzLbM&amp;sc=&amp;uc_param_str=dnnivebichfrmintcpgieiwidsudsvli&amp;dn=20151536891-fdd83270&amp;ni=bTkwBTRiltTM%2FB%2BoM9%2BSzKFTH%2Fw9my2pBssWYs9s4gujq%2F0%3D&amp;ve=10.9.6.755&amp;bi=997&amp;fr=iphone&amp;mi=iPhone8%2C1&amp;nt=2&amp;cp=isp%3A%E7%94%B5%E4%BF%A1%3Bprov%3A%E5%B9%BF%E4%B8%9C%3Bcity%3A%3Bna%3A%E4%B8%AD%E5%9B%BD%3Bcc%3ACN%3Bac%3A&amp;ei=bTkwBcdiqTSojXfM8KyHGJdaY7Z1jg5t1b9yZ4hg%2B347oiyKCUxxdgEfSBZKXw%3D%3D&amp;ds=bTkwBepirf3loQ6QrJ76djgUEWU26yiBFIsxt2oP%2FNcXoQ%3D%3D&amp;ud=bTkwBQ1isdG7gH35p53uwnMKCofF7Sj45ZQil%2B8I6hf4tQ%3D%3D&amp;sv=app&amp;li=g9qKibW4p5yD14qJsbysy4%2Fa04ji5%2FOd7ui%2F</string>
+    </dict>
+    <dict>
+        <key>channel</key>
+        <string>房产</string>
+        <key>url</key>
+        <string>http://iflow.uczzd.cn/iflow/api/v1/channel/586710362?app=uc-iflow&amp;sp_gz=1&amp;recoid=4780413596505591035&amp;ftime=1488170672207&amp;method=new&amp;count=20&amp;no_op=0&amp;auto=0&amp;content_ratio=0&amp;_tm=1488170686131&amp;sign=bTkwBf9iQB%2F%2B%2F%2BHW3ogpeRxXTASXxQkcussc021pvCbY8PhRcDeSzLbM&amp;sc=&amp;uc_param_str=dnnivebichfrmintcpgieiwidsudsvli&amp;dn=20151536891-fdd83270&amp;ni=bTkwBTRiltTM%2FB%2BoM9%2BSzKFTH%2Fw9my2pBssWYs9s4gujq%2F0%3D&amp;ve=10.9.6.755&amp;bi=997&amp;fr=iphone&amp;mi=iPhone8%2C1&amp;nt=2&amp;cp=isp%3A%E7%94%B5%E4%BF%A1%3Bprov%3A%E5%B9%BF%E4%B8%9C%3Bcity%3A%3Bna%3A%E4%B8%AD%E5%9B%BD%3Bcc%3ACN%3Bac%3A&amp;ei=bTkwBcdiqTSojXfM8KyHGJdaY7Z1jg5t1b9yZ4hg%2B347oiyKCUxxdgEfSBZKXw%3D%3D&amp;ds=bTkwBepirf3loQ6QrJ76djgUEWU26yiBFIsxt2oP%2FNcXoQ%3D%3D&amp;ud=bTkwBQ1isdG7gH35p53uwnMKCofF7Sj45ZQil%2B8I6hf4tQ%3D%3D&amp;sv=app&amp;li=g9qKibW4p5yD14qJsbysy4%2Fa04ji5%2FOd7ui%2F</string>
+    </dict>
+    <dict>
+        <key>channel</key>
+        <string>商业</string>
+        <key>url</key>
+        <string>http://iflow.uczzd.cn/iflow/api/v1/channel/696724?app=uc-iflow&amp;sp_gz=1&amp;recoid=4780413596505591035&amp;ftime=1488170672207&amp;method=new&amp;count=20&amp;no_op=0&amp;auto=0&amp;content_ratio=0&amp;_tm=1488170686131&amp;sign=bTkwBf9iQB%2F%2B%2F%2BHW3ogpeRxXTASXxQkcussc021pvCbY8PhRcDeSzLbM&amp;sc=&amp;uc_param_str=dnnivebichfrmintcpgieiwidsudsvli&amp;dn=20151536891-fdd83270&amp;ni=bTkwBTRiltTM%2FB%2BoM9%2BSzKFTH%2Fw9my2pBssWYs9s4gujq%2F0%3D&amp;ve=10.9.6.755&amp;bi=997&amp;fr=iphone&amp;mi=iPhone8%2C1&amp;nt=2&amp;cp=isp%3A%E7%94%B5%E4%BF%A1%3Bprov%3A%E5%B9%BF%E4%B8%9C%3Bcity%3A%3Bna%3A%E4%B8%AD%E5%9B%BD%3Bcc%3ACN%3Bac%3A&amp;ei=bTkwBcdiqTSojXfM8KyHGJdaY7Z1jg5t1b9yZ4hg%2B347oiyKCUxxdgEfSBZKXw%3D%3D&amp;ds=bTkwBepirf3loQ6QrJ76djgUEWU26yiBFIsxt2oP%2FNcXoQ%3D%3D&amp;ud=bTkwBQ1isdG7gH35p53uwnMKCofF7Sj45ZQil%2B8I6hf4tQ%3D%3D&amp;sv=app&amp;li=g9qKibW4p5yD14qJsbysy4%2Fa04ji5%2FOd7ui%2F</string>
+    </dict>
+    <dict>
+        <key>channel</key>
+        <string>旅游</string>
+        <key>url</key>
+        <string>http://iflow.uczzd.cn/iflow/api/v1/channel/1972619079?app=uc-iflow&amp;sp_gz=1&amp;recoid=4780413596505591035&amp;ftime=1488170672207&amp;method=new&amp;count=20&amp;no_op=0&amp;auto=0&amp;content_ratio=0&amp;_tm=1488170686131&amp;sign=bTkwBf9iQB%2F%2B%2F%2BHW3ogpeRxXTASXxQkcussc021pvCbY8PhRcDeSzLbM&amp;sc=&amp;uc_param_str=dnnivebichfrmintcpgieiwidsudsvli&amp;dn=20151536891-fdd83270&amp;ni=bTkwBTRiltTM%2FB%2BoM9%2BSzKFTH%2Fw9my2pBssWYs9s4gujq%2F0%3D&amp;ve=10.9.6.755&amp;bi=997&amp;fr=iphone&amp;mi=iPhone8%2C1&amp;nt=2&amp;cp=isp%3A%E7%94%B5%E4%BF%A1%3Bprov%3A%E5%B9%BF%E4%B8%9C%3Bcity%3A%3Bna%3A%E4%B8%AD%E5%9B%BD%3Bcc%3ACN%3Bac%3A&amp;ei=bTkwBcdiqTSojXfM8KyHGJdaY7Z1jg5t1b9yZ4hg%2B347oiyKCUxxdgEfSBZKXw%3D%3D&amp;ds=bTkwBepirf3loQ6QrJ76djgUEWU26yiBFIsxt2oP%2FNcXoQ%3D%3D&amp;ud=bTkwBQ1isdG7gH35p53uwnMKCofF7Sj45ZQil%2B8I6hf4tQ%3D%3D&amp;sv=app&amp;li=g9qKibW4p5yD14qJsbysy4%2Fa04ji5%2FOd7ui%2F</string>
+    </dict>
+    <dict>
+        <key>channel</key>
+        <string>家居</string>
+        <key>url</key>
+        <string>http://iflow.uczzd.cn/iflow/api/v1/channel/90003?app=uc-iflow&amp;sp_gz=1&amp;recoid=4780413596505591035&amp;ftime=1488170672207&amp;method=new&amp;count=20&amp;no_op=0&amp;auto=0&amp;content_ratio=0&amp;_tm=1488170686131&amp;sign=bTkwBf9iQB%2F%2B%2F%2BHW3ogpeRxXTASXxQkcussc021pvCbY8PhRcDeSzLbM&amp;sc=&amp;uc_param_str=dnnivebichfrmintcpgieiwidsudsvli&amp;dn=20151536891-fdd83270&amp;ni=bTkwBTRiltTM%2FB%2BoM9%2BSzKFTH%2Fw9my2pBssWYs9s4gujq%2F0%3D&amp;ve=10.9.6.755&amp;bi=997&amp;fr=iphone&amp;mi=iPhone8%2C1&amp;nt=2&amp;cp=isp%3A%E7%94%B5%E4%BF%A1%3Bprov%3A%E5%B9%BF%E4%B8%9C%3Bcity%3A%3Bna%3A%E4%B8%AD%E5%9B%BD%3Bcc%3ACN%3Bac%3A&amp;ei=bTkwBcdiqTSojXfM8KyHGJdaY7Z1jg5t1b9yZ4hg%2B347oiyKCUxxdgEfSBZKXw%3D%3D&amp;ds=bTkwBepirf3loQ6QrJ76djgUEWU26yiBFIsxt2oP%2FNcXoQ%3D%3D&amp;ud=bTkwBQ1isdG7gH35p53uwnMKCofF7Sj45ZQil%2B8I6hf4tQ%3D%3D&amp;sv=app&amp;li=g9qKibW4p5yD14qJsbysy4%2Fa04ji5%2FOd7ui%2F</string>
+    </dict>
+    <dict>
+        <key>channel</key>
+        <string>音乐</string>
+        <key>url</key>
+        <string>http://iflow.uczzd.cn/iflow/api/v1/channel/10022?app=uc-iflow&amp;sp_gz=1&amp;recoid=4780413596505591035&amp;ftime=1488170672207&amp;method=new&amp;count=20&amp;no_op=0&amp;auto=0&amp;content_ratio=0&amp;_tm=1488170686131&amp;sign=bTkwBf9iQB%2F%2B%2F%2BHW3ogpeRxXTASXxQkcussc021pvCbY8PhRcDeSzLbM&amp;sc=&amp;uc_param_str=dnnivebichfrmintcpgieiwidsudsvli&amp;dn=20151536891-fdd83270&amp;ni=bTkwBTRiltTM%2FB%2BoM9%2BSzKFTH%2Fw9my2pBssWYs9s4gujq%2F0%3D&amp;ve=10.9.6.755&amp;bi=997&amp;fr=iphone&amp;mi=iPhone8%2C1&amp;nt=2&amp;cp=isp%3A%E7%94%B5%E4%BF%A1%3Bprov%3A%E5%B9%BF%E4%B8%9C%3Bcity%3A%3Bna%3A%E4%B8%AD%E5%9B%BD%3Bcc%3ACN%3Bac%3A&amp;ei=bTkwBcdiqTSojXfM8KyHGJdaY7Z1jg5t1b9yZ4hg%2B347oiyKCUxxdgEfSBZKXw%3D%3D&amp;ds=bTkwBepirf3loQ6QrJ76djgUEWU26yiBFIsxt2oP%2FNcXoQ%3D%3D&amp;ud=bTkwBQ1isdG7gH35p53uwnMKCofF7Sj45ZQil%2B8I6hf4tQ%3D%3D&amp;sv=app&amp;li=g9qKibW4p5yD14qJsbysy4%2Fa04ji5%2FOd7ui%2F</string>
+    </dict>
+    <dict>
+        <key>channel</key>
+        <string>故事</string>
+        <key>url</key>
+        <string>http://iflow.uczzd.cn/iflow/api/v1/channel/10430?app=uc-iflow&amp;sp_gz=1&amp;recoid=4780413596505591035&amp;ftime=1488170672207&amp;method=new&amp;count=20&amp;no_op=0&amp;auto=0&amp;content_ratio=0&amp;_tm=1488170686131&amp;sign=bTkwBf9iQB%2F%2B%2F%2BHW3ogpeRxXTASXxQkcussc021pvCbY8PhRcDeSzLbM&amp;sc=&amp;uc_param_str=dnnivebichfrmintcpgieiwidsudsvli&amp;dn=20151536891-fdd83270&amp;ni=bTkwBTRiltTM%2FB%2BoM9%2BSzKFTH%2Fw9my2pBssWYs9s4gujq%2F0%3D&amp;ve=10.9.6.755&amp;bi=997&amp;fr=iphone&amp;mi=iPhone8%2C1&amp;nt=2&amp;cp=isp%3A%E7%94%B5%E4%BF%A1%3Bprov%3A%E5%B9%BF%E4%B8%9C%3Bcity%3A%3Bna%3A%E4%B8%AD%E5%9B%BD%3Bcc%3ACN%3Bac%3A&amp;ei=bTkwBcdiqTSojXfM8KyHGJdaY7Z1jg5t1b9yZ4hg%2B347oiyKCUxxdgEfSBZKXw%3D%3D&amp;ds=bTkwBepirf3loQ6QrJ76djgUEWU26yiBFIsxt2oP%2FNcXoQ%3D%3D&amp;ud=bTkwBQ1isdG7gH35p53uwnMKCofF7Sj45ZQil%2B8I6hf4tQ%3D%3D&amp;sv=app&amp;li=g9qKibW4p5yD14qJsbysy4%2Fa04ji5%2FOd7ui%2F</string>
+    </dict>
+
+
 </array>
 </plist>

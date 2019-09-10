@@ -251,6 +251,7 @@ static double backForwardSafeDistance = 80.0;
         
         // 左边按钮
         UIButton *leftBtn = [[UIButton alloc] init];
+        leftBtn.frame = CGRectMake(0, 0, 30, 30);
         self.navToolLeftBtn = leftBtn;
         [leftBtn setImage:[UIImage imageNamed:@"navTool_close_white"] forState:UIControlStateNormal];
         [leftBtn addTarget:self action:@selector(closeWebModule) forControlEvents:UIControlEventTouchUpInside];
@@ -258,6 +259,7 @@ static double backForwardSafeDistance = 80.0;
         
         // 右边按钮
         UIButton *rightBtn = [[UIButton alloc] init];
+        rightBtn.frame = CGRectMake(0, 0, 30, 30);
         self.navToolRightBtn = rightBtn;
         [rightBtn setImage:[UIImage imageNamed:@"navTool_more_white"] forState:UIControlStateNormal];
         [rightBtn addTarget:self action:@selector(callNavRightDropView) forControlEvents:UIControlEventTouchUpInside];
