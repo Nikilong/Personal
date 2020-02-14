@@ -48,8 +48,6 @@ NSString *const XMNewsSaveTimeDictKey = @"XMNewsSaveTimeDictKey";
         model.source = dict[@"data"][@"articles"][model.ID][@"source_name"];
         //model.source = model.ID;
         
-        NSLog(@"%@",dict[@"data"][@"articles"][model.ID][@"op_mark"]);
-        
         // 过滤广告
         if([self checkAdvertisement:dict[@"data"][@"articles"][model.ID][@"op_mark"] source:model.source]) continue;
         
