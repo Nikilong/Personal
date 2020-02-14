@@ -48,8 +48,10 @@ NSString *const XMNewsSaveTimeDictKey = @"XMNewsSaveTimeDictKey";
         model.source = dict[@"data"][@"articles"][model.ID][@"source_name"];
         //model.source = model.ID;
         
+        NSLog(@"%@",dict[@"data"][@"articles"][model.ID][@"op_mark"]);
+        
         // 过滤广告
-        if([self checkAdvertisement:model.ID source:model.source]) continue;
+        if([self checkAdvertisement:dict[@"data"][@"articles"][model.ID][@"op_mark"] source:model.source]) continue;
         
         // 这个tag是分类,可用于过滤
         model.tags = dict[@"data"][@"articles"][model.ID][@"tags"];
@@ -93,9 +95,10 @@ NSString *const XMNewsSaveTimeDictKey = @"XMNewsSaveTimeDictKey";
     return arrM;
 }
 
-+ (BOOL)checkAdvertisement:(NSString *)ID  source:(NSString *)source{
-    // 广告的id都是8位,通过id来过滤掉广告
-    if (ID.integerValue < 99999999) return YES;
++ (BOOL)checkAdvertisement:(NSString *)mark  source:(NSString *)source{
+//    // 广告的id都是8位,通过id来过滤掉广告
+//    if (ID.integerValue < 99999999) return YES;
+    if ([mark isEqualToString:@"广告"]) return YES;
     if ([source isEqualToString:@"淘宝精选"]) return YES;
     return NO;
 }
