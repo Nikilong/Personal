@@ -1308,21 +1308,21 @@ static double backForwardSafeDistance = 80.0;
 
 #pragma mark - UIScrollViewDelegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    if (scrollView.contentOffset.y < 0 || self.isDrag == NO){
-        // 到达最顶部和最底部,触发弹簧效果时,需要实时更新最后的y偏移,但是不能改变view的frame
-        self.lastContentY = scrollView.contentOffset.y;
-        return;
-    }
+//    if (scrollView.contentOffset.y < 0 || self.isDrag == NO){
+//        // 到达最顶部和最底部,触发弹簧效果时,需要实时更新最后的y偏移,但是不能改变view的frame
+//        self.lastContentY = scrollView.contentOffset.y;
+//        return;
+//    }
     self.isScroller = YES;
     
-    //toobar移动方案二,避免一直修改toolbar的frame,减少性能损耗
-    if(scrollView.contentOffset.y > self.lastContentY){
-        // 上滑隐藏toolbar
-        [self toggleBottomBar:NO];
-    }else if(scrollView.contentOffset.y < self.lastContentY){
-        // 下滑显示toolbar
-        [self toggleBottomBar:YES];
-    }
+//    //toobar移动方案二,避免一直修改toolbar的frame,减少性能损耗
+//    if(scrollView.contentOffset.y > self.lastContentY){
+//        // 上滑隐藏toolbar
+//        [self toggleBottomBar:NO];
+//    }else if(scrollView.contentOffset.y < self.lastContentY){
+//        // 下滑显示toolbar
+//        [self toggleBottomBar:YES];
+//    }
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
